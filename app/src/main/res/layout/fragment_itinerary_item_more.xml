@@ -11,10 +11,9 @@
         android:layout_height="wrap_content">
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsingToolbar"
+            android:id="@+id/collapse"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="8dp"
             android:fitsSystemWindows="true"
             android:stateListAnimator="@drawable/state_list_animator"
             app:collapsedTitleGravity="start"
@@ -25,19 +24,17 @@
             <ImageView
                 android:id="@+id/imgItineraryListMore"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/home_photo_height"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:layout_height="@dimen/home_photo_height" />
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY"
                 android:src="@drawable/dark_shadow_top" />
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY"
                 android:src="@drawable/dark_shadow" />
 
             <android.support.v7.widget.Toolbar
@@ -46,7 +43,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:textColorPrimary="@color/white_"
                 app:layout_collapseMode="pin"
-                app:theme="@style/AppToolbar" />
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 

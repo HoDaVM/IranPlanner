@@ -4,8 +4,10 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -99,6 +101,7 @@ import tools.Constants;
 import tools.Util;
 
 import tools.widget.PersianDatePicker;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MoreItemItineraryActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -149,6 +152,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
     DaggerItineraryComponent.Builder builder;
 
     private void findView() {
+
         txtItinerary_attraction_Difficulty = (TextView) findViewById(R.id.txtItinerary_attraction_Difficulty);
         toolsPager = (ViewPager) findViewById(R.id.toolsPager);
         txtItinerary_attraction_type = (TextView) findViewById(R.id.txtItinerary_attraction_type);
@@ -171,7 +175,6 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         contentFullDescription = (CTouchyWebView) findViewById(R.id.contentFullDescription);
         txtOk = (TextView) findViewById(R.id.txtOk);
         MoreInoText = (TextView) findViewById(R.id.MoreInoText);
-        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbar);
         AppBarLayout appBar = (AppBarLayout) findViewById(R.id.appBar);
         ViewCompat.setElevation(appBar, Util.dpToPx(this, 28));
     }
@@ -198,10 +201,15 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         String title = "برنامه سفر " + itineraryData.getItineraryFromCityName() + " به " + itineraryData.getItineraryToCityName();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbar);
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse);
         collapsingToolbarLayout.setTitle(title);
         collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, R.color.white_));
         collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.white_));
+
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/IRANSansMobile.ttf");
+
+        collapsingToolbarLayout.setCollapsedTitleTypeface(tf);
+        collapsingToolbarLayout.setExpandedTitleTypeface(tf);
 
         setTypeOfTravel();
         myData = itineraryData.getItineraryBody();
@@ -808,6 +816,11 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
             }
         });
 
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override

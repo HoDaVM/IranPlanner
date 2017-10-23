@@ -1,6 +1,7 @@
 package com.iranplanner.tourism.iranplanner.ui.activity.reqestHotelStatus;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,6 +64,7 @@ public class RequestBundleAdapter extends RecyclerView.Adapter<RequestBundleAdap
 
         private ImageView imageHotel;
         private TextView hotelNameTv, hotelRoomNumberTv, txtHotelDateReq;
+        private Button btnRemove, btnComplete;
         private ProgressBar imageLoading;
 
         public Holder(View itemView) {
@@ -72,12 +74,22 @@ public class RequestBundleAdapter extends RecyclerView.Adapter<RequestBundleAdap
             hotelRoomNumberTv = (TextView) itemView.findViewById(R.id.hotelRoomNumberTv);
             txtHotelDateReq = (TextView) itemView.findViewById(R.id.txtHotelDateReq);
             imageLoading = (ProgressBar) itemView.findViewById(R.id.imageLoading);
+
+            btnRemove = (Button) itemView.findViewById(R.id.requestStatusRowRemoveBtn);
+            btnComplete = (Button) itemView.findViewById(R.id.btnComplete);
+
+            Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/IRANSansMobile.ttf");
+            hotelRoomNumberTv.setTypeface(tf);
+            hotelNameTv.setTypeface(tf);
+            txtHotelDateReq.setTypeface(tf);
+            btnComplete.setTypeface(tf);
+            btnRemove.setTypeface(tf);
         }
 
         public void setData(ResultReqBundle current) {
             hotelNameTv.setText(current.getBundleRequest().getBundleLodgingTitle());
             String roomNumber = "تعداد اتاق : " + current.getBundleRequest().getBundleDateCount();
-            hotelRoomNumberTv.setText(roomNumber);
+            hotelRoomNumberTv.setText(Util.persianNumbers(roomNumber));
             String dateReq = "تاریخ درخواست : " + Util.persianNumbers(Utils.getSimpleDateMilli(Long.valueOf(current.getBundleRequest().getBundleDateFrom())));
             txtHotelDateReq.setText(dateReq);
             Util.setImageView(current.getBundleRequest().getLodgingImgUrl(), context, imageHotel, imageLoading);

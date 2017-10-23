@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -44,23 +45,22 @@ import tools.widget.PersianDatePicker;
  */
 
 public class EditProfileActivity extends StandardActivity implements View.OnClickListener, EditProfileContract.View {
-    TextView txtNewsValueShow, txtBirthdayValueShow, email_verify, email_address, txtDate, btnEditProfile, btnOpenEditProfile, txtTitle, txtGenderValueShow, txtNameValueShow, txtFamilyValueShow, txtPhonValueShow, txtBirthdayShow, txtLodgingValueShow;
-    EditText input_tel, input_name, input_family, input_lodging;
-    RelativeLayout changeDateHolder;
-    CheckBox checkBoxNews;
-    RadioButton radioWoman;
-    RadioButton radioMan;
-    long birthday;
-    ProgressDialog progressDialog;
+    private TextView txtNewsValueShow, txtBirthdayValueShow, email_verify, email_address, txtDate, btnEditProfile, btnOpenEditProfile, txtTitle, txtGenderValueShow, txtNameValueShow, txtFamilyValueShow, txtPhonValueShow, txtBirthdayShow, txtLodgingValueShow;
+    private EditText input_tel, input_name, input_family, input_lodging;
+    private RelativeLayout changeDateHolder, verifyEmailHolder;
+    private CheckBox checkBoxNews;
+    private RadioButton radioWoman, radioMan;
+    private ProgressDialog progressDialog;
+    private LinearLayout editProfileHolder, showProfileHolder;
+    private ImageView ImgUserEmailStatus;
+
+    private String from;
+    private long birthday;
 
     @Inject
     EditProfilePresenter editProfilePresenter;
     DaggerEditProfileComponent.Builder builder;
-    LinearLayout editProfileHolder, showProfileHolder;
-    String from;
-    ResultUserInfo resultUserInfo;
-    ImageView ImgUserEmailStatus;
-    RelativeLayout verifyEmailHolder;
+    private ResultUserInfo resultUserInfo;
 
     @Override
     protected int getLayoutId() {
@@ -71,10 +71,26 @@ public class EditProfileActivity extends StandardActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("مشخصات حساب کاربری");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        init();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    private void init() {
         Intent intent = getIntent();
         from = intent.getStringExtra("from");
         resultUserInfo = (ResultUserInfo) intent.getSerializableExtra("infoUserResult");
-//------- edit profile
+
         editProfileHolder = (LinearLayout) findViewById(R.id.editProfileHolder);
         email_address = (TextView) findViewById(R.id.email_address);
         email_verify = (TextView) findViewById(R.id.email_verify);
@@ -93,8 +109,8 @@ public class EditProfileActivity extends StandardActivity implements View.OnClic
         txtTitle = (TextView) findViewById(R.id.txtTitle);
         checkBoxNews = (CheckBox) findViewById(R.id.checkBoxNews);
         ImgUserEmailStatus = (ImageView) findViewById(R.id.ImgUserEmailStatus);
-//------ show profile
         showProfileHolder = (LinearLayout) findViewById(R.id.showProfileHolder);
+
         txtGenderValueShow = (TextView) findViewById(R.id.txtGenderValueShow);
         txtNameValueShow = (TextView) findViewById(R.id.txtNameValueShow);
         txtFamilyValueShow = (TextView) findViewById(R.id.txtFamilyValueShow);
@@ -104,19 +120,22 @@ public class EditProfileActivity extends StandardActivity implements View.OnClic
         txtBirthdayValueShow = (TextView) findViewById(R.id.txtBirthdayValueShow);
         txtNewsValueShow = (TextView) findViewById(R.id.txtNewsValueShow);
         //----
-        if (from == null||from.equals("editKey")  ) {
+        if (from == null || from.equals("editKey")) {
             editProfileHolder.setVisibility(View.VISIBLE);
             showProfileHolder.setVisibility(View.GONE);
             btnOpenEditProfile.setVisibility(View.GONE);
             editProfileHolder.setVisibility(View.VISIBLE);
-            txtTitle.setText("ویرایش اطلاعات");
 
+            //toggle toolbar to edit
+            getSupportActionBar().setTitle("ویرایش حساب کاربری");
         } else if (from.equals("showKey")) {
             editProfileHolder.setVisibility(View.GONE);
             showProfileHolder.setVisibility(View.VISIBLE);
             btnOpenEditProfile.setVisibility(View.VISIBLE);
             editProfileHolder.setVisibility(View.GONE);
-            txtTitle.setText("نمایش اطلاعات");
+
+            //toggle toolbar to show
+            getSupportActionBar().setTitle("مشخصات حساب کاربری");
         }
 
         setValues(resultUserInfo);
@@ -127,8 +146,8 @@ public class EditProfileActivity extends StandardActivity implements View.OnClic
     }
 
     private void setValues(ResultUserInfo resultUserInfo) {
-        String gender = (resultUserInfo.getUserGender() .equals("0")) ? "زن" : "مرد";
-        txtNewsValueShow.setText((resultUserInfo.getUserNewsletter() .equals("1")) ? "دارم" : "ندارم");
+        String gender = (resultUserInfo.getUserGender().equals("0")) ? "زن" : "مرد";
+        txtNewsValueShow.setText((resultUserInfo.getUserNewsletter().equals("1")) ? "دارم" : "ندارم");
         if (resultUserInfo.getUserEmailStatus().equals("0")) {
             verifyEmailHolder.setVisibility(View.VISIBLE);
             ImgUserEmailStatus.setBackgroundResource(R.mipmap.ic_cancel_red);
@@ -158,15 +177,15 @@ public class EditProfileActivity extends StandardActivity implements View.OnClic
         input_family.setText(resultUserInfo.getUserLname());
         input_lodging.setText(resultUserInfo.getUserCityName());
 
-        radioWoman.setChecked((resultUserInfo.getUserGender() .equals("0")) ? true : false);
-        radioMan.setChecked((resultUserInfo.getUserGender() .equals("1")) ? true : false);
-        if(resultUserInfo.getUserBirthday() != null){
+        radioWoman.setChecked((resultUserInfo.getUserGender().equals("0")));
+        radioMan.setChecked((resultUserInfo.getUserGender().equals("1")));
+        if (resultUserInfo.getUserBirthday() != null) {
             txtBirthdayValueShow.setText(Util.persianNumbers(Utils.getSimpleDateMilli(birthday)));
-        }else {
+        } else {
             txtBirthdayValueShow.setText("");
         }
 
-        if (resultUserInfo.getUserNewsletter() .equals("1")) {
+        if (resultUserInfo.getUserNewsletter().equals("1")) {
             checkBoxNews.setChecked(true);
         } else {
             checkBoxNews.setChecked(false);
@@ -176,7 +195,6 @@ public class EditProfileActivity extends StandardActivity implements View.OnClic
 
     public boolean validate() {
         boolean valid = true;
-
 
         String phoneNumber = input_tel.getText().toString();
 
@@ -203,7 +221,7 @@ public class EditProfileActivity extends StandardActivity implements View.OnClic
         switch (v.getId()) {
             case R.id.input_tel:
                 input_tel.setText("");
-               break;
+                break;
             case R.id.verifyEmailHolder:
                 DaggerEditProfileComponent.builder()
                         .netComponent(((App) getApplicationContext()).getNetComponent())
@@ -220,9 +238,9 @@ public class EditProfileActivity extends StandardActivity implements View.OnClic
                 intent.putExtra("infoUserResult", resultUserInfo);
                 startActivity(intent);
             case R.id.btnEditProfile:
-                if (from.equals("showKey")) {
+                if (from.equals("showKey"))
                     return;
-                }
+
                 if (!validate()) {
                     Toast.makeText(getApplicationContext(), "اشکال در مقادیر ورودی", Toast.LENGTH_SHORT).show();
                     return;
@@ -234,15 +252,13 @@ public class EditProfileActivity extends StandardActivity implements View.OnClic
                 builder.build().inject(this);
 
                 String gender = "0";
-                if (radioMan.isChecked()) {
+                if (radioMan.isChecked())
                     gender = "1";
-                } else if (radioWoman.isChecked()) {
+                else if (radioWoman.isChecked())
                     gender = "0";
-                }
 
-
-                String news = (checkBoxNews.isChecked() == true) ? "1" : "0";
-                updateProfileSend updateProfileSend = new updateProfileSend(Util.getUseRIdFromShareprefrence(getApplicationContext()).toString(),
+                String news = (checkBoxNews.isChecked()) ? "1" : "0";
+                updateProfileSend updateProfileSend = new updateProfileSend(String.valueOf(Util.getUseRIdFromShareprefrence(getApplicationContext())),
                         input_name.getText().toString(),
                         input_family.getText().toString(),
                         gender,
@@ -271,7 +287,7 @@ public class EditProfileActivity extends StandardActivity implements View.OnClic
         resultUserInfo = resultUpdate.getResultUserInfo();
         setValues(resultUserInfo);
         Intent intentShowProfile = new Intent(getApplicationContext(), EditProfileActivity.class);
-        Util.saveDataINShareprefrence(getApplicationContext(),resultUserInfo.getUserEmail(),resultUserInfo.getUserLname(),resultUserInfo.getUserGender().toString(),resultUserInfo.getUserUid().toString());
+        Util.saveDataINShareprefrence(getApplicationContext(), resultUserInfo.getUserEmail(), resultUserInfo.getUserLname(), resultUserInfo.getUserGender().toString(), resultUserInfo.getUserUid().toString());
         String tagFrom = "showKey";
         intentShowProfile.putExtra("from", tagFrom);
         intentShowProfile.putExtra("infoUserResult", (Serializable) resultUserInfo);
@@ -387,6 +403,4 @@ public class EditProfileActivity extends StandardActivity implements View.OnClic
             dismiss();
         }
     }
-
-
 }

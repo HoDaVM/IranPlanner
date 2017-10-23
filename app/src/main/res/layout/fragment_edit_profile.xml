@@ -8,47 +8,12 @@
     android:background="@color/light_blue"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/actionBarSize"
+        android:layout_height="?attr/actionBarSize"
         android:background="@color/main_blue"
-        android:paddingLeft="@dimen/padding_short"
-        android:paddingRight="@dimen/padding_short">
-
-        <ImageView
-            android:id="@+id/backBtn"
-            style="@style/CSelectableItemBackground"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_margin="5dp"
-            android:src="@mipmap/ic_backward"
-            android:visibility="gone"/>
-
-        <ImageView
-            android:id="@+id/okBtn"
-            style="@style/CSelectableItemBackground"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_margin="5dp"
-            android:src="@mipmap/ic_checked_white"
-            android:visibility="gone" />
-
-        <TextView
-            style="@style/StandardTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text=" ویرایش اطلاعات من"
-            android:textColor="@color/white_"
-            android:id="@+id/txtTitle"/>
-
-    </RelativeLayout>
-
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -103,6 +68,7 @@
                     android:paddingTop="@dimen/padding_short"
                     android:text="تایید ویرایش"
                     android:textColor="@color/white_" />
+
                 <TextView
                     android:id="@+id/btnOpenEditProfile"
                     style="@style/StandardText"
@@ -118,8 +84,7 @@
                     android:paddingRight="30dp"
                     android:paddingTop="@dimen/padding_short"
                     android:text="ویرایش اطلاعات"
-                    android:textColor="@color/white_"
-                    />
+                    android:textColor="@color/white_" />
 
             </RelativeLayout>
 
@@ -172,15 +137,14 @@
                                 android:layout_centerVertical="true"
                                 android:layout_marginLeft="@dimen/padding_short"
                                 android:layout_marginRight="@dimen/padding_short"
-                                android:layout_toLeftOf="@+id/email_address"
-                             />
+                                android:layout_toLeftOf="@+id/email_address" />
 
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/verifyEmailHolder"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/verifyEmailHolder">
+                            android:layout_height="wrap_content">
 
                             <TextView
                                 android:id="@+id/email_verify"
@@ -239,8 +203,7 @@
                                 style="@style/StandardText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/padding_big"
-                                />
+                                android:layout_marginLeft="@dimen/padding_big" />
 
                             <TextView
                                 android:id="@+id/weman"
@@ -312,8 +275,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="right"
-                        android:visibility="gone"
-                        >
+                        android:visibility="gone">
 
                         <EditText
                             android:id="@+id/input_lodging"
@@ -433,14 +395,13 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_toLeftOf="@+id/txtGenderShow"
-                            android:text="جنسیت"
-                           />
+                            android:text="جنسیت" />
+
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_below="@+id/txtGenderShow"
-                            android:background="@color/greyLight"
-                            />
+                            android:background="@color/greyLight" />
 
                     </RelativeLayout>
 

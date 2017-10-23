@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -153,5 +155,16 @@ public abstract class StandardActivity extends AppCompatActivity {
     }
 
     protected abstract int getLayoutId();
+
+    public void setCollapseFont(CollapsingToolbarLayout toolbar){
+
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/IRANSansMobile.ttf");
+
+        toolbar.setExpandedTitleTextAppearance(R.style.expandedappbar);
+        toolbar.setCollapsedTitleTextAppearance(R.style.collapsedappbar);
+        toolbar.setCollapsedTitleTypeface(tf);
+        toolbar.setExpandedTitleTypeface(tf);
+
+    }
 
 }
