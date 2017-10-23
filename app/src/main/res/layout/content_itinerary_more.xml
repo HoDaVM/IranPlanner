@@ -523,39 +523,4 @@
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/margin_short"
-        android:layout_marginLeft="@dimen/margin_short"
-        android:layout_marginRight="@dimen/margin_short"
-        android:gravity="bottom"
-        android:elevation="0dp"
-        android:orientation="horizontal"
-        android:weightSum="2">
-
-        <Button
-            android:id="@+id/showItinerary1"
-            style="@style/StandardTitle"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_corner_pink"
-            android:text="نمایش برنامه سفر"
-            android:textColor="@color/white_" />
-
-        <Button
-            android:id="@+id/showReservation"
-            style="@style/StandardTitle"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginRight="@dimen/margin_xxxshort"
-            android:layout_weight="1"
-            android:background="@drawable/button_corner_green"
-            android:text="رزرو مراکز اقامتی"
-            android:textColor="@color/white_" />
-
-    </LinearLayout>
-
 </RelativeLayout>
