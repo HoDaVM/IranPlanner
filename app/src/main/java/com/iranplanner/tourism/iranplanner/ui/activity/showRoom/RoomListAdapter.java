@@ -50,9 +50,9 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         viewHolder.roomType.setText(ResultRoom.get(position).getRoomTitle());
         if (ResultRoom.get(position).getRoomCapacityExtra() != null && !ResultRoom.get(position).getRoomCapacityExtra().equals("0")) {
-            viewHolder.txtCapacity.setText(Util.persianNumbers(ResultRoom.get(position).getRoomCapacityAdult()) + " نفر +" + Util.persianNumbers(ResultRoom.get(position).getRoomCapacityExtra()) + "نفر اضافه");
+            viewHolder.txtCapacity.setText(Util.persianNumbers(ResultRoom.get(position).getRoomCapacityAdult()) + " نفر +" + Util.persianNumbers(ResultRoom.get(position).getRoomCapacityExtra()) + " نفر اضافه ");
         } else {
-            viewHolder.txtCapacity.setText(Util.persianNumbers(ResultRoom.get(position).getRoomCapacityAdult()) + " نفر");
+            viewHolder.txtCapacity.setText(Util.persianNumbers(ResultRoom.get(position).getRoomCapacityAdult()) + " نفر ");
         }
         viewHolder.BreakfastHolder.setVisibility(View.VISIBLE);
         List<LodgingRoomFacility> LodgingRoomFacility = ResultRoom.get(position).getLodgingRoomFacility();
@@ -91,17 +91,22 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
         //create data for price and price after sale applied
         DecimalFormat formatter = new DecimalFormat("#,###,###");
 
-        int roomPrice = Integer.valueOf(ResultRoom.get(position).getRoomPrice());
+        int roomPrice = Integer.valueOf(ResultRoom.get(position).getRoomPriceDifference());
         String roomPriceString = formatter.format(roomPrice);
         String roomPriceStringFinal = "تخفیف: " + roomPriceString + "تومان ";
         viewHolder.txtPriceRoom.setText(Util.persianNumbers(roomPriceStringFinal));
 
-        int roomPricePromotion = Integer.parseInt(ResultRoom.get(position).getRoomPricePromotion());
+        int roomPricePromotion = Integer.parseInt(ResultRoom.get(position).getRoom_price_final());
         String roomPricePromotionString = formatter.format(roomPricePromotion);
-        String roomPricePromotionStringFinal = "قایل پرداخت: " + roomPricePromotionString + "تومان ";
+        String roomPricePromotionStringFinal = "قابل پرداخت: " + roomPricePromotionString + "تومان ";
         viewHolder.txtnewPrice.setText(ResultRoom.get(position).getRoomPricePromotion() != null ? Util.persianNumbers(roomPricePromotionStringFinal) + "تومان" : "");
 
         viewHolder.txtShowPercentPercentage.setText(ResultRoom.get(position).getRoomPriceDifferencePercent() != null ? "تخفیف تا %" + Util.persianNumbers(ResultRoom.get(position).getRoomPriceDifferencePercent()) : "");
+
+        int roomPriceTitle = Integer.valueOf(ResultRoom.get(position).getRoomPrice());
+        String roomPriceTitleString = formatter.format(roomPriceTitle);
+        String roomPriceTitleStringFinal = "قیمت به ازای هرشب :" + roomPriceTitleString + "تومان ";
+        viewHolder.tvPriceTitle.setText(Util.persianNumbers(roomPriceTitleStringFinal));
     }
 
     @Override
@@ -146,6 +151,8 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
         TextView txtNumberChoose;
         @InjectView(R.id.txtNumberRoom)
         TextView tvNumberRoom;
+        @InjectView(R.id.priceTitle)
+        TextView tvPriceTitle;
 
         public ViewHolder(View view) {
             super(view);
