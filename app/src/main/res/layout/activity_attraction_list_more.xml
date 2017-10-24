@@ -59,13 +59,16 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:src="@drawable/ic_folded_paper"
-                android:tint="@color/blue" />
+                android:tint="@color/blue"
+                android:visibility="gone" />
 
             <TextView
+                style="@style/StandardText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="فیلتر" />
+                android:text="فیلتر"
+                android:textColor="@color/white_" />
         </LinearLayout>
 
         <LinearLayout
@@ -78,16 +81,19 @@
             android:orientation="horizontal">
 
             <TextView
+                style="@style/StandardText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="نقشه" />
+                android:text="نقشه"
+                android:textColor="@color/white_" />
 
             <ImageView
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:src="@drawable/ic_folded_paper"
-                android:tint="@color/blue" />
+                android:tint="@color/blue"
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
     <!--End of Bottom Panel Section-->

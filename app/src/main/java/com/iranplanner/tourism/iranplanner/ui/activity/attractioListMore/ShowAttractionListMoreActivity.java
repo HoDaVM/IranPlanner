@@ -149,6 +149,7 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
         FilterManager filterManager = new FilterManager(findViewById(R.id.attractionFilterView));
 //        filterManager.enableAll();
         filterManager.enablePlaceRate();
+        filterManager.enableSort();
 
     }
 
