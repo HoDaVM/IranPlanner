@@ -4,41 +4,4 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/chooseHolder"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="end">
-
-        <TextView
-            android:id="@+id/txtNumberChoose"
-            style="@style/StandardText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/txtNumberRoom"
-            android:background="@color/greyDarkTransparent"
-            android:maxLines="1"
-            android:padding="@dimen/padding_short"
-            android:text="انتخاب تعداد اتاق"
-            android:textColor="@color/white_"/>
-
-        <TextView
-            android:id="@+id/txtNumberRoom"
-            style="@style/StandardText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/margin_xshort"
-            android:background="@color/grey"
-            android:maxLines="1"
-            android:paddingStart="@dimen/padding_standard"
-            android:paddingEnd="@dimen/padding_standard"
-            android:paddingTop="@dimen/padding_short"
-            android:paddingBottom="@dimen/padding_short"
-            android:text="0"
-            android:textColor="@color/white_"/>
-
-    </RelativeLayout>
 </LinearLayout>

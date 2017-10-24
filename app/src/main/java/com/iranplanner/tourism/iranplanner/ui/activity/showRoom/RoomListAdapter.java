@@ -28,17 +28,13 @@ import tools.Util;
  * Created by Hoda on 10/01/2017.
  */
 public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHolder> {
-    private Context context;
-    private int rowLayout;
     private DataTransferInterface dtInterface;
     private LayoutInflater inflater;
     private List<entity.ResultRoom> ResultRoom;
 
 
-    public RoomListAdapter(Activity activity, DataTransferInterface dtInterface, List<ResultRoom> ResultRoom, Context context, int rowLayout) {
+    public RoomListAdapter(Activity activity, DataTransferInterface dtInterface, List<ResultRoom> ResultRoom) {
         this.ResultRoom = ResultRoom;
-        this.context = context;
-        this.rowLayout = rowLayout;
         this.dtInterface = dtInterface;
         inflater = LayoutInflater.from(activity);
     }

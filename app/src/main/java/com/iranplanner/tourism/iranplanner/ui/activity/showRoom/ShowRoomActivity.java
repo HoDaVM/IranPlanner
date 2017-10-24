@@ -96,7 +96,7 @@ public class ShowRoomActivity extends StandardActivity implements ShowRoomContra
         hotelReservationOkHolder.setOnClickListener(this);
 
         //init recyclerView
-        RoomListAdapter adapter = new RoomListAdapter(ShowRoomActivity.this, this, ResultRooms, getApplicationContext(), R.layout.activity_reservation_room_detail);
+        RoomListAdapter adapter = new RoomListAdapter(ShowRoomActivity.this, this, ResultRooms);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -271,13 +271,6 @@ public class ShowRoomActivity extends StandardActivity implements ShowRoomContra
             reqLodgingReservation.setReqRoomNameLast("");//(resultRoom.getHeadLastName());
             reqLodgingReservation.setReqRoomNation("");
             reqLodgingReservation.setReqRoomExtraCount("");
-//            reqLodgingReservation.setReqRoomPricePerson("");
-//            reqLodgingReservation.setReqRoomPriceNet("");
-//            reqLodgingReservation.setReqRoomPriceHalfIn( "0");
-//            reqLodgingReservation.setReqRoomPriceHalfOut( "0");
-//            reqLodgingReservation.setReqRoomPriceCalc("");
-//            reqLodgingReservation.setReqRoomPriceFinal("");
-//            reqLodgingReservation.setReqRoomPriceDiscount("");
             c++;
             ReqLodgingReservationList.add(reqLodgingReservation);
         }
