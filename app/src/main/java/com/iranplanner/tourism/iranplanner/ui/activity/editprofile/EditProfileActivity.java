@@ -86,6 +86,11 @@ public class EditProfileActivity extends StandardActivity implements View.OnClic
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
     private void init() {
         Intent intent = getIntent();
         from = intent.getStringExtra("from");
@@ -214,6 +219,13 @@ public class EditProfileActivity extends StandardActivity implements View.OnClic
             valid = false;
         }
         return valid;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (from.equals("showKey"))
+            onBackPressed();
     }
 
     @Override
