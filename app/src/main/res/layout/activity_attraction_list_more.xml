@@ -34,8 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
-        android:background="#000"
-        android:visibility="gone" />
+        android:background="#000" />
 
     <!--This Section is Used for the Bottom Panel -->
     <LinearLayout
@@ -45,14 +44,13 @@
         android:layout_alignParentBottom="true"
         android:gravity="center"
         android:layoutDirection="rtl"
-        android:orientation="horizontal"
-        android:visibility="gone">
+        android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/attractionFilterToggleView"
             android:layout_width="100dp"
             android:layout_height="32dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:background="@drawable/drawable_right_round_corner"
             android:clickable="true"
             android:orientation="horizontal">
@@ -74,7 +72,7 @@
             android:id="@+id/attractionMapToggleView"
             android:layout_width="100dp"
             android:layout_height="32dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
             android:background="@drawable/drawable_left_round_corner"
             android:clickable="true"
             android:orientation="horizontal">
@@ -99,9 +97,9 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_alignParentBottom="true"
-        android:background="#f2f2f2"
-        android:visibility="gone">
+        android:background="#f2f2f2">
 
+        <include layout="@layout/fragment_filter" />
 
     </RelativeLayout>
 

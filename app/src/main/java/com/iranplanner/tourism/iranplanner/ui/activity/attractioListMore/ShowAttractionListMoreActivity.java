@@ -145,6 +145,11 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
 
         filterView.setY(Util.dpToPx(this, 300));
         setToolbar();
+
+        FilterManager filterManager = new FilterManager(findViewById(R.id.attractionFilterView));
+//        filterManager.enableAll();
+        filterManager.enablePlaceRate();
+
     }
 
     private void togglePanel() {

@@ -16,7 +16,7 @@
         <!-- Sort Section -->
 
         <android.support.v7.widget.CardView
-            android:id="@+id/cardviewSort"
+            android:id="@+id/filterCvSort"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="10dp"
@@ -87,6 +87,7 @@
         <!-- Price Section With SeekBar and Stuff -->
 
         <android.support.v7.widget.CardView
+            android:id="@+id/filterCvRange"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:cardCornerRadius="10dp"
@@ -142,6 +143,7 @@
         <!-- Staying Place Type® -->
 
         <android.support.v7.widget.CardView
+            android:id="@+id/filterCvType"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:cardCornerRadius="10dp"
@@ -197,6 +199,7 @@
         <!-- Staying Place Rate -->
 
         <android.support.v7.widget.CardView
+            android:id="@+id/filterCvRate"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:cardCornerRadius="10dp"

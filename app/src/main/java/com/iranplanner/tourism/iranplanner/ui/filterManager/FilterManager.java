@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.IdRes;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -36,6 +38,8 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
     //primitives used to enable or disable the filter types
     private boolean isSort, isPrice, isType, isRate;
 
+    private CardView cvSort, cvRange, cvType, cvRate;
+
     //Views corresponding with the Sort Filter
     private RadioGroup rgSort;
     private RadioButton rbSortMostSale, rbSortMinPrice, rbSortMostPrice, rbSortMostRate, rbSortMinRate;
@@ -51,6 +55,64 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
 
     public FilterManager(View root) {
         this.root = root;
+        isPrice = false;
+        isType = false;
+        isSort = false;
+        isRate = false;
+
+        init();
+    }
+
+    private void init() {
+        cvSort = (CardView) root.findViewById(R.id.filterCvSort);
+        cvRange = (CardView) root.findViewById(R.id.filterCvRange);
+        cvType = (CardView) root.findViewById(R.id.filterCvType);
+        cvRate = (CardView) root.findViewById(R.id.filterCvRate);
+
+        rgSort = (RadioGroup) root.findViewById(R.id.filterSortRg);
+
+        rbSortMinPrice = (RadioButton) root.findViewById(R.id.filterSortMinPriceRb);
+        rbSortMostSale = (RadioButton) root.findViewById(R.id.filterSortMostSaleRb);
+        rbSortMostPrice = (RadioButton) root.findViewById(R.id.filterSortMostPriceRb);
+        rbSortMostRate = (RadioButton) root.findViewById(R.id.filterSortRateMostRb);
+        rbSortMinRate = (RadioButton) root.findViewById(R.id.filterSortMinRateRb);
+
+        sbPrice = (SeekBar) root.findViewById(R.id.filterPriceSeekBar);
+
+        cbTypeApartement = (CheckBox) root.findViewById(R.id.filterTypeApartementCb);
+        cbTypeHotel = (CheckBox) root.findViewById(R.id.filterTypeHotelCb);
+        cbTypeLocal = (CheckBox) root.findViewById(R.id.filterTypeLocalCb);
+        cbTypeTraditional = (CheckBox) root.findViewById(R.id.filterTypeTraditionalCb);
+
+        cbRateZero = (CheckBox) root.findViewById(R.id.filterRate0StarCb);
+        cbRateOne = (CheckBox) root.findViewById(R.id.filterRate1StarCb);
+        cbRateTwo = (CheckBox) root.findViewById(R.id.filterRate2StarCb);
+        cbRateThree = (CheckBox) root.findViewById(R.id.filterRate3StarCb);
+        cbRateFour = (CheckBox) root.findViewById(R.id.filterRate4StarCb);
+        cbRateFive = (CheckBox) root.findViewById(R.id.filterRate5StarCb);
+    }
+
+    private void updateUi() {
+        if (!isPrice)
+            cvRange.setVisibility(View.GONE);
+        else
+            cvRange.setVisibility(View.VISIBLE);
+
+        if (!isRate)
+            cvRate.setVisibility(View.GONE);
+        else
+            cvRate.setVisibility(View.VISIBLE);
+
+        if (!isSort)
+            cvSort.setVisibility(View.GONE);
+        else
+            cvSort.setVisibility(View.VISIBLE);
+
+        if (!isType)
+            cvType.setVisibility(View.GONE);
+        else
+            cvType.setVisibility(View.VISIBLE);
+
     }
 
     private void updateUrl(String attribute, String type) {
@@ -68,14 +130,6 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
     }
 
     private void initSort() {
-        rgSort = (RadioGroup) root.findViewById(R.id.filterSortRg);
-
-        rbSortMinPrice = (RadioButton) root.findViewById(R.id.filterSortMinPriceRb);
-        rbSortMostSale = (RadioButton) root.findViewById(R.id.filterSortMostSaleRb);
-        rbSortMostPrice = (RadioButton) root.findViewById(R.id.filterSortMostPriceRb);
-        rbSortMostRate = (RadioButton) root.findViewById(R.id.filterSortRateMostRb);
-        rbSortMinRate = (RadioButton) root.findViewById(R.id.filterSortMinRateRb);
-
         rgSort.setOnCheckedChangeListener(this);
     }
 
@@ -87,8 +141,6 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
     }
 
     private void initPriceRange() {
-        sbPrice = (SeekBar) root.findViewById(R.id.filterPriceSeekBar);
-
         sbPrice.setOnSeekBarChangeListener(this);
     }
 
@@ -107,10 +159,6 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
     }
 
     private void initHotelType() {
-        cbTypeApartement = (CheckBox) root.findViewById(R.id.filterTypeApartementCb);
-        cbTypeHotel = (CheckBox) root.findViewById(R.id.filterTypeHotelCb);
-        cbTypeLocal = (CheckBox) root.findViewById(R.id.filterTypeLocalCb);
-        cbTypeTraditional = (CheckBox) root.findViewById(R.id.filterTypeTraditionalCb);
 
         cbTypeHotel.setOnCheckedChangeListener(this);
         cbTypeLocal.setOnCheckedChangeListener(this);
@@ -126,12 +174,6 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
     }
 
     private void initHotelRate() {
-        cbRateZero = (CheckBox) root.findViewById(R.id.filterRate0StarCb);
-        cbRateOne = (CheckBox) root.findViewById(R.id.filterRate1StarCb);
-        cbRateTwo = (CheckBox) root.findViewById(R.id.filterRate2StarCb);
-        cbRateThree = (CheckBox) root.findViewById(R.id.filterRate3StarCb);
-        cbRateFour = (CheckBox) root.findViewById(R.id.filterRate4StarCb);
-        cbRateFive = (CheckBox) root.findViewById(R.id.filterRate5StarCb);
 
         cbRateZero.setOnCheckedChangeListener(checkedChangeListener);
         cbRateOne.setOnCheckedChangeListener(checkedChangeListener);
@@ -179,6 +221,15 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
         isSort = true;
         isPrice = true;
         isRate = true;
+
+        //handle loading of all relative views
+        initHotelType();
+        initSort();
+        initPriceRange();
+        initHotelRate();
+
+        //updateUi
+        updateUi();
     }
 
     public void enableSort() {
@@ -186,6 +237,9 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
 
         //handle the view loadings here
         initSort();
+
+        //updateUi
+        updateUi();
     }
 
     public void enablePriceRange() {
@@ -193,6 +247,9 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
 
         //handle the view loadings here
         initPriceRange();
+
+        //updateUi
+        updateUi();
     }
 
     public void enablePlaceType() {
@@ -200,6 +257,9 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
 
         //handle the view loadings here
         initHotelType();
+
+        //updateUi
+        updateUi();
     }
 
     public void enablePlaceRate() {
@@ -207,5 +267,8 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
 
         //handle the view Loadings here
         initHotelRate();
+
+        //updateUi
+        updateUi();
     }
 }
