@@ -48,11 +48,6 @@ public abstract class StandardActivity extends AppCompatActivity {
         TypedArray a = obtainStyledAttributes(R.style.StandardText, attrs);
         String fontPath = a.getString(0);
         a.recycle();
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath(fontPath)
-                .setFontAttrId(R.attr.fontPath)
-                .build()
-        );
 
         localeUtils.setLocale(new Locale("fa"));
         localeUtils.updateConfig((Application) getApplicationContext(), getBaseContext().getResources().getConfiguration());

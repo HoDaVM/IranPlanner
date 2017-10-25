@@ -70,7 +70,6 @@ public class MapFullActivity extends StandardActivity implements OnMapReadyCallb
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
     }
 
     @Override

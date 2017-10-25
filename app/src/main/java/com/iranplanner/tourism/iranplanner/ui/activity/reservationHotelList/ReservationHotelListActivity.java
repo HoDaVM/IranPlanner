@@ -13,7 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,8 +22,9 @@ import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.RecyclerItemOnClickListener;
 import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.standard.DataTransferInterface;
+import com.iranplanner.tourism.iranplanner.ui.activity.FilterMap;
+import com.iranplanner.tourism.iranplanner.ui.activity.StandardMap;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
-import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.ShowAttractionListMoreActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelDetails.ReservationHotelDetailActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelReservationListOfCity.ReservationContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelReservationListOfCity.ReservationPresenter;
@@ -75,12 +75,12 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
     @InjectView(R.id.txtDurationHotel)
     TextView txtDurationHotel;
     private String nextOffset;
-    private String todayDate , cityName;
+    private String todayDate, cityName;
 
     private Toolbar toolbar;
 
     //Added by Amin
-    private View filterToggle, mapToggle, filterView, filterShade, bottomPanelView;
+    private View filterToggle, mapToggle, filterView, filterShade, bottomPanelView, reservationMapToggleView;
     private boolean isViewOpen = false;
 
     @Override
@@ -90,6 +90,8 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
 
         Log.e(TAG, "this is reservation hotel list activity ");
 
+
+        //تهران
         ButterKnife.inject(this);
         DaggerReservationHotelListComponent.builder()
                 .netComponent(((App) getApplicationContext()).getNetComponent())
@@ -144,10 +146,13 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
         bottomPanelView = findViewById(R.id.reservationBottomPanelView);
         filterView = findViewById(R.id.reservationFilterView);
         filterToggle = findViewById(R.id.reservationFilterToggleView);
+        reservationMapToggleView = findViewById(R.id.reservationMapToggleView);
+
         filterShade = findViewById(R.id.reservationPanelShadeView);
 
         mapToggle.setOnClickListener(this);
         filterToggle.setOnClickListener(this);
+        reservationMapToggleView.setOnClickListener(this);
         filterView.setOnClickListener(this);
         filterShade.setOnClickListener(this);
         bottomPanelView.setOnClickListener(this);
@@ -305,11 +310,29 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
                 Log.e("ddd", "toolbarback");
                 break;
             case R.id.reservationMapToggleView:
+                Intent intent = new Intent(this, FilterMap.class);
 
+//                resultLodgings = (List<ResultLodging>) extras.getSerializable("resultLodgings");
+//                startOfTravel = (Date) extras.getSerializable("startOfTravel");
+//
+//                durationTravel = (int) extras.getSerializable("durationTravel");
+//                nextOffset = extras.getString("nextOffset");
+//                todayDate = extras.getString("todayDate");
+//                cityName = extras.getString("cityName");
+                intent.putExtra("resultLodgings", (Serializable) resultLodgings);
+                long time = System.currentTimeMillis();
+                Date startOfTravel = new Date(time);
+                intent.putExtra("nextOffset", "0");
+                intent.putExtra("startOfTravel", startOfTravel);
+                intent.putExtra("durationTravel", 3);
+                intent.putExtra("todayDate", todayDate);
+                intent.putExtra("cityName", cityName);
+                startActivity(intent);
                 break;
             case R.id.reservationFilterToggleView:
                 togglePanel();
                 break;
+
             case R.id.reservationFilterView:
 
                 break;

@@ -9,6 +9,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.multidex.MultiDexApplication;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
@@ -37,7 +38,7 @@ import static android.content.ContentValues.TAG;
 /**
  * Created by Hoda
  */
-public class App extends Application {
+public class App extends MultiDexApplication {
     private NetComponent mNetComponent;
     private NetComponent googleNetComponent;
     public FirebaseAnalytics mFirebaseAnalytics;

@@ -64,6 +64,7 @@
         <activity
             android:name=".ui.activity.confirmHotelReservation.ActivityHotelReservationConfirm"
             android:screenOrientation="portrait" />
+        <activity android:name=".ui.activity.MapsActivity" />
         <activity
             android:name=".ui.activity.editprofile.EditProfileActivity"
             android:screenOrientation="portrait" />
@@ -92,6 +93,12 @@
         <activity
             android:name=".ui.activity.moreItemItinerary.MoreItemItineraryActivity"
             android:label="@string/title_activity_maps"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.StandardMap"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.FilterMap"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.MapFullActivity"
