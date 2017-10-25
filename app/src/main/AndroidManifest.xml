@@ -158,7 +158,9 @@
         <activity android:name=".ui.tutorial.TutorialActivity" />
         <activity android:name=".ui.navigationDrawer.ContactUsActivity" />
         <activity android:name=".ui.navigationDrawer.AboutUsActivity" />
-        <activity android:name=".ui.activity.forgetPassword.ForgetPasswordActivity"></activity>
+        <activity android:name=".ui.activity.forgetPassword.ForgetPasswordActivity" />
+        <activity android:name=".ui.activity.customJourney.CustomJourney" />
+        <activity android:name=".ui.activity.customJourney.CreateCustomJourney"></activity>
     </application>
 
 </manifest>
