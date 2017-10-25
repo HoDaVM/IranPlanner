@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -230,8 +231,27 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
 
         adapter = new ReseveHotelListAdapter(FilterMap.this, this, resultLodgings, getApplicationContext(), R.layout.fragment_itinerary_item);
         recyclerView.setAdapter(adapter);
-        SnapHelper snapHelper = new LinearSnapHelper();
+        final SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                    View centerView = snapHelper.findSnapView(horizontalLayoutManagaer);
+                    int position = horizontalLayoutManagaer.getPosition(centerView);
+
+                    showMarkers(markerPoints);
+                    mMap.addMarker(new MarkerOptions().position(markerPoints.get(position))
+                            .title(markerNames.get(position)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_logo_pink)));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(position)));
+
+                }
+            }
+        });
+
         recyclerView.addOnItemTouchListener(new RecyclerItemOnClickListener(getApplicationContext(), new RecyclerItemOnClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, final int position) {
