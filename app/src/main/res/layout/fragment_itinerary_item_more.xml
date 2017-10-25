@@ -29,13 +29,14 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/actionBarSize"
                 android:src="@drawable/dark_shadow_top" />
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/dark_shadow" />
+                android:layout_height="@dimen/bottomShadow"
+                android:src="@drawable/dark_shadow"
+                />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"

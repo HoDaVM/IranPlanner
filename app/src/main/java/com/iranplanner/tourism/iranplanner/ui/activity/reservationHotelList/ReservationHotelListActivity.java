@@ -377,7 +377,7 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
             adapter.notifyDataSetChanged();
 //            waitingLoading.setVisibility(View.INVISIBLE);
             nextOffset = resultLodgingList.getStatistics().getOffsetNext().toString();
-            loading = false;
+            loading = true;
 
         }
     }

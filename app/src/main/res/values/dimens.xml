@@ -27,6 +27,7 @@
     <dimen name="home_hotel_cat_height">100dp</dimen>
     <dimen name="home_photo_height">300dp</dimen>
     <dimen name="height20">20dp</dimen>
+    <dimen name="bottomShadow">100dp</dimen>
 
     <dimen name="tutorial_dot_size">12dp</dimen>
 
