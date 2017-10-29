@@ -235,6 +235,18 @@ public class ResultRoom implements Serializable {
     @Expose
     private String lodgingRoomPrice;
 
+    @SerializedName("room_img_url")
+    @Expose
+    private String imageUrl;
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public String getRoomTitle() {
         return roomTitle;
     }

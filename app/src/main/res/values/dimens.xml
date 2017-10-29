@@ -30,5 +30,6 @@
     <dimen name="bottomShadow">100dp</dimen>
 
     <dimen name="tutorial_dot_size">12dp</dimen>
+    <dimen name="filter_view_height">350dp</dimen>
 
 </resources>

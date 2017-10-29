@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -160,7 +162,7 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
         filterShade.setAlpha(0);
         filterShade.setVisibility(View.GONE);
 
-        filterView.setY(Util.dpToPx(this, 300));
+        filterView.setY(Util.dpToPx(this, (int) getResources().getDimension(R.dimen.filter_view_height)));
     }
 
     private void togglePanel() {
@@ -172,10 +174,12 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
     }
 
     private void openFilterView() {
+        Interpolator interpolator = new AccelerateInterpolator();
+
         filterToggle.setOnClickListener(null);
 
-        filterView.animate().translationYBy(-Util.dpToPx(this, 300)).setDuration(300).start();
-        bottomPanelView.animate().translationYBy(-Util.dpToPx(this, 300)).setDuration(300).start();
+        filterView.animate().setInterpolator(interpolator).translationYBy(-Util.dpToPx(this, (int) getResources().getDimension(R.dimen.filter_view_height))).setDuration(300).start();
+        bottomPanelView.animate().setInterpolator(interpolator).translationYBy(-Util.dpToPx(this, 350)).setDuration(300).start();
         filterShade.setVisibility(View.VISIBLE);
         filterShade.animate().alpha(0.7f).setDuration(300).start();
 
@@ -189,11 +193,14 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
     }
 
     private void closeFilterView() {
+
+        Interpolator interpolator = new AccelerateInterpolator();
+
         filterToggle.setOnClickListener(null);
         isViewOpen = false;
 
-        filterView.animate().translationYBy(Util.dpToPx(this, 300)).setDuration(300).start();
-        bottomPanelView.animate().translationYBy(Util.dpToPx(this, 300)).setDuration(300).start();
+        filterView.animate().setInterpolator(interpolator).translationYBy(Util.dpToPx(this, (int) getResources().getDimension(R.dimen.filter_view_height))).setDuration(300).start();
+        bottomPanelView.animate().setInterpolator(interpolator).translationYBy(Util.dpToPx(this, 350)).setDuration(300).start();
         filterShade.animate().alpha(0).setDuration(300).start();
 
         new Handler().postDelayed(new Runnable() {

@@ -120,7 +120,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
-        android:background="#000"/>
+        android:background="#000" />
 
 
     <!--This Section is Used for the Bottom Panel -->
@@ -146,7 +146,8 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:src="@drawable/ic_folded_paper"
-                android:tint="@color/blue" />
+                android:tint="@color/blue"
+                android:visibility="gone" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -174,7 +175,8 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:src="@drawable/ic_folded_paper"
-                android:tint="@color/blue" />
+                android:tint="@color/blue"
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
     <!--End of Bottom Panel Section-->
@@ -182,7 +184,7 @@
     <RelativeLayout
         android:id="@+id/reservationFilterView"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="@dimen/filter_view_height"
         android:layout_alignParentBottom="true"
         android:background="#f2f2f2">
 
