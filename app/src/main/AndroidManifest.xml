@@ -98,7 +98,7 @@
             android:name=".ui.activity.StandardMap"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.FilterMap"
+            android:name=".ui.activity.filterMap.FilterMap"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.MapFullActivity"

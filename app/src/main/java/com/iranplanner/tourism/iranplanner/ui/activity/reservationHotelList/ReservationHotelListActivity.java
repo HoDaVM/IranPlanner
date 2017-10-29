@@ -22,8 +22,7 @@ import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.RecyclerItemOnClickListener;
 import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.standard.DataTransferInterface;
-import com.iranplanner.tourism.iranplanner.ui.activity.FilterMap;
-import com.iranplanner.tourism.iranplanner.ui.activity.StandardMap;
+import com.iranplanner.tourism.iranplanner.ui.activity.filterMap.FilterMap;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelDetails.ReservationHotelDetailActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelReservationListOfCity.ReservationContract;
@@ -356,14 +355,6 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
                 break;
             case R.id.reservationMapToggleView:
                 Intent intent = new Intent(this, FilterMap.class);
-
-//                resultLodgings = (List<ResultLodging>) extras.getSerializable("resultLodgings");
-//                startOfTravel = (Date) extras.getSerializable("startOfTravel");
-//
-//                durationTravel = (int) extras.getSerializable("durationTravel");
-//                nextOffset = extras.getString("nextOffset");
-//                todayDate = extras.getString("todayDate");
-//                cityName = extras.getString("cityName");
                 intent.putExtra("resultLodgings", (Serializable) resultLodgings);
                 long time = System.currentTimeMillis();
                 Date startOfTravel = new Date(time);
