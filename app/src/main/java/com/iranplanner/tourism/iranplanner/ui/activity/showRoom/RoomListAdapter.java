@@ -7,9 +7,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.coinpany.core.android.widget.Utils;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.standard.DataTransferInterface;
@@ -31,11 +33,13 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
     private DataTransferInterface dtInterface;
     private LayoutInflater inflater;
     private List<entity.ResultRoom> ResultRoom;
+    private Activity activity;
 
 
     public RoomListAdapter(Activity activity, DataTransferInterface dtInterface, List<ResultRoom> ResultRoom) {
         this.ResultRoom = ResultRoom;
         this.dtInterface = dtInterface;
+        this.activity = activity;
         inflater = LayoutInflater.from(activity);
     }
 
@@ -107,6 +111,8 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
         String roomPriceTitleString = formatter.format(roomPriceTitle);
         String roomPriceTitleStringFinal = "قیمت به ازای هرشب :" + roomPriceTitleString + "تومان ";
         viewHolder.tvPriceTitle.setText(Util.persianNumbers(roomPriceTitleStringFinal));
+
+        Glide.with(activity).load(ResultRoom.get(position).getImageUrl()).placeholder(R.drawable.ic_logotype_white).into(viewHolder.ivRoomImg);
     }
 
     @Override
@@ -153,6 +159,8 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
         TextView tvNumberRoom;
         @InjectView(R.id.priceTitle)
         TextView tvPriceTitle;
+        @InjectView(R.id.imgHotelList)
+        ImageView ivRoomImg;
 
         public ViewHolder(View view) {
             super(view);

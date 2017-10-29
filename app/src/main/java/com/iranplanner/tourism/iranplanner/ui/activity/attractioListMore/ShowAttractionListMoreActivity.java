@@ -143,7 +143,7 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
         filterShade.setAlpha(0);
         filterShade.setVisibility(View.GONE);
 
-        filterView.setY(Util.dpToPx(this, 300));
+        filterView.setY(Util.dpToPx(this, (int) getResources().getDimension(R.dimen.filter_view_height)));
         setToolbar();
 
         FilterManager filterManager = new FilterManager(findViewById(R.id.attractionFilterView));
@@ -164,8 +164,8 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
     private void openFilterView() {
         filterToggle.setOnClickListener(null);
 
-        filterView.animate().translationYBy(-Util.dpToPx(this, 300)).setDuration(300).start();
-        bottomPanelView.animate().translationYBy(-Util.dpToPx(this, 300)).setDuration(300).start();
+        filterView.animate().translationYBy(-Util.dpToPx(this, (int) getResources().getDimension(R.dimen.filter_view_height))).setDuration(300).start();
+        bottomPanelView.animate().translationYBy(-Util.dpToPx(this, 350)).setDuration(300).start();
         filterShade.setVisibility(View.VISIBLE);
         filterShade.animate().alpha(0.7f).setDuration(300).start();
 
@@ -182,8 +182,8 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
         filterToggle.setOnClickListener(null);
         isViewOpen = false;
 
-        filterView.animate().translationYBy(Util.dpToPx(this, 300)).setDuration(300).start();
-        bottomPanelView.animate().translationYBy(Util.dpToPx(this, 300)).setDuration(300).start();
+        filterView.animate().translationYBy(Util.dpToPx(this, (int) getResources().getDimension(R.dimen.filter_view_height))).setDuration(300).start();
+        bottomPanelView.animate().translationYBy(Util.dpToPx(this, 350)).setDuration(300).start();
         filterShade.animate().alpha(0).setDuration(300).start();
 
         new Handler().postDelayed(new Runnable() {
