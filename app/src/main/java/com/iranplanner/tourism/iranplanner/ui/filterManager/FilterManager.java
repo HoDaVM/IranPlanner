@@ -25,6 +25,7 @@ import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.Rese
 
 import java.util.HashMap;
 
+import tools.Constants;
 import tools.Util;
 
 /**
@@ -58,15 +59,43 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
     private RangeSeekBar sbPrice;
 
     //Views corresponding with the Hotel Type Filter
-    private CheckBox cbTypeHotel, cbTypeApartement, cbTypeLocal, cbTypeTraditional;
+    private CheckBox cbTypeHotel, cbTypeApartment, cbTypeLocal, cbTypeTraditional;
+    private String hotel = "1";
+    private String apartment = "1";
+    private String local = "1";
+    private String traditional = "1";
 
     //Views corresponding with the Hotel Rate Filter
     private CheckBox cbRateZero, cbRateOne, cbRateTwo, cbRateThree, cbRateFour, cbRateFive;
+    private String zero = "1";
+    private String one = "1";
+    private String two = "1";
+    private String three = "1";
+    private String four = "1";
+    private String five = "1";
 
     private View filterToggle, filterView, filterShade, bottomPanelView;
     private boolean isViewOpen = false;
 
     private FilterListener listener;
+
+    //set a default value for order
+    private String order = Constants.MINPRICE;
+
+    //HashMap Constants
+    public static final String KEY_ORDER = "order";
+
+    public static final String KEY_HOTEL = "hotel";
+    public static final String KEY_APARTEMENT_HOTEL = "apartment";
+    public static final String KEY_LOCAL_HOTEL = "local";
+    public static final String KEY_TRADITIONAL_HOTEL = "traditional";
+
+    public static final String KEY_RATE_ZERO = "zero";
+    public static final String KEY_RATE_ONE = "one";
+    public static final String KEY_RATE_TWO = "two";
+    public static final String KEY_RATE_THREE = "three";
+    public static final String KEY_RATE_FOUR = "four";
+    public static final String KEY_RATE_FIVE = "five";
 
     public FilterManager(Activity activity, View root) {
         this.root = root;
@@ -120,7 +149,7 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
 
         sbPrice = (RangeSeekBar) root.findViewById(R.id.filterPriceSeekBar);
 
-        cbTypeApartement = (CheckBox) root.findViewById(R.id.filterTypeApartementCb);
+        cbTypeApartment = (CheckBox) root.findViewById(R.id.filterTypeApartementCb);
         cbTypeHotel = (CheckBox) root.findViewById(R.id.filterTypeHotelCb);
         cbTypeLocal = (CheckBox) root.findViewById(R.id.filterTypeLocalCb);
         cbTypeTraditional = (CheckBox) root.findViewById(R.id.filterTypeTraditionalCb);
@@ -157,9 +186,24 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
     }
 
     private void updateDataSet() {
-        HashMap hashMap = new HashMap<>();
+        HashMap<String, String> hashMap = new HashMap<>();
 
-//        hashMap.put()
+        hashMap.put(KEY_ORDER, order);
+
+        hashMap.put(KEY_HOTEL, hotel);
+        hashMap.put(KEY_APARTEMENT_HOTEL, apartment);
+        hashMap.put(KEY_LOCAL_HOTEL, local);
+        hashMap.put(KEY_TRADITIONAL_HOTEL, traditional);
+
+        hashMap.put(KEY_RATE_ZERO, zero);
+        hashMap.put(KEY_RATE_ONE, one);
+        hashMap.put(KEY_RATE_TWO, two);
+        hashMap.put(KEY_RATE_THREE, three);
+        hashMap.put(KEY_RATE_FOUR, four);
+        hashMap.put(KEY_RATE_FIVE, five);
+
+        if (listener != null)
+            listener.onDataChanged(hashMap);
 
     }
 
@@ -170,8 +214,24 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
     //// TODO: 9/19/17 call the update adapter method here
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
-        RadioButton radioButton = (RadioButton) root.findViewById(radioGroup.getCheckedRadioButtonId());
-        Log.e(TAG, String.valueOf(radioButton.getText()));
+        switch (i) {
+            case R.id.filterSortMostSaleRb:
+                order = Constants.MAXDISCOUNT;
+                break;
+            case R.id.filterSortMinPriceRb:
+                order = Constants.MINPRICE;
+                break;
+            case R.id.filterSortMostPriceRb:
+                order = Constants.MAXPRICE;
+                break;
+            case R.id.filterSortRateMostRb:
+                order = Constants.MAXRATE;
+                break;
+            case R.id.filterSortMinRateRb:
+                order = Constants.MINRATE;
+                break;
+        }
+        updateDataSet();
     }
 
     private void initPriceRange() {
@@ -196,15 +256,32 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
 
         cbTypeHotel.setOnCheckedChangeListener(this);
         cbTypeLocal.setOnCheckedChangeListener(this);
-        cbTypeApartement.setOnCheckedChangeListener(this);
+        cbTypeApartment.setOnCheckedChangeListener(this);
         cbTypeTraditional.setOnCheckedChangeListener(this);
     }
 
     //// TODO: 9/19/17 call the update adapter method here
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        // boolean b can be used to indicate if button is checked or not USEFUL crap
-        Log.e(TAG, String.valueOf(compoundButton.getText()) + b);
+        switch (compoundButton.getId()) {
+            case R.id.filterTypeHotelCb:
+                if (b) hotel = "1";
+                else hotel = "0";
+                break;
+            case R.id.filterTypeApartementCb:
+                if (b) apartment = "1";
+                else apartment = "0";
+                break;
+            case R.id.filterTypeLocalCb:
+                if (b) local = "1";
+                else local = "0";
+                break;
+            case R.id.filterTypeTraditionalCb:
+                if (b) traditional = "1";
+                else traditional = "0";
+                break;
+        }
+        updateDataSet();
     }
 
     private void initHotelRate() {
@@ -221,8 +298,33 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
         //// TODO: 9/19/17 call the update adapter method here
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-            // boolean b can be used to indicate if button is checked or not USEFUL crap
-            Log.e(TAG, String.valueOf(compoundButton.getText()) + b);
+            switch (compoundButton.getId()) {
+                case R.id.filterRate5StarCb:
+                    if (b) five = "1";
+                    else five = "0";
+                    break;
+                case R.id.filterRate4StarCb:
+                    if (b) four = "1";
+                    else four = "0";
+                    break;
+                case R.id.filterRate3StarCb:
+                    if (b) three = "1";
+                    else three = "0";
+                    break;
+                case R.id.filterRate2StarCb:
+                    if (b) two = "1";
+                    else two = "0";
+                    break;
+                case R.id.filterRate1StarCb:
+                    if (b) one = "1";
+                    else one = "0";
+                    break;
+                case R.id.filterRate0StarCb:
+                    if (b) zero = "1";
+                    else zero = "0";
+                    break;
+            }
+            updateDataSet();
         }
     };
 

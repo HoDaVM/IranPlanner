@@ -51,6 +51,7 @@
                         style="@style/StandardText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="true"
                         android:text="بیشترین تخفیف" />
 
                     <RadioButton
@@ -111,10 +112,11 @@
                     android:id="@+id/filterPriceSeekBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:barHeight="1dp"
-                    android:layout_margin="10dp" />
+                    android:layout_margin="10dp"
+                    app:barHeight="1dp" />
 
             </RelativeLayout>
+
         </android.support.v7.widget.CardView>
 
         <!-- Staying Place Type -->
@@ -125,6 +127,7 @@
             android:layout_height="match_parent"
             app:cardCornerRadius="10dp"
             app:cardUseCompatPadding="true">
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -144,6 +147,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_standard"
+                    android:checked="true"
                     android:src="@mipmap/ic_checked_blue"
                     android:text="هتل" />
 
@@ -152,6 +156,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_standard"
+                    android:checked="true"
                     android:src="@mipmap/ic_checked_blue"
                     android:text="هتل آپارتمان" />
 
@@ -160,6 +165,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_standard"
+                    android:checked="true"
                     android:src="@mipmap/ic_checked_blue"
                     android:text="اقامتگاه بومگردی" />
 
@@ -168,9 +174,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_standard"
+                    android:checked="true"
                     android:src="@mipmap/ic_checked_blue"
                     android:text="هتل سنتی" />
             </LinearLayout>
+
         </android.support.v7.widget.CardView>
 
         <!-- Staying Place Rate -->
@@ -200,6 +208,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_standard"
+                    android:checked="true"
                     android:src="@mipmap/ic_checked_blue"
                     android:text="پنج ستاره" />
 
@@ -208,6 +217,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_standard"
+                    android:checked="true"
                     android:src="@mipmap/ic_checked_blue"
                     android:text="چهار ستاره" />
 
@@ -216,6 +226,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_standard"
+                    android:checked="true"
                     android:src="@mipmap/ic_checked_blue"
                     android:text="سه ستاره" />
 
@@ -224,6 +235,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_standard"
+                    android:checked="true"
                     android:src="@mipmap/ic_checked_blue"
                     android:text="دو ستاره" />
 
@@ -232,6 +244,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_standard"
+                    android:checked="true"
                     android:src="@mipmap/ic_checked_blue"
                     android:text="یک ستاره" />
 
@@ -240,6 +253,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_standard"
+                    android:checked="true"
                     android:src="@mipmap/ic_checked_blue"
                     android:text="بدون ستاره" />
 

@@ -20,8 +20,8 @@ public final class Constants {
     public static final String hotelCode = "147";
     public static final String hotelApartmentCode = "3762";
     public static final String hotelboomgardiCode = "3795";
-    public static final String hotelSonnatiCode = "3794";
-    public static final String hotelTraditionalCode = "148";
+    public static final String hotelSonnatiCode = "";
+    public static final String hotelTraditionalCode = "3794";
     public static final String attractionRelegonCode = "2930";
     public static final String attractionNaturalCode = "2931";
     public static final String attractionHistoricalCode = "2932";

@@ -10,6 +10,6 @@ import java.util.HashMap;
 
 public interface FilterListener {
 
-    void onDataChanged(HashMap hashMap);
+    void onDataChanged(HashMap<String, String> hashMap);
 
 }

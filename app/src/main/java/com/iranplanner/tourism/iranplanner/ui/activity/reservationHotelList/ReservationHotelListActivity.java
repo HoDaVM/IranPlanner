@@ -29,11 +29,13 @@ import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelDetails.ReservationHotelDetailActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelReservationListOfCity.ReservationContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelReservationListOfCity.ReservationPresenter;
+import com.iranplanner.tourism.iranplanner.ui.filterManager.FilterListener;
 import com.iranplanner.tourism.iranplanner.ui.filterManager.FilterManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -52,7 +54,7 @@ import tools.Util;
  * Created by h.vahidimehr on 21/02/2017.
  */
 
-public class ReservationHotelListActivity extends StandardActivity implements DataTransferInterface, ReservationHotelListContract.View, View.OnClickListener, ReservationContract.View {
+public class ReservationHotelListActivity extends StandardActivity implements DataTransferInterface, ReservationHotelListContract.View, View.OnClickListener, ReservationContract.View, FilterListener {
     @Inject
     ReservationPresenter reservationPresenter;
     @Inject
@@ -86,6 +88,8 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
 
     private FilterManager filterManager;
 
+    private String cityId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,12 +113,32 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
 
         findViewById(R.id.mapToggleView).setOnClickListener(this);
 
-        //tempo code is here dude watch out
         filterManager = new FilterManager(this, findViewById(R.id.container));
+        filterManager.setListener(this);
         filterManager.enableSort();
-        filterManager.enablePriceRange();
         filterManager.enablePlaceType();
         filterManager.enablePlaceRate();
+    }
+
+    @Override
+    public void onDataChanged(HashMap<String, String> hashMap) {
+
+        order = hashMap.get(FilterManager.KEY_ORDER);
+
+        rate0 = hashMap.get(FilterManager.KEY_RATE_ZERO);
+        rate1 = hashMap.get(FilterManager.KEY_RATE_ONE);
+        rate2 = hashMap.get(FilterManager.KEY_RATE_TWO);
+        rate3 = hashMap.get(FilterManager.KEY_RATE_THREE);
+        rate4 = hashMap.get(FilterManager.KEY_RATE_FOUR);
+        rate5 = hashMap.get(FilterManager.KEY_RATE_FIVE);
+
+        typeHotel = hashMap.get(FilterManager.KEY_HOTEL);
+        typeApartment = hashMap.get(FilterManager.KEY_APARTEMENT_HOTEL);
+        typeLocalhost = hashMap.get(FilterManager.KEY_LOCAL_HOTEL);
+        typeTraditional = hashMap.get(FilterManager.KEY_TRADITIONAL_HOTEL);
+
+        reservationHotelListPresenter.getHotelFilter("list", cityId, "20", "0", type, order, rate0, rate1, rate2, rate3, rate4, rate5, typeHotel, typeLocalhost, typeTraditional, typeApartment, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+
     }
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -148,6 +172,9 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
         nextOffset = extras.getString("nextOffset");
         todayDate = extras.getString("todayDate");
         cityName = extras.getString("cityName");
+
+        cityId = resultLodgings.get(0).getLodgingCityId();
+
         if (resultLodgings.size() > 0) {
             type = resultLodgings.get(0).getLodginTypeId();
         } else {
@@ -302,13 +329,13 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
     public void showLodgingList(ResultLodgingList resultLodgingList) {
         loading = true;
         List<ResultLodging> jj = resultLodgingList.getResultLodging();
-        if (!nextOffset.equals(resultLodgingList.getStatistics().getOffsetNext().toString())) {
+
+        if (!nextOffset.equals(resultLodgingList.getStatistics().getOffsetNext())) {
             resultLodgings.addAll(jj);
             adapter.notifyDataSetChanged();
-//            waitingLoading.setVisibility(View.INVISIBLE);
             nextOffset = resultLodgingList.getStatistics().getOffsetNext().toString();
             loading = true;
-
+        } else {
         }
     }
 
@@ -327,7 +354,7 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
 
     @Override
     public void showError(String message) {
-
+        Log.e(TAG, message);
     }
 
     @Override
@@ -346,18 +373,16 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
         Log.e("lodgingList", "filter");
         loading = true;
         List<ResultLodging> jj = resultLodgingList.getResultLodging();
-        if (!nextOffset.equals(resultLodgingList.getStatistics().getOffsetNext().toString())) {
-            if (filter.equals("filter")) {
-                resultLodgings.clear();
-            }
-
-            resultLodgings.addAll(jj);
-            adapter.notifyDataSetChanged();
-//            waitingLoading.setVisibility(View.INVISIBLE);
-            nextOffset = resultLodgingList.getStatistics().getOffsetNext().toString();
-            loading = true;
-
+//        if (!nextOffset.equals(resultLodgingList.getStatistics().getOffsetNext().toString())) {
+        if (filter.equals("filter")) {
+            resultLodgings.clear();
         }
+
+        resultLodgings.addAll(jj);
+        adapter.notifyDataSetChanged();
+        nextOffset = resultLodgingList.getStatistics().getOffsetNext().toString();
+        loading = true;
+//        }
 
     }
 
@@ -365,4 +390,5 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
     public void dismissProgress() {
         Util.dismissProgress(progressDialog);
     }
+
 }
