@@ -116,7 +116,7 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
 
         getExtras();
         txtDurationHotel.setText(" به مدت " + Util.persianNumbers(durationTravel + " شب "));
-        txtTypeHotel.setText("از " + Utils.getSimpleDate(startOfTravel));
+        txtTypeHotel.setText("از " + Util.persianNumbers(Utils.getSimpleDate(startOfTravel)));
 
         setUpRecyclerView();
         setupToolbar();
@@ -330,7 +330,7 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
             @Override
             public void finish(Date result) {
                 startOfTravel = result;
-                txtTypeHotel.setText("از " + Utils.getSimpleDate(result));
+                txtTypeHotel.setText("از " +Util.persianNumbers( Utils.getSimpleDate(result)));
             }
         });
     }

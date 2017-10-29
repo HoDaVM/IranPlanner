@@ -20,7 +20,9 @@
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
             <ImageView
                 android:id="@+id/imgItineraryListMore"
                 android:layout_width="match_parent"
@@ -32,12 +34,6 @@
                 android:layout_height="@dimen/actionBarSize"
                 android:src="@drawable/dark_shadow_top" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/bottomShadow"
-                android:src="@drawable/dark_shadow"
-                />
-
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -46,6 +42,14 @@
                 app:layout_collapseMode="pin"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="match_parent"
+                android:layout_height="105dp"
+                android:src="@drawable/dark_shadow"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true" />
+</RelativeLayout>
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>

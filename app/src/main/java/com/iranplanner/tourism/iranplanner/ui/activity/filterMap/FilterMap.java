@@ -196,7 +196,7 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
         markers = new ArrayList<>();
         int i = 0;
         for (LatLng latLng : points) {
-            Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerNames.get(i)));
+            Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerNames.get(i)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_point_pink)));
             markers.add(marker);
             i++;
         }
@@ -262,9 +262,13 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
                     int position = horizontalLayoutManagaer.getPosition(centerView);
 
                     showMarkers(markerPoints);
+
                     mMap.addMarker(new MarkerOptions().position(markerPoints.get(position))
-                            .title(markerNames.get(position)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_logo_pink)));
+                            .title(markerNames.get(position)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_blue_pin)));
+
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(position)));
+                    CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
+                    mMap.animateCamera(zoom);
 
                 }
             }
@@ -315,7 +319,7 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
             if (resultLodging.getLodgingName().equals(marker.getTitle())) {
                 showMarkers(markerPoints);
                 mMap.addMarker(new MarkerOptions().position(markerPoints.get(c))
-                        .title(markerNames.get(c)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_logo_pink)));
+                        .title(markerNames.get(c)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_blue_pin)));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(c)));
                 Log.e("marker", marker.getTitle());
                 position = c;
