@@ -44,6 +44,7 @@ import butterknife.InjectView;
 import entity.ResultLodging;
 import entity.ResultLodgingHotel;
 import entity.ResultLodgingList;
+import tools.Constants;
 import tools.CustomDialogDate;
 import tools.CustomDialogNumberPicker;
 import tools.Util;
@@ -78,6 +79,20 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
     TextView txtDurationHotel;
     private String nextOffset;
     private String todayDate, cityName;
+
+    private String ORDER;
+    private String rate0;
+    private String rate1;
+    private String rate2;
+    private String rate3;
+    private String rate4;
+    private String rate5;
+
+    private String typeHotel;
+    private String typeLocalhost;
+    private String typeTraditional;
+    private String typeApartment;
+    private String type;
 
     private Toolbar toolbar;
 
@@ -163,6 +178,7 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
         filterShade.setVisibility(View.GONE);
 
         filterView.setY(Util.dpToPx(this, (int) getResources().getDimension(R.dimen.filter_view_height)));
+
     }
 
     private void togglePanel() {
@@ -222,6 +238,31 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
         nextOffset = extras.getString("nextOffset");
         todayDate = extras.getString("todayDate");
         cityName = extras.getString("cityName");
+        if (resultLodgings.size() > 0) {
+            type = resultLodgings.get(0).getLodginTypeId();
+        } else {
+            type = "";
+        }
+
+
+        ORDER = "";
+        rate0 = "";
+        rate1 = "";
+        rate2 = "";
+        rate3 = "";
+        rate4 = "";
+        rate5 = "";
+        if (type.equals(Constants.hotelCode)) {
+            typeHotel = "1";
+        } else if (type.equals(Constants.hotelApartmentCode)) {
+            typeApartment = "1";
+        } else if (type.equals(Constants.hotelboomgardiCode)) {
+            typeLocalhost = "1";
+        } else if (type.equals(Constants.hotelSonnatiCode)) {
+            typeTraditional = "1";
+        }
+        type = "";
+
 
     }
 
@@ -240,6 +281,7 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
 //                showProgressDialog();
                 String offset = "0";
                 reservationHotelListPresenter.getHotelReserve("full", String.valueOf(resultLodgings.get(position).getLodgingId()), "20", offset, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+//               reservationHotelListPresenter.getHotelFilter("list", String.valueOf(resultLodgings.get(0).getLodgingCityId()), "20", offset, type, ORDER, rate0, rate1, rate2, rate3, rate4, rate5, typeHotel, typeLocalhost, typeTraditional, typeApartment,  Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
 
             }
         }));
@@ -254,7 +296,10 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
 
                     if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                         loading = false;
-                        reservationPresenter.getLodgingList("list", String.valueOf(resultLodgings.get(0).getLodgingCityId()), Util.getTokenFromSharedPreferences(getApplicationContext()), "20", nextOffset, Util.getAndroidIdFromSharedPreferences(getApplicationContext()), "");
+
+//                        reservationPresenter.getLodgingList("list", String.valueOf(resultLodgings.get(0).getLodgingCityId()), Util.getTokenFromSharedPreferences(getApplicationContext()), "20", nextOffset, Util.getAndroidIdFromSharedPreferences(getApplicationContext()), "");
+//                        reservationHotelListPresenter.getHotelFilter("list", String.valueOf(resultLodgings.get(0).getLodgingCityId()), "20", nextOffset, "", Constants.MAXPRICE, "1", "1", "1", "1", "", "", "", "", "", "", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                        reservationHotelListPresenter.getHotelFilterONDemandLoading("list", String.valueOf(resultLodgings.get(0).getLodgingCityId()), "20", nextOffset, type, ORDER, rate0, rate1, rate2, rate3, rate4, rate5, typeHotel, typeLocalhost, typeTraditional, typeApartment, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                     }
                 }
             }
@@ -362,18 +407,6 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
         else super.onBackPressed();
     }
 
-    @Override
-    public void showHotelReserveList(ResultLodgingHotel resultLodgingHotel) {
-        if (resultLodgingHotel != null) {
-            ResultLodging resultLodgingHotelDetail = resultLodgingHotel.getResultLodging();
-            Intent intent = new Intent(getApplicationContext(), ReservationHotelDetailActivity.class);
-            intent.putExtra("resultLodgingHotelDetail", (Serializable) resultLodgingHotelDetail);
-            intent.putExtra("startOfTravel", startOfTravel);
-            intent.putExtra("durationTravel", durationTravel);
-            intent.putExtra("todayDate", todayDate);
-            startActivity(intent);
-        }
-    }
 
     @Override
     public void showLodgingList(ResultLodgingList resultLodgingList) {
@@ -390,6 +423,20 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
     }
 
     @Override
+    public void showHotelReserveList(ResultLodgingHotel resultLodgingHotel) {
+        if (resultLodgingHotel != null) {
+            ResultLodging resultLodgingHotelDetail = resultLodgingHotel.getResultLodging();
+            Intent intent = new Intent(getApplicationContext(), ReservationHotelDetailActivity.class);
+            intent.putExtra("resultLodgingHotelDetail", (Serializable) resultLodgingHotelDetail);
+            intent.putExtra("startOfTravel", startOfTravel);
+            intent.putExtra("durationTravel", durationTravel);
+            intent.putExtra("todayDate", todayDate);
+            startActivity(intent);
+        }
+    }
+
+
+    @Override
     public void showError(String message) {
 
     }
@@ -403,6 +450,26 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
     @Override
     public void showProgress() {
         progressDialog = Util.showProgressDialog(getApplicationContext(), "لطفا منتظر بمانید", ReservationHotelListActivity.this);
+    }
+
+    @Override
+    public void showLodgingList(ResultLodgingList resultLodgingList, String filter) {
+        Log.e("lodgingList", "filter");
+        loading = true;
+        List<ResultLodging> jj = resultLodgingList.getResultLodging();
+        if (!nextOffset.equals(resultLodgingList.getStatistics().getOffsetNext().toString())) {
+            if (filter.equals("filter")) {
+                resultLodgings.clear();
+            }
+
+            resultLodgings.addAll(jj);
+            adapter.notifyDataSetChanged();
+//            waitingLoading.setVisibility(View.INVISIBLE);
+            nextOffset = resultLodgingList.getStatistics().getOffsetNext().toString();
+            loading = true;
+
+        }
+
     }
 
     @Override

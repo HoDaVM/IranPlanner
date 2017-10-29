@@ -913,6 +913,11 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
     }
 
     @Override
+    public void showLodgingList(ResultLodgingList resultLodgingList, String filter) {
+
+    }
+
+    @Override
     public void dismissProgress() {
         Util.dismissProgress(progressDialog);
     }

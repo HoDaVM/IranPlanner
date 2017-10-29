@@ -33,7 +33,7 @@ public class ResultLodging implements Serializable {
 
     @SerializedName("lodging_id")
     @Expose
-    private Integer lodgingId;
+    private String lodgingId;
 
 
     @SerializedName("lodging_name")
@@ -53,7 +53,7 @@ public class ResultLodging implements Serializable {
     private String lodgingRateTitle;
     @SerializedName("lodgin_type_id")
     @Expose
-    private Integer lodginTypeId;
+    private String lodginTypeId;
     @SerializedName("lodging_type_title")
     @Expose
     private String lodgingTypeTitle;
@@ -68,16 +68,16 @@ public class ResultLodging implements Serializable {
     private String lodgingCityName;
     @SerializedName("lodging_city_id")
     @Expose
-    private Integer lodgingCityId;
+    private String lodgingCityId;
     @SerializedName("lodging_province_name")
     @Expose
     private String lodgingProvinceName;
     @SerializedName("lodging_province_id")
     @Expose
-    private Integer lodgingProvinceId;
+    private String lodgingProvinceId;
     @SerializedName("lodging_rate_int")
     @Expose
-    private Integer lodgingRateInt;
+    private String lodgingRateInt;
     @SerializedName("lodging_facility")
     @Expose
     private List<LodgingFacility> lodgingFacility = null;
@@ -93,11 +93,11 @@ public class ResultLodging implements Serializable {
 
     private LodgingRoomPriceRuleDetail lodgingRoomPriceRuleDetail;
 
-    public Integer getLodgingId() {
+    public String getLodgingId() {
         return lodgingId;
     }
 
-    public void setLodgingId(Integer lodgingId) {
+    public void setLodgingId(String lodgingId) {
         this.lodgingId = lodgingId;
     }
 
@@ -141,11 +141,11 @@ public class ResultLodging implements Serializable {
         this.lodgingRateTitle = lodgingRateTitle;
     }
 
-    public Integer getLodginTypeId() {
+    public String getLodginTypeId() {
         return lodginTypeId;
     }
 
-    public void setLodginTypeId(Integer lodginTypeId) {
+    public void setLodginTypeId(String lodginTypeId) {
         this.lodginTypeId = lodginTypeId;
     }
 
@@ -181,11 +181,11 @@ public class ResultLodging implements Serializable {
         this.lodgingCityName = lodgingCityName;
     }
 
-    public Integer getLodgingCityId() {
+    public String getLodgingCityId() {
         return lodgingCityId;
     }
 
-    public void setLodgingCityId(Integer lodgingCityId) {
+    public void setLodgingCityId(String lodgingCityId) {
         this.lodgingCityId = lodgingCityId;
     }
 
@@ -197,19 +197,19 @@ public class ResultLodging implements Serializable {
         this.lodgingProvinceName = lodgingProvinceName;
     }
 
-    public Integer getLodgingProvinceId() {
+    public String getLodgingProvinceId() {
         return lodgingProvinceId;
     }
 
-    public void setLodgingProvinceId(Integer lodgingProvinceId) {
+    public void setLodgingProvinceId(String lodgingProvinceId) {
         this.lodgingProvinceId = lodgingProvinceId;
     }
 
-    public Integer getLodgingRateInt() {
+    public String getLodgingRateInt() {
         return lodgingRateInt;
     }
 
-    public void setLodgingRateInt(Integer lodgingRateInt) {
+    public void setLodgingRateInt(String lodgingRateInt) {
         this.lodgingRateInt = lodgingRateInt;
     }
 
