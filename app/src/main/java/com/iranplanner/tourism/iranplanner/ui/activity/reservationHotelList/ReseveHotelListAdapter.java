@@ -75,25 +75,25 @@ public class ReseveHotelListAdapter extends RecyclerView.Adapter<ReseveHotelList
 //            viewHolder.txtShowPercent.setVisibility(View.VISIBLE);
 //            viewHolder.txtShowPercent.setText(Utils.persianNumbers( resultLodgings.get(i).getLodgingRoomPriceRuleDetail().getLodgingRoomPriceDetailValue()));
         }
-        if (resultLodgings.get(i).getLodgingRateInt() == 1) {
+        if (resultLodgings.get(i).getLodgingRateInt().equals("1")) {
             viewHolder.starHolder.setVisibility(View.VISIBLE);
             viewHolder.imgStar1.setVisibility(View.VISIBLE);
-        } else if (resultLodgings.get(i).getLodgingRateInt() == 2) {
+        } else if (resultLodgings.get(i).getLodgingRateInt() .equals("2") ) {
             viewHolder.starHolder.setVisibility(View.VISIBLE);
             viewHolder.imgStar1.setVisibility(View.VISIBLE);
             viewHolder.imgStar2.setVisibility(View.VISIBLE);
-        } else if (resultLodgings.get(i).getLodgingRateInt() == 3) {
+        } else if (resultLodgings.get(i).getLodgingRateInt().equals("3")) {
             viewHolder.starHolder.setVisibility(View.VISIBLE);
             viewHolder.imgStar1.setVisibility(View.VISIBLE);
             viewHolder.imgStar2.setVisibility(View.VISIBLE);
             viewHolder.imgStar3.setVisibility(View.VISIBLE);
-        } else if (resultLodgings.get(i).getLodgingRateInt() == 4) {
+        } else if (resultLodgings.get(i).getLodgingRateInt() .equals("4")) {
             viewHolder.starHolder.setVisibility(View.VISIBLE);
             viewHolder.imgStar1.setVisibility(View.VISIBLE);
             viewHolder.imgStar2.setVisibility(View.VISIBLE);
             viewHolder.imgStar3.setVisibility(View.VISIBLE);
             viewHolder.imgStar4.setVisibility(View.VISIBLE);
-        } else if (resultLodgings.get(i).getLodgingRateInt() == 5) {
+        } else if (resultLodgings.get(i).getLodgingRateInt().equals("5")) {
             viewHolder.starHolder.setVisibility(View.VISIBLE);
             viewHolder.imgStar1.setVisibility(View.VISIBLE);
             viewHolder.imgStar2.setVisibility(View.VISIBLE);

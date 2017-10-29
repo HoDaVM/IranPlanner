@@ -3,7 +3,6 @@ package com.iranplanner.tourism.iranplanner.ui.navigationDrawer;
 import android.support.design.widget.TextInputEditText;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;

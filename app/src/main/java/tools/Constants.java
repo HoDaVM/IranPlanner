@@ -20,11 +20,17 @@ public final class Constants {
     public static final String hotelCode = "147";
     public static final String hotelApartmentCode = "3762";
     public static final String hotelboomgardiCode = "3795";
+    public static final String hotelSonnatiCode = "3794";
     public static final String hotelTraditionalCode = "148";
     public static final String attractionRelegonCode = "2930";
     public static final String attractionNaturalCode = "2931";
     public static final String attractionHistoricalCode = "2932";
     public static final String attractionSortCode = "2934";
     public static final int durationTravel = 3;
-    public static String urlPayment="http://iranplanner.com/mobilepayment";
+    public static String urlPayment = "http://iranplanner.com/mobilepayment";
+    public static String MAXPRICE = "maxprice";
+    public static String MINPRICE = "minprice";
+    public static String MAXDISCOUNT = "maxdiscount";
+    public static String MAXRATE = "maxrate";
+    public static String MINRATE = "minrate";
 }

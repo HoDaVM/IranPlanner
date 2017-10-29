@@ -215,10 +215,6 @@ public class SplashActivity extends StandardActivity implements MainSearchPresen
         unregisterReceiver(receiver);
     }
 
-    @Override
-    public void showLodgingList(ResultLodgingList resultLodgingList) {
-
-    }
 
     @Override
     public void showComments(ResultCommentList resultCommentList) {
@@ -268,6 +264,11 @@ public class SplashActivity extends StandardActivity implements MainSearchPresen
 
 
     @Override
+    public void showLodgingList(ResultLodgingList resultLodgingList) {
+
+    }
+
+    @Override
     public void showError(String message) {
         FirebaseCrash.report(new Exception("App Name :  non-fatal error"));
         Log.e(TAG, String.valueOf(message));
@@ -302,6 +303,11 @@ public class SplashActivity extends StandardActivity implements MainSearchPresen
 
     @Override
     public void showProgress() {
+
+    }
+
+    @Override
+    public void showLodgingList(ResultLodgingList resultLodgingList, String filter) {
 
     }
 
