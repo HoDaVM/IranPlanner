@@ -60,9 +60,9 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+
 import com.iranplanner.tourism.iranplanner.R;
-
-
 import com.iranplanner.tourism.iranplanner.di.model.App;
 
 import com.iranplanner.tourism.iranplanner.ui.activity.MapFullActivity;
@@ -292,9 +292,11 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.menuItineraryComment:
-            //here comes the comment code section
-//                break;
+            case R.id.menuItineraryComment:
+//            here comes the comment code section
+                itineraryPresenter.getItineraryCommentList("pagecomments", itineraryId, "itinerary", "0", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+
+                break;
 //            case R.id.menuItineraryFav:
 //                if (toggleFav()) {
 //                    builder = DaggerItineraryComponent.builder()

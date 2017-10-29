@@ -6,9 +6,9 @@
         <!--android:icon="@mipmap/ic_like_on"-->
         <!--android:title="favourite"-->
         <!--app:showAsAction="always" />-->
-    <!--<item-->
-        <!--android:id="@+id/menuItineraryComment"-->
-        <!--android:icon="@mipmap/ic_information"-->
-        <!--android:title="favourite"-->
-        <!--app:showAsAction="always" />-->
+    <item
+        android:id="@+id/menuItineraryComment"
+        android:icon="@mipmap/ic_comment"
+        android:title="favourite"
+        app:showAsAction="always" />
 </menu>

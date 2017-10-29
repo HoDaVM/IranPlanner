@@ -24,7 +24,7 @@ import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.RecyclerItemOnClickListener;
 import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.standard.DataTransferInterface;
-import com.iranplanner.tourism.iranplanner.ui.activity.FilterMap;
+import com.iranplanner.tourism.iranplanner.ui.activity.filterMap.FilterMap;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelDetails.ReservationHotelDetailActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelReservationListOfCity.ReservationContract;
@@ -103,7 +103,7 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
 
         getExtras();
         txtDurationHotel.setText(" به مدت " + Util.persianNumbers(durationTravel + " شب "));
-        txtTypeHotel.setText("از " + Utils.getSimpleDate(startOfTravel));
+        txtTypeHotel.setText("از " + Util.persianNumbers(Utils.getSimpleDate(startOfTravel)));
 
         setUpRecyclerView();
         setupToolbar();
@@ -268,7 +268,7 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
             @Override
             public void finish(Date result) {
                 startOfTravel = result;
-                txtTypeHotel.setText("از " + Utils.getSimpleDate(result));
+                txtTypeHotel.setText("از " +Util.persianNumbers( Utils.getSimpleDate(result)));
             }
         });
     }

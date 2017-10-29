@@ -1,6 +1,7 @@
-package com.iranplanner.tourism.iranplanner.ui.activity;
+package com.iranplanner.tourism.iranplanner.ui.activity.filterMap;
 
 import android.Manifest;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -11,13 +12,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.Button;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -36,19 +37,29 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.RecyclerItemOnClickListener;
+import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.standard.DataTransferInterface;
-import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.MySupportMapFragmen;
+import com.iranplanner.tourism.iranplanner.ui.activity.hotelDetails.ReservationHotelDetailActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.hotelReservationListOfCity.ReservationContract;
+import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.DaggerReservationHotelListComponent;
+import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListContract;
+import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListModule;
+import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListPresenter;
 import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReseveHotelListAdapter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import entity.ItineraryLodgingCity;
 import entity.ResultLodging;
+import entity.ResultLodgingHotel;
+import entity.ResultLodgingList;
 import tools.Util;
 
 /**
@@ -58,9 +69,9 @@ import tools.Util;
 public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener, DataTransferInterface, GoogleMap.OnMarkerClickListener
+        LocationListener, DataTransferInterface, GoogleMap.OnMarkerClickListener, View.OnClickListener
+        , ReservationHotelListContract.View, ReservationContract.View {
 
-{
 
     //تهران
     private GoogleMap mMap;
@@ -68,7 +79,23 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
     GoogleApiClient mGoogleApiClient;
     private List<Marker> markers;
     int position = -1;
-
+    private List<ResultLodging> resultLodgings;
+    private Date startOfTravel;
+    private int durationTravel;
+    private String nextOffset;
+    private String todayDate;
+    private String cityName;
+    @InjectView(R.id.reservationListRecyclerView)
+    RecyclerView recyclerView;
+    LinearLayoutManager mLayoutManager;
+    private ReseveHotelListAdapter adapter;
+    ArrayList<LatLng> markerPoints;
+    ArrayList<String> markerNames;
+    MySupportMapFragmen mapFragment;
+    @InjectView(R.id.btnSelectPolygon)
+    Button btnSelectPolygon;
+    @Inject
+    ReservationHotelListPresenter reservationHotelListPresenter;
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         mLocationRequest = new LocationRequest();
@@ -169,25 +196,11 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
         markers = new ArrayList<>();
         int i = 0;
         for (LatLng latLng : points) {
-            Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerNames.get(i)));
+            Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerNames.get(i)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_point_pink)));
             markers.add(marker);
             i++;
         }
     }
-
-    private List<ResultLodging> resultLodgings;
-    private Date startOfTravel;
-    private int durationTravel;
-    private String nextOffset;
-    private String todayDate;
-    private String cityName;
-    @InjectView(R.id.reservationListRecyclerView)
-    RecyclerView recyclerView;
-    LinearLayoutManager mLayoutManager;
-    private ReseveHotelListAdapter adapter;
-    ArrayList<LatLng> markerPoints;
-    ArrayList<String> markerNames;
-    MySupportMapFragmen mapFragment;
 
 
     @Override
@@ -207,6 +220,11 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         setUpRecyclerView();
+        btnSelectPolygon.setOnClickListener(this);
+        DaggerReservationHotelListComponent.builder()
+                .netComponent(((App) getApplicationContext()).getNetComponent())
+                .reservationHotelListModule(new ReservationHotelListModule(this, this))
+                .build().inject(this);
 
     }
 
@@ -244,9 +262,13 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
                     int position = horizontalLayoutManagaer.getPosition(centerView);
 
                     showMarkers(markerPoints);
+
                     mMap.addMarker(new MarkerOptions().position(markerPoints.get(position))
-                            .title(markerNames.get(position)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_logo_pink)));
+                            .title(markerNames.get(position)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_blue_pin)));
+
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(position)));
+                    CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
+                    mMap.animateCamera(zoom);
 
                 }
             }
@@ -256,9 +278,9 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
             @Override
             public void onItemClick(View view, final int position) {
                 showMarkers(markerPoints);
-                mMap.addMarker(new MarkerOptions().position(markerPoints.get(position))
-                        .title(markerNames.get(position)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_logo_pink)));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(position)));
+                //open
+                String offset = "0";
+                reservationHotelListPresenter.getHotelReserve("full", String.valueOf(resultLodgings.get(position).getLodgingId()), "20", offset, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
 
             }
         }));
@@ -297,7 +319,7 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
             if (resultLodging.getLodgingName().equals(marker.getTitle())) {
                 showMarkers(markerPoints);
                 mMap.addMarker(new MarkerOptions().position(markerPoints.get(c))
-                        .title(markerNames.get(c)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_logo_pink)));
+                        .title(markerNames.get(c)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_blue_pin)));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(c)));
                 Log.e("marker", marker.getTitle());
                 position = c;
@@ -306,5 +328,58 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
         }
         recyclerView.getLayoutManager().scrollToPosition(position);
         return false;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnSelectPolygon:
+                mMap.getUiSettings().setScrollGesturesEnabled(false);
+                break;
+        }
+
+    }
+
+    @Override
+    public void showHotelReserveList(ResultLodgingHotel resultLodgingHotel) {
+        if (resultLodgingHotel != null) {
+            ResultLodging resultLodgingHotelDetail = resultLodgingHotel.getResultLodging();
+            Intent intent = new Intent(getApplicationContext(), ReservationHotelDetailActivity.class);
+            intent.putExtra("resultLodgingHotelDetail", (Serializable) resultLodgingHotelDetail);
+            intent.putExtra("startOfTravel", startOfTravel);
+            intent.putExtra("durationTravel", durationTravel);
+            intent.putExtra("todayDate", todayDate);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void showError(String message) {
+
+    }
+
+    @Override
+    public void showComplete() {
+
+    }
+
+    @Override
+    public void dismissProgress() {
+
+    }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void showLodgingList(ResultLodgingList resultLodgingList, String filter) {
+
+    }
+
+    @Override
+    public void showLodgingList(ResultLodgingList resultLodgingList) {
+
     }
 }
