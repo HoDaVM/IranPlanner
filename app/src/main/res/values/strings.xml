@@ -163,4 +163,8 @@
     <string name="tutorial_two">متنوع ترین سامانه رزرو هتل و مراکز اقامتی در سراسر ایران</string>
     <string name="tutorial_three">اطلاع از تازه ترین و هیجان انگیزترین رویدادهای گردشگری در ایران</string>
     <string name="tutorial_four">بهترین پیشنهادها برای خرید سوغاتی و غذاهای محلی</string>
+
+    <string name="demo_min_label"></string>
+    <string name="demo_max_label"></string>
+
 </resources>

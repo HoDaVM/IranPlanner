@@ -20,7 +20,10 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 
 import com.iranplanner.tourism.iranplanner.R;
+import com.iranplanner.tourism.iranplanner.ui.RangeSeekBar;
 import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListActivity;
+
+import java.util.HashMap;
 
 import tools.Util;
 
@@ -52,7 +55,7 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
     private RadioButton rbSortMostSale, rbSortMinPrice, rbSortMostPrice, rbSortMostRate, rbSortMinRate;
 
     //Views corresponding with the Price Range Filter
-    private SeekBar sbPrice;
+    private RangeSeekBar sbPrice;
 
     //Views corresponding with the Hotel Type Filter
     private CheckBox cbTypeHotel, cbTypeApartement, cbTypeLocal, cbTypeTraditional;
@@ -62,6 +65,8 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
 
     private View filterToggle, filterView, filterShade, bottomPanelView;
     private boolean isViewOpen = false;
+
+    private FilterListener listener;
 
     public FilterManager(Activity activity, View root) {
         this.root = root;
@@ -74,7 +79,7 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
         init();
     }
 
-    public void onBackPressed(){
+    public void onBackPressed() {
         if (isViewOpen)
             closeFilterView();
         else activity.finish();
@@ -113,7 +118,7 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
         rbSortMostRate = (RadioButton) root.findViewById(R.id.filterSortRateMostRb);
         rbSortMinRate = (RadioButton) root.findViewById(R.id.filterSortMinRateRb);
 
-        sbPrice = (SeekBar) root.findViewById(R.id.filterPriceSeekBar);
+        sbPrice = (RangeSeekBar) root.findViewById(R.id.filterPriceSeekBar);
 
         cbTypeApartement = (CheckBox) root.findViewById(R.id.filterTypeApartementCb);
         cbTypeHotel = (CheckBox) root.findViewById(R.id.filterTypeHotelCb);
@@ -152,12 +157,10 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
     }
 
     private void updateDataSet() {
-        //use this on filter changes
-        //call update url here
-        //show a progress dialog over the activity
-        //make a request and get the fresh data set from api
-        //disable the progress dialog
-        //update the adapter used in activity with fresh data
+        HashMap hashMap = new HashMap<>();
+
+//        hashMap.put()
+
     }
 
     private void initSort() {
@@ -172,7 +175,7 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
     }
 
     private void initPriceRange() {
-        sbPrice.setOnSeekBarChangeListener(this);
+//        sbPrice.setOnSeekBarChangeListener(this);
     }
 
     @Override
@@ -245,6 +248,10 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
 
     public String getBaseUrl() {
         return BASE_URL + url;
+    }
+
+    public void setListener(FilterListener listener) {
+        this.listener = listener;
     }
 
     public void enableAll() {
