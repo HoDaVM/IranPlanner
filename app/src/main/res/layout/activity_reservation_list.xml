@@ -116,7 +116,7 @@
     <!--This is the Shade View-->
 
     <View
-        android:id="@+id/reservationPanelShadeView"
+        android:id="@+id/panelShadeView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
@@ -125,7 +125,7 @@
 
     <!--This Section is Used for the Bottom Panel -->
     <LinearLayout
-        android:id="@+id/reservationBottomPanelView"
+        android:id="@+id/bottomPanelView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/buttonBottom"
         android:layout_alignParentBottom="true"
@@ -134,7 +134,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/reservationFilterToggleView"
+            android:id="@+id/filterToggleView"
             android:layout_width="100dp"
             android:layout_height="32dp"
             android:layout_marginLeft="5dp"
@@ -157,7 +157,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/reservationMapToggleView"
+            android:id="@+id/mapToggleView"
             android:layout_width="100dp"
             android:layout_height="32dp"
             android:layout_marginRight="5dp"
@@ -182,7 +182,7 @@
     <!--End of Bottom Panel Section-->
 
     <RelativeLayout
-        android:id="@+id/reservationFilterView"
+        android:id="@+id/filterView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/filter_view_height"
         android:layout_alignParentBottom="true"

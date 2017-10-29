@@ -25,7 +25,6 @@ import com.iranplanner.tourism.iranplanner.RecyclerItemOnClickListener;
 import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.standard.DataTransferInterface;
 import com.iranplanner.tourism.iranplanner.ui.activity.FilterMap;
-import com.iranplanner.tourism.iranplanner.ui.activity.StandardMap;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelDetails.ReservationHotelDetailActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelReservationListOfCity.ReservationContract;
@@ -80,35 +79,18 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
     private String nextOffset;
     private String todayDate, cityName;
 
-    private String ORDER;
-    private String rate0;
-    private String rate1;
-    private String rate2;
-    private String rate3;
-    private String rate4;
-    private String rate5;
+    private String order;
+    private String rate0, rate1, rate2, rate3, rate4, rate5;
 
-    private String typeHotel;
-    private String typeLocalhost;
-    private String typeTraditional;
-    private String typeApartment;
-    private String type;
+    private String typeHotel, typeLocalhost, typeTraditional, typeApartment, type;
 
-    private Toolbar toolbar;
-
-    //Added by Amin
-    private View filterToggle, mapToggle, filterView, filterShade, bottomPanelView, reservationMapToggleView;
-    private boolean isViewOpen = false;
+    private FilterManager filterManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reservation_list);
 
-        Log.e(TAG, "this is reservation hotel list activity ");
-
-
-        //تهران
         ButterKnife.inject(this);
         DaggerReservationHotelListComponent.builder()
                 .netComponent(((App) getApplicationContext()).getNetComponent())
@@ -125,10 +107,10 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
         holderDate.setOnClickListener(this);
         typeDurationHolder.setOnClickListener(this);
 
-        init();
+        findViewById(R.id.mapToggleView).setOnClickListener(this);
 
         //tempo code is here dude watch out
-        FilterManager filterManager = new FilterManager(findViewById(R.id.container));
+        filterManager = new FilterManager(this, findViewById(R.id.container));
         filterManager.enableSort();
         filterManager.enablePriceRange();
         filterManager.enablePlaceType();
@@ -156,78 +138,6 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
         unregisterReceiver(receiver);
     }
 
-    private void init() {
-
-        mapToggle = findViewById(R.id.reservationMapToggleView);
-
-        bottomPanelView = findViewById(R.id.reservationBottomPanelView);
-        filterView = findViewById(R.id.reservationFilterView);
-        filterToggle = findViewById(R.id.reservationFilterToggleView);
-        reservationMapToggleView = findViewById(R.id.reservationMapToggleView);
-
-        filterShade = findViewById(R.id.reservationPanelShadeView);
-
-        mapToggle.setOnClickListener(this);
-        filterToggle.setOnClickListener(this);
-        reservationMapToggleView.setOnClickListener(this);
-        filterView.setOnClickListener(this);
-        filterShade.setOnClickListener(this);
-        bottomPanelView.setOnClickListener(this);
-
-        filterShade.setAlpha(0);
-        filterShade.setVisibility(View.GONE);
-
-        filterView.setY(Util.dpToPx(this, (int) getResources().getDimension(R.dimen.filter_view_height)));
-
-    }
-
-    private void togglePanel() {
-        if (isViewOpen) {
-            closeFilterView();
-            return;
-        }
-        openFilterView();
-    }
-
-    private void openFilterView() {
-        Interpolator interpolator = new AccelerateInterpolator();
-
-        filterToggle.setOnClickListener(null);
-
-        filterView.animate().setInterpolator(interpolator).translationYBy(-Util.dpToPx(this, (int) getResources().getDimension(R.dimen.filter_view_height))).setDuration(300).start();
-        bottomPanelView.animate().setInterpolator(interpolator).translationYBy(-Util.dpToPx(this, 350)).setDuration(300).start();
-        filterShade.setVisibility(View.VISIBLE);
-        filterShade.animate().alpha(0.7f).setDuration(300).start();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                isViewOpen = true;
-                filterToggle.setOnClickListener(ReservationHotelListActivity.this);
-            }
-        }, 300);
-    }
-
-    private void closeFilterView() {
-
-        Interpolator interpolator = new AccelerateInterpolator();
-
-        filterToggle.setOnClickListener(null);
-        isViewOpen = false;
-
-        filterView.animate().setInterpolator(interpolator).translationYBy(Util.dpToPx(this, (int) getResources().getDimension(R.dimen.filter_view_height))).setDuration(300).start();
-        bottomPanelView.animate().setInterpolator(interpolator).translationYBy(Util.dpToPx(this, 350)).setDuration(300).start();
-        filterShade.animate().alpha(0).setDuration(300).start();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                filterToggle.setOnClickListener(ReservationHotelListActivity.this);
-                filterShade.setVisibility(View.GONE);
-            }
-        }, 300);
-    }
-
     private void getExtras() {
         Bundle extras = getIntent().getExtras();
 
@@ -245,7 +155,7 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
         }
 
 
-        ORDER = "";
+        order = "";
         rate0 = "";
         rate1 = "";
         rate2 = "";
@@ -281,7 +191,7 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
 //                showProgressDialog();
                 String offset = "0";
                 reservationHotelListPresenter.getHotelReserve("full", String.valueOf(resultLodgings.get(position).getLodgingId()), "20", offset, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
-//               reservationHotelListPresenter.getHotelFilter("list", String.valueOf(resultLodgings.get(0).getLodgingCityId()), "20", offset, type, ORDER, rate0, rate1, rate2, rate3, rate4, rate5, typeHotel, typeLocalhost, typeTraditional, typeApartment,  Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+//               reservationHotelListPresenter.getHotelFilter("list", String.valueOf(resultLodgings.get(0).getLodgingCityId()), "20", offset, type, order, rate0, rate1, rate2, rate3, rate4, rate5, typeHotel, typeLocalhost, typeTraditional, typeApartment,  Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
 
             }
         }));
@@ -299,7 +209,7 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
 
 //                        reservationPresenter.getLodgingList("list", String.valueOf(resultLodgings.get(0).getLodgingCityId()), Util.getTokenFromSharedPreferences(getApplicationContext()), "20", nextOffset, Util.getAndroidIdFromSharedPreferences(getApplicationContext()), "");
 //                        reservationHotelListPresenter.getHotelFilter("list", String.valueOf(resultLodgings.get(0).getLodgingCityId()), "20", nextOffset, "", Constants.MAXPRICE, "1", "1", "1", "1", "", "", "", "", "", "", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
-                        reservationHotelListPresenter.getHotelFilterONDemandLoading("list", String.valueOf(resultLodgings.get(0).getLodgingCityId()), "20", nextOffset, type, ORDER, rate0, rate1, rate2, rate3, rate4, rate5, typeHotel, typeLocalhost, typeTraditional, typeApartment, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                        reservationHotelListPresenter.getHotelFilterONDemandLoading("list", String.valueOf(resultLodgings.get(0).getLodgingCityId()), "20", nextOffset, type, order, rate0, rate1, rate2, rate3, rate4, rate5, typeHotel, typeLocalhost, typeTraditional, typeApartment, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                     }
                 }
             }
@@ -337,7 +247,7 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
     }
 
     void setupToolbar() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (!TextUtils.isEmpty(cityName))
@@ -361,35 +271,18 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
             case R.id.toolbarBack:
                 Log.e("ddd", "toolbarback");
                 break;
-            case R.id.reservationMapToggleView:
-                Intent intent = new Intent(this, FilterMap.class);
-
-//                resultLodgings = (List<ResultLodging>) extras.getSerializable("resultLodgings");
-//                startOfTravel = (Date) extras.getSerializable("startOfTravel");
-//
-//                durationTravel = (int) extras.getSerializable("durationTravel");
-//                nextOffset = extras.getString("nextOffset");
-//                todayDate = extras.getString("todayDate");
-//                cityName = extras.getString("cityName");
-                intent.putExtra("resultLodgings", (Serializable) resultLodgings);
+            case R.id.mapToggleView:
                 long time = System.currentTimeMillis();
                 Date startOfTravel = new Date(time);
+
+                Intent intent = new Intent(this, FilterMap.class);
+                intent.putExtra("resultLodgings", (Serializable) resultLodgings);
                 intent.putExtra("nextOffset", "0");
                 intent.putExtra("startOfTravel", startOfTravel);
                 intent.putExtra("durationTravel", 3);
                 intent.putExtra("todayDate", todayDate);
                 intent.putExtra("cityName", cityName);
                 startActivity(intent);
-                break;
-            case R.id.reservationFilterToggleView:
-                togglePanel();
-                break;
-
-            case R.id.reservationFilterView:
-
-                break;
-            case R.id.reservationPanelShadeView:
-                togglePanel();
                 break;
         }
     }
@@ -402,11 +295,8 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
 
     @Override
     public void onBackPressed() {
-        if (isViewOpen)
-            closeFilterView();
-        else super.onBackPressed();
+        filterManager.onBackPressed();
     }
-
 
     @Override
     public void showLodgingList(ResultLodgingList resultLodgingList) {
@@ -434,7 +324,6 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
             startActivity(intent);
         }
     }
-
 
     @Override
     public void showError(String message) {

@@ -52,10 +52,9 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
     @InjectView(R.id.attractionListRecyclerView)
     RecyclerView attractionRecyclerView;
 
-    //Added by Amin
-    private View filterToggle, mapToggle, filterView, filterShade, bottomPanelView;
-    private boolean isViewOpen = false;
     private ProgressDialog progressDialog;
+
+    private FilterManager filterManager;
 
     private void getExtra() {
         Intent intent = getIntent();
@@ -127,102 +126,35 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
     }
 
     private void init() {
-        mapToggle = findViewById(R.id.attractionMapToggleView);
+        findViewById(R.id.mapToggleView).setOnClickListener(this);
 
-        bottomPanelView = findViewById(R.id.attractionBottomPanelView);
-        filterView = findViewById(R.id.attractionFilterView);
-        filterToggle = findViewById(R.id.attractionFilterToggleView);
-        filterShade = findViewById(R.id.attractionPanelShadeView);
-
-        mapToggle.setOnClickListener(this);
-        filterToggle.setOnClickListener(this);
-        filterView.setOnClickListener(this);
-        filterShade.setOnClickListener(this);
-        bottomPanelView.setOnClickListener(this);
-
-        filterShade.setAlpha(0);
-        filterShade.setVisibility(View.GONE);
-
-        filterView.setY(Util.dpToPx(this, (int) getResources().getDimension(R.dimen.filter_view_height)));
         setToolbar();
 
-        FilterManager filterManager = new FilterManager(findViewById(R.id.attractionFilterView));
+        filterManager = new FilterManager(this,findViewById(R.id.filterView));
 //        filterManager.enableAll();
         filterManager.enablePlaceRate();
         filterManager.enableSort();
 
     }
 
-    private void togglePanel() {
-        if (isViewOpen) {
-            closeFilterView();
-            return;
-        }
-        openFilterView();
-    }
-
-    private void openFilterView() {
-        filterToggle.setOnClickListener(null);
-
-        filterView.animate().translationYBy(-Util.dpToPx(this, (int) getResources().getDimension(R.dimen.filter_view_height))).setDuration(300).start();
-        bottomPanelView.animate().translationYBy(-Util.dpToPx(this, 350)).setDuration(300).start();
-        filterShade.setVisibility(View.VISIBLE);
-        filterShade.animate().alpha(0.7f).setDuration(300).start();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                isViewOpen = true;
-                filterToggle.setOnClickListener(ShowAttractionListMoreActivity.this);
-            }
-        }, 300);
-    }
-
-    private void closeFilterView() {
-        filterToggle.setOnClickListener(null);
-        isViewOpen = false;
-
-        filterView.animate().translationYBy(Util.dpToPx(this, (int) getResources().getDimension(R.dimen.filter_view_height))).setDuration(300).start();
-        bottomPanelView.animate().translationYBy(Util.dpToPx(this, 350)).setDuration(300).start();
-        filterShade.animate().alpha(0).setDuration(300).start();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                filterToggle.setOnClickListener(ShowAttractionListMoreActivity.this);
-                filterShade.setVisibility(View.GONE);
-            }
-        }, 300);
-    }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.attractionMapToggleView:
-                break;
-            case R.id.attractionPanelShadeView:
-            case R.id.attractionFilterToggleView:
-                togglePanel();
-                break;
-            case R.id.attractionFilterView:
-
+            case R.id.mapToggleView:
                 break;
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (isViewOpen)
-            closeFilterView();
-        else super.onBackPressed();
+        filterManager.onBackPressed();
     }
 
     private void buildAlertMessageNoGps(final int position) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
         builder.setMessage("مسیریاب شما فعال نیست، آیا تمایل به روشن کردن آن دارید؟")
                 .setCancelable(false)
-//                // TODO: 06/02/2017  below
-                // toye startActivityForResult be jaye code request posotion ro ferestam . ye joor kalak .
                 .setPositiveButton("بله", new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), position);

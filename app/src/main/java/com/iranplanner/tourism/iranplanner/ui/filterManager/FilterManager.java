@@ -5,11 +5,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
@@ -17,12 +20,15 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 
 import com.iranplanner.tourism.iranplanner.R;
+import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListActivity;
+
+import tools.Util;
 
 /**
  * Created by MrCode on 9/19/17.
  */
 
-public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener, CompoundButton.OnCheckedChangeListener {
+public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener {
 
     private static final String TAG = "Filter Manager Rocks";
 
@@ -34,6 +40,7 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
     private BroadcastReceiver receiver;
 
     private View root;
+    private Activity activity;
 
     //primitives used to enable or disable the filter types
     private boolean isSort, isPrice, isType, isRate;
@@ -53,8 +60,12 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
     //Views corresponding with the Hotel Rate Filter
     private CheckBox cbRateZero, cbRateOne, cbRateTwo, cbRateThree, cbRateFour, cbRateFive;
 
-    public FilterManager(View root) {
+    private View filterToggle, filterView, filterShade, bottomPanelView;
+    private boolean isViewOpen = false;
+
+    public FilterManager(Activity activity, View root) {
         this.root = root;
+        this.activity = activity;
         isPrice = false;
         isType = false;
         isSort = false;
@@ -63,7 +74,32 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
         init();
     }
 
+    public void onBackPressed(){
+        if (isViewOpen)
+            closeFilterView();
+        else activity.finish();
+    }
+
     private void init() {
+
+        //General Initialization of FilterManager ItSelf
+        bottomPanelView = activity.findViewById(R.id.bottomPanelView);
+        filterView = activity.findViewById(R.id.filterView);
+        filterToggle = activity.findViewById(R.id.filterToggleView);
+
+        filterShade = activity.findViewById(R.id.panelShadeView);
+
+        filterToggle.setOnClickListener(this);
+        filterView.setOnClickListener(this);
+        filterShade.setOnClickListener(this);
+        bottomPanelView.setOnClickListener(this);
+
+        filterShade.setAlpha(0);
+        filterShade.setVisibility(View.GONE);
+
+        filterView.setY(Util.dpToPx(activity, (int) activity.getResources().getDimension(R.dimen.filter_view_height)));
+
+        //Initialization Of FilterManager Child Filters
         cvSort = (CardView) root.findViewById(R.id.filterCvSort);
         cvRange = (CardView) root.findViewById(R.id.filterCvRange);
         cvType = (CardView) root.findViewById(R.id.filterCvType);
@@ -115,12 +151,7 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
 
     }
 
-    private void updateUrl(String attribute, String type) {
-        //update the url as a String reference for updateAdapter method to be able to use it
-        //updating is recreating and concat the base url with it
-    }
-
-    private void updateAdapter() {
+    private void updateDataSet() {
         //use this on filter changes
         //call update url here
         //show a progress dialog over the activity
@@ -271,4 +302,65 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
         //updateUi
         updateUi();
     }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.filterToggleView:
+            case R.id.panelShadeView:
+                togglePanel();
+                break;
+            case R.id.filterView:
+
+                break;
+        }
+    }
+
+    private void togglePanel() {
+        if (isViewOpen) {
+            closeFilterView();
+            return;
+        }
+        openFilterView();
+    }
+
+    private void openFilterView() {
+        Interpolator interpolator = new AccelerateInterpolator();
+
+        filterToggle.setOnClickListener(null);
+
+        filterView.animate().setInterpolator(interpolator).translationYBy(-Util.dpToPx(activity, (int) activity.getResources().getDimension(R.dimen.filter_view_height))).setDuration(300).start();
+        bottomPanelView.animate().setInterpolator(interpolator).translationYBy(-Util.dpToPx(activity, 350)).setDuration(300).start();
+        filterShade.setVisibility(View.VISIBLE);
+        filterShade.animate().alpha(0.7f).setDuration(300).start();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                isViewOpen = true;
+                filterToggle.setOnClickListener(FilterManager.this);
+            }
+        }, 300);
+    }
+
+    private void closeFilterView() {
+
+        Interpolator interpolator = new AccelerateInterpolator();
+
+        filterToggle.setOnClickListener(null);
+        isViewOpen = false;
+
+        filterView.animate().setInterpolator(interpolator).translationYBy(Util.dpToPx(activity, (int) activity.getResources().getDimension(R.dimen.filter_view_height))).setDuration(300).start();
+        bottomPanelView.animate().setInterpolator(interpolator).translationYBy(Util.dpToPx(activity, 350)).setDuration(300).start();
+        filterShade.animate().alpha(0).setDuration(300).start();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                filterToggle.setOnClickListener(FilterManager.this);
+                filterShade.setVisibility(View.GONE);
+            }
+        }, 300);
+    }
+
 }

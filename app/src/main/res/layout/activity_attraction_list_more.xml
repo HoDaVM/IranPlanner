@@ -30,7 +30,7 @@
     <!--This is the Shade View-->
 
     <View
-        android:id="@+id/attractionPanelShadeView"
+        android:id="@+id/panelShadeView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
@@ -38,7 +38,7 @@
 
     <!--This Section is Used for the Bottom Panel -->
     <LinearLayout
-        android:id="@+id/attractionBottomPanelView"
+        android:id="@+id/bottomPanelView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/buttonBottom"
         android:layout_alignParentBottom="true"
@@ -47,7 +47,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/attractionFilterToggleView"
+            android:id="@+id/filterToggleView"
             android:layout_width="100dp"
             android:layout_height="32dp"
             android:layout_marginStart="5dp"
@@ -72,7 +72,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/attractionMapToggleView"
+            android:id="@+id/mapToggleView"
             android:layout_width="100dp"
             android:layout_height="32dp"
             android:layout_marginEnd="5dp"
@@ -99,7 +99,7 @@
     <!--End of Bottom Panel Section-->
 
     <RelativeLayout
-        android:id="@+id/attractionFilterView"
+        android:id="@+id/filterView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/filter_view_height"
         android:layout_alignParentBottom="true"

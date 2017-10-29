@@ -28,9 +28,10 @@ public final class Constants {
     public static final String attractionSortCode = "2934";
     public static final int durationTravel = 3;
     public static String urlPayment = "http://iranplanner.com/mobilepayment";
-    public static String MAXPRICE = "maxprice";
-    public static String MINPRICE = "minprice";
-    public static String MAXDISCOUNT = "maxdiscount";
-    public static String MAXRATE = "maxrate";
-    public static String MINRATE = "minrate";
+
+    public static final String MAXPRICE = "maxprice";
+    public static final String MINPRICE = "minprice";
+    public static final String MAXDISCOUNT = "maxdiscount";
+    public static final String MAXRATE = "maxrate";
+    public static final String MINRATE = "minrate";
 }
