@@ -472,4 +472,8 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
         }, 300);
     }
 
+    public void hideToggleButtons(){
+        bottomPanelView.setVisibility(View.GONE);
+    }
+
 }

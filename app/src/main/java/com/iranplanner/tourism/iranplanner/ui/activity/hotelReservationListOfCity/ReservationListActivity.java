@@ -61,8 +61,6 @@ public class ReservationListActivity extends StandardActivity implements DataTra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reservation_list);
 
-        Log.e(TAG, "ReservationListActivity");
-
         builder = DaggerReservationComponent.builder()
                 .netComponent(((App) getApplicationContext()).getNetComponent())
                 .reservationModule(new ReservationModule(this));
@@ -74,6 +72,9 @@ public class ReservationListActivity extends StandardActivity implements DataTra
 
         setupToolbar();
         init();
+
+        FilterManager filterManager = new FilterManager(this, findViewById(R.id.filterView));
+        filterManager.hideToggleButtons();
     }
 
     private void init() {

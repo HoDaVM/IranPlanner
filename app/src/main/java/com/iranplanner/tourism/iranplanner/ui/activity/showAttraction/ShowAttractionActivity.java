@@ -25,6 +25,7 @@ public class ShowAttractionActivity extends StandardActivity {
     private List<ResultItineraryAttractionDay> resultItineraryAttractionDays;
     ResulAttraction resulAttraction;
     List<ResultAttractionList> resultAttractionList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +66,7 @@ public class ShowAttractionActivity extends StandardActivity {
         }
         return map;
     }
+
     public HashMap<String, List<ResultItineraryAttractionDay>> getDayGroups(List<ResultItineraryAttractionDay> rr) {
         HashMap<String, List<ResultItineraryAttractionDay>> maps = new HashMap<String, List<ResultItineraryAttractionDay>>();
         for (ResultItineraryAttractionDay atts : rr) {
