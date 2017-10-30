@@ -61,9 +61,11 @@ public class ReseveHotelListAdapter extends RecyclerView.Adapter<ReseveHotelList
 
         viewHolder.txtHotelName.setText(resultLodgings.get(i).getLodgingName());
         viewHolder.txtType.setText(resultLodgings.get(i).getLodgingTypeTitle());
-        viewHolder.txtShowPercent.setText(Util.persianNumbers(resultLodgings.get(i).getLodgingRoomPriceRuleDetail().getLodgingRoomPriceDetailValue()) + "تخفیف تا");
+        if (resultLodgings.get(i).getLodgingRoomPriceRuleDetail().getLodgingRoomPriceDetailValue() != null && !resultLodgings.get(i).getLodgingRoomPriceRuleDetail().getLodgingRoomPriceDetailValue().equals("")) {
+            viewHolder.txtShowPercent.setText(Util.persianNumbers(resultLodgings.get(i).getLodgingRoomPriceRuleDetail().getLodgingRoomPriceDetailValue()) + "تخفیف ");
+        }
 
-        int price = resultLodgings.get(i).getLodgingRoomPriceDetail().get(0).getLodgingRoomMinPrice()/10;
+        int price = resultLodgings.get(i).getLodgingRoomPriceDetail().get(0).getLodgingRoomMinPrice() / 10;
 
         DecimalFormat formatter = new DecimalFormat("#,###,###");
         String s = formatter.format(price);
@@ -78,7 +80,7 @@ public class ReseveHotelListAdapter extends RecyclerView.Adapter<ReseveHotelList
         if (resultLodgings.get(i).getLodgingRateInt().equals("1")) {
             viewHolder.starHolder.setVisibility(View.VISIBLE);
             viewHolder.imgStar1.setVisibility(View.VISIBLE);
-        } else if (resultLodgings.get(i).getLodgingRateInt() .equals("2") ) {
+        } else if (resultLodgings.get(i).getLodgingRateInt().equals("2")) {
             viewHolder.starHolder.setVisibility(View.VISIBLE);
             viewHolder.imgStar1.setVisibility(View.VISIBLE);
             viewHolder.imgStar2.setVisibility(View.VISIBLE);
@@ -87,7 +89,7 @@ public class ReseveHotelListAdapter extends RecyclerView.Adapter<ReseveHotelList
             viewHolder.imgStar1.setVisibility(View.VISIBLE);
             viewHolder.imgStar2.setVisibility(View.VISIBLE);
             viewHolder.imgStar3.setVisibility(View.VISIBLE);
-        } else if (resultLodgings.get(i).getLodgingRateInt() .equals("4")) {
+        } else if (resultLodgings.get(i).getLodgingRateInt().equals("4")) {
             viewHolder.starHolder.setVisibility(View.VISIBLE);
             viewHolder.imgStar1.setVisibility(View.VISIBLE);
             viewHolder.imgStar2.setVisibility(View.VISIBLE);

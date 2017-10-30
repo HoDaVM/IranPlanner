@@ -59,7 +59,6 @@
                             android:background="@color/dark_red"
                             android:paddingEnd="@dimen/margin_xshort"
                             android:paddingStart="@dimen/margin_xshort"
-                            android:text="تخفیف تا 33%"
                             android:translationZ="2dp"
 
                             />
