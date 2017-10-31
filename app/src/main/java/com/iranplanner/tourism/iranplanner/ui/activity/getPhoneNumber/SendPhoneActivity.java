@@ -17,7 +17,6 @@ import com.iranplanner.tourism.iranplanner.ui.activity.getPhoneNumber.SendPhoneM
 
 import com.iranplanner.tourism.iranplanner.ui.activity.getPhoneNumber.SendPhonePresenter;
 import com.iranplanner.tourism.iranplanner.ui.activity.getPhoneNumber.SendPhoneContract;
-import com.iranplanner.tourism.iranplanner.ui.activity.getToken.GetTokenActivity;
 
 import javax.inject.Inject;
 
@@ -106,8 +105,6 @@ public class SendPhoneActivity extends StandardActivity implements SendPhoneCont
 
     @Override
     public void getPhoneResult(ResultSendPhone resultSendPhone) {
-        Intent intent = new Intent(getApplicationContext(), GetTokenActivity.class);
-        intent.putExtra("phoneNumber",input_tel.getText().toString());
-        startActivity(intent);
+
     }
 }

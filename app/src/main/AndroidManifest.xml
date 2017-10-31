@@ -9,10 +9,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-<!--
-    <uses-permission android:name="android.permission.READ_SMS" />
--->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
@@ -84,9 +80,6 @@
             android:name=".ui.activity.attractioListMore.ShowAttractionListMoreActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.getToken.GetTokenActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activity.register.RegisterActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -143,11 +136,6 @@
             </intent-filter>
         </service>
         <!-- ./Firebase Notifications -->
-        <receiver android:name="tools.SmsListener">
-            <intent-filter>
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
-            </intent-filter>
-        </receiver>
 
         <meta-data
             android:name="io.fabric.ApiKey"
