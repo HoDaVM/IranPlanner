@@ -75,8 +75,8 @@ import javax.inject.Inject;
 
 import autoComplet.MyFilterableAdapterCityProvince;
 import autoComplet.ReadJsonCityProvince;
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import entity.CityProvince;
 import entity.GetHomeResult;
 import entity.HomeAttraction;
@@ -146,109 +146,109 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
 
     private ProgressDialog progressDialog;
     List<ResultHome> resultHomes;
-    @InjectView(R.id.app_bar)
+    @BindView(R.id.app_bar)
     AppBarLayout appBarLayout;
-    @InjectView(R.id.SelectHolder)
+    @BindView(R.id.SelectHolder)
     RelativeLayout SelectHolder;
-    @InjectView(R.id.aboutCityBtn)
+    @BindView(R.id.aboutCityBtn)
     RelativeLayout aboutCityBtn;
-    @InjectView(R.id.imgHome)
+    @BindView(R.id.imgHome)
     ImageView imgHome;
-    @InjectView(R.id.toolbarBack)
+    @BindView(R.id.toolbarBack)
     ImageView toolbarBack;
-    @InjectView(R.id.txtWhereGo)
+    @BindView(R.id.txtWhereGo)
     TextView txtWhereGo;
-    @InjectView(R.id.txtMoreTitleAttraction)
+    @BindView(R.id.txtMoreTitleAttraction)
     TextView txtMoreTitleAttraction;
-    @InjectView(R.id.TypeAttractionHolder)
+    @BindView(R.id.TypeAttractionHolder)
     RelativeLayout TypeAttractionHolder;
-    @InjectView(R.id.drawer_layout)
+    @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
-    @InjectView(R.id.EventsViewPager)
+    @BindView(R.id.EventsViewPager)
     ClickableViewPager eventsViewPager;
-    @InjectView(R.id.indicator)
+    @BindView(R.id.indicator)
     CircleIndicator indicator;
-    @InjectView(R.id.toolbarToggle)
+    @BindView(R.id.toolbarToggle)
     ImageView toolbarToggle;
-    @InjectView(R.id.toolbarToggleLeft)
+    @BindView(R.id.toolbarToggleLeft)
     ImageView toolbarToggleLeft;
-    @InjectView(R.id.featureListRelativeLayout)
+    @BindView(R.id.featureListRelativeLayout)
     RelativeLayout frameLayout;
-    @InjectView(R.id.featureListHolder)
+    @BindView(R.id.featureListHolder)
     LinearLayout featureListHolder;
-    @InjectView(R.id.toolbarFeatureElevation)
+    @BindView(R.id.toolbarFeatureElevation)
     View toolbarFeatureElevation;
-    @InjectView(R.id.toolbarTitle)
+    @BindView(R.id.toolbarTitle)
     TextView toolbarTitle;
-    @InjectView(R.id.nestedScrollView)
+    @BindView(R.id.nestedScrollView)
     NestedScrollView scroller;
-    @InjectView(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
-    //    @InjectView(R.id.left_drawer)
+    //    @BindView(R.id.left_drawer)
 //    ListView mDrawerList;
-    @InjectView(R.id.recyclerViewProvinceShow)
+    @BindView(R.id.recyclerViewProvinceShow)
     RecyclerView recyclerViewProvinceShow;
-    @InjectView(R.id.recyclerBestHotel)
+    @BindView(R.id.recyclerBestHotel)
     RecyclerView recyclerBestHotel;
-    @InjectView(R.id.recyclerBestAttraction)
+    @BindView(R.id.recyclerBestAttraction)
     RecyclerView recyclerBestAttraction;
-    @InjectView(R.id.recyclerItinerary)
+    @BindView(R.id.recyclerItinerary)
     RecyclerView recyclerItinerary;
-    @InjectView(R.id.recyclerSouvenir)
+    @BindView(R.id.recyclerSouvenir)
     RecyclerView recyclerSouvenir;
-    @InjectView(R.id.recyclerCity)
+    @BindView(R.id.recyclerCity)
     RecyclerView recyclerCity;
-    @InjectView(R.id.recyclerLocalFood)
+    @BindView(R.id.recyclerLocalFood)
     RecyclerView recyclerLocalFood;
-    @InjectView(R.id.viewPagerEventsHolder)
+    @BindView(R.id.viewPagerEventsHolder)
     LinearLayout viewPagerEventsHolder;
-    @InjectView(R.id.hotelsTypeHolder)
+    @BindView(R.id.hotelsTypeHolder)
     RelativeLayout hotelsTypeHolder;
-    @InjectView(R.id.tvEventShowAll)
+    @BindView(R.id.tvEventShowAll)
     TextView tvEventShowAll;
-    @InjectView(R.id.viewPagerBestHolder)
+    @BindView(R.id.viewPagerBestHolder)
     RelativeLayout viewPagerBestHolder;
-    @InjectView(R.id.attracttionTypeHolder)
+    @BindView(R.id.attracttionTypeHolder)
     RelativeLayout attracttionTypeHolder;
-    @InjectView(R.id.bestAttractionHolder)
+    @BindView(R.id.bestAttractionHolder)
     RelativeLayout bestAttractionHolder;
-    @InjectView(R.id.itineraryHomeHolder)
+    @BindView(R.id.itineraryHomeHolder)
     RelativeLayout itineraryHomeHolder;
-    @InjectView(R.id.localFoodHomeHolder)
+    @BindView(R.id.localFoodHomeHolder)
     RelativeLayout localFoodHomeHolder;
-    @InjectView(R.id.souvenirHomeHolder)
+    @BindView(R.id.souvenirHomeHolder)
     RelativeLayout souvenirHomeHolder;
-    @InjectView(R.id.TypeHotelHolder)
+    @BindView(R.id.TypeHotelHolder)
     RelativeLayout TypeHotelHolder;
-    @InjectView(R.id.hotelHolderGrouping)
+    @BindView(R.id.hotelHolderGrouping)
     RelativeLayout hotelHolderGrouping;
-    @InjectView(R.id.hotelTraditionalHolderGrouping)
+    @BindView(R.id.hotelTraditionalHolderGrouping)
     RelativeLayout hotelTraditionalHolderGrouping;
-    @InjectView(R.id.hotelBoomgardiHolderGrouping)
+    @BindView(R.id.hotelBoomgardiHolderGrouping)
     RelativeLayout hotelBoomgardiHolderGrouping;
-    @InjectView(R.id.hotelَAppartementHolderGrouping)
+    @BindView(R.id.hotelَAppartementHolderGrouping)
     RelativeLayout hotelَAppartementHolderGrouping;
-    @InjectView(R.id.txtMoreTitleHotel)
+    @BindView(R.id.txtMoreTitleHotel)
     TextView txtMoreTitleHotel;
-    @InjectView(R.id.attractionHistoricalHolder)
+    @BindView(R.id.attractionHistoricalHolder)
     RelativeLayout attractionHistoricalHolder;
-    @InjectView(R.id.attractionNaturalHolder)
+    @BindView(R.id.attractionNaturalHolder)
     RelativeLayout attractionNaturalHolder;
-    @InjectView(R.id.attractionSportHolder)
+    @BindView(R.id.attractionSportHolder)
     RelativeLayout attractionSportHolder;
-    @InjectView(R.id.attractionRelgonHolder)
+    @BindView(R.id.attractionRelgonHolder)
     RelativeLayout attractionRelgonHolder;
-    @InjectView(R.id.toolbarTitleParent)
+    @BindView(R.id.toolbarTitleParent)
     LinearLayout toolbarTitleParent;
-    @InjectView(R.id.txtEventsTitle)
+    @BindView(R.id.txtEventsTitle)
     TextView tvEventsTitle;
-    @InjectView(R.id.overlapImageItineraryHolder)
+    @BindView(R.id.overlapImageItineraryHolder)
     RelativeLayout overlapImageItineraryHolder;
-    @InjectView(R.id.homeNavAttraction)
+    @BindView(R.id.homeNavAttraction)
     ImageView homeNavAttraction;
-    @InjectView(R.id.txtCityrTitle)
+    @BindView(R.id.txtCityrTitle)
     TextView txtCityrTitle;
-    @InjectView(R.id.provinceHomeHolder)
+    @BindView(R.id.provinceHomeHolder)
     RelativeLayout provinceHomeHolder;
 
     private String cityName = "city name";
@@ -263,7 +263,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
                              ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
         toolbarBack.setVisibility(View.GONE);
         appBarLayout.addOnOffsetChangedListener(this);
         if (scroller != null) {
@@ -755,6 +755,8 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
         Intent intentA = new Intent(getContext(), ShowAttractionListMoreActivity.class);
         intentA.putExtra("attractionsList", (Serializable) resultLodgings);
         intentA.putExtra("nextOffset", getAttractionList.getStatistics().getOffsetNext());
+        intentA.putExtra("provinceCityID", selectId);
+        intentA.putExtra("provinceCityType",SelectedType);
         startActivity(intentA);
     }
 

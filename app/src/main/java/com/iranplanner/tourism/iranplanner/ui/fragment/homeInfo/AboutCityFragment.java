@@ -46,8 +46,8 @@ public class AboutCityFragment extends StandardFragment {
         if (url != null) {
             Util.setImageView(url, getContext(), img, null);
         }
-        collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
-        collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
+        collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.expandedappbar);
+        collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.collapsedappbar);
         collapsingToolbarLayout.setTitle(homeInfo.getTitle());
         setWebViewContent(homeInfo.getBody());
         return rootView;

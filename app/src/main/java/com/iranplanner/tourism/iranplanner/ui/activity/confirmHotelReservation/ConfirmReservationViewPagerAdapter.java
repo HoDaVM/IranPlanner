@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import tools.CustomDialogNumberPicker;
 import tools.Util;
 
@@ -48,58 +48,59 @@ public class ConfirmReservationViewPagerAdapter extends PagerAdapter {
     Activity activity;
     int hotelPosition;
     List<entity.ResultRoom> resultRooms;
-    @InjectView(R.id.roomType)
+    @BindView(R.id.roomType)
     TextView roomType;
-    @InjectView(R.id.txtOkRoom)
+    @BindView(R.id.txtOkRoom)
     TextView txtOkRoom;
-    @InjectView(R.id.txtPrice)
+    @BindView(R.id.txtPrice)
     TextView txtPrice;
-    @InjectView(R.id.txtAddPeople)
+    @BindView(R.id.txtAddPeople)
     TextView txtAddPeople;
 
-    @InjectView(R.id.checkHalfIn)
+    @BindView(R.id.checkHalfIn)
     CheckBox checkHalfIn;
-    @InjectView(R.id.checkHalfOut)
+    @BindView(R.id.checkHalfOut)
     CheckBox checkHalfOut;
-    @InjectView(R.id.txthalfInPrice)
+    @BindView(R.id.txthalfInPrice)
     TextView txthalfInPrice;
-    @InjectView(R.id.txtaddPersonValue)
+    @BindView(R.id.txtaddPersonValue)
     TextView txtaddPersonValue;
-    @InjectView(R.id.txtNationalityValue)
+    @BindView(R.id.txtNationalityValue)
     TextView txtNationalityValue;
-    @InjectView(R.id.txtDiscount)
+    @BindView(R.id.txtDiscount)
     TextView txtDiscount;
-    @InjectView(R.id.endPrice)
+    @BindView(R.id.endPrice)
     TextView endPrice;
-    @InjectView(R.id.roomDelete)
+    @BindView(R.id.roomDelete)
     TextView roomDelete;
-    @InjectView(R.id.selectHoldetHalf)
+    @BindView(R.id.selectHoldetHalf)
     LinearLayout selectHoldetHalf;
-    @InjectView(R.id.imgHotelList)
+    @BindView(R.id.imgHotelList)
     ImageView imageView;
 
 
-    @InjectView(R.id.edtHeadNameReservation)
+    @BindView(R.id.edtHeadNameReservation)
     EditText edtHeadNameReservation;
-    @InjectView(R.id.edtHeadLastNameReservation)
+    @BindView(R.id.edtHeadLastNameReservation)
     EditText edtHeadLastNameReservation;
-    @InjectView(R.id.holderNationality)
+    @BindView(R.id.holderNationality)
     RelativeLayout holderNationality;
-    @InjectView(R.id.addPerHolderHolder)
+    @BindView(R.id.addPerHolderHolder)
     RelativeLayout addPerHolderHolder;
-    @InjectView(R.id.NationalHolder)
+    @BindView(R.id.NationalHolder)
     RelativeLayout NationalHolder;
-    @InjectView(R.id.holder)
+    @BindView(R.id.holder)
     RelativeLayout holder;
-    @InjectView(R.id.nextHolder)
+    @BindView(R.id.nextHolder)
     RelativeLayout nextHolder;
-    @InjectView(R.id.okEndHolder)
+    @BindView(R.id.okEndHolder)
     RelativeLayout okEndHolder;
-    @InjectView(R.id.txtReqNumber)
+    @BindView(R.id.txtReqNumber)
     TextView txtReqNumber;
     String name, family;
     View viewHolder;
     String bundleId;
+    String hotelName;
 
     @Override
     public int getItemPosition(Object object) {
@@ -117,7 +118,7 @@ public class ConfirmReservationViewPagerAdapter extends PagerAdapter {
     }
 
 
-    public ConfirmReservationViewPagerAdapter(Context context, Activity activity, List<entity.ResultRoom> resultRooms, int durationTravel, Date startOfTravel, String bundleId) {
+    public ConfirmReservationViewPagerAdapter(Context context, Activity activity, List<entity.ResultRoom> resultRooms, int durationTravel, Date startOfTravel, String bundleId,String hotelName) {
         this.context = context;
         this.activity = activity;
         this.resultRooms = resultRooms;
@@ -133,7 +134,7 @@ public class ConfirmReservationViewPagerAdapter extends PagerAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         viewHolder = inflater.inflate(R.layout.content_room_reservation_fill, null);
-        ButterKnife.inject(this, viewHolder);
+        ButterKnife.bind(this, viewHolder);
         roomCapacityExtraPrice = 0;
 
         setDefaultValue(position);
@@ -332,7 +333,7 @@ public class ConfirmReservationViewPagerAdapter extends PagerAdapter {
         txtAddPeople.setText(Util.persianNumbers(" " + Util.getPriceInToman(roomCapacityExtraPrice * durationTravel * selectAddPeople )+ " تومان "));
         edtHeadNameReservation.setText(resultRooms.get(position).getHeadName());
         edtHeadLastNameReservation.setText(resultRooms.get(position).getHeadLastName());
-        txtDiscount.setText((resultRooms.get(position).getRoomPriceDifference() != null) ? Util.persianNumbers(" " + Util.getPriceInToman(Integer.valueOf(resultRooms.get(position).getRoomPriceDifference())) + " تومان ") : "");
+        txtDiscount.setText((resultRooms.get(position).getRoomPriceDifference() != null) ? Util.persianNumbers(" " + Util.getPriceInToman(Integer.valueOf(resultRooms.get(position).getRoomPriceDifference())* durationTravel) + " تومان ") : "");
         setVisibleHalfBoard(position);
         endPrice.setText(Util.persianNumbers(Util.getPriceInToman((roomPricefinal * durationTravel) + priceHalfOutPrice + priceHalfInPrice + (roomCapacityExtraPrice * durationTravel * selectAddPeople)) + "تومان"));
         checkHalfOut.setChecked((resultRooms.get(position).getHalfOut() != null) ? resultRooms.get(position).getHalfOut() : false);

@@ -25,8 +25,9 @@ import com.iranplanner.tourism.iranplanner.ui.activity.register.RegisterContract
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 import entity.ResultRegister;
 import entity.ResultUserRegister;
 import tools.Util;
@@ -38,25 +39,25 @@ import tools.Util;
 public class SignupFragment extends StandardFragment implements RegisterContract.View {
     private static final String TAG = "SignupActivity";
     ProgressDialog progressDialog;
-    @InjectView(R.id.input_name)
+    @BindView(R.id.input_name)
     EditText nameText;
-    @InjectView(R.id.input_tel)
+    @BindView(R.id.input_tel)
     EditText input_tel;
-    @InjectView(R.id.input_family)
+    @BindView(R.id.input_family)
     EditText input_family;
-    @InjectView(R.id.input_email)
+    @BindView(R.id.input_email)
     EditText editText;
-    @InjectView(R.id.input_password)
+    @BindView(R.id.input_password)
     EditText passwordText;
-    @InjectView(R.id.input_password_repeat)
+    @BindView(R.id.input_password_repeat)
     EditText input_password_repeat;
-    @InjectView(R.id.btn_signup)
+    @BindView(R.id.btn_signup)
     Button _signupButton;
-    @InjectView(R.id.link_login)
+    @BindView(R.id.link_login)
     TextView _loginLink;
-    @InjectView(R.id.radioWoman)
+    @BindView(R.id.radioWoman)
     RadioButton radioWoman;
-    @InjectView(R.id.radioMan)
+    @BindView(R.id.radioMan)
     RadioButton radioMan;
 
     @Inject
@@ -68,7 +69,7 @@ public class SignupFragment extends StandardFragment implements RegisterContract
                              Bundle savedInstanceState) {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         View view = inflater.inflate(R.layout.activity_signup, container, false);
-        ButterKnife.inject(getActivity());
+        ButterKnife.bind(getActivity());
 
 
 

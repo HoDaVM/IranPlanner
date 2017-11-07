@@ -338,6 +338,8 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
         collapsingToolbarLayout.setCollapsedTitleTypeface(tf);
         collapsingToolbarLayout.setExpandedTitleTypeface(tf);
 
+
+
         collapsingToolbarLayout.setTitle(resultLodgingHotelDetail.getLodgingName());
 
         holderDate.setOnClickListener(this);
@@ -626,6 +628,7 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
                     intent.putExtra("resultLodgingHotelDetail", (Serializable) resultLodgingHotelDetail);
                     intent.putExtra("startOfTravel", startOfTravel);
                     intent.putExtra("durationTravel", durationTravel);
+                    intent.putExtra("hotelName", resultLodgingHotelDetail.getLodgingName());
                     startActivity(intent);
                 }
             }

@@ -19,8 +19,8 @@ import com.iranplanner.tourism.iranplanner.standard.DataTransferInterface;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import entity.LodgingRoomBed;
 import entity.LodgingRoomFacility;
 import entity.ResultRoom;
@@ -121,50 +121,50 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @InjectView(R.id.roomType)
+        @BindView(R.id.roomType)
         TextView roomType;
-        @InjectView(R.id.txtCapacity)
+        @BindView(R.id.txtCapacity)
         TextView txtCapacity;
-        @InjectView(R.id.txtShowPercentPercentage)
+        @BindView(R.id.txtShowPercentPercentage)
         TextView txtShowPercentPercentage;
-        @InjectView(R.id.txtCapacityRoomDetail1)
+        @BindView(R.id.txtCapacityRoomDetail1)
         TextView txtCapacityRoomDetail1;
-        @InjectView(R.id.txtCapacityRoomDetail2)
+        @BindView(R.id.txtCapacityRoomDetail2)
         TextView txtCapacityRoomDetail2;
-        @InjectView(R.id.txtCapacityRoomDetail3)
+        @BindView(R.id.txtCapacityRoomDetail3)
         TextView txtCapacityRoomDetail3;
-        @InjectView(R.id.txtCapacityRoomDetail4)
+        @BindView(R.id.txtCapacityRoomDetail4)
         TextView txtCapacityRoomDetail4;
-        @InjectView(R.id.txtnewPrice)
+        @BindView(R.id.txtnewPrice)
         TextView txtnewPrice;
-        @InjectView(R.id.txtPriceRoom)
+        @BindView(R.id.txtPriceRoom)
         TextView txtPriceRoom;
-        @InjectView(R.id.capacityRoomHolderDetail1)
+        @BindView(R.id.capacityRoomHolderDetail1)
         RelativeLayout capacityRoomHolderDetail1;
-        @InjectView(R.id.capacityRoomHolderDetail2)
+        @BindView(R.id.capacityRoomHolderDetail2)
         RelativeLayout capacityRoomHolderDetail2;
-        @InjectView(R.id.capacityRoomHolderDetail3)
+        @BindView(R.id.capacityRoomHolderDetail3)
         RelativeLayout capacityRoomHolderDetail3;
-        @InjectView(R.id.capacityRoomHolderDetail4)
+        @BindView(R.id.capacityRoomHolderDetail4)
         RelativeLayout capacityRoomHolderDetail4;
-        @InjectView(R.id.WifiHolder)
+        @BindView(R.id.WifiHolder)
         RelativeLayout WifiHolder;
-        @InjectView(R.id.BreakfastHolder)
+        @BindView(R.id.BreakfastHolder)
         RelativeLayout BreakfastHolder;
-        @InjectView(R.id.chooseHolder)
+        @BindView(R.id.chooseHolder)
         RelativeLayout chooseHolder;
-        @InjectView(R.id.txtNumberChoose)
+        @BindView(R.id.txtNumberChoose)
         TextView txtNumberChoose;
-        @InjectView(R.id.txtNumberRoom)
+        @BindView(R.id.txtNumberRoom)
         TextView tvNumberRoom;
-        @InjectView(R.id.priceTitle)
+        @BindView(R.id.priceTitle)
         TextView tvPriceTitle;
-        @InjectView(R.id.imgHotelList)
+        @BindView(R.id.imgHotelList)
         ImageView ivRoomImg;
 
         public ViewHolder(View view) {
             super(view);
-            ButterKnife.inject(this, view);
+            ButterKnife.bind(this, view);
 
             chooseHolder.setOnClickListener(this);
             tvNumberRoom.setText(Util.persianNumbers("0"));

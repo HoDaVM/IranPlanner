@@ -40,8 +40,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 import entity.ResultLodging;
 import entity.ResultLodgingHotel;
 import entity.ResultLodgingList;
@@ -68,15 +69,15 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
     int pastVisiblesItems, visibleItemCount, totalItemCount;
     private ProgressBar waitingLoading;
     private boolean loading = true;
-    @InjectView(R.id.TypeDurationHolder)
+    @BindView(R.id.TypeDurationHolder)
     RelativeLayout typeDurationHolder;
-    @InjectView(R.id.holderDate)
+    @BindView(R.id.holderDate)
     RelativeLayout holderDate;
-    @InjectView(R.id.reservationListRecyclerView)
+    @BindView(R.id.reservationListRecyclerView)
     RecyclerView recyclerView;
-    @InjectView(R.id.txtDateCheckIn)
+    @BindView(R.id.txtDateCheckIn)
     TextView txtTypeHotel;
-    @InjectView(R.id.txtDurationHotel)
+    @BindView(R.id.txtDurationHotel)
     TextView txtDurationHotel;
     private String nextOffset;
     private String todayDate, cityName;
@@ -95,7 +96,7 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reservation_list);
 
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         DaggerReservationHotelListComponent.builder()
                 .netComponent(((App) getApplicationContext()).getNetComponent())
                 .reservationHotelListModule(new ReservationHotelListModule(this, this))
@@ -173,9 +174,9 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
         todayDate = extras.getString("todayDate");
         cityName = extras.getString("cityName");
 
-        cityId = resultLodgings.get(0).getLodgingCityId();
 
         if (resultLodgings.size() > 0) {
+            cityId = resultLodgings.get(0).getLodgingCityId();
             type = resultLodgings.get(0).getLodginTypeId();
         } else {
             type = "";
@@ -233,9 +234,6 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
 
                     if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                         loading = false;
-
-//                        reservationPresenter.getLodgingList("list", String.valueOf(resultLodgings.get(0).getLodgingCityId()), Util.getTokenFromSharedPreferences(getApplicationContext()), "20", nextOffset, Util.getAndroidIdFromSharedPreferences(getApplicationContext()), "");
-//                        reservationHotelListPresenter.getHotelFilter("list", String.valueOf(resultLodgings.get(0).getLodgingCityId()), "20", nextOffset, "", Constants.MAXPRICE, "1", "1", "1", "1", "", "", "", "", "", "", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                         reservationHotelListPresenter.getHotelFilterONDemandLoading("list", String.valueOf(resultLodgings.get(0).getLodgingCityId()), "20", nextOffset, type, order, rate0, rate1, rate2, rate3, rate4, rate5, typeHotel, typeLocalhost, typeTraditional, typeApartment, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                     }
                 }
@@ -268,7 +266,7 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
             @Override
             public void finish(Date result) {
                 startOfTravel = result;
-                txtTypeHotel.setText("از " +Util.persianNumbers( Utils.getSimpleDate(result)));
+                txtTypeHotel.setText("از " + Util.persianNumbers(Utils.getSimpleDate(result)));
             }
         });
     }
@@ -327,14 +325,16 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
 
     @Override
     public void showLodgingList(ResultLodgingList resultLodgingList) {
-        loading = true;
+//        loading = true;
         List<ResultLodging> jj = resultLodgingList.getResultLodging();
 
         if (!nextOffset.equals(resultLodgingList.getStatistics().getOffsetNext())) {
             resultLodgings.addAll(jj);
             adapter.notifyDataSetChanged();
             nextOffset = resultLodgingList.getStatistics().getOffsetNext().toString();
-            loading = true;
+            if (resultLodgingList.getResultLodging().size() > 0) {
+                loading = true;
+            }
         } else {
         }
     }
@@ -371,7 +371,7 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
     @Override
     public void showLodgingList(ResultLodgingList resultLodgingList, String filter) {
         Log.e("lodgingList", "filter");
-        loading = true;
+//        loading = true;
         List<ResultLodging> jj = resultLodgingList.getResultLodging();
 //        if (!nextOffset.equals(resultLodgingList.getStatistics().getOffsetNext().toString())) {
         if (filter.equals("filter")) {
@@ -381,7 +381,10 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
         resultLodgings.addAll(jj);
         adapter.notifyDataSetChanged();
         nextOffset = resultLodgingList.getStatistics().getOffsetNext().toString();
-        loading = true;
+        if (resultLodgingList.getResultLodging().size() > 0) {
+            loading = true;
+        }
+
 //        }
 
     }

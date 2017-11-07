@@ -80,6 +80,9 @@
             android:name=".ui.activity.attractioListMore.ShowAttractionListMoreActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.activity.filterMap.FilterMapAttraction"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activity.register.RegisterActivity"
             android:screenOrientation="portrait" />
         <activity

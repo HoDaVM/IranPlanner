@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import entity.ReqLodgingReservation;
 import tools.CustomDialogNumberPicker;
 
@@ -315,46 +315,46 @@ public class HotelReservationConfirmListAdapter extends RecyclerView.Adapter<Hot
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @InjectView(R.id.roomType)
+        @BindView(R.id.roomType)
         TextView roomType;
-        @InjectView(R.id.txtOkRoom)
+        @BindView(R.id.txtOkRoom)
         TextView txtOkRoom;
-        @InjectView(R.id.txtPrice)
+        @BindView(R.id.txtPrice)
         TextView txtPrice;
-        @InjectView(R.id.txtAddPeople)
+        @BindView(R.id.txtAddPeople)
         TextView txtAddPeople;
-        @InjectView(R.id.checkHalfIn)
+        @BindView(R.id.checkHalfIn)
         CheckBox checkHalfIn;
-        @InjectView(R.id.checkHalfOut)
+        @BindView(R.id.checkHalfOut)
         CheckBox checkHalfOut;
-        @InjectView(R.id.txthalfInPrice)
+        @BindView(R.id.txthalfInPrice)
         TextView txthalfInPrice;
-        @InjectView(R.id.txtaddPersonValue)
+        @BindView(R.id.txtaddPersonValue)
         TextView txtaddPersonValue;
-        @InjectView(R.id.txtNationalityValue)
+        @BindView(R.id.txtNationalityValue)
         TextView txtNationalityValue;
-        @InjectView(R.id.txtDiscount)
+        @BindView(R.id.txtDiscount)
         TextView txtDiscount;
-        @InjectView(R.id.endPrice)
+        @BindView(R.id.endPrice)
         TextView endPrice;
-        @InjectView(R.id.roomDelete)
+        @BindView(R.id.roomDelete)
         TextView roomDelete;
-        @InjectView(R.id.edtHeadNameReservation)
+        @BindView(R.id.edtHeadNameReservation)
         EditText edtHeadNameReservation;
-        @InjectView(R.id.edtHeadLastNameReservation)
+        @BindView(R.id.edtHeadLastNameReservation)
         EditText edtHeadLastNameReservation;
-        @InjectView(R.id.holderNationality)
+        @BindView(R.id.holderNationality)
         RelativeLayout holderNationality;
-        @InjectView(R.id.addPerHolderHolder)
+        @BindView(R.id.addPerHolderHolder)
         RelativeLayout addPerHolderHolder;
-        @InjectView(R.id.NationalHolder)
+        @BindView(R.id.NationalHolder)
         RelativeLayout NationalHolder;
-        @InjectView(R.id.holder)
+        @BindView(R.id.holder)
         RelativeLayout holder;
 
         public ViewHolder(View view) {
             super(view);
-            ButterKnife.inject(this, view);
+            ButterKnife.bind(this, view);
         }
     }
 }

@@ -5,7 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -36,8 +38,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 import entity.GetInfoResult;
 import entity.ReqLodgingReservation;
 import entity.RequestLodgingReservationMain;
@@ -72,12 +75,13 @@ public class ActivityHotelReservationConfirm extends StandardActivity implements
     private View viewAdapter, viewEnds;
     private ConfirmReservationViewPagerAdapter confirmReservationViewPagerAdapter;
     private entity.Bundle roomBundle;
+    private String hotelName;
 
     @Inject
     ConfirmHotelPresenter confirmHotelPresenter;
     @Inject
     HotelReservationStatusListPresenter hotelReservationStatusListPresenter;
-    @InjectView(R.id.pager)
+    @BindView(R.id.pager)
     ClickableViewPager pager;
 
     private void getExtra() {
@@ -97,6 +101,7 @@ public class ActivityHotelReservationConfirm extends StandardActivity implements
             edtLastNameReservation = bundle.getString("edtLastNameReservation");
             textPhoneAddress = bundle.getString("textPhoneAddress");
             roomBundle = (entity.Bundle) bundle.getSerializable("RoomBundle");
+            hotelName = bundle.getString("hoelName");
         } else if (bundleFrom.equals("HotelReservationStatusActivity")) {
             roomBundle = (entity.Bundle) bundle.getSerializable("RoomBundle");
             ResultRooms = roomBundle.getResultRoom();
@@ -108,6 +113,7 @@ public class ActivityHotelReservationConfirm extends StandardActivity implements
             edtEmailReservation = "";
             edtLastNameReservation = "";
             textPhoneAddress = "";
+            hotelName = bundle.getString("");
         }
     }
 
@@ -115,14 +121,14 @@ public class ActivityHotelReservationConfirm extends StandardActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_show_room);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         getExtra();
         DaggerConfirmHotelComponent.builder().netComponent(((App) getApplicationContext().getApplicationContext()).getNetComponent())
                 .confirmHotelModule(new ConfirmHotelModule(this, this))
                 .build().injectConfirmHotel(this);
         ReqLodgingReservationList = new ArrayList<ReqLodgingReservation>();
 
-        confirmReservationViewPagerAdapter = new ConfirmReservationViewPagerAdapter(getApplicationContext(), this, ResultRooms, durationTravel, startOfTravel, bundleId);
+        confirmReservationViewPagerAdapter = new ConfirmReservationViewPagerAdapter(getApplicationContext(), this, ResultRooms, durationTravel, startOfTravel, bundleId,"");
         pager.setAdapter(confirmReservationViewPagerAdapter);
         pager.setCurrentItem(ResultRooms.size() - 1);
         confirmReservationViewPagerAdapter.setOnItemClickListener(new ConfirmReservationViewPagerAdapter.OnItemClickViewPagerListener() {
@@ -151,6 +157,13 @@ public class ActivityHotelReservationConfirm extends StandardActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        getSupportActionBar().setTitle("ورود مشخصات ");
 
     }
 
@@ -304,7 +317,7 @@ public class ActivityHotelReservationConfirm extends StandardActivity implements
         pager.setCurrentItem(pager.getCurrentItem(), true);
         ((TextView) viewAdapter.findViewById(R.id.txtOkRoom)).setText("ویرایش");
         ((TextView) viewAdapter.findViewById(R.id.txtOkRoom)).setBackgroundResource(R.drawable.button_corner_grey_stroke);
-        ((TextView) viewAdapter.findViewById(R.id.txtOkRoom)).setTextColor(ContextCompat.getColor(this,R.color.white_));
+        ((TextView) viewAdapter.findViewById(R.id.txtOkRoom)).setTextColor(ContextCompat.getColor(this,R.color.dark_blue));
         if (0 == pager.getCurrentItem()) {
             viewEnds.setVisibility(View.VISIBLE);
         }

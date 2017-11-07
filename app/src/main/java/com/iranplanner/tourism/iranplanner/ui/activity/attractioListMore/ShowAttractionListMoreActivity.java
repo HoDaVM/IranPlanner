@@ -20,6 +20,7 @@ import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.standard.DataTransferInterface;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails.attractionDetailActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.filterMap.FilterMapAttraction;
 import com.iranplanner.tourism.iranplanner.ui.filterManager.FilterManager;
 
 import java.io.Serializable;
@@ -28,8 +29,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import entity.ResulAttraction;
 import entity.ResultAttractionList;
 import entity.ResultCommentList;
@@ -46,10 +47,10 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
     private AttractionsMoreListAdapter adapter;
     LinearLayoutManager mLayoutManager;
     List<ResultAttractionList> attractionsList;
-    String nextOffset;
+    String nextOffset, cityid, citytype;
     Toolbar toolbar;
 
-    @InjectView(R.id.attractionListRecyclerView)
+    @BindView(R.id.attractionListRecyclerView)
     RecyclerView attractionRecyclerView;
 
     private ProgressDialog progressDialog;
@@ -61,6 +62,8 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
         Bundle bundle = intent.getExtras();
         attractionsList = (List<ResultAttractionList>) bundle.getSerializable("attractionsList");
         nextOffset = bundle.getString("nextOffset");
+        cityid = bundle.getString("provinceCityID");
+        citytype = bundle.getString("provinceCityType");
     }
 
     private void setToolbar() {
@@ -83,7 +86,7 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_attraction_list_more);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         DaggerAttractionListMoreComponent.builder().netComponent(((App) getApplicationContext()).getNetComponent())
                 .attractionListMoreModule(new AttractionListMoreModule(this))
@@ -112,11 +115,12 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
 //                    visibleItemCount = mLayoutManager.getChildCount();
 //                    totalItemCount = mLayoutManager.getItemCount();
 //                    pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
-//
-//                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-////                        lklk
-////                        reservationPresenter.getLodgingList("list", String.valueOf(resultLodgings.get(0).getLodgingCityId()), "20", nextOffset, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
-//                    }
+
+                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+//                        lklk
+//                        reservationPresenter.getLodgingList("list", String.valueOf(resultLodgings.get(0).getLodgingCityId()), "20", nextOffset, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+//                        attractionListMorePresenter.getAttractionMore("search", "fa", cityid, citytype, "0", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                    }
                 }
             }
 //            }
@@ -130,7 +134,7 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
 
         setToolbar();
 
-        filterManager = new FilterManager(this,findViewById(R.id.filterView));
+        filterManager = new FilterManager(this, findViewById(R.id.filterView));
 //        filterManager.enableAll();
         filterManager.enablePlaceRate();
         filterManager.enableSort();
@@ -142,6 +146,10 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.mapToggleView:
+                Intent intentA = new Intent(getApplicationContext(), FilterMapAttraction.class);
+                intentA.putExtra("attractionsList", (Serializable) attractionsList);
+                intentA.putExtra("nextOffset", "0");
+                startActivity(intentA);
                 break;
         }
     }

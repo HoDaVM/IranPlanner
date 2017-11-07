@@ -55,8 +55,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 import entity.InterestResult;
 import entity.ItineraryLodgingCity;
 import entity.ResulAttraction;
@@ -94,73 +95,73 @@ public class attractionDetailActivity extends AppCompatActivity implements OnMap
     int VisitedValue;
     int WishValue;
 
-    @InjectView(R.id.contentFullDescription)
+    @BindView(R.id.contentFullDescription)
     CTouchyWebView contentFullDescription;
-    @InjectView(R.id.attractionPlace)
+    @BindView(R.id.attractionPlace)
     TextView attractionPlace;
-    @InjectView(R.id.textTimeDuration)
+    @BindView(R.id.textTimeDuration)
     TextView textTimeDuration;
-    @InjectView(R.id.textEntranceFee)
+    @BindView(R.id.textEntranceFee)
     TextView textEntranceFee;
-    @InjectView(R.id.attractionType)
+    @BindView(R.id.attractionType)
     TextView attractionType;
-    @InjectView(R.id.txtAddress)
+    @BindView(R.id.txtAddress)
     TextView txtAddress;
-    @InjectView(R.id.imageTypeAttraction)
+    @BindView(R.id.imageTypeAttraction)
     ImageView imageTypeAttraction;
-    @InjectView(R.id.imageAttraction)
+    @BindView(R.id.imageAttraction)
     ImageView imageAttraction;
-    @InjectView(R.id.commentHolder)
+    @BindView(R.id.commentHolder)
     LinearLayout commentHolder;
-    @InjectView(R.id.rateHolder)
+    @BindView(R.id.rateHolder)
     LinearLayout rateHolder;
-    @InjectView(R.id.doneHolder)
+    @BindView(R.id.doneHolder)
     LinearLayout doneHolder;
-    @InjectView(R.id.nowVisitedHolder)
+    @BindView(R.id.nowVisitedHolder)
     LinearLayout nowVisitedHolder;
-    @InjectView(R.id.beftorVisitedHolder)
+    @BindView(R.id.beftorVisitedHolder)
     LinearLayout beftorVisitedHolder;
-    @InjectView(R.id.dislikeHolder)
+    @BindView(R.id.dislikeHolder)
     LinearLayout dislikeHolder;
-    @InjectView(R.id.okHolder)
+    @BindView(R.id.okHolder)
     LinearLayout okHolder;
-    @InjectView(R.id.likeHolder)
+    @BindView(R.id.likeHolder)
     LinearLayout likeHolder;
-    @InjectView(R.id.bookmarkHolder)
+    @BindView(R.id.bookmarkHolder)
     LinearLayout bookmarkHolder;
-    @InjectView(R.id.ratingHolder)
+    @BindView(R.id.ratingHolder)
     RelativeLayout ratingHolder;
-    @InjectView(R.id.GroupHolder)
+    @BindView(R.id.GroupHolder)
     RelativeLayout GroupHolder;
-    @InjectView(R.id.interestingLayout)
+    @BindView(R.id.interestingLayout)
     RelativeLayout interestingLayout;
-    @InjectView(R.id.VisitedLayout)
+    @BindView(R.id.VisitedLayout)
     RelativeLayout VisitedLayout;
-    @InjectView(R.id.LikeLayout)
+    @BindView(R.id.LikeLayout)
     RelativeLayout LikeLayout;
-    @InjectView(R.id.MoreInoText)
+    @BindView(R.id.MoreInoText)
     TextView MoreInoText;
-    @InjectView(R.id.bookmarkImg)
+    @BindView(R.id.bookmarkImg)
     ImageView bookmarkImg;
-    @InjectView(R.id.doneImg)
+    @BindView(R.id.doneImg)
     ImageView doneImg;
-    @InjectView(R.id.dislikeImg)
+    @BindView(R.id.dislikeImg)
     ImageView dislikeImg;
-    @InjectView(R.id.okImg)
+    @BindView(R.id.okImg)
     ImageView okImg;
-    @InjectView(R.id.likeImg)
+    @BindView(R.id.likeImg)
     ImageView likeImg;
-    @InjectView(R.id.rateImg)
+    @BindView(R.id.rateImg)
     ImageView rateImg;
-    @InjectView(R.id.beftorVisitedImg)
+    @BindView(R.id.beftorVisitedImg)
     ImageView beftorVisitedImg;
-    @InjectView(R.id.nowVisitedImg)
+    @BindView(R.id.nowVisitedImg)
     ImageView nowVisitedImg;
-    @InjectView(R.id.wishImg)
+    @BindView(R.id.wishImg)
     ImageView wishImg;
-    @InjectView(R.id.triangleShowAttraction)
+    @BindView(R.id.triangleShowAttraction)
     ImageView triangleShowAttraction;
-    @InjectView(R.id.recyclerBestAttraction)
+    @BindView(R.id.recyclerBestAttraction)
     RecyclerView recyclerBestAttraction;
     DaggerAtractionDetailComponent.Builder builder;
     private List<ResultAttractionList> resultAttractionList;
@@ -169,7 +170,7 @@ public class attractionDetailActivity extends AppCompatActivity implements OnMap
     private void findView() {
 //        setContentView(R.layout.activity_attraction_detail);
         setContentView(R.layout.fragment_attraction_detail);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
     }
 

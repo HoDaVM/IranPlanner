@@ -68,7 +68,7 @@ public class HotelReservationStatusActivity extends StandardActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_status_reservation_hotel);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         initToolbar();
         getExtras();

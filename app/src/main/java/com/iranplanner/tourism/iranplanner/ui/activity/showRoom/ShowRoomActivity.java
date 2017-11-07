@@ -10,7 +10,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -37,8 +36,8 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import entity.ReqLodgingReservation;
 import entity.RequestLodgingReservationMain;
 import entity.ResultLodging;
@@ -66,25 +65,26 @@ public class ShowRoomActivity extends StandardActivity implements ShowRoomContra
     CustomDialogNumberPicker cdd;
 
     Map<Integer, Integer> selectedRooms;
-    List<String> t;
+    List<String> tString;
 
-    @InjectView(R.id.reservationListRecyclerView)
+    @BindView(R.id.reservationListRecyclerView)
     RecyclerView recyclerView;
-    @InjectView(R.id.hotelReservationOkHolder)
+    @BindView(R.id.hotelReservationOkHolder)
     LinearLayout hotelReservationOkHolder;
-    @InjectView(R.id.txtNumber)
+    @BindView(R.id.txtNumber)
     TextView txtNumber;
     @Inject
     ShowRoomPresenter showRoomPresenter;
 
     private ProgressDialog progressDialog;
+    private String hotelName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_show_room);
 
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         getExtra();
         init();
     }
@@ -115,14 +115,16 @@ public class ShowRoomActivity extends StandardActivity implements ShowRoomContra
             }
         }));
 
-        t = new ArrayList<>();
+        tString = new ArrayList<>();
+
 
         //init toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("لیست اتاقهای هتل");
+        getSupportActionBar().setTitle(hotelName);
+        getSupportActionBar().setSubtitle("Subtitle");
+        getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         updateRoomCountTv("0");
     }
 
@@ -156,6 +158,7 @@ public class ShowRoomActivity extends StandardActivity implements ShowRoomContra
         startOfTravel = (Date) bundle.getSerializable("startOfTravel");
         durationTravel = 0;
         durationTravel = (int) bundle.getSerializable("durationTravel");
+        hotelName = bundle.getString("hotelName");
     }
 
     private void showDialogNumber(final int position, final TextView txtNumberRoom, final TextView txtNumberChoose) {
@@ -304,6 +307,7 @@ public class ShowRoomActivity extends StandardActivity implements ShowRoomContra
             intentReservationRegisterRoom.putExtra("durationTravel", durationTravel);
             intentReservationRegisterRoom.putExtra("resultLodgingHotelDetail", (Serializable) resultLodgingHotelDetail);
             intentReservationRegisterRoom.putExtra("bundleId", requestLodgingReservationMain.getResultLodgingReservation().getReqBundleId());
+            intentReservationRegisterRoom.putExtra("hotelName", hotelName);
             startActivity(intentReservationRegisterRoom);
         } else
             Toast.makeText(getApplicationContext(), "قطع ارتباط با سرور", Toast.LENGTH_LONG).show();

@@ -1,8 +1,6 @@
 package com.iranplanner.tourism.iranplanner.ui.activity.filterMap;
 
 import android.Manifest;
-
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -37,64 +35,57 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.RecyclerItemOnClickListener;
-import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.standard.DataTransferInterface;
-import com.iranplanner.tourism.iranplanner.ui.activity.MapsActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.MySupportMapFragmen;
-import com.iranplanner.tourism.iranplanner.ui.activity.hotelDetails.ReservationHotelDetailActivity;
-import com.iranplanner.tourism.iranplanner.ui.activity.hotelReservationListOfCity.ReservationContract;
-import com.iranplanner.tourism.iranplanner.ui.activity.mainActivity.MainActivity;
-import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.DaggerReservationHotelListComponent;
-import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListContract;
-import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListModule;
-import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListPresenter;
-import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReseveHotelListAdapter;
+import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.AttractionListMoreContract;
 
-import java.io.Serializable;
+import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.AttractionsMoreListAdapter;
+
+import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListPresenter;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 import entity.ResultAttractionList;
-import entity.ResultLodging;
-import entity.ResultLodgingHotel;
-import entity.ResultLodgingList;
+import entity.ResultCommentList;
+import entity.ShowAtractionDetailMore;
+import entity.ShowAttractionMoreList;
 import tools.Util;
 
 /**
  * Created by h.vahidimehr on 23/10/2017.
  */
 
-public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
+public class FilterMapAttraction extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener, DataTransferInterface, GoogleMap.OnMarkerClickListener, View.OnClickListener
-        , ReservationHotelListContract.View, ReservationContract.View {
+        LocationListener, DataTransferInterface, GoogleMap.OnMarkerClickListener, View.OnClickListener,AttractionListMoreContract.View
+     /*   , AttractionListMoreContract.View*/ {
 
 
     //تهران
     List<ResultAttractionList> attractionsList;
-
+//    @Inject
+//    AttractionListMorePresenter attractionListMorePresenter;
     private GoogleMap mMap;
     LocationRequest mLocationRequest;
     GoogleApiClient mGoogleApiClient;
     private List<Marker> markers;
     int position = -1;
-    private List<ResultLodging> resultLodgings;
-    private Date startOfTravel;
-    private int durationTravel;
+    //    private List<ResultLodging> resultLodgings;
+//    private Date startOfTravel;
+//    private int durationTravel;
     private String nextOffset;
-    private String todayDate;
-    private String cityName;
+    //    private String todayDate;
+//    private String cityName;
     @BindView(R.id.reservationListRecyclerView)
     RecyclerView recyclerView;
     LinearLayoutManager mLayoutManager;
-    private ReseveHotelListAdapter adapter;
+    private AttractionsMoreListAdapter adapter;
     ArrayList<LatLng> markerPoints;
     ArrayList<String> markerNames;
     MySupportMapFragmen mapFragment;
@@ -103,10 +94,6 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
     @Inject
     ReservationHotelListPresenter reservationHotelListPresenter;
 
-    public FilterMap(List<ResultAttractionList> attractionsList, String nextOffset) {
-        this.attractionsList=attractionsList;
-        this.nextOffset=nextOffset;
-    }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -166,7 +153,7 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
         mMap = googleMap;
 
         //Initialize Google Play Services
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)
@@ -233,25 +220,21 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
         mapFragment.getMapAsync(this);
         setUpRecyclerView();
         btnSelectPolygon.setOnClickListener(this);
-        DaggerReservationHotelListComponent.builder()
-                .netComponent(((App) getApplicationContext()).getNetComponent())
-                .reservationHotelListModule(new ReservationHotelListModule(this, this))
-                .build().inject(this);
+//        DaggerReservationHotelListComponent.builder()
+//                .netComponent(((App) getApplicationContext()).getNetComponent())
+//                .reservationHotelListModule(new ReservationHotelListModule(this, this))
+//                .build().inject(this);
+//        DaggerAttractionListMoreComponent.builder().netComponent(((App) getApplicationContext()).getNetComponent())
+//                .attractionListMoreModule(new AttractionListMoreModule(this))
+//                .build().inject(this);
 
     }
 
-    public FilterMap() {
-
-    }
 
     private void getExtras() {
         Bundle extras = getIntent().getExtras();
-        resultLodgings = (List<ResultLodging>) extras.getSerializable("resultLodgings");
-        startOfTravel = (Date) extras.getSerializable("startOfTravel");
-        durationTravel = (int) extras.getSerializable("durationTravel");
+        attractionsList = (List<ResultAttractionList>) extras.getSerializable("attractionsList");
         nextOffset = extras.getString("nextOffset");
-        todayDate = extras.getString("todayDate");
-        cityName = extras.getString("cityName");
         setPointList();
     }
 
@@ -261,8 +244,9 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
         final LinearLayoutManager horizontalLayoutManagaer
                 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(horizontalLayoutManagaer);
+        adapter = new AttractionsMoreListAdapter(this, this, attractionsList, getApplicationContext(), R.layout.content_attraction_list);
 
-        adapter = new ReseveHotelListAdapter(FilterMap.this, this, resultLodgings, getApplicationContext(), R.layout.fragment_itinerary_item);
+//        adapter = new ReseveHotelListAdapter(FilterMapAttraction.this, this, resultLodgings, getApplicationContext(), R.layout.fragment_itinerary_item);
         recyclerView.setAdapter(adapter);
         final SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
@@ -282,7 +266,7 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
                             .title(markerNames.get(position)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_blue_pin)));
 
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(position)));
-                    CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
+                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
                     mMap.animateCamera(zoom);
 
                 }
@@ -295,7 +279,8 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
                 showMarkers(markerPoints);
                 //open
                 String offset = "0";
-                reservationHotelListPresenter.getHotelReserve("full", String.valueOf(resultLodgings.get(position).getLodgingId()), "20", offset, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+//                reservationHotelListPresenter.getHotelReserve("full", String.valueOf(resultLodgings.get(position).getLodgingId()), "20", offset, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+//                attractionListMorePresenter.getAttractionDetailNear("full", attractionsList.get(position).getResulAttraction().getAttractionId(), "fa", "0", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
 
             }
         }));
@@ -308,14 +293,22 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
         markerPoints = new ArrayList<>();
         markerNames = new ArrayList<>();
 
-        for (ResultLodging resultLodging : resultLodgings) {
-            if (resultLodging.getLodgingPosLat() != null &&
-                    resultLodging.getLodgingPosLong() != null) {
-                LatLng latLng = new LatLng(Double.valueOf(resultLodging.getLodgingPosLat()), Double.valueOf(resultLodging.getLodgingPosLong()));
+        for (ResultAttractionList resultAttractionList : attractionsList) {
+            if (resultAttractionList.getResulAttraction().getAttractionPositionLat() != null &&
+                    resultAttractionList.getResulAttraction().getAttractionPositionLon() != null) {
+                LatLng latLng = new LatLng(Double.valueOf(resultAttractionList.getResulAttraction().getAttractionPositionLat()), Double.valueOf(resultAttractionList.getResulAttraction().getAttractionPositionLon()));
                 markerPoints.add(latLng);
-                markerNames.add(resultLodging.getLodgingName());
+                markerNames.add(resultAttractionList.getResulAttraction().getAttractionTitle());
             }
         }
+//        for ( resultLodging : attractionsList) {
+//            if (resultLodging.getLodgingPosLat() != null &&
+//                    resultLodging.getLodgingPosLong() != null) {
+//                LatLng latLng = new LatLng(Double.valueOf(resultLodging.getLodgingPosLat()), Double.valueOf(resultLodging.getLodgingPosLong()));
+//                markerPoints.add(latLng);
+//                markerNames.add(resultLodging.getLodgingName());
+//            }
+//        }
 
 
     }
@@ -330,8 +323,8 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
     @Override
     public boolean onMarkerClick(Marker marker) {
         int c = 0;
-        for (ResultLodging resultLodging : resultLodgings) {
-            if (resultLodging.getLodgingName().equals(marker.getTitle())) {
+        for (ResultAttractionList resultLodging : attractionsList) {
+            if (resultLodging.getResulAttraction().getAttractionTitle().equals(marker.getTitle())) {
                 showMarkers(markerPoints);
                 mMap.addMarker(new MarkerOptions().position(markerPoints.get(c))
                         .title(markerNames.get(c)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_blue_pin)));
@@ -356,20 +349,22 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     @Override
-    public void showHotelReserveList(ResultLodgingHotel resultLodgingHotel) {
-        if (resultLodgingHotel != null) {
-            ResultLodging resultLodgingHotelDetail = resultLodgingHotel.getResultLodging();
-            Intent intent = new Intent(getApplicationContext(), ReservationHotelDetailActivity.class);
-            intent.putExtra("resultLodgingHotelDetail", (Serializable) resultLodgingHotelDetail);
-            intent.putExtra("startOfTravel", startOfTravel);
-            intent.putExtra("durationTravel", durationTravel);
-            intent.putExtra("todayDate", todayDate);
-            startActivity(intent);
-        }
+    public void showComments(ResultCommentList resultCommentList) {
+
+    }
+
+    @Override
+    public void sendCommentMessage(ResultCommentList resultCommentList) {
+
     }
 
     @Override
     public void showError(String message) {
+
+    }
+
+    @Override
+    public void commentResult(String message) {
 
     }
 
@@ -379,22 +374,70 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     @Override
-    public void dismissProgress() {
-
-    }
-
-    @Override
     public void showProgress() {
 
     }
 
     @Override
-    public void showLodgingList(ResultLodgingList resultLodgingList, String filter) {
+    public void dismissProgress() {
 
     }
 
     @Override
-    public void showLodgingList(ResultLodgingList resultLodgingList) {
+    public void ShowAttractionLists(ShowAttractionMoreList showAttractionList) {
 
     }
+
+    @Override
+    public void showAttractionDetail(ShowAtractionDetailMore showAttractionFull) {
+
+    }
+
+
+//    @Override
+//    public void showComments(ResultCommentList resultCommentList) {
+//
+//    }
+
+//    @Override
+//    public void sendCommentMessage(ResultCommentList resultCommentList) {
+//
+//    }
+//
+//    @Override
+//    public void showError(String message) {
+//
+//    }
+//
+//    @Override
+//    public void commentResult(String message) {
+//
+//    }
+//
+//    @Override
+//    public void showComplete() {
+//
+//    }
+//
+//    @Override
+//    public void dismissProgress() {
+//
+//    }
+//
+//    @Override
+//    public void ShowAttractionLists(ShowAttractionMoreList showAttractionList) {
+//
+//    }
+//
+//    @Override
+//    public void showAttractionDetail(ShowAtractionDetailMore showAttractionFull) {
+//
+//    }
+//
+//    @Override
+//    public void showProgress() {
+//
+//    }
+
+
 }

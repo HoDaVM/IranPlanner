@@ -85,7 +85,7 @@ public class LoginFragment extends StandardFragment implements GoogleApiClient.C
                              Bundle savedInstanceState) {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         View view = inflater.inflate(R.layout.login, container, false);
-        ButterKnife.inject(getActivity());
+        ButterKnife.bind(getActivity());
         _emailText = (EditText) view.findViewById(R.id.input_email);
         _passwordText = (EditText) view.findViewById(R.id.input_password);
         _loginButton = (TextView) view.findViewById(R.id.btn_login);

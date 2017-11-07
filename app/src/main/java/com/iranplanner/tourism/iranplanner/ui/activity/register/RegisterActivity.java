@@ -21,8 +21,9 @@ import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 import entity.GetHomeResult;
 import entity.RegisterReqSend;
 import entity.ResultRegister;
@@ -37,17 +38,17 @@ public class RegisterActivity extends StandardActivity implements RegisterContra
     private static final String TAG = "RegisterActivity";
     ProgressDialog progressDialog;
 
-    @InjectView(R.id.input_tel)
+    @BindView(R.id.input_tel)
     EditText etPhone;
-    @InjectView(R.id.input_email)
+    @BindView(R.id.input_email)
     EditText etMail;
-    @InjectView(R.id.input_password)
+    @BindView(R.id.input_password)
     EditText etPassword;
-    @InjectView(R.id.input_password_repeat)
+    @BindView(R.id.input_password_repeat)
     EditText etPasswordRepeat;
-    @InjectView(R.id.btn_signup)
+    @BindView(R.id.btn_signup)
     TextView btnSignUp;
-    @InjectView(R.id.loginCommand)
+    @BindView(R.id.loginCommand)
     TextView tvLoginCommand;
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
@@ -66,7 +67,7 @@ public class RegisterActivity extends StandardActivity implements RegisterContra
         //Load Background Image
         Glide.with(this).load(R.drawable.splash_bg_blur).centerCrop().override(600, 400).into((ImageView) findViewById(R.id.registerBgIv));
 
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         etPhone.requestFocus();
         etPhone.setFocusable(true);
         btnSignUp.setOnClickListener(new View.OnClickListener() {

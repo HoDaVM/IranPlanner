@@ -28,8 +28,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 import entity.ResultLodging;
 import entity.ResultRoom;
 import tools.Util;
@@ -44,37 +45,37 @@ public class ActivityReservationRegisterRoom extends StandardActivity {
     int durationTravel;
     List<ResultRoom> ResultRooms;
     Map<Integer, Integer> selectedRooms;
-    @InjectView(R.id.txtHotelName)
+     @BindView(R.id.txtHotelName)
     TextView txtHotelName;
-    @InjectView(R.id.txtRoomSelected)
+    @BindView(R.id.txtRoomSelected)
     TextView txtRoomSelected;
-    @InjectView(R.id.txtCheckInDateReserve)
+    @BindView(R.id.txtCheckInDateReserve)
     TextView txtCheckInDateReserve;
-    //    @InjectView(R.id.txtDateCheckOutReserveValue)
+    //    @BindView(R.id.txtDateCheckOutReserveValue)
 //    TextView txtDateCheckOutReserveValue;
-    @InjectView(R.id.txtTimeCheckoutValue)
+    @BindView(R.id.txtTimeCheckoutValue)
     TextView txtTimeCheckoutValue;
-    @InjectView(R.id.txtTimeCheckinValue)
+    @BindView(R.id.txtTimeCheckinValue)
     TextView txtTimeCheckinValue;
-    @InjectView(R.id.txtHotelAddressValue)
+    @BindView(R.id.txtHotelAddressValue)
     TextView txtHotelAddressValue;
-    @InjectView(R.id.txtCheckInDateReserveValue)
+    @BindView(R.id.txtCheckInDateReserveValue)
     TextView txtCheckInDateReserveValue;
-    @InjectView(R.id.txtDurationTravel)
+    @BindView(R.id.txtDurationTravel)
     TextView txtDurationTravel;
-    @InjectView(R.id.imgHotel)
+    @BindView(R.id.imgHotel)
     ImageView imgHotel;
-    @InjectView(R.id.ShowRoomHolder)
+    @BindView(R.id.ShowRoomHolder)
     RelativeLayout ShowRoomHolder;
-    @InjectView(R.id.edtNameReservation)
+    @BindView(R.id.edtNameReservation)
     EditText edtNameReservation;
-    @InjectView(R.id.edtEmailReservation)
+    @BindView(R.id.edtEmailReservation)
     EditText edtEmailReservation;
-    @InjectView(R.id.edtLastNameReservation)
+    @BindView(R.id.edtLastNameReservation)
     EditText edtLastNameReservation;
-    @InjectView(R.id.textPhoneAddress)
+    @BindView(R.id.textPhoneAddress)
     EditText textPhoneAddress;
-    @InjectView(R.id.imageLoading)
+    @BindView(R.id.imageLoading)
     ProgressBar imageLoading;
     ResultLodging resultLodgingHotelDetail;
     String bundleId;
@@ -90,7 +91,7 @@ public class ActivityReservationRegisterRoom extends StandardActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reservation_register_room_activity);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         getExtra();
 
         Log.e("ReservationRegisterRoom", "Damn Son");
@@ -123,6 +124,7 @@ public class ActivityReservationRegisterRoom extends StandardActivity {
                     intentReservationRegisterRoom.putExtra("edtEmailReservation", edtEmailReservation.getText().toString());
                     intentReservationRegisterRoom.putExtra("edtLastNameReservation", edtLastNameReservation.getText().toString());
                     intentReservationRegisterRoom.putExtra("textPhoneAddress", textPhoneAddress.getText().toString());
+                    intentReservationRegisterRoom.putExtra("hotelName",resultLodgingHotelDetail.getLodgingName() );
                     startActivity(intentReservationRegisterRoom);
 //                } else {
 //                    Toast.makeText(getApplicationContext(), "مقادیر وارد شده صحیح نیست", Toast.LENGTH_LONG).show();

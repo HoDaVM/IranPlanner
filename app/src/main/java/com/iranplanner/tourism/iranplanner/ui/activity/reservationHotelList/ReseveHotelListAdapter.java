@@ -2,6 +2,7 @@ package com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.PictureDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+//import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+//import com.bumptech.glide.request.RequestListener;
+//import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
@@ -26,6 +30,7 @@ import java.util.Locale;
 
 import entity.ResultLodging;
 import tools.Util;
+
 
 /**
  * Created by Hoda on 10/01/2017.

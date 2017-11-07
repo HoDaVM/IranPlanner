@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import entity.ResultReqBundle;
 import entity.ResultReqCount;
 import tools.Util;

@@ -119,11 +119,11 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
         //General Initialization of FilterManager ItSelf
         bottomPanelView = activity.findViewById(R.id.bottomPanelView);
         filterView = activity.findViewById(R.id.filterView);
-        filterToggle = activity.findViewById(R.id.filterToggleView);
+//        filterToggle = activity.findViewById(R.id.filterToggleView);
 
         filterShade = activity.findViewById(R.id.panelShadeView);
 
-        filterToggle.setOnClickListener(this);
+//        filterToggle.setOnClickListener(this);
         filterView.setOnClickListener(this);
         filterShade.setOnClickListener(this);
         bottomPanelView.setOnClickListener(this);
@@ -415,7 +415,7 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.filterToggleView:
+//            case R.id.filterToggleView:
             case R.id.panelShadeView:
                 togglePanel();
                 break;
@@ -436,7 +436,7 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
     private void openFilterView() {
         Interpolator interpolator = new AccelerateInterpolator();
 
-        filterToggle.setOnClickListener(null);
+//        filterToggle.setOnClickListener(null);
 
         filterView.animate().setInterpolator(interpolator).translationYBy(-Util.dpToPx(activity, (int) activity.getResources().getDimension(R.dimen.filter_view_height))).setDuration(300).start();
         bottomPanelView.animate().setInterpolator(interpolator).translationYBy(-Util.dpToPx(activity, 350)).setDuration(300).start();
@@ -447,7 +447,7 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
             @Override
             public void run() {
                 isViewOpen = true;
-                filterToggle.setOnClickListener(FilterManager.this);
+//                filterToggle.setOnClickListener(FilterManager.this);
             }
         }, 300);
     }
@@ -456,7 +456,7 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
 
         Interpolator interpolator = new AccelerateInterpolator();
 
-        filterToggle.setOnClickListener(null);
+//        filterToggle.setOnClickListener(null);
         isViewOpen = false;
 
         filterView.animate().setInterpolator(interpolator).translationYBy(Util.dpToPx(activity, (int) activity.getResources().getDimension(R.dimen.filter_view_height))).setDuration(300).start();
@@ -466,7 +466,7 @@ public class FilterManager implements RadioGroup.OnCheckedChangeListener, SeekBa
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                filterToggle.setOnClickListener(FilterManager.this);
+//                filterToggle.setOnClickListener(FilterManager.this);
                 filterShade.setVisibility(View.GONE);
             }
         }, 300);

@@ -72,7 +72,7 @@ public class LoginActivity extends StandardActivity implements GoogleApiClient.C
         Bundle extras = getIntent().getExtras();
         HomeResult = (GetHomeResult) extras.getSerializable("HomeResult");
 
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         if (Util.getUseRIdFromShareprefrence(getApplicationContext()) == null || Util.getUseRIdFromShareprefrence(getApplicationContext()) == "") {
             setContentView(R.layout.login);
             etMail = (EditText) findViewById(R.id.input_email);
