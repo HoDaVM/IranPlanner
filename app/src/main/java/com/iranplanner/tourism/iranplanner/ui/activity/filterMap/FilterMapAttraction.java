@@ -53,6 +53,7 @@ import butterknife.ButterKnife;
 import entity.ResultAttractionList;
 import entity.ResultCommentList;
 import entity.ShowAtractionDetailMore;
+import entity.ShowAttractionListMore;
 import entity.ShowAttractionMoreList;
 import tools.Util;
 
@@ -383,13 +384,14 @@ public class FilterMapAttraction extends AppCompatActivity implements OnMapReady
 
     }
 
+
     @Override
-    public void ShowAttractionLists(ShowAttractionMoreList showAttractionList) {
+    public void showAttractionDetail(ShowAtractionDetailMore showAttractionFull) {
 
     }
 
     @Override
-    public void showAttractionDetail(ShowAtractionDetailMore showAttractionFull) {
+    public void ShowAttractionLists(ShowAttractionListMore getAttractionList) {
 
     }
 

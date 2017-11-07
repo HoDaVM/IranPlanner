@@ -1,10 +1,13 @@
 package com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore;
 
 
+import com.iranplanner.tourism.iranplanner.ui.fragment.home.HomePresenter;
+
 import javax.inject.Inject;
 
 import entity.ShowAtractionDetailMore;
 import entity.ShowAttractionFull;
+import entity.ShowAttractionListMore;
 import entity.ShowAttractionMoreList;
 import retrofit2.Retrofit;
 import retrofit2.http.GET;
@@ -50,13 +53,13 @@ public class AttractionListMorePresenter extends AttractionListMoreContract {
     }
 
     @Override
-    public void getAttractionMore(String action, String lang, String city, String offset, String cid, String andId) {
+    public void getAttractionMore(String action, String lang, String value, String placetype, String offset, String cid, String androidId, String attractionType) {
         mView.showProgress();
         retrofit.create(AttractionMoreListService.class)
-                .getAttractionMore(action, lang, city, offset, cid, andId).subscribeOn(Schedulers.io())
+                .getAttractionMore( action,  lang,  value,  placetype,  offset,  cid,  androidId,  attractionType).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
-                .subscribe(new Observer<ShowAttractionMoreList>() {
+                .subscribe(new Observer<ShowAttractionListMore>() {
 
                     @Override
                     public void onCompleted() {
@@ -71,7 +74,7 @@ public class AttractionListMorePresenter extends AttractionListMoreContract {
                     }
 
                     @Override
-                    public void onNext(ShowAttractionMoreList showAttractionList) {
+                    public void onNext(ShowAttractionListMore showAttractionList) {
                         mView.ShowAttractionLists(showAttractionList);
                     }
                 });
@@ -111,13 +114,16 @@ public class AttractionListMorePresenter extends AttractionListMoreContract {
 
 
         @GET("api-attraction.php")
-        Observable<ShowAttractionMoreList> getAttractionMore(
+        Observable<ShowAttractionListMore> getAttractionMore(
                 @Query("action") String action,
-                @Query("lang") String type,
-                @Query("city") String value,
+                @Query("lang") String lang,
+                @Query("id") String value,
+                @Query("placetype") String placetype,
                 @Query("offset") String offset,
                 @Query("cid") String cid,
-                @Query("andId") String androidId);
+                @Query("andId") String androidId,
+                @Query("type") String attractionType
+        );
 
         //        https://api.parsdid.com/iranplanner/app/api-attraction.php?action=full&id=24283&lang=fa&offset=20
         @GET("api-attraction.php")

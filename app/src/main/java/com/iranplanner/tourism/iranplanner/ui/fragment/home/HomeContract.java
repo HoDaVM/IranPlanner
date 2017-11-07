@@ -21,7 +21,7 @@ public abstract class HomeContract extends Presenter<HomeContract.View> {
 
         void ShowHomeResult(GetHomeResult GetHomeResult);
 
-        void ShowAttractionLists(ShowAttractionListMore getAttractionList);
+//        void ShowAttractionLists(ShowAttractionListMore getAttractionList);
 
         void ShowEventLists(ResultEvents resultEvents);
 
@@ -41,14 +41,14 @@ public abstract class HomeContract extends Presenter<HomeContract.View> {
                                  String token,
                                  String androidId);
 
-    public abstract void getAttractionMore(String action,
-                                           String lang,
-                                           String value,
-                                           String placetype,
-                                           String offset,
-                                           String cid,
-                                           String androidId,
-                                           String attractionType);
+//    public abstract void getAttractionMore(String action,
+//                                           String lang,
+//                                           String value,
+//                                           String placetype,
+//                                           String offset,
+//                                           String cid,
+//                                           String androidId,
+//                                           String attractionType);
 
 
     public abstract void getEventMore(

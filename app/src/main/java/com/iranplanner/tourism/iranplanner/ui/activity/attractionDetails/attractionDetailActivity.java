@@ -68,6 +68,7 @@ import entity.ResultData;
 import entity.ResultWidget;
 import entity.ResultWidgetFull;
 import entity.ShowAtractionDetailMore;
+import entity.ShowAttractionListMore;
 import entity.ShowAttractionMoreList;
 import tools.Constants;
 import tools.Util;
@@ -725,10 +726,7 @@ public class attractionDetailActivity extends AppCompatActivity implements OnMap
         progressBar.dismiss();
     }
 
-    @Override
-    public void ShowAttractionLists(ShowAttractionMoreList showAttractionList) {
 
-    }
 
     @Override
     public void showAttractionDetail(ShowAtractionDetailMore showAttractionFull) {
@@ -738,6 +736,11 @@ public class attractionDetailActivity extends AppCompatActivity implements OnMap
         intent.putExtra("resulAttraction", (Serializable) resulAttraction);
         intent.putExtra("resultAttractionList", (Serializable) resultAttractions);
         startActivity(intent);
+    }
+
+    @Override
+    public void ShowAttractionLists(ShowAttractionListMore getAttractionList) {
+
     }
 
 

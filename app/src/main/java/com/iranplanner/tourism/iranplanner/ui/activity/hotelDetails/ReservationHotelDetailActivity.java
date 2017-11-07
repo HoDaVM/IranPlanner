@@ -62,6 +62,7 @@ import entity.ResultLodging;
 import entity.ResultLodgingRoomList;
 import entity.ResultRoom;
 import entity.ShowAtractionDetailMore;
+import entity.ShowAttractionListMore;
 import entity.ShowAttractionMoreList;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -756,13 +757,15 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
         Util.dismissProgress(progressDialog);
     }
 
+
+
     @Override
-    public void ShowAttractionLists(ShowAttractionMoreList showAttractionList) {
+    public void showAttractionDetail(ShowAtractionDetailMore showAttractionFull) {
 
     }
 
     @Override
-    public void showAttractionDetail(ShowAtractionDetailMore showAttractionFull) {
+    public void ShowAttractionLists(ShowAttractionListMore getAttractionList) {
 
     }
 

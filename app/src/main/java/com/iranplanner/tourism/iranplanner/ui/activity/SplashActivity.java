@@ -321,10 +321,7 @@ public class SplashActivity extends StandardActivity implements MainSearchPresen
 
     }
 
-    @Override
-    public void ShowAttractionLists(ShowAttractionMoreList showAttractionList) {
 
-    }
 
     @Override
     public void showAttractionDetail(ShowAtractionDetailMore showAttractionFull) {

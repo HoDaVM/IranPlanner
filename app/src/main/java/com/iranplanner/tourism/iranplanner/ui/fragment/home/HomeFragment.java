@@ -398,7 +398,8 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
             frameLayout.setVisibility(View.INVISIBLE);
 
         } else {
-            homePresenter.getAttractionMore("search", "fa", selectId, SelectedType, "0", Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()), type);
+//            homePresenter.getAttractionMore("search", "fa", selectId, SelectedType, "0", Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()), type);
+            attractionListMorePresenter.getAttractionMore("search", "fa", selectId, SelectedType, "0", Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()), type);
 
         }
     }
@@ -932,10 +933,10 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
         startActivity(intent);
     }
 
-    @Override
-    public void ShowAttractionLists(ShowAttractionMoreList showAttractionList) {
-
-    }
+//    @Override
+//    public void ShowAttractionLists(ShowAttractionMoreList showAttractionList) {
+//
+//    }
 
     @Override
     public void showAttractionDetail(ShowAtractionDetailMore showAttractionFull) {
@@ -1020,7 +1021,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
                     }
                     else if (type == Constants.homeAttraction) {
                         cityName = CityProvince.get(position).getTitle();
-                        homePresenter.getAttractionMore("search", "fa", CityProvince.get(position).getId(), CityProvince.get(position).getType(), "0", Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()), "");
+                        attractionListMorePresenter.getAttractionMore("search", "fa", CityProvince.get(position).getId(), CityProvince.get(position).getType(), "0", Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()), "");
 //                        homePresenter.getAttractionMore("search", "fa", selectId, SelectedType, "0", Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()), type);
 
                         dismiss();

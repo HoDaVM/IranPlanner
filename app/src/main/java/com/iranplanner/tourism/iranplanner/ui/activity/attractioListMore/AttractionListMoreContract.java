@@ -6,6 +6,7 @@ import com.iranplanner.tourism.iranplanner.ui.presenter.Presenter;
 import entity.ResultCommentList;
 import entity.ShowAtractionDetailMore;
 import entity.ShowAttractionFull;
+import entity.ShowAttractionListMore;
 import entity.ShowAttractionMoreList;
 
 /**
@@ -27,16 +28,19 @@ public abstract class AttractionListMoreContract extends Presenter<AttractionLis
 
         void dismissProgress();
 
-        void ShowAttractionLists(ShowAttractionMoreList showAttractionList);
         void showAttractionDetail(ShowAtractionDetailMore showAttractionFull);
+        void ShowAttractionLists(ShowAttractionListMore getAttractionList);
+
     }
 
-    public abstract void getAttractionMore(String action
-            , String lang
-            , String city
-            , String offset
-            , String cid
-            , String andId);
+    public abstract void getAttractionMore(String action,
+                                           String lang,
+                                           String value,
+                                           String placetype,
+                                           String offset,
+                                           String cid,
+                                           String androidId,
+                                           String attractionType);
 
     public abstract void getAttractionDetailNear(String action,
                                                  String id,

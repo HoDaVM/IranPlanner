@@ -35,6 +35,7 @@ import entity.ResulAttraction;
 import entity.ResultAttractionList;
 import entity.ResultCommentList;
 import entity.ShowAtractionDetailMore;
+import entity.ShowAttractionListMore;
 import entity.ShowAttractionMoreList;
 import tools.Util;
 
@@ -49,7 +50,7 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
     List<ResultAttractionList> attractionsList;
     String nextOffset, cityid, citytype;
     Toolbar toolbar;
-
+    private boolean loading = true;
     @BindView(R.id.attractionListRecyclerView)
     RecyclerView attractionRecyclerView;
 
@@ -81,7 +82,45 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
         onBackPressed();
         return true;
     }
+    private void setUpRecyclerView() {
+        attractionRecyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        attractionRecyclerView.setLayoutManager(layoutManager);
+        mLayoutManager = new LinearLayoutManager(getApplicationContext());
 
+        attractionRecyclerView.setLayoutManager(mLayoutManager);
+
+        if (attractionsList != null && attractionsList.size() > 0) {
+            adapter = new AttractionsMoreListAdapter(this, this, attractionsList, getApplicationContext(), R.layout.content_attraction_list);
+            attractionRecyclerView.addItemDecoration(new AttractionListMoreItemDecoration(this));
+            attractionRecyclerView.setAdapter(adapter);
+
+        }
+        attractionRecyclerView.addOnItemTouchListener(new RecyclerItemOnClickListener(getApplicationContext(), new RecyclerItemOnClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                attractionListMorePresenter.getAttractionDetailNear("full", attractionsList.get(position).getResulAttraction().getAttractionId(), "fa", "0", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+            }
+        }));
+
+        attractionRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0 && loading) //check for scroll down
+                {
+                    visibleItemCount = mLayoutManager.getChildCount();
+                    totalItemCount = mLayoutManager.getItemCount();
+                    pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                        loading = false;
+                        attractionListMorePresenter.getAttractionMore("search", "fa", cityid, citytype, nextOffset, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()),"");
+                    }
+                }
+            }
+//            }
+        });
+
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,38 +132,37 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
                 .build().inject(this);
 
         getExtra();
-        attractionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        if (attractionsList != null && attractionsList.size() > 0) {
-            adapter = new AttractionsMoreListAdapter(this, this, attractionsList, getApplicationContext(), R.layout.content_attraction_list);
-            attractionRecyclerView.addItemDecoration(new AttractionListMoreItemDecoration(this));
-            attractionRecyclerView.setAdapter(adapter);
-
-        }
-
-        attractionRecyclerView.addOnItemTouchListener(new RecyclerItemOnClickListener(getApplicationContext(), new RecyclerItemOnClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                attractionListMorePresenter.getAttractionDetailNear("full", attractionsList.get(position).getResulAttraction().getAttractionId(), "fa", "0", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
-            }
-        }));
-        attractionRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0) //check for scroll down
-                {
+        setUpRecyclerView();
+//        attractionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        if (attractionsList != null && attractionsList.size() > 0) {
+//            adapter = new AttractionsMoreListAdapter(this, this, attractionsList, getApplicationContext(), R.layout.content_attraction_list);
+//            attractionRecyclerView.addItemDecoration(new AttractionListMoreItemDecoration(this));
+//            attractionRecyclerView.setAdapter(adapter);
+//
+//        }
+//
+//        attractionRecyclerView.addOnItemTouchListener(new RecyclerItemOnClickListener(getApplicationContext(), new RecyclerItemOnClickListener.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(View view, int position) {
+//                attractionListMorePresenter.getAttractionDetailNear("full", attractionsList.get(position).getResulAttraction().getAttractionId(), "fa", "0", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+//            }
+//        }));
+//        attractionRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                if (dy > 0 && loading) //check for scroll down
+//                {
 //                    visibleItemCount = mLayoutManager.getChildCount();
 //                    totalItemCount = mLayoutManager.getItemCount();
 //                    pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
-
-                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-//                        lklk
-//                        reservationPresenter.getLodgingList("list", String.valueOf(resultLodgings.get(0).getLodgingCityId()), "20", nextOffset, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
-//                        attractionListMorePresenter.getAttractionMore("search", "fa", cityid, citytype, "0", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
-                    }
-                }
-            }
+//                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+//                        loading = false;
+//                        attractionListMorePresenter.getAttractionMore("search", "fa", cityid, citytype, "0", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()),"");
+//                    }
+//                }
 //            }
-        });
+////            }
+//        });
 
         init();
     }
@@ -204,7 +242,7 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
 //        startActivity(intent);
     }
 
-    private boolean loading = true;
+
     int pastVisiblesItems, visibleItemCount, totalItemCount;
 
 
@@ -253,10 +291,7 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
         Util.dismissProgress(progressDialog);
     }
 
-    @Override
-    public void ShowAttractionLists(ShowAttractionMoreList showAttractionList) {
 
-    }
 
     @Override
     public void showAttractionDetail(ShowAtractionDetailMore showAttractionFull) {
@@ -266,5 +301,19 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
         intent.putExtra("resulAttraction", (Serializable) resulAttraction);
         intent.putExtra("resultAttractionList", (Serializable) resultAttractions);
         startActivity(intent);
+    }
+
+    @Override
+    public void ShowAttractionLists(ShowAttractionListMore getAttractionList) {
+        List<ResultAttractionList> RAL = getAttractionList.getResultAttractionList();
+        if (!nextOffset.equals(getAttractionList.getStatistics().getOffsetNext())) {
+            attractionsList.addAll(RAL);
+            adapter.notifyDataSetChanged();
+            nextOffset = getAttractionList.getStatistics().getOffsetNext().toString();
+            if (getAttractionList.getResultAttractionList().size() > 0) {
+                loading = true;
+            }
+
+        }
     }
 }

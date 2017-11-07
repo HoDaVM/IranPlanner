@@ -4,6 +4,7 @@ package com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore;
 import com.iranplanner.tourism.iranplanner.di.model.CustomScope;
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelReservationListOfCity.ReservationContract;
 import com.iranplanner.tourism.iranplanner.ui.fragment.home.HomeContract;
+import com.iranplanner.tourism.iranplanner.ui.fragment.home.HomeFragment;
 
 import dagger.Module;
 import dagger.Provides;

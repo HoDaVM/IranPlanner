@@ -81,33 +81,33 @@ public class HomePresenter extends HomeContract {
                 });
     }
 
-    @Override
-    public void getAttractionMore(String action, String lang, String value, String placetype, String offset, String cid, String androidId, String attractionType) {
-        mView.showProgress();
-        retrofit.create(HomeService.class)
-                .getAttractionMore( action,  lang,  value,  placetype,  offset,  cid,  androidId,  attractionType).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(new Observer<ShowAttractionListMore>() {
-
-                    @Override
-                    public void onCompleted() {
-                        mView.showComplete();
-                        mView.dismissProgress();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mView.showError(e.getMessage());
-                        mView.dismissProgress();
-                    }
-
-                    @Override
-                    public void onNext(ShowAttractionListMore showAttractionList) {
-                        mView.ShowAttractionLists(showAttractionList);
-                    }
-                });
-    }
+//    @Override
+//    public void getAttractionMore(String action, String lang, String value, String placetype, String offset, String cid, String androidId, String attractionType) {
+//        mView.showProgress();
+//        retrofit.create(HomeService.class)
+//                .getAttractionMore( action,  lang,  value,  placetype,  offset,  cid,  androidId,  attractionType).subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .unsubscribeOn(Schedulers.io())
+//                .subscribe(new Observer<ShowAttractionListMore>() {
+//
+//                    @Override
+//                    public void onCompleted() {
+//                        mView.showComplete();
+//                        mView.dismissProgress();
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        mView.showError(e.getMessage());
+//                        mView.dismissProgress();
+//                    }
+//
+//                    @Override
+//                    public void onNext(ShowAttractionListMore showAttractionList) {
+//                        mView.ShowAttractionLists(showAttractionList);
+//                    }
+//                });
+//    }
 
     @Override
     public void getEventMore(String action, String lang, String id, String type, String cid, String androidId) {
