@@ -5,8 +5,6 @@ import com.iranplanner.tourism.iranplanner.ui.presenter.Presenter;
 import entity.GetHomeResult;
 import entity.ResultEvents;
 import entity.ResultItineraryList;
-import entity.ShowAttractionListMore;
-import entity.ShowAttractionMoreList;
 
 
 /**

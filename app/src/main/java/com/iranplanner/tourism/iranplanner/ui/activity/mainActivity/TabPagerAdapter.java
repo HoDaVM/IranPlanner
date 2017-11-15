@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.iranplanner.tourism.iranplanner.R;
+import com.iranplanner.tourism.iranplanner.ui.fragment.pandaMap.MapPandaFragment;
 import com.iranplanner.tourism.iranplanner.ui.fragment.home.HomeFragment;
 import com.iranplanner.tourism.iranplanner.ui.fragment.itinerarySearch.MainSearchFragment;
 import com.iranplanner.tourism.iranplanner.standard.StandardFragment;
@@ -23,17 +24,18 @@ import entity.GetHomeResult;
  */
 public class TabPagerAdapter extends FragmentPagerAdapter {
     private Context context;
-    public final int PAGE_COUNT = 3;
+    public final int PAGE_COUNT = 4;
     GetHomeResult homeResult;
     private int[] mTabsIcons = {
             R.mipmap.ic_search,
+            R.mipmap.ic_profile_grey,
             R.mipmap.ic_profile_grey,
             R.mipmap.ic_profile_grey
 
     };
     private StandardFragment currentTab;
     //    StandardFragment
-    private final String[] mTabsTitle = {"برنامه سفر", "حساب من", "خانه"};
+    private final String[] mTabsTitle = {"پاندای دانا","برنامه سفر", "حساب من", "خانه"};
 
     public TabPagerAdapter(FragmentManager fm, Context context, GetHomeResult homeResult) {
         super(fm);
@@ -57,12 +59,15 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
         currentTab = null;
         switch (pos) {
             case 0:
-                currentTab = MainSearchFragment.newInstance();
+                currentTab = MapPandaFragment.newInstance();
                 return currentTab;
             case 1:
-                currentTab = SettingFragment.newInstance();
+                currentTab = MainSearchFragment.newInstance();
                 return currentTab;
             case 2:
+                currentTab = SettingFragment.newInstance();
+                return currentTab;
+            case 3:
                 currentTab = HomeFragment.newInstance(homeResult);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("HomeResult", homeResult);

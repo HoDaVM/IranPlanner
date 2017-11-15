@@ -292,7 +292,6 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
     }
 
 
-
     @Override
     public void showAttractionDetail(ShowAtractionDetailMore showAttractionFull) {
         ResulAttraction resulAttraction = showAttractionFull.getResultAttractionFull().getResulAttraction();

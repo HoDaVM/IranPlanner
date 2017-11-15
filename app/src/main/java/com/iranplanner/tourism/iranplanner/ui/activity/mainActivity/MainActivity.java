@@ -22,6 +22,7 @@ import android.widget.Toast;
 //import com.appsee.Appsee;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.iranplanner.tourism.iranplanner.NonSwipeableViewPager;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.di.model.ForceUpdateChecker;
@@ -43,7 +44,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
     private static final String TOPIC_MAIN = "main";
 
     boolean doubleBackToExitPressedOnce = false;
-    private ViewPager viewPager;
+    private NonSwipeableViewPager viewPager;
     private TabPagerAdapter pagerAdapter;
     TabLayout mainTabLayout;
 
@@ -135,7 +136,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
 
         Bundle extras = getIntent().getExtras();
         homeResult = (GetHomeResult) extras.getSerializable("HomeResult");
-        viewPager = (ViewPager) findViewById(R.id.main_view_pager);
+        viewPager = (NonSwipeableViewPager) findViewById(R.id.main_view_pager);
         pagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), this, homeResult);
         if (viewPager != null)
             viewPager.setAdapter(pagerAdapter);
@@ -151,14 +152,17 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
             }
         }
 
-        int position = 2;
+
+
+        ///
+        int position = 3;
         mainTabLayout.getTabAt(position).getCustomView().setSelected(true);
         viewPager.setCurrentItem(position);
 
         Util.displayFirebaseRegId(this);
 
         ForceUpdateChecker.with(this).onUpdateNeeded(this).check();
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(4);
 
         permissionStatus = getSharedPreferences("permissionStatus", MODE_PRIVATE);
     }
@@ -173,7 +177,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
     @Override
     public void onBackPressed() {
 
-        if (viewPager.getCurrentItem() == 2) {
+        if (viewPager.getCurrentItem() == 3) {
 
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
@@ -190,7 +194,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
                 }
             }, 2000);
 
-        } else viewPager.setCurrentItem(2, true);
+        } else viewPager.setCurrentItem(3, true);
     }
 
     @Override

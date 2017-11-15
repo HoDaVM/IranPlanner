@@ -222,15 +222,15 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
         setContentView(R.layout.map_filter);
         ButterKnife.bind(this);
         mapFragment = (MySupportMapFragmen) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.mapView);
         mapFragment.getMapAsync(this);
         getExtras();
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+//                .findFragmentById(R.id.map);
+//        mapFragment.getMapAsync(this);
         setUpRecyclerView();
         btnSelectPolygon.setOnClickListener(this);
         DaggerReservationHotelListComponent.builder()
