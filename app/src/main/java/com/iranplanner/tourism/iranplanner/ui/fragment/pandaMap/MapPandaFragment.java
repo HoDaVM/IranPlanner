@@ -1,5 +1,6 @@
 package com.iranplanner.tourism.iranplanner.ui.fragment.pandaMap;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -10,12 +11,17 @@ import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -46,9 +52,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import autoComplet.MyFilterableAdapterProvince;
+import autoComplet.ReadJsonProvince;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import entity.PandaMapList;
+import entity.Province;
 import entity.ResultLodging;
 import entity.ResultPandaMap;
 import entity.ResultPandaMaps;
@@ -58,13 +67,12 @@ import tools.Util;
  * Created by h.vahidimehr on 11/11/2017.
  */
 
-public class MapPandaFragment extends StandardFragment implements OnMapReadyCallback, MapWrapperLayout.OnDragListener, MapPandaPresenter.View, GoogleMap.OnMarkerClickListener {
+public class MapPandaFragment extends StandardFragment implements OnMapReadyCallback, MapWrapperLayout.OnDragListener, MapPandaPresenter.View/*, GoogleMap.OnMarkerClickListener*/ {
     @Inject
     MapPandaPresenter mapPandaPresenter;
-    MapView mMapView;
+
     private GoogleMap mMap;
     ProgressDialog progressBar;
-    MarkerOptions markerOptions;
     LatLng Iran;
     @BindView(R.id.reservationListRecyclerView)
     RecyclerView recyclerView;
@@ -85,6 +93,10 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     int destination = 1;
     private List<ResultPandaMap> resultPandaMapList;
     private List<String> markerNames;
+    LinearLayoutManager horizontalLayoutManagaer;
+    private boolean isResultForDraw = false;
+    private Button btnFilter;
+    private AutoCompleteTextView search;
 
     public static MapPandaFragment newInstance() {
         MapPandaFragment fragment = new MapPandaFragment();
@@ -97,8 +109,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
         recyclerView.setHasFixedSize(true);
 
-        final LinearLayoutManager horizontalLayoutManagaer
-                = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        horizontalLayoutManagaer = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(horizontalLayoutManagaer);
 
         adapter = new PandaAdapter(getActivity(), resultPandaMapList, getContext());
@@ -112,15 +123,16 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-//                    View centerView = snapHelper.findSnapView(horizontalLayoutManagaer);
-//                    int position = horizontalLayoutManagaer.getPosition(centerView);
-//
+                    View centerView = snapHelper.findSnapView(horizontalLayoutManagaer);
+                    int position = horizontalLayoutManagaer.getPosition(centerView);
+
 //                    showMarkers(markerPoints);
-//
-//                    mMap.addMarker(new MarkerOptions().position(markerPoints.get(position))
-//                            .title(markerNames.get(position)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_blue_pin)));
-//
-//                    mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(position)));
+                    if (markerNames.size() > 0) {
+                        Marker marker = mMap.addMarker(new MarkerOptions().position(markerPoints.get(position))
+                                .title(markerNames.get(position))/*.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_blue_pin))*/);
+                        marker.showInfoWindow();
+                    }
+//                    mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(markerPosition)));
 //                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
 //                    mMap.animateCamera(zoom);
                 }
@@ -140,6 +152,25 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     }
 
+    private void cleanMapAndRecyclerView() {
+        if (PolylinePoints.size() > 0) {
+            PolylinePoints.clear();
+            mMap.clear();
+        }
+        isResultForDraw = false;
+        PolylinePoints.clear();
+        markerPoints.clear();
+        try {
+            resultPandaMapList.clear();
+            adapter.notifyDataSetChanged();
+
+        } catch (Exception e) {
+
+        }
+
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -148,12 +179,35 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
                 .findFragmentById(R.id.mapView);
 
         recyclerView = rootView.findViewById(R.id.reservationListRecyclerView);
+        btnFilter = rootView.findViewById(R.id.btnFilter);
+        search = rootView.findViewById(R.id.search);
+        search.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                mapPandaPresenter.getPandaSearch("pandaautocomplete","عار");
+
+            }
+        });
+//        autoCompleteProvince(search);
+        btnFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final Dialog mBottomSheetDialog = new Dialog(getActivity(), R.style.MaterialDialogSheet);
+                mBottomSheetDialog.setContentView(R.layout.fragment_panda_filter); // your custom view.
+                mBottomSheetDialog.setCancelable(true);
+                mBottomSheetDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                mBottomSheetDialog.getWindow().setGravity(Gravity.BOTTOM);
+                mBottomSheetDialog.show();
+            }
+        });
         Button btn = rootView.findViewById(R.id.btnSelectPolygon);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setDrawable(setDraw);
-
+                cleanMapAndRecyclerView();
 
             }
         });
@@ -164,6 +218,10 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         return rootView;
 
     }
+
+
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -197,12 +255,36 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     private void setDrawable(boolean drawable) {
         if (drawable) {
             mMap.getUiSettings().setScrollGesturesEnabled(drawable);
-            setDraw=false;
+            setDraw = false;
 
         } else {
             mMap.getUiSettings().setScrollGesturesEnabled(drawable);
-            setDraw=true;
+            setDraw = true;
         }
+
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            int markerPosition;
+
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                int c = 0;
+                for (ResultPandaMap resultLodging : resultPandaMapList) {
+                    if (resultLodging.getPoint().getTitle().equals(marker.getTitle())) {
+                        showMarkers(markerPoints);
+                        mMap.addMarker(new MarkerOptions().position(markerPoints.get(c))
+                                .title(markerNames.get(c))/*.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_blue_pin))*/);
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(c)));
+                        Log.e("marker", marker.getTitle());
+                        markerPosition = c;
+                    }
+                    c++;
+                }
+                recyclerView.getLayoutManager().scrollToPosition(markerPosition);
+
+                return false;
+            }
+        });
 
     }
 
@@ -235,13 +317,15 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     }
 
     private void showMarkers(List<LatLng> draw) {
+        int index = 0;
         for (LatLng latLng : draw) {
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(latLng);
-            markerOptions.title("موقعیت شما");
+            markerOptions.title(markerNames.get(index));
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(Iran));
-            mMap.addMarker(markerOptions);
+            Marker marker = mMap.addMarker(markerOptions);
+            index++;
         }
 
     }
@@ -249,7 +333,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     @Override
     public void onDrag(MotionEvent motionEvent) {
-        if(setDraw){
+        if (setDraw && !isResultForDraw) {
             Log.d("ON_DRAG", String.format("ME: %s", motionEvent));
             Log.d("ON_DRAG", String.format("ME: %s", motionEvent));
             // Handle motion event:
@@ -276,10 +360,10 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
             int eventaction = motionEvent.getAction();
             switch (eventaction) {
                 case MotionEvent.ACTION_DOWN:
-                    if (PolylinePoints.size() > 0) {
-                        PolylinePoints.clear();
-                        mMap.clear();
-                    }
+//                    if (PolylinePoints.size() > 0) {
+//                        PolylinePoints.clear();
+//                        mMap.clear();
+//                    }
 
                     // finger touches the screen
                     screenLeave = false;
@@ -298,6 +382,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
                     screenLeave = false;
                     Draw_Map();
 
+
                 case MotionEvent.ACTION_UP:
 
 //                            System.out.println("ACTION_UP");
@@ -308,11 +393,9 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
                         Is_MAP_Moveable = false; // to detect map is movable
                         source = 0;
                         destination = 1;
-
                         draw_final_polygon();
-
-
                     }
+
 
                     // finger leaves the screen
 //                            Is_MAP_Moveable = false; // to detect map is movable
@@ -321,7 +404,10 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
                 default:
                     break;
             }
+        } else if (setDraw && isResultForDraw) {
+            setDrawable(true);
         }
+
 
     }
 
@@ -359,28 +445,30 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
             }
         }
+        isResultForDraw = true;
         showMarkers(markerPoints);
         setUpRecyclerView(resultPandaMapList);
 
     }
 
-    int position = -1;
+//    int position = -1;
 
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        int c = 0;
-        for (ResultPandaMap resultLodging : resultPandaMapList) {
-            if (resultLodging.equals(marker.getTitle())) {
-                showMarkers(markerPoints);
-                mMap.addMarker(new MarkerOptions().position(markerPoints.get(c))
-                        .title(markerNames.get(c)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_blue_pin)));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(c)));
-                Log.e("marker", marker.getTitle());
-                position = c;
-            }
-            c++;
-        }
-        recyclerView.getLayoutManager().scrollToPosition(position);
-        return false;
-    }
+//    @Override
+//    public boolean onMarkerClick(Marker marker) {
+//        int c = 0;
+//        for (ResultPandaMap resultLodging : resultPandaMapList) {
+//            if (resultLodging.equals(marker.getTitle())) {
+//                showMarkers(markerPoints);
+//                mMap.addMarker(new MarkerOptions().position(markerPoints.get(c))
+//                        .title(markerNames.get(c)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_blue_pin)));
+//                mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(c)));
+//                Log.e("marker", marker.getTitle());
+//                position = c;
+//            }
+//            c++;
+//        }
+//        recyclerView.getLayoutManager().scrollToPosition(position);
+//        return false;
+//    }
+
 }
