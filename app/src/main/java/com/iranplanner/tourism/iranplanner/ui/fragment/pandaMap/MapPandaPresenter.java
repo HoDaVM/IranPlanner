@@ -56,10 +56,39 @@ public class MapPandaPresenter extends MapPandaContract {
 
     }
 
+//    @Override
+//    public void getDrawResult(PandaMapList pandaMapList, String token, String androidId) {
+//        mView.showProgress();
+//        retrofit.create(MapPandaService.class).getDrawResult(pandaMapList, token, androidId)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .unsubscribeOn(Schedulers.io())
+//                .subscribe(new Observer<ResultPandaMaps>() {
+//
+//                    @Override
+//                    public void onCompleted() {
+//                        mView.dismissProgress();
+//                        mView.showComplete();
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        mView.dismissProgress();
+//                        mView.showError(e.getMessage());
+//                    }
+//
+//                    @Override
+//                    public void onNext(ResultPandaMaps resultPandaMaps) {
+//                        mView.dismissProgress();
+//                        mView.showPointOnMap(resultPandaMaps);
+//                    }
+//                });
+//    }
+
     @Override
-    public void getDrawResult(PandaMapList pandaMapList, String token, String androidId) {
+    public void getDrawResult(PandaMapList pandaMapList, String valueSearch, String attractionFilter, String lodgingFilter, String position1, String position2, String token, String androidId) {
         mView.showProgress();
-        retrofit.create(MapPandaService.class).getDrawResult(pandaMapList, token, androidId)
+        retrofit.create(MapPandaService.class).getDrawResult( pandaMapList,  valueSearch,  attractionFilter,  lodgingFilter,  position1,  position2,  token,  androidId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -87,7 +116,7 @@ public class MapPandaPresenter extends MapPandaContract {
 
     @Override
     public void getPandaSearch(String action, String value) {
-        mView.showProgress();
+//        mView.showProgress();
         retrofit.create(MapPandaService.class).getPandaSearch(action,value)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -96,30 +125,38 @@ public class MapPandaPresenter extends MapPandaContract {
 
                     @Override
                     public void onCompleted() {
-                        mView.dismissProgress();
-                        mView.showComplete();
+//                        mView.dismissProgress();
+//                        mView.showComplete();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mView.dismissProgress();
+//                        mView.dismissProgress();
                         mView.showError(e.getMessage());
                     }
 
                     @Override
                     public void onNext(ResultPandaMapSearch resultPandaMapSearch) {
-                        mView.dismissProgress();
+//                        mView.dismissProgress();
+                        mView.showPandaSearch(resultPandaMapSearch);
                     }
                 });
     }
 
 
     public interface MapPandaService {
-        //        https://api.parsdid.com/iranplanner/app/api-field.php?action=pandamap
+   //https://api.parsdid.com/iranplanner/app/api-field.php?action=pandamap
         @POST("api-field.php?action=pandamap")
-        Observable<ResultPandaMaps> getDrawResult(@Body PandaMapList pandaMapList, @Query("cid") String token, @Query("andId") String androidId);
+        Observable<ResultPandaMaps> getDrawResult(@Body PandaMapList pandaMapList,
+                                                  @Query("valueSearch") String valueSearch,
+                                                  @Query("attractionFilter") String attractionFilter,
+                                                  @Query("lodgingFilter") String lodgingFilter,
+                                                  @Query("position1") String position1,
+                                                  @Query("position2") String position2,
+                                                  @Query("cid") String token,
+                                                  @Query("andId") String androidId);
 
-        //        https://api.parsdid.com/iranplanner/app/api-field.php?action=pandaautocomplete&value=غار
+   //https://api.parsdid.com/iranplanner/app/api-field.php?action=pandaautocomplete&value=غار
         @GET("api-field.php?")
         Observable<ResultPandaMapSearch> getPandaSearch(
                 @Query("action") String action,

@@ -2,10 +2,8 @@ package com.iranplanner.tourism.iranplanner.ui.fragment.pandaMap;
 
 import com.iranplanner.tourism.iranplanner.ui.presenter.Presenter;
 
-import entity.GoogleLoginReqSend;
-import entity.LoginReqSend;
-import entity.LoginResult;
 import entity.PandaMapList;
+import entity.ResultPandaMapSearch;
 import entity.ResultPandaMaps;
 
 
@@ -24,10 +22,21 @@ public abstract class MapPandaContract extends Presenter<MapPandaContract.View> 
         void dismissProgress();
 
         void showPointOnMap(ResultPandaMaps resultPandaMaps);
+
+        void showPandaSearch(ResultPandaMapSearch resultPandaMapSearch);
     }
 
 
-    public abstract void getDrawResult(PandaMapList pandaMapList, String token, String androidId);
+//    public abstract void getDrawResult(PandaMapList pandaMapList, String token, String androidId);
+
+    public abstract void getDrawResult(PandaMapList pandaMapList,
+                                       String valueSearch,
+                                       String attractionFilter,
+                                       String lodgingFilter,
+                                       String position1,
+                                       String position2,
+                                       String token,
+                                       String androidId);
 
     public abstract void getPandaSearch(
             String action,

@@ -10,6 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,10 +21,12 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,28 +42,28 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.VisibleRegion;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.RecyclerItemOnClickListener;
 import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.standard.StandardFragment;
 import com.iranplanner.tourism.iranplanner.ui.activity.MapWrapperLayout;
 import com.iranplanner.tourism.iranplanner.ui.activity.MySupportMapFragmen;
-import com.iranplanner.tourism.iranplanner.ui.activity.filterMap.FilterMap;
-import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReseveHotelListAdapter;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import autoComplet.MyFilterableAdapterProvince;
-import autoComplet.ReadJsonProvince;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnTextChanged;
 import entity.PandaMapList;
-import entity.Province;
-import entity.ResultLodging;
+
+import entity.ResultPandaAutoComplete;
 import entity.ResultPandaMap;
+import entity.ResultPandaMapSearch;
 import entity.ResultPandaMaps;
 import tools.Util;
 
@@ -67,7 +71,7 @@ import tools.Util;
  * Created by h.vahidimehr on 11/11/2017.
  */
 
-public class MapPandaFragment extends StandardFragment implements OnMapReadyCallback, MapWrapperLayout.OnDragListener, MapPandaPresenter.View/*, GoogleMap.OnMarkerClickListener*/ {
+public class MapPandaFragment extends StandardFragment implements OnMapReadyCallback, MapWrapperLayout.OnDragListener, MapPandaPresenter.View , TextWatcher/*, GoogleMap.OnMarkerClickListener*/ {
     @Inject
     MapPandaPresenter mapPandaPresenter;
 
@@ -124,12 +128,12 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
                     View centerView = snapHelper.findSnapView(horizontalLayoutManagaer);
-                    int position = horizontalLayoutManagaer.getPosition(centerView);
+                    int positions = horizontalLayoutManagaer.getPosition(centerView);
 
 //                    showMarkers(markerPoints);
                     if (markerNames.size() > 0) {
-                        Marker marker = mMap.addMarker(new MarkerOptions().position(markerPoints.get(position))
-                                .title(markerNames.get(position))/*.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_blue_pin))*/);
+                        Marker marker = mMap.addMarker(new MarkerOptions().position(markerPoints.get(positions))
+                                .title(markerNames.get(positions))/*.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_blue_pin))*/);
                         marker.showInfoWindow();
                     }
 //                    mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(markerPosition)));
@@ -167,6 +171,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         } catch (Exception e) {
 
         }
+        markerNames.clear();
 
 
     }
@@ -182,13 +187,10 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         btnFilter = rootView.findViewById(R.id.btnFilter);
         search = rootView.findViewById(R.id.search);
         search.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-        search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                mapPandaPresenter.getPandaSearch("pandaautocomplete","عار");
+//        search.getText().toString();
 
-            }
-        });
+//        search.setOnItemClickListener(onItemClickListener);
+        search.addTextChangedListener(this);
 //        autoCompleteProvince(search);
         btnFilter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -264,11 +266,12 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            int markerPosition;
+
 
             @Override
             public boolean onMarkerClick(Marker marker) {
                 int c = 0;
+                int markerPosition = 0;
                 for (ResultPandaMap resultLodging : resultPandaMapList) {
                     if (resultLodging.getPoint().getTitle().equals(marker.getTitle())) {
                         showMarkers(markerPoints);
@@ -296,9 +299,15 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         polygonOptions.fillColor(ContextCompat.getColor(getContext(), R.color.map));
         polygon = mMap.addPolygon(polygonOptions);
         PandaMapList PandaMapList = new PandaMapList(polygon.getPoints());
+        VisibleRegion visibleRegion = mMap.getProjection().getVisibleRegion();
+        LatLng farLeft = visibleRegion.farLeft;
+        LatLng nearRight = visibleRegion.nearRight;
+        farLeft.toString();
 
 //                mapPandaPresenter.getPandaSearch("pandaautocomplete","غار");
-        mapPandaPresenter.getDrawResult(PandaMapList, Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
+//        mapPandaPresenter.getDrawResult(PandaMapList, Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
+//        mapPandaPresenter.getDrawResult(PandaMapList,"غار","1",,"",nearRight.toString(), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
+        mapPandaPresenter.getDrawResult(PandaMapList,"غار","1","1",farLeft.toString(),nearRight.toString(),Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
 
     }
 
@@ -451,24 +460,41 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     }
 
-//    int position = -1;
+    @Override
+    public void showPandaSearch(ResultPandaMapSearch resultPandaMapSearch) {
 
-//    @Override
-//    public boolean onMarkerClick(Marker marker) {
-//        int c = 0;
-//        for (ResultPandaMap resultLodging : resultPandaMapList) {
-//            if (resultLodging.equals(marker.getTitle())) {
-//                showMarkers(markerPoints);
-//                mMap.addMarker(new MarkerOptions().position(markerPoints.get(c))
-//                        .title(markerNames.get(c)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_blue_pin)));
-//                mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(c)));
-//                Log.e("marker", marker.getTitle());
-//                position = c;
-//            }
-//            c++;
-//        }
-//        recyclerView.getLayoutManager().scrollToPosition(position);
-//        return false;
-//    }
+        List<ResultPandaAutoComplete> re = resultPandaMapSearch.getResultPandaAutoComplete();
+        List<String> titleArray = new ArrayList<>();
+        for (ResultPandaAutoComplete resultPandaAutoComplete : re) {
+            titleArray.add(resultPandaAutoComplete.getTitle());
+        }
+        ArrayAdapter<String> adapteo = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_dropdown_item_1line, titleArray.toArray(new String[0]));
+        search.setAdapter(adapteo);
+        adapteo.notifyDataSetChanged();
+
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+         String lastValue = "";
+        String newValue = s.getFilters().toString();
+        if (!newValue.equals(lastValue) && s.length()>=2) {
+                mapPandaPresenter.getPandaSearch("pandaautocomplete",s.toString());
+        }
+
+    }
+
+
 
 }
