@@ -115,6 +115,32 @@ public class MapPandaPresenter extends MapPandaContract {
     }
 
     @Override
+    public void getDrawResult(String valueSearch, String attractionFilter, String lodgingFilter, String position1, String position2, String token, String androidId) {
+
+        retrofit.create(MapPandaService.class).getDrawResult(   valueSearch,  attractionFilter,  lodgingFilter,  position1,  position2,  token,  androidId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(new Observer<ResultPandaMaps>() {
+
+                    @Override
+                    public void onCompleted() {
+                        mView.showComplete();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mView.showError(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ResultPandaMaps resultPandaMaps) {
+                        mView.showPointOnMap(resultPandaMaps);
+                    }
+                });
+    }
+
+    @Override
     public void getPandaSearch(String action, String value) {
 //        mView.showProgress();
         retrofit.create(MapPandaService.class).getPandaSearch(action,value)
@@ -149,6 +175,14 @@ public class MapPandaPresenter extends MapPandaContract {
         @POST("api-field.php?action=pandamap")
         Observable<ResultPandaMaps> getDrawResult(@Body PandaMapList pandaMapList,
                                                   @Query("valueSearch") String valueSearch,
+                                                  @Query("attractionFilter") String attractionFilter,
+                                                  @Query("lodgingFilter") String lodgingFilter,
+                                                  @Query("position1") String position1,
+                                                  @Query("position2") String position2,
+                                                  @Query("cid") String token,
+                                                  @Query("andId") String androidId);
+        @POST("api-field.php?action=pandamap")
+        Observable<ResultPandaMaps> getDrawResult(@Query("valueSearch") String valueSearch,
                                                   @Query("attractionFilter") String attractionFilter,
                                                   @Query("lodgingFilter") String lodgingFilter,
                                                   @Query("position1") String position1,

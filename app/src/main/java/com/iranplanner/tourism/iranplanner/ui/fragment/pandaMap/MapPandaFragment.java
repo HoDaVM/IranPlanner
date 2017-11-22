@@ -101,7 +101,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     private boolean isResultForDraw = false;
     private Button btnFilter;
     private AutoCompleteTextView search;
-
+    PandaMapList PandaMapList;
     public static MapPandaFragment newInstance() {
         MapPandaFragment fragment = new MapPandaFragment();
         return fragment;
@@ -192,6 +192,8 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 //        search.setOnItemClickListener(onItemClickListener);
         search.addTextChangedListener(this);
 //        autoCompleteProvince(search);
+//        PandaMapList = new PandaMapList(null);
+
         btnFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -298,16 +300,15 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         polygonOptions.strokeWidth(8);
         polygonOptions.fillColor(ContextCompat.getColor(getContext(), R.color.map));
         polygon = mMap.addPolygon(polygonOptions);
-        PandaMapList PandaMapList = new PandaMapList(polygon.getPoints());
+        PandaMapList = new PandaMapList(polygon.getPoints());
         VisibleRegion visibleRegion = mMap.getProjection().getVisibleRegion();
         LatLng farLeft = visibleRegion.farLeft;
         LatLng nearRight = visibleRegion.nearRight;
-        farLeft.toString();
 
 //                mapPandaPresenter.getPandaSearch("pandaautocomplete","غار");
 //        mapPandaPresenter.getDrawResult(PandaMapList, Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
 //        mapPandaPresenter.getDrawResult(PandaMapList,"غار","1",,"",nearRight.toString(), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
-        mapPandaPresenter.getDrawResult(PandaMapList,"غار","1","1",farLeft.toString(),nearRight.toString(),Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
+        mapPandaPresenter.getDrawResult(PandaMapList,"تهران","1","1",farLeft.toString(),nearRight.toString(),Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
 
     }
 
@@ -444,6 +445,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     @Override
     public void showPointOnMap(ResultPandaMaps resultPandaMaps) {
+
         resultPandaMapList = resultPandaMaps.getResultPandaMap();
         markerPoints.clear();
         if (resultPandaMapList.size() > 0) {
@@ -490,7 +492,13 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
          String lastValue = "";
         String newValue = s.getFilters().toString();
         if (!newValue.equals(lastValue) && s.length()>=2) {
-                mapPandaPresenter.getPandaSearch("pandaautocomplete",s.toString());
+//                mapPandaPresenter.getPandaSearch("pandaautocomplete",s.toString());
+            VisibleRegion visibleRegion = mMap.getProjection().getVisibleRegion();
+            LatLng farLeft = visibleRegion.farLeft;
+            LatLng nearRight = visibleRegion.nearRight;
+
+            mapPandaPresenter.getDrawResult(s.toString(),"1","1",farLeft.toString(),nearRight.toString(),Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
+
         }
 
     }

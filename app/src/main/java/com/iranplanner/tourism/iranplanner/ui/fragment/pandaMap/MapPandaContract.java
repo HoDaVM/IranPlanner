@@ -37,6 +37,14 @@ public abstract class MapPandaContract extends Presenter<MapPandaContract.View> 
                                        String position2,
                                        String token,
                                        String androidId);
+    public abstract void getDrawResult(
+                                       String valueSearch,
+                                       String attractionFilter,
+                                       String lodgingFilter,
+                                       String position1,
+                                       String position2,
+                                       String token,
+                                       String androidId);
 
     public abstract void getPandaSearch(
             String action,

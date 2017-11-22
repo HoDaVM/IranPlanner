@@ -15,16 +15,31 @@
             android:id="@+id/searchHolder"
             android:background="@color/white_">
 
-            <AutoCompleteTextView
-                android:id="@+id/search"
-                style="@style/StandardText"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/padding_big"
-                android:gravity="right"
-                android:hint="از شهر"
-                android:imeOptions="actionNext"
-                android:inputType="text"
-                />
+                android:layout_height="wrap_content">
+
+                <ImageButton
+                    android:id="@+id/imageButton"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@mipmap/ic_search" />
+
+                <AutoCompleteTextView
+                    android:id="@+id/search"
+                    style="@style/StandardText"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/padding_big"
+
+                    android:gravity="right"
+                    android:hint="جستجو"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:layout_toStartOf="@+id/imageButton"
+                    />
+            </RelativeLayout>
         </android.support.design.widget.TextInputLayout>
 
         <Button
@@ -48,7 +63,6 @@
         android:id="@+id/mapHolder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/hotelHolder"
         android:layout_below="@+id/searchHolder"
         >
 
@@ -58,11 +72,13 @@
     <!--cityHolder-->
     <RelativeLayout
         android:id="@+id/hotelHolder"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:padding="@dimen/padding_standard"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:translationZ="2dp"
+        android:background="@color/transparent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/reservationListRecyclerView"
