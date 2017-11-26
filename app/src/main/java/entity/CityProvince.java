@@ -21,6 +21,32 @@ public class CityProvince implements Serializable {
     @Expose
     private String type;
 
+    @SerializedName("position_lat")
+    @Expose
+    private String position_lat;
+
+    public String getPosition_lat() {
+        return position_lat;
+    }
+
+    public void setPosition_lat(String position_lat) {
+        this.position_lat = position_lat;
+    }
+
+    public String getPosition_lon() {
+        return position_lon;
+    }
+
+    public void setPosition_lon(String position_lon) {
+        this.position_lon = position_lon;
+    }
+
+    @SerializedName("position_lon")
+    @Expose
+
+    private String position_lon;
+
+
     public String getId() {
         return id;
     }

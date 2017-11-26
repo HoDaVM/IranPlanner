@@ -47,6 +47,8 @@ public class ReadJsonCityProvince {
                 cityProvince.setTitle(jo_inside.getString("title"));
                 cityProvince.setType(jo_inside.getString("type"));
                 cityProvince.setParent(jo_inside.getString("parent"));
+                cityProvince.setPosition_lat(jo_inside.getString("position_lat"));
+                cityProvince.setPosition_lon(jo_inside.getString("position_lon"));
                 list.add(cityProvince);
             }
         } catch (JSONException e) {

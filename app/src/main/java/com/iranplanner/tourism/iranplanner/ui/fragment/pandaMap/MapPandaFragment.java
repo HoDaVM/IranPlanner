@@ -2,6 +2,7 @@ package com.iranplanner.tourism.iranplanner.ui.fragment.pandaMap;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -36,6 +38,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
@@ -56,22 +59,26 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import autoComplet.MyFilterableAdapterCityProvince;
+import autoComplet.ReadJsonCityProvince;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnTextChanged;
+import entity.CityProvince;
 import entity.PandaMapList;
 
 import entity.ResultPandaAutoComplete;
 import entity.ResultPandaMap;
 import entity.ResultPandaMapSearch;
 import entity.ResultPandaMaps;
+import tools.Constants;
 import tools.Util;
 
 /**
  * Created by h.vahidimehr on 11/11/2017.
  */
 
-public class MapPandaFragment extends StandardFragment implements OnMapReadyCallback, MapWrapperLayout.OnDragListener, MapPandaPresenter.View , TextWatcher/*, GoogleMap.OnMarkerClickListener*/ {
+public class MapPandaFragment extends StandardFragment implements OnMapReadyCallback, MapWrapperLayout.OnDragListener, MapPandaPresenter.View, TextWatcher  /*, GoogleMap.OnMarkerClickListener*/ {
     @Inject
     MapPandaPresenter mapPandaPresenter;
 
@@ -100,17 +107,18 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     LinearLayoutManager horizontalLayoutManagaer;
     private boolean isResultForDraw = false;
     private Button btnFilter;
-    private AutoCompleteTextView search;
+    private AutoCompleteTextView search, searchRange;
     PandaMapList PandaMapList;
+
     public static MapPandaFragment newInstance() {
         MapPandaFragment fragment = new MapPandaFragment();
         return fragment;
     }
 
     boolean setDraw = true;
+    SnapHelper snapHelper;
 
     private void setUpRecyclerView(List<ResultPandaMap> resultPandaMapList) {
-
         recyclerView.setHasFixedSize(true);
 
         horizontalLayoutManagaer = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -118,15 +126,17 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
         adapter = new PandaAdapter(getActivity(), resultPandaMapList, getContext());
         recyclerView.setAdapter(adapter);
-        final SnapHelper snapHelper = new PagerSnapHelper();
-        snapHelper.attachToRecyclerView(recyclerView);
-
+        if (snapHelper == null) {
+            snapHelper = new PagerSnapHelper();
+            snapHelper.attachToRecyclerView(recyclerView);
+        }
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+
                     View centerView = snapHelper.findSnapView(horizontalLayoutManagaer);
                     int positions = horizontalLayoutManagaer.getPosition(centerView);
 
@@ -157,13 +167,13 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     }
 
     private void cleanMapAndRecyclerView() {
-        if (PolylinePoints.size() > 0) {
-            PolylinePoints.clear();
-            mMap.clear();
-        }
+        searchRange.setText("");
+        markerPoints.clear();
+        markerNames.clear();
         isResultForDraw = false;
         PolylinePoints.clear();
-        markerPoints.clear();
+
+        snapHelper = null;
         try {
             resultPandaMapList.clear();
             adapter.notifyDataSetChanged();
@@ -171,7 +181,13 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         } catch (Exception e) {
 
         }
-        markerNames.clear();
+
+        try {
+            PolylinePoints.clear();
+            mMap.clear();
+        } catch (Exception e) {
+
+        }
 
 
     }
@@ -186,11 +202,13 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         recyclerView = rootView.findViewById(R.id.reservationListRecyclerView);
         btnFilter = rootView.findViewById(R.id.btnFilter);
         search = rootView.findViewById(R.id.search);
+        searchRange = rootView.findViewById(R.id.searchRange);
         search.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 //        search.getText().toString();
 
 //        search.setOnItemClickListener(onItemClickListener);
         search.addTextChangedListener(this);
+        autoCompleteProvince(searchRange, null);
 //        autoCompleteProvince(search);
 //        PandaMapList = new PandaMapList(null);
 
@@ -206,10 +224,11 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
                 mBottomSheetDialog.show();
             }
         });
-        Button btn = rootView.findViewById(R.id.btnSelectPolygon);
-        btn.setOnClickListener(new View.OnClickListener() {
+        Button btnSelectPolygon = rootView.findViewById(R.id.btnSelectPolygon);
+        btnSelectPolygon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                search.setText("");
                 setDrawable(setDraw);
                 cleanMapAndRecyclerView();
 
@@ -223,9 +242,35 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     }
 
+    private void hiddenKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
 
+    List<entity.CityProvince> CityProvince;
+    String selectId, SelectedType;
 
+    public void autoCompleteProvince(AutoCompleteTextView textProvience, final String type) {
+        ReadJsonCityProvince readJsonProvince = new ReadJsonCityProvince();
+        CityProvince = readJsonProvince.getListOfCityProvience(getContext());
+        MyFilterableAdapterCityProvince adapter = new MyFilterableAdapterCityProvince(getContext(), android.R.layout.simple_list_item_1, CityProvince);
+        textProvience.setAdapter(adapter);
+        textProvience.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                hiddenKeyboard();
+                if (CityProvince.get(position).getType().equals("city")) {
+                    zoomCamera(new LatLng(Double.valueOf(CityProvince.get(position).getPosition_lat()), Double.valueOf(CityProvince.get(position).getPosition_lon())), 12f);
 
+                } else {
+                    zoomCamera(new LatLng(Double.valueOf(CityProvince.get(position).getPosition_lat()), Double.valueOf(CityProvince.get(position).getPosition_lon())), 9f);
+
+                }
+                searchRange.setText(CityProvince.get(position).getTitle());
+            }
+
+        });
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -254,6 +299,14 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 //        mMap.getUiSettings().setScrollGesturesEnabled(false);
         setDrawable(setDraw);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Iran, 10.0f));
+        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                searchRange.setText("");
+                searchRange.setHint("محدوده نمایش نقشه");
+
+            }
+        });
     }
 
     private void setDrawable(boolean drawable) {
@@ -305,10 +358,8 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         LatLng farLeft = visibleRegion.farLeft;
         LatLng nearRight = visibleRegion.nearRight;
 
-//                mapPandaPresenter.getPandaSearch("pandaautocomplete","غار");
-//        mapPandaPresenter.getDrawResult(PandaMapList, Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
-//        mapPandaPresenter.getDrawResult(PandaMapList,"غار","1",,"",nearRight.toString(), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
-        mapPandaPresenter.getDrawResult(PandaMapList,"تهران","1","1",farLeft.toString(),nearRight.toString(),Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
+        String searchText = search.getText().toString();
+        mapPandaPresenter.getDrawResult(PandaMapList, searchText, "1", "1", farLeft.toString(), nearRight.toString(), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
 
     }
 
@@ -333,7 +384,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
             markerOptions.position(latLng);
             markerOptions.title(markerNames.get(index));
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(Iran));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             Marker marker = mMap.addMarker(markerOptions);
             index++;
         }
@@ -416,6 +467,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
             }
         } else if (setDraw && isResultForDraw) {
             setDrawable(true);
+            searchRange.setText("محدوده نمایش نقشه");
         }
 
 
@@ -458,24 +510,71 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         }
         isResultForDraw = true;
         showMarkers(markerPoints);
+
         setUpRecyclerView(resultPandaMapList);
+//        onWindowFocusChanged(markerPoints);
 
     }
 
-    @Override
-    public void showPandaSearch(ResultPandaMapSearch resultPandaMapSearch) {
+    private void zoomCamera(LatLng point, Float zoom) {
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom));
 
-        List<ResultPandaAutoComplete> re = resultPandaMapSearch.getResultPandaAutoComplete();
-        List<String> titleArray = new ArrayList<>();
-        for (ResultPandaAutoComplete resultPandaAutoComplete : re) {
-            titleArray.add(resultPandaAutoComplete.getTitle());
+    }
+
+    public void onWindowFocusChanged(List<LatLng> points) {
+
+        try {
+
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+            for (LatLng latLng : points) {
+                builder.include(latLng);
+            }
+            LatLngBounds bounds = builder.build();
+            int width = getResources().getDisplayMetrics().widthPixels;
+            int height = getResources().getDisplayMetrics().heightPixels;
+            int padding = (int) (width * 0.20); // offset from edges of the map 12% of screen
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+            mMap.animateCamera(cu);
+
+        } catch (Exception e) {
+
         }
+
+    }
+
+
+    @Override
+    public void showPandaSearch(ResultPandaMaps resultPandaMapSearch) {
+        List<ResultPandaMap> re = resultPandaMapSearch.getResultPandaMap();
+        List<String> titleArray = new ArrayList<>();
+        for (ResultPandaMap resultPandaMap : re) {
+            titleArray.add(resultPandaMap.getPoint().getTitle());
+
+        }
+//        for (ResultPandaAutoComplete resultPandaAutoComplete : re) {
+//            titleArray.add(resultPandaAutoComplete.getTitle());
+//        }
         ArrayAdapter<String> adapteo = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_dropdown_item_1line, titleArray.toArray(new String[0]));
         search.setAdapter(adapteo);
         adapteo.notifyDataSetChanged();
-
     }
+
+//    @Override
+//    public void showPandaSearch(ResultPandaMapSearch resultPandaMapSearch) {
+//
+//        List<ResultPandaAutoComplete> re = resultPandaMapSearch.getResultPandaAutoComplete();
+//        List<String> titleArray = new ArrayList<>();
+//        for (ResultPandaAutoComplete resultPandaAutoComplete : re) {
+//            titleArray.add(resultPandaAutoComplete.getTitle());
+//        }
+//        ArrayAdapter<String> adapteo = new ArrayAdapter<String>(getContext(),
+//                android.R.layout.simple_dropdown_item_1line, titleArray.toArray(new String[0]));
+//        search.setAdapter(adapteo);
+//        adapteo.notifyDataSetChanged();
+//
+////    }
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -489,20 +588,19 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     @Override
     public void afterTextChanged(Editable s) {
-         String lastValue = "";
+        cleanMapAndRecyclerView();
+        String lastValue = "";
         String newValue = s.getFilters().toString();
-        if (!newValue.equals(lastValue) && s.length()>=2) {
+        if (!newValue.equals(lastValue) && s.length() >= 2) {
 //                mapPandaPresenter.getPandaSearch("pandaautocomplete",s.toString());
             VisibleRegion visibleRegion = mMap.getProjection().getVisibleRegion();
             LatLng farLeft = visibleRegion.farLeft;
             LatLng nearRight = visibleRegion.nearRight;
-
-            mapPandaPresenter.getDrawResult(s.toString(),"1","1",farLeft.toString(),nearRight.toString(),Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
+            mapPandaPresenter.getDrawResult(s.toString(), "1", "1", farLeft.toString(), nearRight.toString(), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
 
         }
 
     }
-
 
 
 }

@@ -23,7 +23,7 @@ public abstract class MapPandaContract extends Presenter<MapPandaContract.View> 
 
         void showPointOnMap(ResultPandaMaps resultPandaMaps);
 
-        void showPandaSearch(ResultPandaMapSearch resultPandaMapSearch);
+        void showPandaSearch(ResultPandaMaps resultPandaMapSearch);
     }
 
 

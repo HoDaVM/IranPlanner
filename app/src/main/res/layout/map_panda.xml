@@ -16,11 +16,36 @@
             android:background="@color/white_">
 
             <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@mipmap/ic_search" />
+
+            <AutoCompleteTextView
+                android:id="@+id/search"
+                style="@style/StandardText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/padding_big"
+
+                android:gravity="right"
+                android:hint="جاذبه، هتل، هر چی"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:layout_toStartOf="@+id/imageButton"
+                />
+        </RelativeLayout>
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <ImageButton
-                    android:id="@+id/imageButton"
+                    android:id="@+id/imageButtonRange"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_alignParentEnd="true"
@@ -28,24 +53,24 @@
                     android:background="@mipmap/ic_search" />
 
                 <AutoCompleteTextView
-                    android:id="@+id/search"
+                    android:id="@+id/searchRange"
                     style="@style/StandardText"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/padding_big"
-
                     android:gravity="right"
-                    android:hint="جستجو"
+                    android:hint="شهر، استان"
                     android:imeOptions="actionNext"
                     android:inputType="text"
-                    android:layout_toStartOf="@+id/imageButton"
+                    android:layout_toStartOf="@+id/imageButtonRange"
                     />
             </RelativeLayout>
+
         </android.support.design.widget.TextInputLayout>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="انتخاب محدوده"
+            android:text="روی نقشه محدوده را بکش"
             android:id="@+id/btnSelectPolygon"
             android:layout_below="@+id/searchHolder"/>
 
@@ -56,7 +81,7 @@
             android:layout_below="@+id/searchHolder"
             android:layout_marginStart="26dp"
             android:layout_toEndOf="@+id/btnSelectPolygon"
-            android:text="فیلتر"/>
+            android:text="دسته بندی اماکن"/>
 
 
     <RelativeLayout

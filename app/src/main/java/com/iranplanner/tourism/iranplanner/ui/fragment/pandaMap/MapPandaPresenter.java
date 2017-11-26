@@ -135,6 +135,8 @@ public class MapPandaPresenter extends MapPandaContract {
 
                     @Override
                     public void onNext(ResultPandaMaps resultPandaMaps) {
+
+                        mView.showPandaSearch(resultPandaMaps);
                         mView.showPointOnMap(resultPandaMaps);
                     }
                 });
@@ -164,7 +166,7 @@ public class MapPandaPresenter extends MapPandaContract {
                     @Override
                     public void onNext(ResultPandaMapSearch resultPandaMapSearch) {
 //                        mView.dismissProgress();
-                        mView.showPandaSearch(resultPandaMapSearch);
+//                        mView.showPandaSearch(resultPandaMapSearch);
                     }
                 });
     }
