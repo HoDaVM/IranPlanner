@@ -36,6 +36,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -95,6 +96,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     private Polygon polygon;
     private List<LatLng> PolylinePoints;
     List<LatLng> markerPoints;
+    List<String> markerType;
     Polyline polyline;
     boolean flagUp = false;
     Boolean Is_MAP_Moveable = false; // to detect map is movable
@@ -144,11 +146,24 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
                     if (markerNames.size() > 0) {
                         Marker marker = mMap.addMarker(new MarkerOptions().position(markerPoints.get(positions))
                                 .title(markerNames.get(positions))/*.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_blue_pin))*/);
+                        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.hotel);
+                        if (markerType.get(positions).equals("attraction")) {
+                            icon = BitmapDescriptorFactory.fromResource(R.drawable.attraction);
+
+                        } else if (markerType.get(positions).equals("lodging")) {
+                            icon = BitmapDescriptorFactory.fromResource(R.drawable.hotel);
+
+                        } else if (markerType.get(positions).equals("city")) {
+                            icon = BitmapDescriptorFactory.fromResource(R.drawable.city);
+
+                        }
+                        marker.setIcon(icon);
                         marker.showInfoWindow();
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(positions)));
+                        CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+                        mMap.animateCamera(zoom);
                     }
-//                    mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(markerPosition)));
-//                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
-//                    mMap.animateCamera(zoom);
+
                 }
             }
         });
@@ -156,7 +171,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         recyclerView.addOnItemTouchListener(new RecyclerItemOnClickListener(getContext(), new RecyclerItemOnClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, final int position) {
-                showMarkers(markerPoints);
+                showMarkers(markerPoints, markerType);
                 //open
                 String offset = "0";
 
@@ -166,10 +181,14 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     }
 
+    private void cleanSearchText() {
+        search.setText("");
+    }
+
     private void cleanMapAndRecyclerView() {
-        searchRange.setText("");
         markerPoints.clear();
         markerNames.clear();
+        markerType.clear();
         isResultForDraw = false;
         PolylinePoints.clear();
 
@@ -248,16 +267,20 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     }
 
     List<entity.CityProvince> CityProvince;
-    String selectId, SelectedType;
+
 
     public void autoCompleteProvince(AutoCompleteTextView textProvience, final String type) {
+
         ReadJsonCityProvince readJsonProvince = new ReadJsonCityProvince();
         CityProvince = readJsonProvince.getListOfCityProvience(getContext());
         MyFilterableAdapterCityProvince adapter = new MyFilterableAdapterCityProvince(getContext(), android.R.layout.simple_list_item_1, CityProvince);
         textProvience.setAdapter(adapter);
         textProvience.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                cleanMapAndRecyclerView();
+                cleanSearchText();
                 hiddenKeyboard();
                 if (CityProvince.get(position).getType().equals("city")) {
                     zoomCamera(new LatLng(Double.valueOf(CityProvince.get(position).getPosition_lat()), Double.valueOf(CityProvince.get(position).getPosition_lon())), 12f);
@@ -267,6 +290,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
                 }
                 searchRange.setText(CityProvince.get(position).getTitle());
+
             }
 
         });
@@ -289,6 +313,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
                 .mapPandaModule(new MapPandaModule(this))
                 .build().inject(this);
         markerNames = new ArrayList<>();
+        markerType = new ArrayList<>();
 
     }
 
@@ -302,11 +327,13 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
             @Override
             public void onCameraMove() {
-                searchRange.setText("");
-                searchRange.setHint("محدوده نمایش نقشه");
+
+//                   cleanMapAndRecyclerView();
 
             }
         });
+
+
     }
 
     private void setDrawable(boolean drawable) {
@@ -328,8 +355,9 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
                 int c = 0;
                 int markerPosition = 0;
                 for (ResultPandaMap resultLodging : resultPandaMapList) {
-                    if (resultLodging.getPoint().getTitle().equals(marker.getTitle())) {
-                        showMarkers(markerPoints);
+                    String s[] = marker.getTitle().split("-");
+                    if (resultLodging.getPoint().getTitle().equals(s[s.length - 1])) {
+                        showMarkers(markerPoints, markerType);
                         mMap.addMarker(new MarkerOptions().position(markerPoints.get(c))
                                 .title(markerNames.get(c))/*.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_blue_pin))*/);
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(c)));
@@ -351,6 +379,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         PolygonOptions polygonOptions = new PolygonOptions();
         polygonOptions.addAll(PolylinePoints);
         polygonOptions.strokeWidth(8);
+        polygonOptions.strokeColor(R.color.main_blue);
         polygonOptions.fillColor(ContextCompat.getColor(getContext(), R.color.map));
         polygon = mMap.addPolygon(polygonOptions);
         PandaMapList = new PandaMapList(polygon.getPoints());
@@ -377,13 +406,26 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     }
 
-    private void showMarkers(List<LatLng> draw) {
+    private void showMarkers(List<LatLng> draw, List<String> markerType) {
+
         int index = 0;
         for (LatLng latLng : draw) {
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(latLng);
             markerOptions.title(markerNames.get(index));
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+            BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.hotel);
+            if (markerType.get(index).equals("attraction")) {
+                icon = BitmapDescriptorFactory.fromResource(R.drawable.attraction);
+
+            } else if (markerType.get(index).equals("lodging")) {
+                icon = BitmapDescriptorFactory.fromResource(R.drawable.hotel);
+
+            } else if (markerType.get(index).equals("city")) {
+                icon = BitmapDescriptorFactory.fromResource(R.drawable.city);
+
+            }
+            markerOptions.icon(icon);
+
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             Marker marker = mMap.addMarker(markerOptions);
             index++;
@@ -465,9 +507,12 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
                 default:
                     break;
             }
-        } else if (setDraw && isResultForDraw) {
+        } else {
             setDrawable(true);
-            searchRange.setText("محدوده نمایش نقشه");
+            searchRange.setText("");
+            searchRange.setHint("محدوده نمایش نقشه");
+//            cleanMapAndRecyclerView();
+//            cleanSearchText();
         }
 
 
@@ -500,16 +545,18 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
         resultPandaMapList = resultPandaMaps.getResultPandaMap();
         markerPoints.clear();
+        int counter = 1;
         if (resultPandaMapList.size() > 0) {
             for (ResultPandaMap resultPandaMap : resultPandaMapList) {
                 LatLng point = new LatLng(Double.valueOf(resultPandaMap.getPoint().getLatitude()), Double.valueOf(resultPandaMap.getPoint().getLongitude()));
                 markerPoints.add(point);
-                markerNames.add(resultPandaMap.getPoint().getTitle());
-
+                markerNames.add(Util.persianNumbers(String.valueOf(counter)) + "-" + resultPandaMap.getPoint().getTitle());
+                markerType.add(resultPandaMap.getPoint().getType());
+                counter++;
             }
         }
         isResultForDraw = true;
-        showMarkers(markerPoints);
+        showMarkers(markerPoints, markerType);
 
         setUpRecyclerView(resultPandaMapList);
 //        onWindowFocusChanged(markerPoints);

@@ -64,8 +64,7 @@ public class PandaAdapter extends RecyclerView.Adapter<PandaAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(final PandaAdapter.ViewHolder viewHolder, int i) {
 
-
-        viewHolder.txtTitle.setText(resultPandaMapList.get(i).getPoint().getTitle());
+        viewHolder.txtTitle.setText(Util.persianNumbers(String.valueOf(i + 1)) + "-" + resultPandaMapList.get(i).getPoint().getTitle());
         viewHolder.txtType.setText(resultPandaMapList.get(i).getPoint().getType());
         viewHolder.txtAddress.setText(resultPandaMapList.get(i).getPoint().getCityTitle());
         if (resultPandaMapList.get(i).getPoint().getImgUrl() != null) {
@@ -87,8 +86,7 @@ public class PandaAdapter extends RecyclerView.Adapter<PandaAdapter.ViewHolder> 
                             return false;
                         }
                     })
-                    .into(viewHolder.imgItineraryListMore)
-            ;
+                    .into(viewHolder.imgItineraryListMore);
         } else {
             Glide.clear(viewHolder.imgItineraryListMore);
             viewHolder.imgItineraryListMore.setImageDrawable(null);
