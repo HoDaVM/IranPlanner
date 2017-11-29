@@ -17,52 +17,29 @@
                     android:layout_margin="@dimen/margin_standard"
                     android:text="مرتب سازی بر اساس" />
 
-                <RadioGroup
-                    android:id="@+id/filterSortRg"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/margin_standard"
-                    android:layout_marginRight="@dimen/margin_standard"
-                    android:orientation="vertical"
-                    android:background="@color/white_">
 
-                    <RadioButton
-                        android:id="@+id/filterSortMostSaleRb"
+
+                    <CheckBox
+                        android:id="@+id/filterHotelCheckBox"
                         style="@style/StandardText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="true"
-                        android:text="بیشترین تخفیف" />
+                        android:text="هتل"/>
 
-                    <RadioButton
-                        android:id="@+id/filterSortMinPriceRb"
+                    <CheckBox
+                        android:id="@+id/filterAttrctionCheckBox"
                         style="@style/StandardText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="کمترین قیمت" />
+                        android:text="جاذبه "
+                        android:checked="true"/>
 
-                    <RadioButton
-                        android:id="@+id/filterSortMostPriceRb"
-                        style="@style/StandardText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="بیشترین قیمت" />
 
-                    <RadioButton
-                        android:id="@+id/filterSortRateMostRb"
-                        style="@style/StandardText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="بیشترین درجه" />
 
-                    <RadioButton
-                        android:id="@+id/filterSortMinRateRb"
-                        style="@style/StandardText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="کمترین درجه" />
 
-                </RadioGroup>
+
+
             </LinearLayout>
 
 

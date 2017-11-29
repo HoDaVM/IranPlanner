@@ -161,18 +161,24 @@ public class ShowAttractionListFragment extends StandardFragment implements Data
     }
 
     private void openMapFull(int position, ResulAttraction resulAttraction) {
-        Intent intent = new Intent(getContext(), MapFullActivity.class);
-        ItineraryLodgingCity i = new ItineraryLodgingCity();
+
+            Intent intent = new Intent(getContext(), MapFullActivity.class);
+            ItineraryLodgingCity i = new ItineraryLodgingCity();
 //        i.setCityPositionLat(itineraryActionList.get(position).getAttractionPositionLat());
-        i.setCityPositionLat(resulAttraction.getAttractionPositionLat());
-        i.setCityPositionLon(resulAttraction.getAttractionPositionLon());
+        if(resulAttraction!=null){
+            i.setCityPositionLat(resulAttraction.getAttractionPositionLat());
+            i.setCityPositionLon(resulAttraction.getAttractionPositionLon());
+        }
+
 //        i.setCityPositionLat(resultItineraryAttractionDays.get(0).getResultAttractionList().get(position).getResulAttraction().getAttractionPositionLat());
 //        i.setCityPositionLon(itineraryActionList.get(position).getAttractionPositionOn());
 //        i.setCityPositionLat(resultItineraryAttractionDays.get(0).getResultAttractionList().get(position).getResulAttraction().getAttractionPositionLon());
-        List<ItineraryLodgingCity> lodgingCities = new ArrayList<ItineraryLodgingCity>();
-        lodgingCities.add(i);
-        intent.putExtra("lodgingCities", (Serializable) lodgingCities);
-        startActivity(intent);
+            List<ItineraryLodgingCity> lodgingCities = new ArrayList<ItineraryLodgingCity>();
+            lodgingCities.add(i);
+            intent.putExtra("lodgingCities", (Serializable) lodgingCities);
+            startActivity(intent);
+
+
     }
 
     private boolean loading = true;

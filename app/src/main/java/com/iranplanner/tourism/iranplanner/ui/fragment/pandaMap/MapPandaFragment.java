@@ -1,11 +1,23 @@
 package com.iranplanner.tourism.iranplanner.ui.fragment.pandaMap;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
@@ -26,10 +38,21 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.location.LocationListener;
+
+
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,6 +61,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -75,11 +99,17 @@ import entity.ResultPandaMaps;
 import tools.Constants;
 import tools.Util;
 
+import static android.content.Context.LOCATION_SERVICE;
+
 /**
  * Created by h.vahidimehr on 11/11/2017.
  */
 
-public class MapPandaFragment extends StandardFragment implements OnMapReadyCallback, MapWrapperLayout.OnDragListener, MapPandaPresenter.View, TextWatcher  /*, GoogleMap.OnMarkerClickListener*/ {
+public class MapPandaFragment extends StandardFragment implements OnMapReadyCallback, MapWrapperLayout.OnDragListener,
+        MapPandaPresenter.View, TextWatcher,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
     @Inject
     MapPandaPresenter mapPandaPresenter;
 
@@ -111,12 +141,14 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     private Button btnFilter;
     private AutoCompleteTextView search, searchRange;
     PandaMapList PandaMapList;
+    private ImageView imgMyLocation;
 
     public static MapPandaFragment newInstance() {
         MapPandaFragment fragment = new MapPandaFragment();
         return fragment;
     }
 
+    String chooseHotel, chooseAttraction;
     boolean setDraw = true;
     SnapHelper snapHelper;
 
@@ -223,20 +255,115 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         search = rootView.findViewById(R.id.search);
         searchRange = rootView.findViewById(R.id.searchRange);
         search.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-//        search.getText().toString();
+        imgMyLocation = rootView.findViewById(R.id.imgMyLocation);
+        imgMyLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-//        search.setOnItemClickListener(onItemClickListener);
+
+
+
+                final LocationManager manager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
+
+                if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    buildAlertMessageNoGps(1);
+
+                } else {
+//                    openMapFull(position, resulAttraction);
+                    mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                    Location location= mMap.getMyLocation();
+                    double latitude = location.getLatitude();
+                    double longitude = location.getLongitude();
+
+                    if (location != null)
+                    {
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+
+                        CameraPosition cameraPosition = new CameraPosition.Builder()
+                                .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
+                                .zoom(17)                   // Sets the zoom
+                                .bearing(90)                // Sets the orientation of the camera to east
+                                .tilt(40)                   // Sets the tilt of the camera to 30 degrees
+                                .build();                   // Creates a CameraPosition from the builder
+                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    }
+
+                }
+//                LocationManager locationManager = (LocationManager)
+//                        getActivity().getSystemService(Context.LOCATION_SERVICE);
+//                Criteria criteria = new Criteria();
+//
+//                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                    // TODO: Consider calling
+//                    //    ActivityCompat#requestPermissions
+//                    // here to request the missing permissions, and then overriding
+//                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//                    //                                          int[] grantResults)
+//                    // to handle the case where the user grants the permission. See the documentation
+//                    // for ActivityCompat#requestPermissions for more details.
+//                    return;
+//                }
+
+
+
+
+            }
+        });
         search.addTextChangedListener(this);
         autoCompleteProvince(searchRange, null);
-//        autoCompleteProvince(search);
-//        PandaMapList = new PandaMapList(null);
+        chooseAttraction = "1";
+        chooseHotel = "1";
+        ImageButton navigateBtn = rootView.findViewById(R.id.nearBtn);
+
+        navigateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final LocationManager manager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
+
+                if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    buildAlertMessageNoGps(1);
+
+                } else {
+//                    openMapFull(position, resulAttraction);
+
+
+                }
+            }
+        });
 
         btnFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 final Dialog mBottomSheetDialog = new Dialog(getActivity(), R.style.MaterialDialogSheet);
-                mBottomSheetDialog.setContentView(R.layout.fragment_panda_filter); // your custom view.
+                mBottomSheetDialog.setContentView(R.layout.fragment_panda_filter);
+                CheckBox filterHotelCheckBox = ((Dialog) mBottomSheetDialog).findViewById(R.id.filterHotelCheckBox);
+                CheckBox filterAttrctionCheckBox = ((Dialog) mBottomSheetDialog).findViewById(R.id.filterAttrctionCheckBox);
+                filterHotelCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            Log.e("hotel", "selected");
+                            chooseHotel = "1";
+                        } else {
+                            chooseHotel = "0";
+                        }
+                    }
+                });
+                filterAttrctionCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            Log.e("attraction", "selected");
+                            chooseAttraction = "1";
+
+                        } else {
+                            chooseAttraction = "0";
+                        }
+                    }
+                });
+
+
                 mBottomSheetDialog.setCancelable(true);
                 mBottomSheetDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 mBottomSheetDialog.getWindow().setGravity(Gravity.BOTTOM);
@@ -258,6 +385,28 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         ButterKnife.bind(this, rootView);
 
         return rootView;
+
+    }
+
+      private void buildAlertMessageNoGps(final int position) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("موقعیت یاب شما فعال نیست، آیا تمایل به روشن کردن آن دارید؟")
+                .setCancelable(false)
+//                // TODO: 06/02/2017  below
+                // toye startActivityForResult be jaye code request posotion ro ferestam . ye joor kalak .
+                .setPositiveButton("بله", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), position);
+                    }
+                })
+                .setNegativeButton("خیر", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        final AlertDialog alert = builder.create();
+        alert.show();
 
     }
 
@@ -324,16 +473,32 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 //        mMap.getUiSettings().setScrollGesturesEnabled(false);
         setDrawable(setDraw);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Iran, 10.0f));
-        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
-            @Override
-            public void onCameraMove() {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-//                   cleanMapAndRecyclerView();
-
+            if (ContextCompat.checkSelfPermission(getContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                buildGoogleApiClient();
+                mMap.setMyLocationEnabled(true);
             }
-        });
+        } else {
+            buildGoogleApiClient();
+            mMap.setMyLocationEnabled(true);
+        }
 
 
+
+    }
+
+    GoogleApiClient mGoogleApiClient;
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
     }
 
     private void setDrawable(boolean drawable) {
@@ -388,7 +553,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         LatLng nearRight = visibleRegion.nearRight;
 
         String searchText = search.getText().toString();
-        mapPandaPresenter.getDrawResult(PandaMapList, searchText, "1", "1", farLeft.toString(), nearRight.toString(), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
+        mapPandaPresenter.getDrawResult(PandaMapList, searchText, chooseAttraction, chooseHotel, farLeft.toString(), nearRight.toString(), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
 
     }
 
@@ -639,15 +804,45 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         String lastValue = "";
         String newValue = s.getFilters().toString();
         if (!newValue.equals(lastValue) && s.length() >= 2) {
-//                mapPandaPresenter.getPandaSearch("pandaautocomplete",s.toString());
             VisibleRegion visibleRegion = mMap.getProjection().getVisibleRegion();
             LatLng farLeft = visibleRegion.farLeft;
             LatLng nearRight = visibleRegion.nearRight;
-            mapPandaPresenter.getDrawResult(s.toString(), "1", "1", farLeft.toString(), nearRight.toString(), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
+            mapPandaPresenter.getDrawResult(s.toString(), chooseAttraction, chooseHotel, farLeft.toString(), nearRight.toString(), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
 
         }
 
     }
 
 
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        Log.e("Dfd", "fsdfsd");
+
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(location.getLatitude(), location.getLongitude()))
+                .zoom(17)
+                .bearing(90)
+                .tilt(40)
+                .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+    }
 }

@@ -155,7 +155,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
 
 
         ///
-        int position = 3;
+        int position = 0;
         mainTabLayout.getTabAt(position).getCustomView().setSelected(true);
         viewPager.setCurrentItem(position);
 
@@ -177,7 +177,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
     @Override
     public void onBackPressed() {
 
-        if (viewPager.getCurrentItem() == 3) {
+        if (viewPager.getCurrentItem() == 0) {
 
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
@@ -194,7 +194,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
                 }
             }, 2000);
 
-        } else viewPager.setCurrentItem(3, true);
+        } else viewPager.setCurrentItem(0, true);
     }
 
     @Override
