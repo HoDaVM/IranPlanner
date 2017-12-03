@@ -107,7 +107,8 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
     Button roomReservationBtn;
     private String todayDate;
     private ProgressDialog progressDialog;
-
+     ImageView imgStar1, imgStar2, imgStar3, imgStar4, imgStar5;
+    RelativeLayout starHolder;
     @Inject
     AttractionListMorePresenter attractionListMorePresenter;
 
@@ -121,7 +122,15 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
         Log.e("this tag", ReservationHotelDetailActivity.class.getSimpleName());
 
 //        setContentView(R.layout.activity_reservation_hotel_detail);
+
+
         setContentView(R.layout.fragment_reservation);
+        starHolder =  findViewById(R.id.starShowHolder);
+        imgStar1 =  findViewById(R.id.imgStarH1);
+        imgStar2 =  findViewById(R.id.imgStarH2);
+        imgStar3 =  findViewById(R.id.imgStarH3);
+        imgStar4 =  findViewById(R.id.imgStarH4);
+        imgStar5 =  findViewById(R.id.imgStarH5);
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         contentFullDescription = (CTouchyWebView) findViewById(R.id.contentFullDescription);
@@ -309,6 +318,35 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
         });
     }
 
+
+    private void setStar(){
+        if (resultLodgingHotelDetail.getLodgingRateInt().equals("1")) {
+           starHolder.setVisibility(View.VISIBLE);
+           imgStar1.setVisibility(View.VISIBLE);
+        } else if (resultLodgingHotelDetail.getLodgingRateInt().equals("2")) {
+          starHolder.setVisibility(View.VISIBLE);
+          imgStar1.setVisibility(View.VISIBLE);
+          imgStar2.setVisibility(View.VISIBLE);
+        } else if (resultLodgingHotelDetail.getLodgingRateInt().equals("3")) {
+           starHolder.setVisibility(View.VISIBLE);
+           imgStar1.setVisibility(View.VISIBLE);
+           imgStar2.setVisibility(View.VISIBLE);
+           imgStar3.setVisibility(View.VISIBLE);
+        } else if (resultLodgingHotelDetail.getLodgingRateInt().equals("4")) {
+           starHolder.setVisibility(View.VISIBLE);
+           imgStar1.setVisibility(View.VISIBLE);
+           imgStar2.setVisibility(View.VISIBLE);
+           imgStar3.setVisibility(View.VISIBLE);
+           imgStar4.setVisibility(View.VISIBLE);
+        } else if (resultLodgingHotelDetail.getLodgingRateInt().equals("5")) {
+            starHolder.setVisibility(View.VISIBLE);
+            imgStar1.setVisibility(View.VISIBLE);
+            imgStar2.setVisibility(View.VISIBLE);
+            imgStar3.setVisibility(View.VISIBLE);
+            imgStar4.setVisibility(View.VISIBLE);
+            imgStar5.setVisibility(View.VISIBLE);
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -323,7 +361,7 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
 //        txtDate.setText(Utils.getSimpleDate(startOfTravel));
 //        txtDuration.setText(Utils.persianNumbers(String.valueOf(durationTravel)) + " شب");
         roomReservationBtn.setOnClickListener(this);
-
+        setStar();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -632,11 +670,15 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
                     intent.putExtra("hotelName", resultLodgingHotelDetail.getLodgingName());
                     startActivity(intent);
                 }
+                else {
+                    dismissProgress();
+                }
             }
 
             @Override
             public void onFailure(Call<ResultLodgingRoomList> call, Throwable t) {
                 Log.e("result of intresting", "false");
+                dismissProgress();
             }
         });
     }
@@ -713,6 +755,7 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
 //                    bookmarkImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_bookmark_pink));
                 } else {
                     Log.e("Responce body", "null");
+                    dismissProgress();
                 }
             }
 

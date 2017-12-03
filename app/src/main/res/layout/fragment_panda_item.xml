@@ -29,26 +29,16 @@
 
                     <RelativeLayout
                         android:id="@+id/imageHolder"
-                        android:layout_width="100dp"
-                        android:layout_height="120dp"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
                         android:layout_alignParentStart="true">
 
                         <ProgressBar
                             android:id="@+id/imageLoading"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
                             android:layout_centerInParent="true"
                             android:translationZ="1dp" />
-
-                        <!--<ImageView-->
-                        <!--android:layout_width="50dp"-->
-                        <!--android:layout_height="25dp"-->
-                        <!--android:layout_alignStart="@+id/imgItineraryListMore"-->
-                        <!--android:layout_marginTop="@dimen/padding_standard"-->
-                        <!--android:src="@color/dark_red"-->
-                        <!--android:translationZ="1dp"-->
-                        <!--/>-->
-
 
 
                         <ImageView
@@ -66,7 +56,7 @@
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_alignParentEnd="true"
                         android:layout_marginStart="@dimen/margin_short"
                         android:layout_marginTop="@dimen/padding_standard"
@@ -74,86 +64,42 @@
                         android:gravity="start">
 
 
-                        <!--<TextView-->
-                            <!--android:id="@+id/txtHotelName"-->
-                            <!--style="@style/StandardTitle"-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_alignParentStart="true"-->
-                            <!--android:layout_marginStart="@dimen/margin_short"-->
-                            <!--android:maxLines="1"-->
-                            <!--android:text="هتل آپارتمان رازی" />-->
-
-
-                        <RelativeLayout
-                            android:id="@+id/TitleHolder"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/starHolder"
-                            android:layout_marginStart="@dimen/margin_short">
-
-                            <ImageView
-                                android:id="@+id/imgType"
-                                android:layout_width="15dp"
-                                android:layout_height="15dp"
-                                android:layout_alignParentStart="true"
-                                android:layout_centerVertical="true"
-                                android:scaleType="centerCrop"
-                                android:src="@mipmap/ic_hotel"
-                                android:visibility="gone"
-                                />
-
-                            <TextView
-                                android:id="@+id/txtTitle"
-                                style="@style/SmallText"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginStart="@dimen/margin_short"
-                                android:layout_toEndOf="@+id/imgType"
-                                android:text="نوع مرکز اقامت" />
-                        </RelativeLayout>
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="sdlfslfjsa"
-                            android:layout_below="@+id/TitleHolder"
-                            android:id="@+id/txtType"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="sdlfslfjsa"
-                            android:layout_below="@+id/txtType"
-                            android:id="@+id/txtAddress"/>
-
-
-                    </RelativeLayout>
-
-                    <LinearLayout
-                        android:id="@+id/cityNameHolder1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/imageHolder"
-                        android:background="@color/greyLight"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/padding_short"
-                        android:visibility="gone"
-
-
-                        >
-
-                        <TextView
-                            android:id="@+id/txtPrice"
+                            android:id="@+id/txtTitle"
                             style="@style/SmallText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
-                            android:text="شروع قیمت از"
-                            android:textColor="@color/grey"
-                            android:visibility="gone" />
+                            android:layout_alignParentTop="true"
+                            android:text="نوع مرکز اقامت" />
 
-                    </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/txtTitle"
+                            android:weightSum="2"
+                            >
+
+                         <!--   <TextView
+                                android:id="@+id/txtType"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+
+                                android:layout_weight="1"
+                                android:text="sdlfslfjsa"
+                                />-->
+                            <TextView
+                                android:id="@+id/txtAddress"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+
+                                android:layout_weight="1"
+                                android:text="dfdfsfsf" />
+                        </LinearLayout>
+
+
+
+                    </RelativeLayout>
 
 
                 </RelativeLayout>

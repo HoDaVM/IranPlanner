@@ -180,6 +180,7 @@ public class Util {
     public static void dismissProgress(ProgressDialog progressDialog) {
         if (progressDialog.isShowing() == true || progressDialog != null) {
             progressDialog.dismiss();
+            progressDialog.cancel();
         }
     }
 

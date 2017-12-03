@@ -123,7 +123,7 @@
             style="@style/StandardTextGrey"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/starHolder"
+            android:layout_below="@+id/starShowHolder"
             android:layout_centerHorizontal="true"
             android:text="type"
             android:textColor="@color/dark_blue"
@@ -139,55 +139,60 @@
             android:translationZ="1dp" />
 
         <RelativeLayout
-            android:id="@+id/starHolder"
+            android:id="@+id/starShowHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtHotelName"
             android:padding="@dimen/margin_short">
 
             <ImageView
-                android:id="@+id/imgStar1"
+                android:id="@+id/imgStarH1"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_marginLeft="@dimen/margin_xshort"
-                android:layout_toRightOf="@+id/imgStar2"
+                android:layout_toRightOf="@+id/imgStarH2"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/ic_stars" />
+                android:src="@mipmap/ic_stars"
+                android:visibility="invisible"/>
 
             <ImageView
-                android:id="@+id/imgStar2"
+                android:id="@+id/imgStarH2"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_marginLeft="@dimen/margin_xshort"
-                android:layout_toRightOf="@+id/imgStar3"
+                android:layout_toRightOf="@+id/imgStarH3"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/ic_stars" />
+                android:src="@mipmap/ic_stars"
+                android:visibility="invisible"/>
 
             <ImageView
-                android:id="@+id/imgStar3"
+                android:id="@+id/imgStarH3"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_centerInParent="true"
                 android:layout_marginLeft="@dimen/margin_xshort"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/ic_stars" />
+                android:src="@mipmap/ic_stars"
+                android:visibility="invisible"/>
 
             <ImageView
-                android:id="@+id/imgStar4"
+                android:id="@+id/imgStarH4"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_marginLeft="@dimen/margin_xshort"
-                android:layout_toLeftOf="@+id/imgStar3"
+                android:layout_toLeftOf="@+id/imgStarH3"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/ic_stars" />
+                android:src="@mipmap/ic_stars"
+                android:visibility="invisible"/>
 
             <ImageView
-                android:id="@+id/imgStar5"
+                android:id="@+id/imgStarH5"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:layout_toLeftOf="@+id/imgStar4"
+                android:layout_toLeftOf="@+id/imgStarH4"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/ic_stars" />
+                android:src="@mipmap/ic_stars"
+                android:visibility="invisible"/>
         </RelativeLayout>
     </RelativeLayout>
 

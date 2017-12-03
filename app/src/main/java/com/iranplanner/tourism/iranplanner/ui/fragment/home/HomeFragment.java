@@ -122,7 +122,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
 
     protected String[] mNavigationDrawerItemTitles;
     List<CityProvince> CityProvince;
-    String selectId, SelectedType;
+    String selectId, SelectedType, selectedIdAttraction, selectedTypeAtraction;
     GetHomeResult homeResult;
     protected static int buildVersion;
     @Inject
@@ -252,7 +252,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
     RelativeLayout provinceHomeHolder;
 
     private String cityName = "city name";
-
+    private String selectSearch = "";
 
     public HomeFragment() {
         super();
@@ -756,8 +756,8 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
         Intent intentA = new Intent(getContext(), ShowAttractionListMoreActivity.class);
         intentA.putExtra("attractionsList", (Serializable) resultLodgings);
         intentA.putExtra("nextOffset", getAttractionList.getStatistics().getOffsetNext());
-        intentA.putExtra("provinceCityID", selectId);
-        intentA.putExtra("provinceCityType",SelectedType);
+        intentA.putExtra("provinceCityID", selectedIdAttraction);
+        intentA.putExtra("provinceCityType", selectedTypeAtraction);
         startActivity(intentA);
     }
 
@@ -1013,16 +1013,18 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
                         SelectedType = CityProvince.get(position).getType();
                         getHomeResult(SelectedType, CityProvince.get(position).getId());
                         cityName = CityProvince.get(position).getTitle();
+                        selectedIdAttraction = CityProvince.get(position).getId();
+                        selectedTypeAtraction = CityProvince.get(position).getType();
                         dismiss();
                     } else if (type == Constants.homeHotel) {
                         cityName = CityProvince.get(position).getTitle();
                         getHotelResults(CityProvince.get(position).getType(), CityProvince.get(position).getId(), "");
                         dismiss();
-                    }
-                    else if (type == Constants.homeAttraction) {
+                    } else if (type == Constants.homeAttraction) {
                         cityName = CityProvince.get(position).getTitle();
+                        selectedIdAttraction = CityProvince.get(position).getId();
+                        selectedTypeAtraction = CityProvince.get(position).getType();
                         attractionListMorePresenter.getAttractionMore("search", "fa", CityProvince.get(position).getId(), CityProvince.get(position).getType(), "0", Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()), "");
-//                        homePresenter.getAttractionMore("search", "fa", selectId, SelectedType, "0", Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()), type);
 
                         dismiss();
                     }

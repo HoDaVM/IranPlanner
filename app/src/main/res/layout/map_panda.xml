@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/main_blue">
 
 
         <android.support.design.widget.TextInputLayout
@@ -12,37 +13,11 @@
             android:layout_marginTop="@dimen/margin_short"
             android:paddingLeft="@dimen/padding_standard"
             android:paddingRight="@dimen/padding_standard"
-            android:id="@+id/searchHolder"
-            android:background="@color/white_">
-
-            <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:background="@mipmap/ic_search" />
-
-            <AutoCompleteTextView
-                android:id="@+id/search"
-                style="@style/StandardText"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/padding_big"
-
-                android:gravity="right"
-                android:hint="جاذبه، هتل، هر چی"
-                android:imeOptions="actionNext"
-                android:inputType="text"
-                android:layout_toStartOf="@+id/imageButton"
-                />
-        </RelativeLayout>
+            android:id="@+id/searchHolder">
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                >
 
                 <ImageButton
                     android:id="@+id/nearBtn"
@@ -50,20 +25,53 @@
                     android:layout_height="30dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:background="@mipmap/ic_search" />
+                    android:background="@mipmap/ic_search"
+                    android:visibility="gone"/>
 
                 <AutoCompleteTextView
                     android:id="@+id/searchRange"
                     style="@style/StandardText"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/padding_big"
+                    android:layout_height="wrap_content"
                     android:gravity="right"
                     android:hint="شهر، استان"
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:layout_toStartOf="@+id/nearBtn"
+                    android:background="@color/white_"
+
                     />
             </RelativeLayout>
+            <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+                android:layout_marginTop="@dimen/margin_short">
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@mipmap/ic_search"
+                android:visibility="gone"/>
+
+            <AutoCompleteTextView
+                android:id="@+id/search"
+                style="@style/StandardText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:hint="جاذبه، هتل، هر چی"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:layout_toStartOf="@+id/imageButton"
+                android:background="@color/white_"
+
+                />
+        </RelativeLayout>
+
 
         </android.support.design.widget.TextInputLayout>
 

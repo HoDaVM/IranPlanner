@@ -104,6 +104,8 @@ public class AttractionListMorePresenter extends AttractionListMoreContract {
                     @Override
                     public void onNext(ShowAtractionDetailMore showAttractionFull) {
                         mView.showAttractionDetail(showAttractionFull);
+                        mView.dismissProgress();
+
                     }
                 });
     }

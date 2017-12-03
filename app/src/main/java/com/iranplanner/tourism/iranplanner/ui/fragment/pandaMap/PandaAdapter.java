@@ -65,7 +65,7 @@ public class PandaAdapter extends RecyclerView.Adapter<PandaAdapter.ViewHolder> 
     public void onBindViewHolder(final PandaAdapter.ViewHolder viewHolder, int i) {
 
         viewHolder.txtTitle.setText(Util.persianNumbers(String.valueOf(i + 1)) + "-" + resultPandaMapList.get(i).getPoint().getTitle());
-        viewHolder.txtType.setText(resultPandaMapList.get(i).getPoint().getType());
+//        viewHolder.txtType.setText(resultPandaMapList.get(i).getPoint().getType());
         viewHolder.txtAddress.setText(resultPandaMapList.get(i).getPoint().getCityTitle());
         if (resultPandaMapList.get(i).getPoint().getImgUrl() != null) {
             viewHolder.imageLoading.setVisibility(View.VISIBLE);
@@ -115,7 +115,7 @@ public class PandaAdapter extends RecyclerView.Adapter<PandaAdapter.ViewHolder> 
             imgItineraryListMore = (ImageView) view.findViewById(R.id.imgItineraryListMore);
 
             txtTitle = view.findViewById(R.id.txtTitle);
-            txtType = view.findViewById(R.id.txtType);
+//            txtType = view.findViewById(R.id.txtType);
             txtAddress = view.findViewById(R.id.txtAddress);
             imageLoading = view.findViewById(R.id.imageLoading);
 

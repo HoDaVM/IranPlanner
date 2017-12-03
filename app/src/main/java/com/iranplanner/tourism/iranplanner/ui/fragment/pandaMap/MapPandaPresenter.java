@@ -86,9 +86,9 @@ public class MapPandaPresenter extends MapPandaContract {
 //    }
 
     @Override
-    public void getDrawResult(PandaMapList pandaMapList, String valueSearch, String attractionFilter, String lodgingFilter, String position1, String position2, String token, String androidId) {
+    public void getDrawResult(PandaMapList pandaMapList, String valueSearch, String attractionFilter, String lodgingFilter, String eventFilter,String position1, String position2, String token, String androidId) {
         mView.showProgress();
-        retrofit.create(MapPandaService.class).getDrawResult( pandaMapList,  valueSearch,  attractionFilter,  lodgingFilter,  position1,  position2,  token,  androidId)
+        retrofit.create(MapPandaService.class).getDrawResult( pandaMapList,  valueSearch,  attractionFilter,  lodgingFilter,  eventFilter, position1,  position2,  token,  androidId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -115,9 +115,9 @@ public class MapPandaPresenter extends MapPandaContract {
     }
 
     @Override
-    public void getDrawResult(String valueSearch, String attractionFilter, String lodgingFilter, String position1, String position2, String token, String androidId) {
+    public void getDrawResult(String valueSearch, String attractionFilter, String lodgingFilter,String eventFilter, String position1, String position2, String token, String androidId) {
 
-        retrofit.create(MapPandaService.class).getDrawResult(   valueSearch,  attractionFilter,  lodgingFilter,  position1,  position2,  token,  androidId)
+        retrofit.create(MapPandaService.class).getDrawResult(   valueSearch,  attractionFilter,  lodgingFilter,  eventFilter, position1,  position2,  token,  androidId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -135,7 +135,6 @@ public class MapPandaPresenter extends MapPandaContract {
 
                     @Override
                     public void onNext(ResultPandaMaps resultPandaMaps) {
-
                         mView.showPandaSearch(resultPandaMaps);
                         mView.showPointOnMap(resultPandaMaps);
                     }
@@ -179,6 +178,7 @@ public class MapPandaPresenter extends MapPandaContract {
                                                   @Query("valueSearch") String valueSearch,
                                                   @Query("attractionFilter") String attractionFilter,
                                                   @Query("lodgingFilter") String lodgingFilter,
+                                                  @Query("eventFilter") String eventFilter,
                                                   @Query("position1") String position1,
                                                   @Query("position2") String position2,
                                                   @Query("cid") String token,
@@ -187,6 +187,7 @@ public class MapPandaPresenter extends MapPandaContract {
         Observable<ResultPandaMaps> getDrawResult(@Query("valueSearch") String valueSearch,
                                                   @Query("attractionFilter") String attractionFilter,
                                                   @Query("lodgingFilter") String lodgingFilter,
+                                                  @Query("eventFilter") String eventFilter,
                                                   @Query("position1") String position1,
                                                   @Query("position2") String position2,
                                                   @Query("cid") String token,

@@ -1,45 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<LinearLayout android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white_"
     android:gravity="start"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/padding_short"
-    android:background="@color/white_"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:paddingBottom="@dimen/padding_short">
 
-                <TextView
-                    android:id="@+id/sortName"
-                    style="@style/StandardTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_standard"
-                    android:text="مرتب سازی بر اساس" />
+    <TextView
+        android:id="@+id/sortName"
+        style="@style/StandardTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_standard"
+        android:text="فیلتر " />
 
 
+    <CheckBox
+        android:id="@+id/filterHotelCheckBox"
+        style="@style/StandardText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:text="هتل" />
 
-                    <CheckBox
-                        android:id="@+id/filterHotelCheckBox"
-                        style="@style/StandardText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="هتل"/>
+    <CheckBox
+        android:id="@+id/filterAttrctionCheckBox"
+        style="@style/StandardText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:text="جاذبه " />
 
-                    <CheckBox
-                        android:id="@+id/filterAttrctionCheckBox"
-                        style="@style/StandardText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="جاذبه "
-                        android:checked="true"/>
-
-
+    <CheckBox
+        android:id="@+id/filterEventCheckBox"
+        style="@style/StandardText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:text="رویداد " />
 
 
-
-
-            </LinearLayout>
+</LinearLayout>
 
 
