@@ -44,6 +44,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -169,11 +170,13 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     private List<String> markerNames;
     LinearLayoutManager horizontalLayoutManagaer;
     private boolean isResultForDraw = false;
-    private Button btnFilter;
+    private LinearLayout btnFilter;
     private AutoCompleteTextView search, searchRange;
     PandaMapList PandaMapList;
     private ImageView imgMyLocation;
     Button btnSelectPolygon;
+    LinearLayout drawPolygon;
+    TextView txtDraw;
 
     public static MapPandaFragment newInstance() {
         MapPandaFragment fragment = new MapPandaFragment();
@@ -187,8 +190,10 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     List<entity.CityProvince> CityProvince;
 
     private void setUpRecyclerView(List<ResultPandaMap> resultPandaMapList) {
-        recyclerView.setHasFixedSize(true);
 
+
+
+        recyclerView.setHasFixedSize(true);
         horizontalLayoutManagaer = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(horizontalLayoutManagaer);
 
@@ -302,7 +307,10 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
         btnFilter.setOnClickListener(this);
         btnSelectPolygon = rootView.findViewById(R.id.btnSelectPolygon);
+        drawPolygon = rootView.findViewById(R.id.drawPolygon);
+        txtDraw = rootView.findViewById(R.id.txtDraw);
         btnSelectPolygon.setOnClickListener(this);
+        drawPolygon.setOnClickListener(this);
         mapFragment.getMapAsync(this);
         mapFragment.setOnDragListener(this);
         ButterKnife.bind(this, rootView);
@@ -428,12 +436,13 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
             mMap.getUiSettings().setScrollGesturesEnabled(drawable);
             setDraw = false;
             btnSelectPolygon.setBackground(getResources().getDrawable(R.mipmap.ic_drawing_map_round));
+            txtDraw.setText("ترسیم محدوده");
         } else {
             mMap.getUiSettings().setScrollGesturesEnabled(drawable);
             setDraw = true;
             clearPolyLine();
             btnSelectPolygon.setBackground(getResources().getDrawable(R.mipmap.ic_map_zoomout_round));
-
+            txtDraw.setText("لغو ترسیم");
 
         }
 
@@ -612,8 +621,8 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         } else {
             setDrawable(true);
             searchRange.setText("");
-            searchRange.setHint("جستجو در محدوده نمایش نقشه");
-        }
+            searchRange.setHint("جستجوی نام شهر یا استان");
+    }
 
 
     }
@@ -738,7 +747,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
             showMarkers(markerPoints, markerType);
             setUpRecyclerView(resultPandaMapList);
         } else {
-            Toast.makeText(getContext(), "در محدوده مورد نظر نتیجه ای یافت نشد", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getContext(), "در محدوده مورد نظر نتیجه ای یافت نشد", Toast.LENGTH_SHORT).show();
             cleanMapAndRecyclerView();
         }
 //        onWindowFocusChanged(markerPoints);
@@ -868,6 +877,11 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
                 break;
 
             case R.id.btnSelectPolygon:
+                search.setText("");
+                setDrawable(setDraw);
+                cleanMapAndRecyclerView();
+                break;
+                case R.id.drawPolygon:
                 search.setText("");
                 setDrawable(setDraw);
                 cleanMapAndRecyclerView();

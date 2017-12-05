@@ -27,15 +27,15 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
     public final int PAGE_COUNT = 4;
     GetHomeResult homeResult;
     private int[] mTabsIcons = {
-            R.mipmap.ic_search,
+            R.mipmap.ic_home,
             R.mipmap.ic_profile_grey,
-            R.mipmap.ic_profile_grey,
-            R.mipmap.ic_profile_grey
+            R.mipmap.ic_barnamesafar,
+            R.mipmap.ic_map_safar
 
     };
     private StandardFragment currentTab;
     //    StandardFragment
-    private final String[] mTabsTitle = {"خانه","حساب من","برنامه سفر","پاندای دانا"};
+    private final String[] mTabsTitle = {"خانه","پروفایل","برنامه سفر","نقشه"};
 
     public TabPagerAdapter(FragmentManager fm, Context context, GetHomeResult homeResult) {
         super(fm);
@@ -58,20 +58,25 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int pos) {
         currentTab = null;
         switch (pos) {
-            case 3:
-                currentTab = MapPandaFragment.newInstance();
-                return currentTab;
-            case 2:
-                currentTab = MainSearchFragment.newInstance();
-                return currentTab;
-            case 1:
-                currentTab = SettingFragment.newInstance();
-                return currentTab;
+
             case 0:
+
                 currentTab = HomeFragment.newInstance(homeResult);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("HomeResult", homeResult);
                 currentTab.setArguments(bundle);
+                return currentTab;
+
+            case 1:
+
+                currentTab = SettingFragment.newInstance();
+                return currentTab;
+
+            case 2:
+                currentTab = MainSearchFragment.newInstance();
+                return currentTab;
+            case 3:
+                currentTab = MapPandaFragment.newInstance();
                 return currentTab;
         }
         return null;

@@ -418,7 +418,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
                 else if (SelectedType != null && SelectedType.equals("province"))
                     mainSearchPresenter.loadItineraryFromProvince("searchprovince", selectId, offset, Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
                 else
-                    ((ViewPager) getActivity().findViewById(R.id.main_view_pager)).setCurrentItem(0);
+                    ((ViewPager) getActivity().findViewById(R.id.main_view_pager)).setCurrentItem(2);
                 break;
             case R.id.attractionHistoricalHolder:
                 getAttractionMore(Constants.attractionHistoricalCode);
@@ -481,7 +481,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
 
                 } else {
                     ViewPager viewPager = (ViewPager) getActivity().findViewById(R.id.main_view_pager);
-                    viewPager.setCurrentItem(0);
+                    viewPager.setCurrentItem(2);
 
                 }
                 break;

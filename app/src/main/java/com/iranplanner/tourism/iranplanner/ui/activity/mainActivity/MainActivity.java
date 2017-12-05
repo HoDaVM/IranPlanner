@@ -155,7 +155,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
 
 
         ///
-        int position = 0;
+        int position =0;
         mainTabLayout.getTabAt(position).getCustomView().setSelected(true);
         viewPager.setCurrentItem(position);
 

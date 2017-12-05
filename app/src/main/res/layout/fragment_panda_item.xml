@@ -1,115 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="280dp"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_margin="@dimen/margin_xshort"
+>
 
-    <ScrollView
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view_itinerary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_xxshort">
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/holder"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+
+            >
+
+            <RelativeLayout
+                android:id="@+id/imageHolder"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentStart="true">
+
+                <ProgressBar
+                    android:id="@+id/imageLoading"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:translationZ="1dp" />
 
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/card_view_itinerary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_xxshort">
-
-                <RelativeLayout
-                    android:id="@+id/holder"
+                <ImageView
+                    android:id="@+id/imgItineraryListMore"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="@dimen/margin_short"
+                    android:layout_marginStart="@dimen/margin_short"
+                    android:layout_marginTop="@dimen/margin_short"
+                    android:scaleType="center"
 
-                    >
+                    />
 
-                    <RelativeLayout
-                        android:id="@+id/imageHolder"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_alignParentStart="true">
+            </RelativeLayout>
 
-                        <ProgressBar
-                            android:id="@+id/imageLoading"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_centerInParent="true"
-                            android:translationZ="1dp" />
-
-
-                        <ImageView
-                            android:id="@+id/imgItineraryListMore"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="@dimen/margin_short"
-                            android:layout_marginStart="@dimen/margin_short"
-                            android:layout_marginTop="@dimen/margin_short"
-                            android:scaleType="center"
-
-                            />
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginStart="@dimen/margin_short"
-                        android:layout_marginTop="@dimen/padding_standard"
-                        android:layout_toEndOf="@+id/imageHolder"
-                        android:gravity="start">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/imageHolder"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="@dimen/margin_short"
+                android:layout_marginTop="@dimen/padding_standard"
+                android:layout_toEndOf="@+id/imageHolder"
+                android:gravity="start">
 
 
-                        <TextView
-                            android:id="@+id/txtTitle"
-                            style="@style/SmallText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_alignParentTop="true"
-                            android:text="نوع مرکز اقامت" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/txtTitle"
-                            android:weightSum="2"
-                            >
-
-                         <!--   <TextView
-                                android:id="@+id/txtType"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-
-                                android:layout_weight="1"
-                                android:text="sdlfslfjsa"
-                                />-->
-                            <TextView
-                                android:id="@+id/txtAddress"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-
-                                android:layout_weight="1"
-                                android:text="dfdfsfsf" />
-                        </LinearLayout>
+                <TextView
+                    android:id="@+id/txtTitle"
+                    style="@style/SmallText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:text="نوع مرکز اقامت" />
 
 
-
-                    </RelativeLayout>
-
-
-                </RelativeLayout>
-
-
-            </android.support.v7.widget.CardView>
-
-
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/txtAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_below="@+id/txtTitle"
+                    android:layout_weight="1"
+                    android:text="dfdfsfsf" />
 
 
-    </ScrollView>
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+
 </LinearLayout>

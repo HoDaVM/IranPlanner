@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_blue"
+    android:background="@color/dark_blue"
     android:orientation="vertical">
 
 
@@ -28,11 +29,11 @@
 
                 android:background="@color/white_"
                 android:gravity="right"
-                android:hint="جستجو شهر استان"
+                android:hint="جستجو نام شهر یااستان"
                 android:imeOptions="actionNext"
                 android:inputType="text"
-                android:paddingRight="@dimen/margin_short"
-                android:paddingLeft="@dimen/margin_short"/>
+                android:paddingLeft="@dimen/margin_short"
+                android:paddingRight="@dimen/margin_short" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -50,37 +51,17 @@
 
                 android:background="@color/white_"
                 android:gravity="right"
-                android:hint="جستجو عنوان جاذبه؛ هتل؛ رویداد"
+                android:hint="جستجو اماکن دیدنی، هتل، رویداد"
                 android:imeOptions="actionNext"
                 android:inputType="text"
-                android:paddingRight="@dimen/margin_short"
                 android:paddingLeft="@dimen/margin_short"
+                android:paddingRight="@dimen/margin_short"
 
                 />
         </RelativeLayout>
 
 
     </android.support.design.widget.TextInputLayout>
-
-    <Button
-        android:id="@+id/btnSelectPolygon"
-        android:layout_width="70dp"
-
-        android:layout_height="70dp"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/searchHolder"
-        android:layout_margin="@dimen/margin_short"
-        android:background="@mipmap/ic_drawing_map_round" />
-
-    <Button
-        android:id="@+id/btnFilter"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_below="@+id/searchHolder"
-        android:layout_margin="@dimen/margin_short"
-        android:layout_marginStart="26dp"
-        android:layout_toStartOf="@+id/btnSelectPolygon"
-        android:text="filter" />
 
 
     <RelativeLayout
@@ -89,11 +70,88 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/searchHolder">
 
-        <include
-            layout="@layout/activity_maps"
+        <LinearLayout
+            android:id="@+id/drawhholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true" />
+            android:translationZ="1dp">
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/button_corner"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/margin_short"
+                android:padding="@dimen/margin_xshort"
+                android:layout_margin="@dimen/margin_xshort"
+                android:id="@+id/drawPolygon"
+               >
+
+
+                <Button
+                    android:id="@+id/btnSelectPolygon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@mipmap/ic_map_draw" />
+
+
+                <TextView
+                    android:id="@+id/txtDraw"
+                    style="@style/SmallText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="ترسیم محدوده"
+                    android:textColor="@color/white_" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/button_blue_corner"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/margin_short"
+                android:padding="@dimen/margin_xshort"
+                android:id="@+id/btnFilter"
+                android:layout_margin="@dimen/margin_xshort">
+
+
+                <Button
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@mipmap/ic_filter_foreground" />
+
+
+                <TextView
+                    style="@style/SmallText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="فیلتر"
+                    android:textColor="@color/white_"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <include layout="@layout/activity_maps" />
+        <ImageView
+            android:id="@+id/imgMyLocation"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ic_near_me_round"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:layout_margin="@dimen/margin_short"/>
     </RelativeLayout>
     <!--cityHolder-->
     <RelativeLayout
@@ -110,8 +168,8 @@
             android:id="@+id/reservationListRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="false"
-            android:overScrollMode="never" />
+            android:layout_below="@+id/txtBestTitleHotel"
+            android:focusable="false" />
 
 
     </RelativeLayout>
