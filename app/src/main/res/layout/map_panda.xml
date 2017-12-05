@@ -2,104 +2,97 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/main_blue">
+    android:background="@color/main_blue"
+    android:orientation="vertical">
 
 
-        <android.support.design.widget.TextInputLayout
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/searchHolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_short"
+        android:layout_marginTop="@dimen/margin_short"
+        android:paddingLeft="@dimen/padding_standard"
+        android:paddingRight="@dimen/padding_standard">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_short"
-            android:layout_marginTop="@dimen/margin_short"
-            android:paddingLeft="@dimen/padding_standard"
-            android:paddingRight="@dimen/padding_standard"
-            android:id="@+id/searchHolder">
-            <RelativeLayout
+            android:layout_height="wrap_content">
+
+
+            <AutoCompleteTextView
+                android:id="@+id/searchRange"
+                style="@style/StandardText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                >
 
-                <ImageButton
-                    android:id="@+id/nearBtn"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:background="@mipmap/ic_search"
-                    android:visibility="gone"/>
+                android:background="@color/white_"
+                android:gravity="right"
+                android:hint="جستجو شهر استان"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:paddingRight="@dimen/margin_short"
+                android:paddingLeft="@dimen/margin_short"/>
+        </RelativeLayout>
 
-                <AutoCompleteTextView
-                    android:id="@+id/searchRange"
-                    style="@style/StandardText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:hint="شهر، استان"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:layout_toStartOf="@+id/nearBtn"
-                    android:background="@color/white_"
-
-                    />
-            </RelativeLayout>
-            <RelativeLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-                android:layout_marginTop="@dimen/margin_short">
+            android:layout_marginTop="@dimen/margin_xshort">
 
-            <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:background="@mipmap/ic_search"
-                android:visibility="gone"/>
 
             <AutoCompleteTextView
                 android:id="@+id/search"
                 style="@style/StandardText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
+                android:background="@color/white_"
                 android:gravity="right"
-                android:hint="جاذبه، هتل، هر چی"
+                android:hint="جستجو عنوان جاذبه؛ هتل؛ رویداد"
                 android:imeOptions="actionNext"
                 android:inputType="text"
-                android:layout_toStartOf="@+id/imageButton"
-                android:background="@color/white_"
+                android:paddingRight="@dimen/margin_short"
+                android:paddingLeft="@dimen/margin_short"
 
                 />
         </RelativeLayout>
 
 
-        </android.support.design.widget.TextInputLayout>
+    </android.support.design.widget.TextInputLayout>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="روی نقشه محدوده را بکش"
-            android:id="@+id/btnSelectPolygon"
-            android:layout_below="@+id/searchHolder"/>
+    <Button
+        android:id="@+id/btnSelectPolygon"
+        android:layout_width="70dp"
 
-        <Button
-            android:id="@+id/btnFilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/searchHolder"
-            android:layout_marginStart="26dp"
-            android:layout_toEndOf="@+id/btnSelectPolygon"
-            android:text="دسته بندی اماکن"/>
+        android:layout_height="70dp"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/searchHolder"
+        android:layout_margin="@dimen/margin_short"
+        android:background="@mipmap/ic_drawing_map_round" />
+
+    <Button
+        android:id="@+id/btnFilter"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_below="@+id/searchHolder"
+        android:layout_margin="@dimen/margin_short"
+        android:layout_marginStart="26dp"
+        android:layout_toStartOf="@+id/btnSelectPolygon"
+        android:text="filter" />
 
 
     <RelativeLayout
         android:id="@+id/mapHolder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/searchHolder"
-        >
+        android:layout_below="@+id/searchHolder">
 
-        <include layout="@layout/activity_maps" />
+        <include
+            layout="@layout/activity_maps"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true" />
 
     </RelativeLayout>
     <!--cityHolder-->
@@ -108,10 +101,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@color/transparent"
         android:padding="@dimen/padding_standard"
-        android:visibility="visible"
         android:translationZ="2dp"
-        android:background="@color/transparent">
+        android:visibility="visible">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/reservationListRecyclerView"

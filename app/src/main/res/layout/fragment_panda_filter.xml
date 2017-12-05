@@ -8,7 +8,10 @@
     android:gravity="start"
     android:orientation="vertical"
     android:paddingBottom="@dimen/padding_short">
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/margin_short">
     <TextView
         android:id="@+id/sortName"
         style="@style/StandardTitle"
@@ -16,7 +19,18 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_standard"
         android:text="فیلتر " />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="اعمال فیلتر"
+        android:background="@color/dark_red"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/okFilter"
+        android:padding="@dimen/margin_xshort"
+        style="@style/StandardText"
+        />
 
+</RelativeLayout>
 
     <CheckBox
         android:id="@+id/filterHotelCheckBox"
