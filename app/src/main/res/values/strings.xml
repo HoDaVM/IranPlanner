@@ -166,5 +166,17 @@
 
     <string name="demo_min_label"></string>
     <string name="demo_max_label"></string>
+    <string name="tutorialNext">بعدی</string>
+    <string name="tutorialHotelext">با انتخاب این دکمه و وارد کردن نام شهر مورد نظر می توانید تمامی اقامتگاههای در دسترس این شهر را ببینید.</string>
+    <string name="tutorialHotelTitle">جستجوی اقامتگاه</string>
+    <string name="tutorialItinerary">با انتخاب این دکمه می توانید برنامه سفر را انتخاب کنید.  حالا برنامه سفر چیه می گم خدمتتون.. برنامه سفر خیلی خوبه . چ</string>
+    <string name="tutorialItineraryText">جستجوی برنامه سفر</string>
+    <string name="tutorialAttractionTitle">جستجوی مکان های دیدنی در هر شهر یا استان</string>
+    <string name="tutorialAttractionText">با وارد کردن نام شهر یا استان مورد نظر  لیست مکان های دیدنی انجا را مشاهده کنید.</string>
+    <string name="tutorialWhereToText">نام شهر یا استانی را که می خواهید جستجو کنید وارد کرده و از لیستی که پیشنهاد می دهد مکان مورد نظر خود را انتخاب کنید. حالا تمام اطلاعات گردشگری جاذبه هتل و ... را ببینید.</string>
+    <string name="tutorialWhereToTitle">کجا برم؟</string>
+
+    <string name="txtCloseAppTutorial">برای دیدن آموزش برنامه باید برنامه را بسته و دوباره باز کنید. آیا مایل به بستن برنامه هستید؟</string>
+
 
 </resources>

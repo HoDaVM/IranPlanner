@@ -14,6 +14,7 @@ import android.net.NetworkInfo;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
@@ -26,12 +27,15 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.coinpany.core.android.widget.Utils;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 import server.Config;
 
@@ -158,6 +162,39 @@ public class Util {
 
         editor.commit();
     }
+
+   //--------------------
+
+    public static final String PREFS_NAME = "IRAN_PLANNER_CONFIG";
+
+    public static SharedPreferences getSharedPreferences(Context context) {
+        return context.getSharedPreferences(PREFS_NAME,0);
+    }
+
+    public static void clearSharedPreferences(Context context) {
+        SharedPreferences settings = getSharedPreferences(context);
+        SharedPreferences.Editor editor;
+        editor = settings.edit(); //2
+        editor.clear();
+        editor.commit();
+    }
+
+    public static void saveInPreferences(String key, String value, boolean secure,Context context) {
+        SharedPreferences settings =getSharedPreferences(context);
+        SharedPreferences.Editor editor;
+        editor = settings.edit(); //2
+        editor.remove(key);
+        editor.putString(key, secure ? value : value); //3
+        editor.commit(); //4
+    }
+
+    public static String getFromPreferences(String key, String defaultValue, boolean secure,Context context) {
+        SharedPreferences settings = getSharedPreferences(context);
+        String value = settings.getString(key, defaultValue);
+        return secure && value != null ? value : value;
+    }
+
+    //----------------------
 
     public static final String displayFirebaseRegId(Context context) {
         SharedPreferences pref = context.getSharedPreferences(Config.SHARED_PREF, 0);

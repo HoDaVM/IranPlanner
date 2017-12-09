@@ -4,7 +4,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,12 +16,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.coinpany.core.android.widget.Utils;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.iranplanner.tourism.iranplanner.R;
 
 import com.iranplanner.tourism.iranplanner.di.model.App;
+import com.iranplanner.tourism.iranplanner.showcaseview.CustomShowcaseView;
 import com.iranplanner.tourism.iranplanner.standard.StandardFragment;
 import com.iranplanner.tourism.iranplanner.ui.activity.SplashActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.editprofile.EditProfileActivity;
@@ -32,6 +42,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import entity.GetInfoReqSend;
 import entity.GetInfoResult;
 import entity.ReservationRequestList;
@@ -40,12 +51,13 @@ import entity.ResultReqBundle;
 import entity.ResultReqCount;
 import entity.ResultReservationReqStatus;
 import server.Config;
+import tools.Constants;
 import tools.Util;
 
 /**
  * Created by Hoda on 10/01/2017.
  */
-public class SettingFragment extends StandardFragment implements View.OnClickListener, SettingContract.View ,HotelReservationStatusContract.View {
+public class SettingFragment extends StandardFragment implements View.OnClickListener, SettingContract.View ,HotelReservationStatusContract.View  {
 
     TextView txtProfileName, btnEditProfile, txtHotelReservationStatus;
     RelativeLayout LayoutShowProfileHolder, exitFromAccount,HotelReservationStatusHolder;
@@ -59,6 +71,8 @@ public class SettingFragment extends StandardFragment implements View.OnClickLis
     View view;
     @Inject
     HotelReservationStatusListPresenter hotelReservationStatusListPresenter;
+    private RelativeLayout TutorialHolder;
+
     public static SettingFragment newInstance() {
         SettingFragment fragment = new SettingFragment();
         return fragment;
@@ -90,18 +104,34 @@ public class SettingFragment extends StandardFragment implements View.OnClickLis
         HotelReservationStatusHolder = (RelativeLayout) view.findViewById(R.id.HotelReservationStatusHolder);
         LayoutShowProfileHolder = (RelativeLayout) view.findViewById(R.id.LayoutShowProfileHolder);
         exitFromAccount = (RelativeLayout) view.findViewById(R.id.exitFromAccount);
+        TutorialHolder = (RelativeLayout) view.findViewById(R.id.TutorialHolder);
         btnEditProfile.setOnClickListener(this);
         LayoutShowProfileHolder.setOnClickListener(this);
         exitFromAccount.setOnClickListener(this);
         HotelReservationStatusHolder.setOnClickListener(this);
+        TutorialHolder.setOnClickListener(this);
         setLoginName();
         getSharedpreferences();
         DaggerSettingComponent.builder().netComponent(((App) getActivity().getApplicationContext()).getNetComponent())
                 .settingModule(new SettingModule(this,this))
                 .build().inject(this);
-
+//        boolean responseBoolean = Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_SETTINGFRAGMENT, "false", false,getContext()));
+//
+//        if (!responseBoolean) {
+//            setShowCase();
+//        }
         return view;
     }
+//
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        boolean responseBoolean = Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_SETTINGFRAGMENT, "false", false,getContext()));
+//
+//        if (!responseBoolean) {
+//            setShowCase();
+//        }
+//    }
 
     private void setLoginName() {
         if (!Util.getUseRIdFromShareprefrence(getContext()).equals("")) {
@@ -136,6 +166,40 @@ public class SettingFragment extends StandardFragment implements View.OnClickLis
             case R.id.HotelReservationStatusHolder:
                 getRerReservation();
                 break;
+            case R.id.TutorialHolder: {
+                Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_HOMEfRAGMENT, String.valueOf(false), false,getContext());
+                Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_SETTINGFRAGMENT, String.valueOf(false), false,getContext());
+                final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.custom_alert, null);
+                TextView tv = (TextView) dialogView.findViewById(R.id.alertDescription);
+                TextView txtAlertTitle = (TextView) dialogView.findViewById(R.id.txtAlertTitle);
+
+                txtAlertTitle.setText("توجه");
+                tv.setText(R.string.txtCloseAppTutorial);
+                dialogBuilder.setView(dialogView);
+                TextView txtNo = (TextView) dialogView.findViewById(R.id.txtNo);
+                txtNo.setText("خیر");
+                TextView txtOk = (TextView) dialogView.findViewById(R.id.txtOk);
+                txtOk.setText("بله");
+                final AlertDialog alertDialog = dialogBuilder.create();
+                alertDialog.show();
+                txtOk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ActivityCompat.finishAffinity(getActivity());
+                    }
+                });
+
+                txtNo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.cancel();
+                    }
+                });
+                break;
+            }
+
 
         }
     }
@@ -207,5 +271,37 @@ public class SettingFragment extends StandardFragment implements View.OnClickLis
         intent.putExtra("resultReqCountList", (Serializable) resultReqCountList);
         intent.putExtra("resultReqBundleList", (Serializable) resultReqBundleList);
         startActivity(intent);
+    }
+    ShowcaseView showcaseView;
+
+
+
+    private void setShowCase() {
+        Button customButton = (Button) getActivity().getLayoutInflater().inflate(R.layout.showcase_custom_button, null);
+        CustomShowcaseView showcaseDrawer = new CustomShowcaseView(getResources());
+        float width = getResources().getDimension(R.dimen.custom_showcase_width);
+        float height = getResources().getDimension(R.dimen.custom_showcase_height);
+        showcaseDrawer.customShowcaseSize(width, height);
+
+        showcaseView = new ShowcaseView.Builder(getActivity())
+                .setTarget(new ViewTarget(txtHotelReservationStatus))
+                .setShowcaseDrawer(showcaseDrawer)
+                .blockAllTouches()
+                .replaceEndButton(customButton)
+                .build();
+        Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_SETTINGFRAGMENT, String.valueOf(true), false,getContext());
+        RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        lps.addRule(RelativeLayout.CENTER_IN_PARENT);
+        int margin = Utils.dp(getContext(), 16);
+        lps.setMargins(0, 0, 0, margin);
+        showcaseView.setButtonPosition(lps);
+        final int screenSize = getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK;
+
+        showcaseView.setButtonText(getString(R.string.tutorialNext));
+        showcaseView.setContentText(getString(R.string.tutorialWhereToText));
+        showcaseView.setContentTitle(getString(R.string.tutorialWhereToTitle));
+        showcaseView.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
     }
 }

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -38,9 +40,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.coinpany.core.android.widget.Utils;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.RecyclerItemOnClickListener;
 import com.iranplanner.tourism.iranplanner.di.model.App;
+import com.iranplanner.tourism.iranplanner.showcaseview.CustomShowcaseView;
 import com.iranplanner.tourism.iranplanner.standard.ClickableViewPager;
 import com.iranplanner.tourism.iranplanner.standard.DataTransferInterface;
 import com.iranplanner.tourism.iranplanner.standard.StandardFragment;
@@ -251,8 +258,11 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
     @BindView(R.id.provinceHomeHolder)
     RelativeLayout provinceHomeHolder;
 
+    private ShowcaseView showcaseView;
+    private int counter = 0;
     private String cityName = "city name";
     private String selectSearch = "";
+    LinearLayout homeFragmentWhereToView;
 
     public HomeFragment() {
         super();
@@ -278,7 +288,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
         hotelَAppartementHolderGrouping.setOnClickListener(this);
         hotelBoomgardiHolderGrouping.setOnClickListener(this);
         hotelTraditionalHolderGrouping.setOnClickListener(this);
-
+        homeFragmentWhereToView = rootView.findViewById(R.id.homeFragmentWhereToView);
         rootView.findViewById(R.id.homeFragmentWhereToView).setOnClickListener(this);
 
         attractionHistoricalHolder.setOnClickListener(this);
@@ -308,7 +318,10 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
 
         //Initializing the navigation layout
         initNav(rootView.findViewById(R.id.nav_layout));
-
+//        boolean responseBoolean = Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_HOMEfRAGMENT, "false", false,getContext()));
+//        if (!responseBoolean) {
+//            setShowCase();
+//        }
         return rootView;
     }
 
@@ -384,8 +397,8 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
         super.onCreate(savedInstanceState);
         final Bundle args = getArguments();
         homeResult = (GetHomeResult) args.getSerializable("HomeResult");
-        SelectedType="country";
-        selectId="311";
+        SelectedType = "country";
+        selectId = "311";
     }
 
     private void getAttractionResults() {
@@ -393,7 +406,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
     }
 
     private void getAttractionMore(String type) {
-        if ( SelectedType.equals("country") ) {
+        if (SelectedType.equals("country")) {
             openCustomSearchDialog(Constants.homeAttraction);
             frameLayout.setVisibility(View.INVISIBLE);
 
@@ -665,24 +678,24 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
 
     @Override
     public void onResume() {
-        Log.e("backpress","true");
+        Log.e("backpress", "true");
         super.onResume();
 
     }
 
     @Override
     public void ShowHomeResult(GetHomeResult getHomeResult) {
-        if(SelectedType.equals("country")){
+        if (SelectedType.equals("country")) {
             txtCityrTitle.setText("مقاصد محبوب");
-        }else if(SelectedType.equals("province")){
+        } else if (SelectedType.equals("province")) {
             txtCityrTitle.setText("شهرهای استان");
-        }else if(SelectedType.equals("city")){
+        } else if (SelectedType.equals("city")) {
             txtCityrTitle.setText("شهرهای مجاور");
         }
         b = true;
 
-        selectId=getHomeResult.getResultHome().get(0).getHomeInfo().getId();
-        SelectedType=getHomeResult.getResultHome().get(0).getHomeInfo().getType();
+        selectId = getHomeResult.getResultHome().get(0).getHomeInfo().getId();
+        SelectedType = getHomeResult.getResultHome().get(0).getHomeInfo().getType();
 
         resultHomes = getHomeResult.getResultHome();
         toolbarTitleSetName(resultHomes.get(0).getHomeInfo().getTitle(), resultHomes.get(0).getHomeInfo().getId());
@@ -772,7 +785,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
 
     @Override
     public void ShowEventDetail(ResultEvents resultEvent) {
-        Log.e("get","eventDetail");
+        Log.e("get", "eventDetail");
         Intent intent = new Intent(getContext(), EventActivity.class);
         intent.putExtra("ResultEvent", (Serializable) resultEvent.getResultEvent().get(0));
         startActivity(intent);
@@ -782,12 +795,12 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
         ShowHomeEventAdapter showHomeEventAdapter = new ShowHomeEventAdapter(getContext(), getActivity(), homeEvents);
         eventsViewPager.setAdapter(showHomeEventAdapter);
         indicator.setViewPager(eventsViewPager);
-        eventsViewPager.setCurrentItem(homeEvents.size()-1);
+        eventsViewPager.setCurrentItem(homeEvents.size() - 1);
         eventsViewPager.setOnItemClickListener(new ClickableViewPager.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Log.d("event","clicked");
-                homePresenter.getEventDetail("full","fa",homeEvents.get(position).getEventId(),Util.getTokenFromSharedPreferences(getContext()),Util.getAndroidIdFromSharedPreferences(getContext()));
+                Log.d("event", "clicked");
+                homePresenter.getEventDetail("full", "fa", homeEvents.get(position).getEventId(), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
             }
         });
     }
@@ -842,7 +855,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
             @Override
             public void onItemClick(View view, final int position) {
 //                https://api.parsdid.com/iranplanner/app/api-itinerary.php?action=full&id=28439&lang=fa
-                homePresenter.getItineraryDetail("full",homeItineraries.get(position).getItineraryId(),"fa",Util.getTokenFromSharedPreferences(getContext()),Util.getAndroidIdFromSharedPreferences(getContext()));
+                homePresenter.getItineraryDetail("full", homeItineraries.get(position).getItineraryId(), "fa", Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
 //                String cityid = homeItineraries.get(position).getItineraryId();
 //                String name = Util.getUseRIdFromShareprefrence(getContext());
 //                Intent intent = new Intent(getActivity(), MoreItemItineraryActivity.class);
@@ -1145,5 +1158,85 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
         Log.i("Build Version : ", String.valueOf(buildVersion));
 
 
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+
+    }
+
+    private void setShowCase() {
+        Button customButton = (Button) getActivity().getLayoutInflater().inflate(R.layout.showcase_custom_button, null);
+        CustomShowcaseView showcaseDrawer = new CustomShowcaseView(getResources());
+        float width = getResources().getDimension(R.dimen.custom_showcase_width);
+        float height = getResources().getDimension(R.dimen.custom_showcase_height);
+        showcaseDrawer.customShowcaseSize(width, height);
+
+        showcaseView = new ShowcaseView.Builder(getActivity())
+                .setTarget(new ViewTarget(homeFragmentWhereToView))
+                .setShowcaseDrawer(showcaseDrawer)
+                .blockAllTouches()
+                .replaceEndButton(customButton)
+                .build();
+        Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_HOMEfRAGMENT, String.valueOf(true), false,getContext());
+        RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        lps.addRule(RelativeLayout.CENTER_IN_PARENT);
+        int margin = Utils.dp(getContext(), 16);
+        lps.setMargins(0, 0, 0, margin);
+        showcaseView.setButtonPosition(lps);
+        final int screenSize = getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK;
+        showcaseView.overrideButtonClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (counter) {
+                    case 0: {
+                        showcaseView.setShowcase(new ViewTarget(TypeHotelHolder), true);
+                        showcaseView.setContentText(getString(R.string.tutorialHotelext));
+                        showcaseView.setContentTitle(getString(R.string.tutorialHotelTitle));
+                        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+                        break;
+                    }
+
+                    case 1: {
+                        showcaseView.setShowcase(new ViewTarget(overlapImageItineraryHolder), true);
+                        showcaseView.setContentTitle(getString(R.string.tutorialItineraryText));
+                        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+                        showcaseView.setContentText(getResources().getString(R.string.tutorialItinerary));
+                        break;
+                    }
+
+                    case 2: {
+                        showcaseView.setShowcase(new ViewTarget(TypeAttractionHolder), true);
+                        showcaseView.setContentTitle(getString(R.string.tutorialAttractionTitle));
+                        showcaseView.setContentText(getString(R.string.tutorialAttractionText));
+                        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+                        showcaseView.setButtonText("بستن");
+                        break;
+                    }
+                    case 3: {
+                        showcaseView.setTarget(Target.NONE);
+                        showcaseView.setContentTitle("");
+                        showcaseView.hide();
+//                showcaseView.setButtonText("بستن");
+                        //setAlpha(0.4f, v0,v1, v2,v3);
+                        break;
+                    }
+//            case 4: {
+//                showcaseView.hide();
+//                //  setAlpha(1.0f, v0,v1, v2,v3);
+//                break;
+//            }
+                }
+                counter++;
+            }
+        });
+        showcaseView.setButtonText(getString(R.string.tutorialNext));
+        showcaseView.setContentText(getString(R.string.tutorialWhereToText));
+        showcaseView.setContentTitle(getString(R.string.tutorialWhereToTitle));
+        showcaseView.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
     }
 }

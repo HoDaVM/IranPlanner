@@ -31,5 +31,7 @@
 
     <dimen name="tutorial_dot_size">12dp</dimen>
     <dimen name="filter_view_height">350dp</dimen>
+    <dimen name="custom_showcase_width">100dp</dimen>
+    <dimen name="custom_showcase_height">50dp</dimen>
 
 </resources>

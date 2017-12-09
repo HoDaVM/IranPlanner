@@ -34,4 +34,9 @@ public final class Constants {
     public static final String MAXDISCOUNT = "maxdiscount";
     public static final String MAXRATE = "maxrate";
     public static final String MINRATE = "minrate";
+    public static final String PREF_SHOWCASE_PASSED_HOMEfRAGMENT = "PREF_SHOWCASE_PASSED_HOMEfRAGMENT";
+    public static final String PREF_SHOWCASE_PASSED_MAINACTIVITY = "PREF_SHOWCASE_PASSED_MAINACTIVITY";
+    public static final String PREF_SHOWCASE_PASSED_SETTINGFRAGMENT = "PREF_SHOWCASE_PASSED_SETTINGFRAGMENT";
+
+
 }

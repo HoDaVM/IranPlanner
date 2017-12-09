@@ -89,7 +89,7 @@
                         android:src="@mipmap/ic_send_grey"
                         android:visibility="invisible"
 
-                  />
+                        />
 
                     <View
                         android:layout_width="match_parent"
@@ -97,6 +97,7 @@
                         android:layout_below="@+id/showProfile"
                         android:background="@color/greyLight" />
                 </RelativeLayout>
+
                 <RelativeLayout
                     android:id="@+id/HotelReservationStatusHolder"
                     android:layout_width="match_parent"
@@ -116,52 +117,84 @@
                         android:text="@string/my_booking" />
 
                     <ImageView
+                        android:id="@+id/imgHotelReservationStatus"
                         android:layout_width="@dimen/height20"
                         android:layout_height="@dimen/height20"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:src="@mipmap/ic_send_grey"
-                        android:id="@+id/imgHotelReservationStatus"
-                        android:visibility="invisible"
-                        />
+                        android:visibility="invisible" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/greyLight"
                         android:layout_alignParentBottom="true"
-                        />
+                        android:background="@color/greyLight" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/TutorialHolder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true">
+
+                    <TextView
+                        android:id="@+id/txtTutorial"
+                        style="@style/StandardTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="@dimen/margin_standard"
+                        android:layout_marginTop="@dimen/margin_standard"
+                        android:text="مشاهده نحوه استفاده از برنامه" />
+
+                    <ImageView
+                        android:id="@+id/imgTutorial"
+                        android:layout_width="@dimen/height20"
+                        android:layout_height="@dimen/height20"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/ic_send_grey"
+                        android:visibility="invisible" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/greyLight" />
                 </RelativeLayout>
                 <!--<RelativeLayout-->
-                    <!--android:id="@+id/HotelReservationStatusHolder"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginTop="@dimen/margin_standard">-->
+                <!--android:id="@+id/HotelReservationStatusHolder"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="@dimen/margin_standard">-->
 
-                    <!--<TextView-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_alignParentRight="true"-->
-                        <!--android:layout_centerVertical="true"-->
-                        <!--android:text="@string/my_booking"-->
-                        <!--android:id="@+id/txtHotelReservationStatus"-->
-                        <!--style="@style/StandardTitle"-->
-                        <!--android:layout_marginBottom="@dimen/margin_standard"-->
-                        <!--/>-->
+                <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:text="@string/my_booking"-->
+                <!--android:id="@+id/txtHotelReservationStatus"-->
+                <!--style="@style/StandardTitle"-->
+                <!--android:layout_marginBottom="@dimen/margin_standard"-->
+                <!--/>-->
 
-                    <!--<ImageView-->
-                        <!--android:layout_width="30dp"-->
-                        <!--android:layout_height="30dp"-->
-                        <!--android:layout_alignParentLeft="true"-->
-                        <!--android:layout_centerVertical="true"-->
-                        <!--android:src="@mipmap/ic_send_grey"-->
-                        <!--android:visibility="invisible" />-->
-                    <!--<View-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="1dp"-->
-                        <!--android:layout_below="@+id/showProfile"-->
-                        <!--android:background="@color/greyLight" -->
-                        <!--android:layout_alignParentBottom="true"/>-->
+                <!--<ImageView-->
+                <!--android:layout_width="30dp"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:src="@mipmap/ic_send_grey"-->
+                <!--android:visibility="invisible" />-->
+                <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:layout_below="@+id/showProfile"-->
+                <!--android:background="@color/greyLight" -->
+                <!--android:layout_alignParentBottom="true"/>-->
                 <!--</RelativeLayout>-->
                 <RelativeLayout
                     android:id="@+id/exitFromAccount"
@@ -187,7 +220,6 @@
                 </RelativeLayout>
 
             </LinearLayout>
-
 
 
         </LinearLayout>
