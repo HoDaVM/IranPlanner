@@ -2,24 +2,18 @@ package com.iranplanner.tourism.iranplanner.ui.activity.mainActivity;
 
 
 import android.Manifest;
-import android.app.Application;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.text.Layout;
-import android.text.TextPaint;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +22,6 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-//import com.appsee.Appsee;
 import com.coinpany.core.android.widget.Utils;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.Target;
@@ -40,22 +33,15 @@ import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.di.model.ForceUpdateChecker;
 import com.iranplanner.tourism.iranplanner.showcaseview.CustomShowcaseView;
-import com.iranplanner.tourism.iranplanner.ui.activity.SplashActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
-
 import com.iranplanner.tourism.iranplanner.ui.fragment.OnVisibleShowCaseViewListener;
-import com.iranplanner.tourism.iranplanner.ui.fragment.home.HomeFragment;
-import com.iranplanner.tourism.iranplanner.ui.fragment.itineraryList.ItineraryListFragment;
-import com.iranplanner.tourism.iranplanner.ui.fragment.itinerarySearch.MainSearchFragment;
 import com.iranplanner.tourism.iranplanner.ui.tutorial.TutorialActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import entity.GetHomeResult;
-import rx.Observable;
 import server.Config;
-import server.NotificationUtils;
 import tools.Constants;
 import tools.Util;
 
@@ -185,24 +171,22 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            // Do something after 5s = 5000ms
                             if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_SETTINGFRAGMENT, "false", false, getApplicationContext()))) {
                                 setShowCaseSetting(settingView.get(0));
                             }
                         }
-                    }, 20);
+                    }, 100);
                 } else if (tab.getPosition() == 3) {
                     final Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            // Do something after 5s = 5000ms
                             if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_PANDAFRAGMENT, "false", false, getApplicationContext()))) {
-                                counter = 0;
-                                setShowCasePanda(pandaView);
+                            counter = 0;
+                            setShowCasePanda(pandaView);
                             }
                         }
-                    }, 20);
+                    }, 100);
                 }
 
             }
@@ -505,58 +489,34 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
             @Override
             public void onClick(View v) {
                 switch (counter) {
+
+
                     case 0: {
-                        showcaseViewPanda.setShowcase(new ViewTarget(views.get(1)), true);
-                        showcaseViewPanda.setContentText(getString(R.string.tutorialHotelext));
-                        showcaseViewPanda.setContentTitle(getString(R.string.tutorialHotelTitle));
-                        showcaseViewPanda.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+                        showcaseViewPanda.setContentText("می توانید با این گزینه نوع جستجوی خود را فیلتر کنید");
+                        showcaseViewPanda.setContentTitle("فیلتر کردن ");
+                         showcaseViewPanda.setShowcase(new ViewTarget(views.get(1)), true);
+                         showcaseViewPanda.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
                         break;
                     }
 
                     case 1: {
-                        showcaseViewPanda.setShowcase(new ViewTarget(views.get(2)), true);
-                        showcaseViewPanda.setContentTitle(getString(R.string.tutorialItineraryText));
-                        showcaseViewPanda.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
-                        showcaseViewPanda.setContentText(getResources().getString(R.string.tutorialItinerary));
+                        showcaseViewPanda.setTarget(Target.NONE);
+                        showcaseViewPanda.setContentTitle("");
+                        showcaseViewPanda.hide();
+
                         break;
                     }
 
-                    case 2: {
-                        showcaseViewPanda.setShowcase(new ViewTarget(views.get(3)), true);
-                        showcaseViewPanda.setContentTitle(getString(R.string.tutorialAttractionTitle));
-                        showcaseViewPanda.setContentText(getString(R.string.tutorialAttractionText));
-                        showcaseViewPanda.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
-                        showcaseViewPanda.setButtonText("بعدی");
-                        break;
-                    }
-//                    case 3: {
-//                        showcaseViewPanda.setShowcase(new ViewTarget(views.get(3)), true);
-//                        showcaseViewPanda.setContentTitle(getString(R.string.tutorialAttractionTitle));
-//                        showcaseViewPanda.setContentText(getString(R.string.tutorialAttractionText));
-//                        showcaseViewPanda.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
-//                        showcaseViewPanda.setButtonText("بستن");
-//                        break;
-//                    }
-                    case 3: {
-                        showcaseView.setTarget(Target.NONE);
-                        showcaseView.setContentTitle("");
-                        showcaseView.hide();
-//                showcaseView.setButtonText("بستن");
-                        //setAlpha(0.4f, v0,v1, v2,v3);
-                        break;
-                    }
-//            case 4: {
-//                showcaseView.hide();
-//                //  setAlpha(1.0f, v0,v1, v2,v3);
-//                break;
-//            }
                 }
                 counter++;
             }
         });
-        showcaseView.setButtonText(getString(R.string.tutorialNext));
-        showcaseView.setContentText(getString(R.string.tutorialWhereToText));
-        showcaseView.setContentTitle(getString(R.string.tutorialWhereToTitle));
-        showcaseView.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
+
+
+        showcaseViewPanda.setContentTitle("ترسیم محدوده با دست روی نقشه");
+        showcaseViewPanda.setContentText("با زدن این دکمه می توانید بر روی نقشه محدوده ای را ترسیم کنید و نتیجه جستجو را در شکلی که ترسیم کرده اید ببینید");
+        showcaseViewPanda.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
+
+
     }
 }

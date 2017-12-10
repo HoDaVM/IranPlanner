@@ -974,10 +974,9 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     public void setOnVisibleShowCaseViewListener() {
         if (onVisibleShowCaseViewListener != null) {
             List<View> views = new ArrayList<>();
-            views.add(searchRange);
-            views.add(search);
-            views.add(btnFilter);
             views.add(drawPolygon);
+            views.add(btnFilter);
+
             onVisibleShowCaseViewListener.onVisibleShowCase("pandaFragment", views);
         }
     }
