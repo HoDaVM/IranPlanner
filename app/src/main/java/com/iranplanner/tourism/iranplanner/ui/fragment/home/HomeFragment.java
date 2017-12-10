@@ -65,6 +65,7 @@ import com.iranplanner.tourism.iranplanner.ui.activity.moreItemItinerary.MoreIte
 import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListPresenter;
 import com.iranplanner.tourism.iranplanner.ui.fragment.FirstItem;
+import com.iranplanner.tourism.iranplanner.ui.fragment.OnVisibleShowCaseViewListener;
 import com.iranplanner.tourism.iranplanner.ui.fragment.itineraryList.ItineraryListFragment;
 import com.iranplanner.tourism.iranplanner.ui.fragment.itinerarySearch.MainSearchPresenter;
 import com.iranplanner.tourism.iranplanner.ui.navigationDrawer.AboutUsActivity;
@@ -115,6 +116,7 @@ import tools.Constants;
 import tools.Util;
 
 import static android.R.attr.data;
+import static android.R.attr.thickness;
 
 
 /**
@@ -257,7 +259,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
     TextView txtCityrTitle;
     @BindView(R.id.provinceHomeHolder)
     RelativeLayout provinceHomeHolder;
-
+    OnVisibleShowCaseViewListener onVisibleShowCaseViewListener;
     private ShowcaseView showcaseView;
     private int counter = 0;
     private String cityName = "city name";
@@ -322,6 +324,8 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
 //        if (!responseBoolean) {
 //            setShowCase();
 //        }
+
+        setOnVisibleShowCaseViewListener();
         return rootView;
     }
 
@@ -385,10 +389,10 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
             hideDrawer();
         }
     };
-
-    public static HomeFragment newInstance(GetHomeResult homeResult) {
+    public static HomeFragment newInstance(GetHomeResult homeResult,OnVisibleShowCaseViewListener onVisibleShowCaseViewListener) {
         HomeFragment fragment = new HomeFragment();
         fragment.homeResult = homeResult;
+        fragment.onVisibleShowCaseViewListener=onVisibleShowCaseViewListener;
         return fragment;
     }
 
@@ -399,6 +403,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
         homeResult = (GetHomeResult) args.getSerializable("HomeResult");
         SelectedType = "country";
         selectId = "311";
+
     }
 
     private void getAttractionResults() {
@@ -995,6 +1000,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
             /*tempCityProvince =*/
             autoCompleteProvince(autoTextWhere, type);
 
+
         }
 
         @Override
@@ -1167,76 +1173,18 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
 
     }
 
-    private void setShowCase() {
-        Button customButton = (Button) getActivity().getLayoutInflater().inflate(R.layout.showcase_custom_button, null);
-        CustomShowcaseView showcaseDrawer = new CustomShowcaseView(getResources());
-        float width = getResources().getDimension(R.dimen.custom_showcase_width);
-        float height = getResources().getDimension(R.dimen.custom_showcase_height);
-        showcaseDrawer.customShowcaseSize(width, height);
 
-        showcaseView = new ShowcaseView.Builder(getActivity())
-                .setTarget(new ViewTarget(homeFragmentWhereToView))
-                .setShowcaseDrawer(showcaseDrawer)
-                .blockAllTouches()
-                .replaceEndButton(customButton)
-                .build();
-        Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_HOMEfRAGMENT, String.valueOf(true), false,getContext());
-        RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        lps.addRule(RelativeLayout.CENTER_IN_PARENT);
-        int margin = Utils.dp(getContext(), 16);
-        lps.setMargins(0, 0, 0, margin);
-        showcaseView.setButtonPosition(lps);
-        final int screenSize = getResources().getConfiguration().screenLayout &
-                Configuration.SCREENLAYOUT_SIZE_MASK;
-        showcaseView.overrideButtonClick(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (counter) {
-                    case 0: {
-                        showcaseView.setShowcase(new ViewTarget(TypeHotelHolder), true);
-                        showcaseView.setContentText(getString(R.string.tutorialHotelext));
-                        showcaseView.setContentTitle(getString(R.string.tutorialHotelTitle));
-                        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
-                        break;
-                    }
+    public void setOnVisibleShowCaseViewListener() {
+        if(onVisibleShowCaseViewListener!=null) {
+            List<View> views = new ArrayList<>();
+            views.add(homeFragmentWhereToView);
+            views.add(TypeHotelHolder);
+            views.add(overlapImageItineraryHolder);
+            views.add(TypeAttractionHolder);
 
-                    case 1: {
-                        showcaseView.setShowcase(new ViewTarget(overlapImageItineraryHolder), true);
-                        showcaseView.setContentTitle(getString(R.string.tutorialItineraryText));
-                        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
-                        showcaseView.setContentText(getResources().getString(R.string.tutorialItinerary));
-                        break;
-                    }
-
-                    case 2: {
-                        showcaseView.setShowcase(new ViewTarget(TypeAttractionHolder), true);
-                        showcaseView.setContentTitle(getString(R.string.tutorialAttractionTitle));
-                        showcaseView.setContentText(getString(R.string.tutorialAttractionText));
-                        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
-                        showcaseView.setButtonText("بستن");
-                        break;
-                    }
-                    case 3: {
-                        showcaseView.setTarget(Target.NONE);
-                        showcaseView.setContentTitle("");
-                        showcaseView.hide();
-//                showcaseView.setButtonText("بستن");
-                        //setAlpha(0.4f, v0,v1, v2,v3);
-                        break;
-                    }
-//            case 4: {
-//                showcaseView.hide();
-//                //  setAlpha(1.0f, v0,v1, v2,v3);
-//                break;
-//            }
-                }
-                counter++;
-            }
-        });
-        showcaseView.setButtonText(getString(R.string.tutorialNext));
-        showcaseView.setContentText(getString(R.string.tutorialWhereToText));
-        showcaseView.setContentTitle(getString(R.string.tutorialWhereToTitle));
-        showcaseView.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
+            onVisibleShowCaseViewListener.onVisibleShowCase("homeFragment",views);
+        }
     }
+
+
 }

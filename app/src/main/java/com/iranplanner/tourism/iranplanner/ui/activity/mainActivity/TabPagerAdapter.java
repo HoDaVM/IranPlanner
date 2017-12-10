@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.iranplanner.tourism.iranplanner.R;
+import com.iranplanner.tourism.iranplanner.ui.fragment.OnVisibleShowCaseViewListener;
 import com.iranplanner.tourism.iranplanner.ui.fragment.pandaMap.MapPandaFragment;
 import com.iranplanner.tourism.iranplanner.ui.fragment.home.HomeFragment;
 import com.iranplanner.tourism.iranplanner.ui.fragment.itinerarySearch.MainSearchFragment;
@@ -26,6 +27,7 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
     private Context context;
     public final int PAGE_COUNT = 4;
     GetHomeResult homeResult;
+    OnVisibleShowCaseViewListener onVisibleShowCaseViewListener;
     private int[] mTabsIcons = {
             R.mipmap.ic_home,
             R.mipmap.ic_profile_grey,
@@ -37,10 +39,11 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
     //    StandardFragment
     private final String[] mTabsTitle = {"خانه","پروفایل","برنامه سفر","نقشه"};
 
-    public TabPagerAdapter(FragmentManager fm, Context context, GetHomeResult homeResult) {
+    public TabPagerAdapter(FragmentManager fm, Context context, GetHomeResult homeResult,OnVisibleShowCaseViewListener onVisibleShowCaseViewListener) {
         super(fm);
         this.context = context;
         this.homeResult = homeResult;
+        this.onVisibleShowCaseViewListener=onVisibleShowCaseViewListener;
     }
 
     public View getTabView(int position) {
@@ -61,7 +64,7 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
 
             case 0:
 
-                currentTab = HomeFragment.newInstance(homeResult);
+                currentTab = HomeFragment.newInstance(homeResult,onVisibleShowCaseViewListener);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("HomeResult", homeResult);
                 currentTab.setArguments(bundle);
@@ -69,14 +72,14 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
 
             case 1:
 
-                currentTab = SettingFragment.newInstance();
+                currentTab = SettingFragment.newInstance(onVisibleShowCaseViewListener);
                 return currentTab;
 
             case 2:
                 currentTab = MainSearchFragment.newInstance();
                 return currentTab;
             case 3:
-                currentTab = MapPandaFragment.newInstance();
+                currentTab = MapPandaFragment.newInstance(onVisibleShowCaseViewListener);
                 return currentTab;
         }
         return null;

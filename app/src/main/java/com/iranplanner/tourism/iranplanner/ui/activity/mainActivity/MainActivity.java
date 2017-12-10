@@ -7,9 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.design.widget.TabLayout;
@@ -41,9 +43,14 @@ import com.iranplanner.tourism.iranplanner.showcaseview.CustomShowcaseView;
 import com.iranplanner.tourism.iranplanner.ui.activity.SplashActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
 
+import com.iranplanner.tourism.iranplanner.ui.fragment.OnVisibleShowCaseViewListener;
+import com.iranplanner.tourism.iranplanner.ui.fragment.home.HomeFragment;
 import com.iranplanner.tourism.iranplanner.ui.fragment.itineraryList.ItineraryListFragment;
 import com.iranplanner.tourism.iranplanner.ui.fragment.itinerarySearch.MainSearchFragment;
 import com.iranplanner.tourism.iranplanner.ui.tutorial.TutorialActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import entity.GetHomeResult;
 import rx.Observable;
@@ -52,11 +59,11 @@ import server.NotificationUtils;
 import tools.Constants;
 import tools.Util;
 
-public class MainActivity extends StandardActivity implements ForceUpdateChecker.OnUpdateNeededListener {
+public class MainActivity extends StandardActivity implements ForceUpdateChecker.OnUpdateNeededListener, OnVisibleShowCaseViewListener {
     GetHomeResult homeResult;
     CustomShowcaseView customShowcaseView;
     private int counter = 0;
-    ShowcaseView showcaseView;
+    ShowcaseView showcaseView,showcaseViewPanda;
     private static final String TOPIC_MAIN = "main";
 
     boolean doubleBackToExitPressedOnce = false;
@@ -84,10 +91,8 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
         FirebaseMessaging.getInstance().subscribeToTopic(TOPIC_MAIN);
 
         initTutorial();
-        boolean responseBoolean = Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_HOMEfRAGMENT, "false", false,getApplicationContext()));
-        if (!responseBoolean) {
-            setShowCase();
-        }
+
+
     }
 
     private void checkPermission() {
@@ -156,7 +161,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
         Bundle extras = getIntent().getExtras();
         homeResult = (GetHomeResult) extras.getSerializable("HomeResult");
         viewPager = (NonSwipeableViewPager) findViewById(R.id.main_view_pager);
-        pagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), this, homeResult);
+        pagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), this, homeResult, this);
         if (viewPager != null)
             viewPager.setAdapter(pagerAdapter);
 
@@ -167,17 +172,54 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
                 TabLayout.Tab tab = mainTabLayout.getTabAt(i);
                 if (tab != null) {
                     tab.setCustomView(pagerAdapter.getTabView(i));
+
                 }
             }
         }
 
+        mainTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 1) {
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Do something after 5s = 5000ms
+                            if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_SETTINGFRAGMENT, "false", false, getApplicationContext()))) {
+                                setShowCaseSetting(settingView.get(0));
+                            }
+                        }
+                    }, 20);
+                } else if (tab.getPosition() == 3) {
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Do something after 5s = 5000ms
+                            if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_PANDAFRAGMENT, "false", false, getApplicationContext()))) {
+                                counter = 0;
+                                setShowCasePanda(pandaView);
+                            }
+                        }
+                    }, 20);
+                }
 
+            }
 
-        ///
-        int position =0;
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+        int position = 0;
         mainTabLayout.getTabAt(position).getCustomView().setSelected(true);
         viewPager.setCurrentItem(position);
-
         Util.displayFirebaseRegId(this);
 
         ForceUpdateChecker.with(this).onUpdateNeeded(this).check();
@@ -318,141 +360,203 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
 
     Runnable showSubscribeRunnable = null;
 
+    List<View> settingView;
+    List<View> pandaView;
 
-//    @Override
-//    public void callback(int key, Object... params) {
-//        super.callback(key, params);
-//        if (key == CallbackCenter.emptyContentList) {
-//            mViewPager.setCurrentItem(mSectionsPagerAdapter.getCount() - 2);
-//        }
-//        if (key == CallbackCenter.subscribeTutorial) {
-//            final View followbtnView = (View) params[0];
-//            showSubscribeRunnable = new Runnable() {
-//                @Override
-//                public void run() {
-//
-//                    float width = getResources().getDimension(R.dimen.custom_showcase_width_small);
-//                    float height = getResources().getDimension(R.dimen.custom_showcase_height_small);
-//                    customShowcaseView.customShowcaseSize(width, height);
-//
-//                    showcaseView.setShowcase(new ViewTarget(followbtnView), true);
-//                    showcaseView.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
-//                    showcaseView.setContentTitle(getString(R.string.TutorialSubscribeTitle));
-//                    showcaseView.setContentText(getString(R.string.TutorialSubscribeText));
-//                }
-//            };
-//        }
-//    }
-    private void setShowCase() {
-        TextPaint paintTitle = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        paintTitle.setTextSize(getResources().getDimension(R.dimen.text_margin));
-        paintTitle.setColor(getResources().getColor(R.color.white));
-//        TextPaint paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-//        paint.setTextSize(getResources().getDimension(R.dimen.tutorialtext));
-//        paint.setColor(Color.WHITE);
-        Button customButton = (Button) getLayoutInflater().inflate(R.layout.showcase_custom_button, null);
-        viewPager.setCurrentItem(0);
-        customShowcaseView = new CustomShowcaseView(getResources());
+    @Override
+    public void onVisibleShowCase(String fragmentName, List<View> views) {
+        if (fragmentName.equals("homeFragment")) {
+            if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_HOMEfRAGMENT, "false", false, getApplicationContext()))) {
+                setShowCase(views);
+            }
+
+        } else if (fragmentName.equals("settingFragment")) {
+            settingView = new ArrayList<View>();
+            settingView = views;
+        } else if (fragmentName.equals("pandaFragment")) {
+            pandaView = new ArrayList<View>();
+            pandaView = views;
+        }
+
+    }
+
+    private void setShowCase(final List<View> views) {
+        Button customButton = (Button) this.getLayoutInflater().inflate(R.layout.showcase_custom_button, null);
+        CustomShowcaseView showcaseDrawer = new CustomShowcaseView(getResources());
         float width = getResources().getDimension(R.dimen.custom_showcase_width);
         float height = getResources().getDimension(R.dimen.custom_showcase_height);
-        customShowcaseView.customShowcaseSize(width, height);
+        showcaseDrawer.customShowcaseSize(width, height);
+
         showcaseView = new ShowcaseView.Builder(this)
-                .setTarget(new ViewTarget(((ViewGroup) mainTabLayout.getChildAt(0)).getChildAt(0)))
-//                .setOnClickListener(ContentActivity.this)
-
-                .setShowcaseDrawer(customShowcaseView)
+                .setTarget(new ViewTarget(views.get(0)))
+                .setShowcaseDrawer(showcaseDrawer)
                 .blockAllTouches()
-//                .setContentTitlePaint(paintTitle)
                 .replaceEndButton(customButton)
-//                .setContentTextPaint(paint)
                 .build();
-        Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_MAINACTIVITY, String.valueOf(true), false,getApplicationContext());
-
-
-        showcaseView.setContentText("متن هوم");
-        showcaseView.setContentTitle("متن");
-        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
-
+        Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_HOMEfRAGMENT, String.valueOf(true), false, getApplicationContext());
+        RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        lps.addRule(RelativeLayout.CENTER_IN_PARENT);
+        int margin = Utils.dp(getApplicationContext(), 16);
+        lps.setMargins(0, 0, 0, margin);
+        showcaseView.setButtonPosition(lps);
+        final int screenSize = getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK;
         showcaseView.overrideButtonClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (counter) {
                     case 0: {
-                        if (showSubscribeRunnable != null) {
-                            showSubscribeRunnable.run();
+                        showcaseView.setShowcase(new ViewTarget(views.get(1)), true);
+                        showcaseView.setContentText(getString(R.string.tutorialHotelext));
+                        showcaseView.setContentTitle(getString(R.string.tutorialHotelTitle));
+                        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+                        break;
+                    }
 
-                        } else {
-                            counter++;
-                        }
-                        break;
-                    }
                     case 1: {
-                        float width = getResources().getDimension(R.dimen.custom_showcase_width);
-                        float height = getResources().getDimension(R.dimen.custom_showcase_height);
-                        customShowcaseView.customShowcaseSize(width, height);
-                        viewPager.setCurrentItem(1);
-                        showcaseView.setTitleTextAlignment(Layout.Alignment.ALIGN_NORMAL);
-                        showcaseView.setContentTitle("متن 2");
-                        showcaseView.setContentText("متن2");
-                        showcaseView.setShowcase(new ViewTarget(((ViewGroup) mainTabLayout.getChildAt(0)).getChildAt(1)), true);
+                        showcaseView.setShowcase(new ViewTarget(views.get(2)), true);
+                        showcaseView.setContentTitle(getString(R.string.tutorialItineraryText));
                         showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+                        showcaseView.setContentText(getResources().getString(R.string.tutorialItinerary));
                         break;
                     }
-//
+
                     case 2: {
-                        viewPager.setCurrentItem(2);
-                        showcaseView.setShowcase(new ViewTarget(((ViewGroup) mainTabLayout.getChildAt(0)).getChildAt(2)), true);
-                        showcaseView.setContentText("متن3");
-                        showcaseView.setContentTitle("متن3");
+                        showcaseView.setShowcase(new ViewTarget(views.get(3)), true);
+                        showcaseView.setContentTitle(getString(R.string.tutorialAttractionTitle));
+                        showcaseView.setContentText(getString(R.string.tutorialAttractionText));
                         showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+                        showcaseView.setButtonText("بستن");
                         break;
                     }
                     case 3: {
-                        viewPager.setCurrentItem(3);
-                        showcaseView.setShowcase(new ViewTarget(((ViewGroup) mainTabLayout.getChildAt(0)).getChildAt(3)), true);
-                        showcaseView.setContentText("ljk");
-                        showcaseView.setContentTitle("juhg");
-                        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
-                        break;
-                    }
-//                    case 4: {
-//                        mViewPager.setCurrentItem(0);
-//                        showcaseView.setShowcase(new ViewTarget(((ViewGroup) tabs.getChildAt(0)).getChildAt(0)), true);
-//                        showcaseView.setContentTitle(getResources().getString(R.string.tutorialSetting));
-//                        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
-//                        showcaseView.setContentText(getString(R.string.tutorialSettingText));
-//
-//                        break;
-//                    }
-//                    case 5: {
-//                        showcaseView.setShowcase(new ViewTarget(search), true);
-//                        showcaseView.setContentTitle(getResources().getString(R.string.tutorialSearch));
-//                        showcaseView.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
-//                        showcaseView.setContentText(getString(R.string.tutorialSearchText));
-//                        showcaseView.setButtonText(getString(R.string.tutorialClose));
-//                        break;
-//                    }
-                    case 4: {
                         showcaseView.setTarget(Target.NONE);
                         showcaseView.setContentTitle("");
-                        showcaseView.setContentText("");
                         showcaseView.hide();
+//                showcaseView.setButtonText("بستن");
+                        //setAlpha(0.4f, v0,v1, v2,v3);
                         break;
                     }
-
+//            case 4: {
+//                showcaseView.hide();
+//                //  setAlpha(1.0f, v0,v1, v2,v3);
+//                break;
+//            }
                 }
                 counter++;
             }
         });
         showcaseView.setButtonText(getString(R.string.tutorialNext));
-        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+        showcaseView.setContentText(getString(R.string.tutorialWhereToText));
+        showcaseView.setContentTitle(getString(R.string.tutorialWhereToTitle));
+        showcaseView.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
+    }
+
+    private void setShowCaseSetting(View view) {
+        Button customButton = (Button) this.getLayoutInflater().inflate(R.layout.showcase_custom_button, null);
+        CustomShowcaseView showcaseDrawer = new CustomShowcaseView(getResources());
+        float width = getResources().getDimension(R.dimen.custom_showcase_width);
+        float height = getResources().getDimension(R.dimen.custom_showcase_height);
+        showcaseDrawer.customShowcaseSize(width, height);
+
+        showcaseView = new ShowcaseView.Builder(this)
+                .setTarget(new ViewTarget(view))
+                .setShowcaseDrawer(showcaseDrawer)
+                .blockAllTouches()
+                .replaceEndButton(customButton)
+                .build();
+        Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_SETTINGFRAGMENT, String.valueOf(true), false, getApplicationContext());
         RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-//        lps.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         lps.addRule(RelativeLayout.CENTER_IN_PARENT);
-        int margin = getResources().getDimensionPixelSize(R.dimen.actionBarSize) + Utils.dp(getApplicationContext(),16);
+        int margin = Utils.dp(getApplicationContext(), 16);
         lps.setMargins(0, 0, 0, margin);
         showcaseView.setButtonPosition(lps);
+        showcaseView.setButtonText(getString(R.string.tutorialNext));
+        showcaseView.setContentText(getString(R.string.tutorialWhereToText));
+        showcaseView.setContentTitle(getString(R.string.tutorialWhereToTitle));
+        showcaseView.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
+    }
 
+    private void setShowCasePanda(final List<View> views) {
+        Button customButtonPanda = (Button) this.getLayoutInflater().inflate(R.layout.showcase_custom_button, null);
+        CustomShowcaseView showcaseDrawer = new CustomShowcaseView(getResources());
+        float width = getResources().getDimension(R.dimen.custom_showcase_width);
+        float height = getResources().getDimension(R.dimen.custom_showcase_height);
+        showcaseDrawer.customShowcaseSize(width, height);
+
+        showcaseViewPanda = new ShowcaseView.Builder(this)
+                .setTarget(new ViewTarget(views.get(0)))
+                .setShowcaseDrawer(showcaseDrawer)
+                .blockAllTouches()
+                .replaceEndButton(customButtonPanda)
+                .build();
+        Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_PANDAFRAGMENT, String.valueOf(true), false, getApplicationContext());
+        RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        lps.addRule(RelativeLayout.CENTER_IN_PARENT);
+        int margin = Utils.dp(getApplicationContext(), 16);
+        lps.setMargins(0, 0, 0, margin);
+        showcaseViewPanda.setButtonPosition(lps);
+        final int screenSize = getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK;
+        showcaseViewPanda.overrideButtonClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (counter) {
+                    case 0: {
+                        showcaseViewPanda.setShowcase(new ViewTarget(views.get(1)), true);
+                        showcaseViewPanda.setContentText(getString(R.string.tutorialHotelext));
+                        showcaseViewPanda.setContentTitle(getString(R.string.tutorialHotelTitle));
+                        showcaseViewPanda.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+                        break;
+                    }
+
+                    case 1: {
+                        showcaseViewPanda.setShowcase(new ViewTarget(views.get(2)), true);
+                        showcaseViewPanda.setContentTitle(getString(R.string.tutorialItineraryText));
+                        showcaseViewPanda.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+                        showcaseViewPanda.setContentText(getResources().getString(R.string.tutorialItinerary));
+                        break;
+                    }
+
+                    case 2: {
+                        showcaseViewPanda.setShowcase(new ViewTarget(views.get(3)), true);
+                        showcaseViewPanda.setContentTitle(getString(R.string.tutorialAttractionTitle));
+                        showcaseViewPanda.setContentText(getString(R.string.tutorialAttractionText));
+                        showcaseViewPanda.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+                        showcaseViewPanda.setButtonText("بعدی");
+                        break;
+                    }
+//                    case 3: {
+//                        showcaseViewPanda.setShowcase(new ViewTarget(views.get(3)), true);
+//                        showcaseViewPanda.setContentTitle(getString(R.string.tutorialAttractionTitle));
+//                        showcaseViewPanda.setContentText(getString(R.string.tutorialAttractionText));
+//                        showcaseViewPanda.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+//                        showcaseViewPanda.setButtonText("بستن");
+//                        break;
+//                    }
+                    case 3: {
+                        showcaseView.setTarget(Target.NONE);
+                        showcaseView.setContentTitle("");
+                        showcaseView.hide();
+//                showcaseView.setButtonText("بستن");
+                        //setAlpha(0.4f, v0,v1, v2,v3);
+                        break;
+                    }
+//            case 4: {
+//                showcaseView.hide();
+//                //  setAlpha(1.0f, v0,v1, v2,v3);
+//                break;
+//            }
+                }
+                counter++;
+            }
+        });
+        showcaseView.setButtonText(getString(R.string.tutorialNext));
+        showcaseView.setContentText(getString(R.string.tutorialWhereToText));
+        showcaseView.setContentTitle(getString(R.string.tutorialWhereToTitle));
+        showcaseView.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
     }
 }

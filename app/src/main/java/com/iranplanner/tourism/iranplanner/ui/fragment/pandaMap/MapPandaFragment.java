@@ -84,6 +84,7 @@ import com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails.attract
 import com.iranplanner.tourism.iranplanner.ui.activity.event.EventActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelDetails.ReservationHotelDetailActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListPresenter;
+import com.iranplanner.tourism.iranplanner.ui.fragment.OnVisibleShowCaseViewListener;
 import com.iranplanner.tourism.iranplanner.ui.fragment.home.HomeContract;
 import com.iranplanner.tourism.iranplanner.ui.fragment.home.HomePresenter;
 
@@ -178,8 +179,9 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     LinearLayout drawPolygon;
     TextView txtDraw;
 
-    public static MapPandaFragment newInstance() {
+    public static MapPandaFragment newInstance(OnVisibleShowCaseViewListener onVisibleShowCaseViewListener) {
         MapPandaFragment fragment = new MapPandaFragment();
+        fragment.onVisibleShowCaseViewListener = onVisibleShowCaseViewListener;
         return fragment;
     }
 
@@ -190,7 +192,6 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     List<entity.CityProvince> CityProvince;
 
     private void setUpRecyclerView(List<ResultPandaMap> resultPandaMapList) {
-
 
 
         recyclerView.setHasFixedSize(true);
@@ -622,7 +623,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
             setDrawable(true);
             searchRange.setText("");
             searchRange.setHint("جستجوی نام شهر یا استان");
-    }
+        }
 
 
     }
@@ -881,7 +882,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
                 setDrawable(setDraw);
                 cleanMapAndRecyclerView();
                 break;
-                case R.id.drawPolygon:
+            case R.id.drawPolygon:
                 search.setText("");
                 setDrawable(setDraw);
                 cleanMapAndRecyclerView();
@@ -968,5 +969,23 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         mBottomSheetDialog.show();
     }
 
+    OnVisibleShowCaseViewListener onVisibleShowCaseViewListener;
+
+    public void setOnVisibleShowCaseViewListener() {
+        if (onVisibleShowCaseViewListener != null) {
+            List<View> views = new ArrayList<>();
+            views.add(searchRange);
+            views.add(search);
+            views.add(btnFilter);
+            views.add(drawPolygon);
+            onVisibleShowCaseViewListener.onVisibleShowCase("pandaFragment", views);
+        }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setOnVisibleShowCaseViewListener();
+    }
 
 }
