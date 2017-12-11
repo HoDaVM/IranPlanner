@@ -80,7 +80,7 @@
         android:layout_marginLeft="@dimen/padding_standard"
         android:layout_marginRight="@dimen/padding_standard"
         android:background="@drawable/button_corner_greend"
-        android:text="مشاهده اتاق های هتل"
+        android:text="رزرو و مشاهده نوع اتاق های هتل"
         android:textColor="@color/white_" />
 
 </RelativeLayout>

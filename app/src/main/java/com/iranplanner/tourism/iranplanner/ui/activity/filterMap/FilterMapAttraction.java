@@ -210,24 +210,15 @@ public class FilterMapAttraction extends AppCompatActivity implements OnMapReady
         setContentView(R.layout.map_filter);
         ButterKnife.bind(this);
         mapFragment = (MySupportMapFragmen) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.mapView);
         mapFragment.getMapAsync(this);
         getExtras();
 
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+
         setUpRecyclerView();
         btnSelectPolygon.setOnClickListener(this);
-//        DaggerReservationHotelListComponent.builder()
-//                .netComponent(((App) getApplicationContext()).getNetComponent())
-//                .reservationHotelListModule(new ReservationHotelListModule(this, this))
-//                .build().inject(this);
-//        DaggerAttractionListMoreComponent.builder().netComponent(((App) getApplicationContext()).getNetComponent())
-//                .attractionListMoreModule(new AttractionListMoreModule(this))
-//                .build().inject(this);
+
 
     }
 
@@ -392,6 +383,7 @@ public class FilterMapAttraction extends AppCompatActivity implements OnMapReady
 
     @Override
     public void ShowAttractionLists(ShowAttractionListMore getAttractionList) {
+        Log.e("fd","Fd");
 
     }
 
