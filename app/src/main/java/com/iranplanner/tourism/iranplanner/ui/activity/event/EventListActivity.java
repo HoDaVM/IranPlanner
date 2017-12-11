@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.iranplanner.tourism.iranplanner.R;
@@ -20,7 +21,8 @@ import entity.HomeEvent;
 import entity.ResultEvent;
 
 public class EventListActivity extends StandardActivity implements RecyclerItemOnClickListener.OnItemClickListener {
-    List<ResultEvent> ResultEvent;
+    private List<ResultEvent> ResultEvent;
+    private String cityName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +37,14 @@ public class EventListActivity extends StandardActivity implements RecyclerItemO
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         ResultEvent = (List<ResultEvent>) bundle.getSerializable("ResultEvent");
+        cityName = bundle.getString("title");
+        Log.e("amin", ResultEvent.get(0).getEventInfo().getEventCityTitle() + " ");
     }
 
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("مشاهده ی همه ی رویدادها");
+        getSupportActionBar().setTitle("رویدادهای " + cityName);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }

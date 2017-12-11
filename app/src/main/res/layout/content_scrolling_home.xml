@@ -68,9 +68,7 @@
                     android:layout_marginBottom="@dimen/margin_short"
                     android:layout_marginTop="@dimen/margin_short"
                     android:layout_weight="1"
-                    android:translationZ="1dp"
-
-                    >
+                    android:translationZ="1dp">
 
                     <ImageView
                         android:id="@+id/imageTypeAttraction"
@@ -78,7 +76,7 @@
                         android:layout_height="@dimen/height35"
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
-                        android:src="@mipmap/ic_flight_blue" />
+                        android:src="@drawable/calendar" />
 
                     <TextView
                         android:id="@+id/txtTypeHotel"
@@ -88,7 +86,7 @@
                         android:layout_below="@+id/imageTypeAttraction"
                         android:layout_centerHorizontal="true"
                         android:padding="@dimen/margin_xshort"
-                        android:text="@string/flight" />
+                        android:text="@string/events" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -765,9 +763,7 @@
                 android:id="@+id/recyclerViewProvinceShow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/txtProvinceTitle"
-                />
-
+                android:layout_below="@+id/txtProvinceTitle" />
 
 
             <TextView
@@ -779,6 +775,6 @@
                 android:layout_marginBottom="@dimen/margin_short"
                 android:text="@string/provineList" />
         </RelativeLayout>
-</RelativeLayout>
+    </RelativeLayout>
 
 </ScrollView>

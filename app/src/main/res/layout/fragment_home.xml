@@ -44,6 +44,15 @@
                         android:translationZ="1dp" />
 
                     <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/padding_big"
+                        android:layout_alignParentTop="true"
+                        android:background="@drawable/dark_shadow"
+                        android:rotation="180"
+                        android:translationZ="1dp" />
+
+
+                    <ImageView
                         android:id="@+id/imgHome"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/home_photo_height"
@@ -64,13 +73,12 @@
                                android:layout_height="wrap_content"
                                android:text="@string/about"
                                android:layout_marginBottom="@dimen/margin_standard"
-
                                android:layout_toEndOf="@+id/imageView" />-->
 
                         <ImageView
                             android:id="@+id/imageView"
-                            android:layout_width="@dimen/height35"
-                            android:layout_height="@dimen/height35"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
                             android:layout_marginBottom="@dimen/margin_standard"
                             android:layout_marginStart="@dimen/margin_standard"
                             android:background="@mipmap/ic_information"
@@ -170,7 +178,7 @@
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:layout_weight="1"
-                            android:src="@mipmap/ic_flight_blue" />
+                            android:src="@drawable/calendar" />
 
                         <View
                             android:layout_width="1dp"

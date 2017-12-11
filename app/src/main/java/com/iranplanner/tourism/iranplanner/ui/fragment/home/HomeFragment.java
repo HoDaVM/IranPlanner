@@ -262,7 +262,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
     OnVisibleShowCaseViewListener onVisibleShowCaseViewListener;
     private ShowcaseView showcaseView;
     private int counter = 0;
-    private String cityName = "city name";
+    private String cityName = "default";
     private String selectSearch = "";
     LinearLayout homeFragmentWhereToView;
 
@@ -290,6 +290,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
         hotelَAppartementHolderGrouping.setOnClickListener(this);
         hotelBoomgardiHolderGrouping.setOnClickListener(this);
         hotelTraditionalHolderGrouping.setOnClickListener(this);
+        rootView.findViewById(R.id.overlapImageHolder2).setOnClickListener(this);
         homeFragmentWhereToView = rootView.findViewById(R.id.homeFragmentWhereToView);
         rootView.findViewById(R.id.homeFragmentWhereToView).setOnClickListener(this);
 
@@ -389,10 +390,11 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
             hideDrawer();
         }
     };
-    public static HomeFragment newInstance(GetHomeResult homeResult,OnVisibleShowCaseViewListener onVisibleShowCaseViewListener) {
+
+    public static HomeFragment newInstance(GetHomeResult homeResult, OnVisibleShowCaseViewListener onVisibleShowCaseViewListener) {
         HomeFragment fragment = new HomeFragment();
         fragment.homeResult = homeResult;
-        fragment.onVisibleShowCaseViewListener=onVisibleShowCaseViewListener;
+        fragment.onVisibleShowCaseViewListener = onVisibleShowCaseViewListener;
         return fragment;
     }
 
@@ -503,11 +505,10 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
 
                 }
                 break;
+            case R.id.homeNavFlightAttraction:
             case R.id.tvEventShowAll:
-                //        https://api.parsdid.com/iranplanner/app/api-event.php?action=list&lang=fa&id=342&type=city
-
+            case R.id.overlapImageHolder2:
                 homePresenter.getEventMore("list", "fa", selectId, SelectedType, Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
-
                 break;
 
         }
@@ -784,8 +785,12 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
         List<ResultEvent> resultEvnt = resultEvents.getResultEvent();
         Intent intent = new Intent(getActivity(), EventListActivity.class);
         intent.putExtra("ResultEvent", (Serializable) resultEvnt);
-        startActivity(intent);
 
+        if (cityName.equals("default"))
+            intent.putExtra("title", "ایران");
+        else intent.putExtra("title", cityName);
+
+        startActivity(intent);
     }
 
     @Override
@@ -1175,14 +1180,14 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
 
 
     public void setOnVisibleShowCaseViewListener() {
-        if(onVisibleShowCaseViewListener!=null) {
+        if (onVisibleShowCaseViewListener != null) {
             List<View> views = new ArrayList<>();
             views.add(homeFragmentWhereToView);
             views.add(TypeHotelHolder);
             views.add(overlapImageItineraryHolder);
             views.add(TypeAttractionHolder);
 
-            onVisibleShowCaseViewListener.onVisibleShowCase("homeFragment",views);
+            onVisibleShowCaseViewListener.onVisibleShowCase("homeFragment", views);
         }
     }
 

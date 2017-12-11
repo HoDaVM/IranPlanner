@@ -276,7 +276,7 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (!TextUtils.isEmpty(cityName))
-            getSupportActionBar().setTitle(cityName);
+            getSupportActionBar().setTitle("هتل های " + cityName);
     }
 
     @Override

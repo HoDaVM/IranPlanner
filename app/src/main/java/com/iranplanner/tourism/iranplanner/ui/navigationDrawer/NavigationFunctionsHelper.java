@@ -23,7 +23,7 @@ public class NavigationFunctionsHelper {
     }
 
     public void sendShareIntent() {
-        String shareBody = "Hi! Come and try Iran planner from link below \n http://iranplanner.com";
+        String shareBody = "\u200F«ایران پلنر» را در بازار اندروید ببین: \n http://cafebazaar.ir/app/?id=com.iranplanner.tourism.iranplanner&ref=share";
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Iranplanner");

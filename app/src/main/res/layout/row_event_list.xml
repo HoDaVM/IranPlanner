@@ -37,7 +37,14 @@
                 android:ellipsize="start"
                 android:lines="1"
                 android:text="عنوان"
-                android:visibility="gone"/>
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/rowEventDateTv"
+                style="@style/StandardTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="تاریخ برگزاری" />
 
             <TextView
                 android:id="@+id/rowEventCityTv"
@@ -45,13 +52,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="شهرامیت" />
-
-            <TextView
-                android:id="@+id/rowEventDateTv"
-                style="@style/StandardTextGrey"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="تاریخ برگزاری" />
 
         </LinearLayout>
 

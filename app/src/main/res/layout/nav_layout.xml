@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nav_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/nav_layout"
     android:background="@color/white"
     android:orientation="vertical">
 
@@ -24,17 +24,19 @@
             android:layout_height="35dp"
             android:layout_marginStart="@dimen/margin_standard"
             android:src="@drawable/ic_settings_black_24dp"
-            android:tint="@color/white" />
+            android:tint="@color/white"
+            android:visibility="gone" />
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/navAboutUsTv"
+        style="@style/StandardText"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:gravity="center"
         android:text="درباره ما"
-        android:textColor="#212121"
+        android:textColor="#737373"
         android:textSize="18dp" />
 
     <View
@@ -46,11 +48,12 @@
 
     <TextView
         android:id="@+id/navContactUsTv"
-        android:layout_width="match_parent"
+        style="@style/StandardText"
+        android:layout_width="match_parent"gi
         android:layout_height="60dp"
         android:gravity="center"
         android:text="تماس با ما"
-        android:textColor="#212121"
+        android:textColor="#737373"
         android:textSize="18dp" />
 
     <View
@@ -58,16 +61,19 @@
         android:layout_height="1dp"
         android:layout_marginEnd="@dimen/margin_standard"
         android:layout_marginStart="@dimen/margin_standard"
-        android:background="@color/dark_blue" />
+        android:background="@color/dark_blue"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/navCommentTv"
+        style="@style/StandardText"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:gravity="center"
         android:text="بازخورد"
         android:textColor="#212121"
-        android:textSize="18dp" />
+        android:textSize="18dp"
+        android:visibility="gone" />
 
     <View
         android:layout_width="match_parent"
@@ -78,11 +84,12 @@
 
     <TextView
         android:id="@+id/navRecommendTv"
+        style="@style/StandardText"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:gravity="center"
         android:text="توصیه به دوستان"
-        android:textColor="#212121"
+        android:textColor="#737373"
         android:textSize="18dp" />
 
     <View
@@ -94,11 +101,12 @@
 
     <TextView
         android:id="@+id/navTutorialTv"
+        style="@style/StandardText"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:gravity="center"
         android:text="تور ایران پلنر"
-        android:textColor="#212121"
+        android:textColor="#737373"
         android:textSize="18dp" />
 
 </LinearLayout>

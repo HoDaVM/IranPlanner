@@ -3,8 +3,12 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/IranPlanner.iml" filepath="$PROJECT_DIR$/IranPlanner.iml" />
+      <module fileurl="file://$PROJECT_DIR$/IranPlanner.iml" filepath="$PROJECT_DIR$/IranPlanner.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/folding-cell-1.1.0.0/folding-cell-1.1.0.0.iml" filepath="$PROJECT_DIR$/folding-cell-1.1.0.0/folding-cell-1.1.0.0.iml" />
+      <module fileurl="file://$PROJECT_DIR$/folding-cell-1.1.0.0/folding-cell-1.1.0.0.iml" filepath="$PROJECT_DIR$/folding-cell-1.1.0.0/folding-cell-1.1.0.0.iml" />
+      <module fileurl="file://$PROJECT_DIR$/widget/widget.iml" filepath="$PROJECT_DIR$/widget/widget.iml" />
       <module fileurl="file://$PROJECT_DIR$/widget/widget.iml" filepath="$PROJECT_DIR$/widget/widget.iml" />
     </modules>
   </component>
