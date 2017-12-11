@@ -54,6 +54,7 @@ import entity.ResultReqBundle;
 import entity.ResultReqCount;
 import entity.ResultReservationReqStatus;
 import entity.ResultRoom;
+import me.relex.circleindicator.CircleIndicator;
 import tools.CustomDialogNumberPicker;
 import tools.Util;
 
@@ -115,7 +116,8 @@ public class ActivityHotelReservationConfirm extends StandardActivity implements
             textPhoneAddress = "";
             hotelName = bundle.getString("");
         }
-    }
+    }   @BindView(R.id.indicatorReservation)
+    CircleIndicator indicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +132,7 @@ public class ActivityHotelReservationConfirm extends StandardActivity implements
 
         confirmReservationViewPagerAdapter = new ConfirmReservationViewPagerAdapter(getApplicationContext(), this, ResultRooms, durationTravel, startOfTravel, bundleId,"");
         pager.setAdapter(confirmReservationViewPagerAdapter);
+        indicator.setViewPager(pager);
         pager.setCurrentItem(ResultRooms.size() - 1);
         confirmReservationViewPagerAdapter.setOnItemClickListener(new ConfirmReservationViewPagerAdapter.OnItemClickViewPagerListener() {
             @Override

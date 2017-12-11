@@ -23,33 +23,18 @@
 
         </android.support.v7.widget.Toolbar>
 
-        <!--<android.support.design.widget.TabLayout
-            android:id="@+id/tabLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbar"
-            android:background="@color/green"
-            android:scrollbars="horizontal" />-->
+
     </android.support.design.widget.AppBarLayout>
-<!--    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/nestedScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
 
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-
-        android:layout_below="@+id/app_bar"
-        android:layout_above="@+id/ShowRoomHolder"
-        android:fillViewport="true">-->
 
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@+id/app_bar"
       android:layout_above="@+id/ShowRoomHolder">
-        <include layout="@layout/content_show_room_viewpager"/></LinearLayout>
+
+        <include layout="@layout/content_show_room_viewpager"/>
+  </LinearLayout>
 <!--
     </android.support.v4.widget.NestedScrollView>
 -->

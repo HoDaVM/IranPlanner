@@ -258,7 +258,7 @@ public class FilterMapAttraction extends AppCompatActivity implements OnMapReady
                             .title(markerNames.get(position)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_blue_pin)));
 
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(position)));
-                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(12);
                     mMap.animateCamera(zoom);
 
                 }
