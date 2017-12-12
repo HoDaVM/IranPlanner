@@ -15,6 +15,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -28,16 +29,20 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iranplanner.tourism.iranplanner.R;
 
 import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.standard.StandardFragment;
+import com.iranplanner.tourism.iranplanner.ui.fragment.OnVisibleShowCaseViewListener;
 import com.iranplanner.tourism.iranplanner.ui.fragment.itineraryList.ItineraryListFragment;
 import com.ramotion.foldingcell.FoldingCell;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -60,7 +65,10 @@ public class MainSearchFragment extends StandardFragment implements MainSearchCo
     public static final String TAG_ITINERARY = "ioigbs";
     @Inject
     MainSearchPresenter mainPresenter;
-
+    TextView txtitinerary_name_city_city,
+            city_name,
+            itinerary_name,
+            itinerary_name_attraction;
     FoldingCell fcProvince, folding_cell_City_City, folding_cell_city, folding_cell_attraction;
     List<Province> provinces;
     String provinceName;
@@ -84,9 +92,9 @@ public class MainSearchFragment extends StandardFragment implements MainSearchCo
     String attractionEnd;
     Button mmActivity;
     FrameLayout cell_title_view_theme, cell_title_view_events;
-
-    public static MainSearchFragment newInstance() {
+    public static MainSearchFragment newInstance( OnVisibleShowCaseViewListener onVisibleShowCaseViewListener) {
         MainSearchFragment fragment = new MainSearchFragment();
+        fragment.onVisibleShowCaseViewListener=onVisibleShowCaseViewListener;
         return fragment;
     }
 
@@ -99,6 +107,11 @@ public class MainSearchFragment extends StandardFragment implements MainSearchCo
         city_city_layout = (LinearLayout) view.findViewById(R.id.city_city_layout);
         city_layout = (LinearLayout) view.findViewById(R.id.city_layout);
         province_layout = (LinearLayout) view.findViewById(R.id.province_layout);
+
+        txtitinerary_name_city_city = view.findViewById(R.id.txtitinerary_name_city_city);
+        city_name = view.findViewById(R.id.city_name);
+        itinerary_name = view.findViewById(R.id.itinerary_name);
+        itinerary_name_attraction = view.findViewById(R.id.itinerary_name_attraction);
 //        events_layout = (LinearLayout) view.findViewById(R.id.events_layout);
 //        cell_title_view_events = (FrameLayout) view.findViewById(R.id.cell_title_view_events);
 //        cell_title_view_theme = (FrameLayout) view.findViewById(R.id.cell_title_view_theme);
@@ -671,5 +684,24 @@ public class MainSearchFragment extends StandardFragment implements MainSearchCo
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    OnVisibleShowCaseViewListener onVisibleShowCaseViewListener;
+
+    public void setOnVisibleShowCaseViewListener() {
+        if (onVisibleShowCaseViewListener != null) {
+            List<View> views = new ArrayList<>();
+            views.add(txtitinerary_name_city_city);
+            views.add(city_name);
+            views.add(itinerary_name);
+            views.add(itinerary_name_attraction);
+            onVisibleShowCaseViewListener.onVisibleShowCase("ItineraryFragment", views);
+        }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setOnVisibleShowCaseViewListener();
     }
 }

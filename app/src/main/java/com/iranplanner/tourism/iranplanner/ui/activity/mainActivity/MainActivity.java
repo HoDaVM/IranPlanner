@@ -49,7 +49,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
     GetHomeResult homeResult;
     CustomShowcaseView customShowcaseView;
     private int counter = 0;
-    ShowcaseView showcaseView,showcaseViewPanda;
+    ShowcaseView showcaseView, showcaseViewPanda;
     private static final String TOPIC_MAIN = "main";
 
     boolean doubleBackToExitPressedOnce = false;
@@ -175,18 +175,29 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
                                 setShowCaseSetting(settingView.get(0));
                             }
                         }
-                    }, 100);
+                    }, 150);
                 } else if (tab.getPosition() == 3) {
                     final Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_PANDAFRAGMENT, "false", false, getApplicationContext()))) {
-                            counter = 0;
-                            setShowCasePanda(pandaView);
+                                counter = 0;
+                                setShowCasePanda(pandaView);
                             }
                         }
-                    }, 100);
+                    }, 150);
+                } else if (tab.getPosition() == 2) {
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_SEARCHINERARY, "false", false, getApplicationContext()))) {
+                                counter = 0;
+                                setShowCaseItinerary(itineraryView);
+                            }
+                        }
+                    }, 150);
                 }
 
             }
@@ -346,6 +357,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
 
     List<View> settingView;
     List<View> pandaView;
+    List<View> itineraryView;
 
     @Override
     public void onVisibleShowCase(String fragmentName, List<View> views) {
@@ -360,22 +372,42 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
         } else if (fragmentName.equals("pandaFragment")) {
             pandaView = new ArrayList<View>();
             pandaView = views;
+        } else if (fragmentName.equals("ItineraryFragment")) {
+            itineraryView = new ArrayList<View>();
+            itineraryView = views;
         }
 
     }
 
     private void setShowCase(final List<View> views) {
+//        RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+//        lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+//        int margin = ((Number) (getResources().getDisplayMetrics().density * 12)).intValue();
+//        lps.setMargins(margin, margin, margin, margin);
+//
+//        ViewTarget target = new ViewTarget(views.get(0));
+//        showcaseView = new ShowcaseView.Builder(this)
+//                .withMaterialShowcase()
+//                .setTarget(target)
+//
+//                .setStyle(R.style.CustomShowcaseTheme2)
+//                .setShowcaseEventListener(this)
+//                .replaceEndButton(R.layout.view_custom_button)
+//                .build();
+//        showcaseView.setButtonPosition(lps);
         Button customButton = (Button) this.getLayoutInflater().inflate(R.layout.showcase_custom_button, null);
-        CustomShowcaseView showcaseDrawer = new CustomShowcaseView(getResources());
-        float width = getResources().getDimension(R.dimen.custom_showcase_width);
-        float height = getResources().getDimension(R.dimen.custom_showcase_height);
-        showcaseDrawer.customShowcaseSize(width, height);
+//        CustomShowcaseView showcaseDrawer = new CustomShowcaseView(getResources());
+//        float width = getResources().getDimension(R.dimen.custom_showcase_width);
+//        float height = getResources().getDimension(R.dimen.custom_showcase_height);
+//        showcaseDrawer.customShowcaseSize(width, height);
 
         showcaseView = new ShowcaseView.Builder(this)
                 .setTarget(new ViewTarget(views.get(0)))
-                .setShowcaseDrawer(showcaseDrawer)
+//                .setShowcaseDrawer(showcaseDrawer)
                 .blockAllTouches()
                 .replaceEndButton(customButton)
+                .setStyle(R.style.CustomShowcaseTheme2)
                 .build();
         Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_HOMEfRAGMENT, String.valueOf(true), false, getApplicationContext());
         RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -458,8 +490,8 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
         lps.setMargins(0, 0, 0, margin);
         showcaseView.setButtonPosition(lps);
         showcaseView.setButtonText(getString(R.string.tutorialNext));
-        showcaseView.setContentText(getString(R.string.tutorialWhereToText));
-        showcaseView.setContentTitle(getString(R.string.tutorialWhereToTitle));
+        showcaseView.setContentText(getString(R.string.tutorialReservation));
+        showcaseView.setContentTitle(getString(R.string.tutorialReservationTitle));
         showcaseView.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
     }
 
@@ -492,10 +524,10 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
 
 
                     case 0: {
-                        showcaseViewPanda.setContentText("می توانید با این گزینه نوع جستجوی خود را فیلتر کنید");
+                        showcaseViewPanda.setContentText("به کمک این گزینه میتونی نوع اطلاعاتی که روی نقشه نمایش داده می شه رو فیلتر کنی");
                         showcaseViewPanda.setContentTitle("فیلتر کردن ");
-                         showcaseViewPanda.setShowcase(new ViewTarget(views.get(1)), true);
-                         showcaseViewPanda.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
+                        showcaseViewPanda.setShowcase(new ViewTarget(views.get(1)), true);
+                        showcaseViewPanda.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
                         break;
                     }
 
@@ -513,10 +545,83 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
         });
 
 
-        showcaseViewPanda.setContentTitle("ترسیم محدوده با دست روی نقشه");
-        showcaseViewPanda.setContentText("با زدن این دکمه می توانید بر روی نقشه محدوده ای را ترسیم کنید و نتیجه جستجو را در شکلی که ترسیم کرده اید ببینید");
+        showcaseViewPanda.setContentTitle("کشیدن محدوده با دست روی نقشه");
+        showcaseViewPanda.setContentText("یه ویژگی خاص و منحصر به فرد! کافیه محدوده مورد نظرت رو با دست روی نقشه ترسیم کنی تا همه اطلاعات در اون منطقه رو یه جا بدست بیاری");
         showcaseViewPanda.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
 
 
+    }
+
+    private void setShowCaseItinerary(final List<View> views) {
+        Button customButton = (Button) this.getLayoutInflater().inflate(R.layout.showcase_custom_button, null);
+        CustomShowcaseView showcaseDrawer = new CustomShowcaseView(getResources());
+        float width = getResources().getDimension(R.dimen.custom_showcase_moreItem_width);
+        float height = getResources().getDimension(R.dimen.custom_showcase_moreItem_height);
+        showcaseDrawer.customShowcaseSize(width, height);
+
+        showcaseView = new ShowcaseView.Builder(this)
+                .setTarget(new ViewTarget(views.get(0)))
+                .setShowcaseDrawer(showcaseDrawer)
+                .blockAllTouches()
+                .replaceEndButton(customButton)
+                .build();
+        Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_SEARCHINERARY, String.valueOf(true), false, getApplicationContext());
+        RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        lps.addRule(RelativeLayout.CENTER_IN_PARENT);
+        int margin = Utils.dp(getApplicationContext(), 16);
+        lps.setMargins(0, 0, 0, margin);
+        showcaseView.setButtonPosition(lps);
+        final int screenSize = getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK;
+        showcaseView.overrideButtonClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (counter) {
+                    case 0: {
+                        showcaseView.setShowcase(new ViewTarget(views.get(1)), true);
+                        showcaseView.setContentText(getString(R.string.tutorialItineraryCityText));
+                        showcaseView.setContentTitle(getString(R.string.tutorialItineraryCityTitle));
+                        showcaseView.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
+                        break;
+                    }
+
+                    case 1: {
+                        showcaseView.setShowcase(new ViewTarget(views.get(2)), true);
+                        showcaseView.setContentTitle(getString(R.string.tutorialItineraryProvinceTitle));
+                        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+                        showcaseView.setContentText(getResources().getString(R.string.tutorialItineraryProvinceText));
+                        break;
+                    }
+
+                    case 2: {
+                        showcaseView.setShowcase(new ViewTarget(views.get(3)), true);
+                        showcaseView.setContentTitle(getString(R.string.tutorialItineraryAttractionTitle));
+                        showcaseView.setContentText(getString(R.string.tutorialItineraryAttractionText));
+                        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+                        showcaseView.setButtonText("بستن");
+                        break;
+                    }
+                    case 3: {
+                        showcaseView.setTarget(Target.NONE);
+                        showcaseView.setContentTitle("");
+                        showcaseView.hide();
+//                showcaseView.setButtonText("بستن");
+                        //setAlpha(0.4f, v0,v1, v2,v3);
+                        break;
+                    }
+//            case 4: {
+//                showcaseView.hide();
+//                //  setAlpha(1.0f, v0,v1, v2,v3);
+//                break;
+//            }
+                }
+                counter++;
+            }
+        });
+        showcaseView.setButtonText(getString(R.string.tutorialNext));
+        showcaseView.setContentText(getString(R.string.tutorialItineraryIranText));
+        showcaseView.setContentTitle(getString(R.string.tutorialItineraryIranTitle));
+        showcaseView.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
     }
 }

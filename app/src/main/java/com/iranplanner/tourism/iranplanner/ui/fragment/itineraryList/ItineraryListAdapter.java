@@ -59,7 +59,7 @@ public class ItineraryListAdapter extends RecyclerView.Adapter<ItineraryListAdap
         } else {
             viewHolder.itinerary_from_city_name.setText(itineraries.get(i).getItineraryFromCityName() + " - " + itineraries.get(i).getItineraryToCityName());
         }
-        viewHolder.itinerary_duration.setText(Util.persianNumbers(itineraries.get(i).getItineraryDuration()) + " روز");
+        viewHolder.itinerary_duration.setText("مدت زمان سفر: "+Util.persianNumbers(itineraries.get(i).getItineraryDuration()) + " روز");
         float perc = Float.valueOf(itineraries.get(i).getItineraryPercentage().get(0).getItineraryAttractionTypePercentage());
         viewHolder.textTpeTravel.setText(itineraries.get(i).getItineraryPercentage().get(0).getItineraryAttractionType());
         int animationDuration = 2500; // 2500ms = 2,5s

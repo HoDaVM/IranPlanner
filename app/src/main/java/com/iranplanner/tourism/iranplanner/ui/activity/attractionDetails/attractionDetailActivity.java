@@ -367,13 +367,13 @@ public class attractionDetailActivity extends AppCompatActivity implements OnMap
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_attraction_detail, menu);
         this.menu = menu;
-//        menu.findItem(R.id.menuAttractionLike).setVisible(true);
+//        menu.findItem(R.id.menuAttractionShare).setVisible(true);
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
 //            case R.id.menuAttractionLike:
 //                Toast.makeText(this, "Liked!", Toast.LENGTH_SHORT).show();
 //                OnClickedIntrestedWidget("like", Constants.intrestDefault, null);
@@ -383,10 +383,10 @@ public class attractionDetailActivity extends AppCompatActivity implements OnMap
 //            case R.id.menuAttractionShare:
 //                Toast.makeText(this, "Shared!", Toast.LENGTH_SHORT).show();
 //                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
 
     private void setInterestResponce(List<ResultWidget> resultWidget) {
         if (resultWidget.get(0).getWidgetBookmarkValue() != null && resultWidget.get(0).getWidgetBookmarkValue() == 1) {
@@ -725,7 +725,6 @@ public class attractionDetailActivity extends AppCompatActivity implements OnMap
     public void dismissProgress() {
         progressBar.dismiss();
     }
-
 
 
     @Override

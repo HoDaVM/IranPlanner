@@ -22,6 +22,30 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:src="@drawable/image_dummy" />
+            <LinearLayout
+                android:id="@+id/showItinraryHolder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/button_corner_blue"
+                android:gravity="center"
+                android:paddingEnd="@dimen/padding_standard"
+                android:paddingStart="@dimen/padding_standard">
+
+                <TextView
+                    android:id="@+id/txtitinerary"
+                    style="@style/StandardTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/padding_short"
+                    android:paddingTop="@dimen/padding_short"
+                    android:textColor="@color/white_"
+                    android:text="مشاهده " />
+
+
+
+            </LinearLayout>
+
 
             <ProgressBar
                 android:id="@+id/imageLoading"

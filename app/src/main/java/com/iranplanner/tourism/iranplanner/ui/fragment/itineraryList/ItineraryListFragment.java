@@ -125,7 +125,7 @@ public class ItineraryListFragment extends StandardActivity implements MainSearc
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("لیست برنامه سفر");
+        getSupportActionBar().setTitle("لیست برنامه سفرهای پیشنهادی");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         recyclerView = (RecyclerView) findViewById(R.id.card_recycler_view);

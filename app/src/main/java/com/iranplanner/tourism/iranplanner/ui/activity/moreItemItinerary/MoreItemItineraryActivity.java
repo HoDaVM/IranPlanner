@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Build;
@@ -24,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
@@ -44,6 +46,8 @@ import com.bumptech.glide.request.target.Target;
 import com.coinpany.core.android.widget.CTouchyWebView;
 import com.coinpany.core.android.widget.Utils;
 import com.coinpany.core.android.widget.calendar.dateutil.PersianCalendar;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -65,6 +69,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.di.model.App;
 
+import com.iranplanner.tourism.iranplanner.showcaseview.CustomShowcaseView;
 import com.iranplanner.tourism.iranplanner.ui.activity.MapFullActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelReservationListOfCity.ReservationListActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.showAttraction.ShowAttractionActivity;
@@ -175,7 +180,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         contentFullDescription = (CTouchyWebView) findViewById(R.id.contentFullDescription);
         txtOk = (TextView) findViewById(R.id.txtOk);
         MoreInoText = (TextView) findViewById(R.id.MoreInoText);
-        AppBarLayout appBar = (AppBarLayout) findViewById(R.id.appBar);
+        AppBarLayout appBar = (AppBarLayout) findViewById(R.id.app_bar);
         ViewCompat.setElevation(appBar, Util.dpToPx(this, 28));
     }
 
@@ -277,6 +282,9 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
                 .itineraryModule(new ItineraryModule(this));
         builder.build().inject(this);
         itineraryPresenter.getWidgetResult("nodeuser", itineraryData.getItineraryId(), Util.getUseRIdFromShareprefrence(getApplicationContext()), "itinerary", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+//        if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_MOREITEMITINERARY, "false", false, getApplicationContext()))) {
+        setShowCase();
+//        }
     }
 
     private Menu menu = null;
@@ -285,7 +293,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_itinerary_more, menu);
         this.menu = menu;
-//        menu.findItem(R.id.menuItineraryFav).setVisible(true);
+        MenuItem menuItem = menu.getItem(0);
         return true;
     }
 
@@ -294,26 +302,10 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         switch (item.getItemId()) {
             case R.id.menuItineraryComment:
 //            here comes the comment code section
+                showProgressDialog();
+                builder.build().inject(this);
                 itineraryPresenter.getItineraryCommentList("pagecomments", itineraryId, "itinerary", "0", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
-
                 break;
-//            case R.id.menuItineraryFav:
-//                if (toggleFav()) {
-//                    builder = DaggerItineraryComponent.builder()
-//                            .netComponent(((App) getApplicationContext()).getNetComponent())
-//                            .itineraryModule(new ItineraryModule(this));
-//                    builder.build().inject(this);
-//                    itineraryPresenter.getInterest("widget", Util.getUseRIdFromShareprefrence(getApplicationContext()), "1", "attraction", itineraryId, "like", Constants.likeImg, Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
-//                    itineraryPresenter.getInterest("widget", user, "1", "itinerary", itineraryId, gType, gValue,ss);
-
-//                    OnClickedIntrestedWidget("like", Constants.likeImg, null);
-
-//                    item.setIcon(R.mipmap.ic_like_on);
-//                } else {
-//                    item.setIcon(R.mipmap.ic_like_off);
-//                    OnClickedIntrestedWidget("like", Constants.dislikeImg, null);
-//                }
-//                break;
         }
         return true;
     }
@@ -337,6 +329,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+
 
             case R.id.commentHolder:
                 showProgressDialog();
@@ -853,4 +846,86 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
     public void onLocationChanged(Location location) {
 
     }
+
+    ShowcaseView showcaseView;
+    int counter = 0;
+
+    private void setShowCase() {
+        Button customButton = (Button) this.getLayoutInflater().inflate(R.layout.showcase_custom_button, null);
+        CustomShowcaseView showcaseDrawer = new CustomShowcaseView(getResources());
+        float width = getResources().getDimension(R.dimen.custom_showcase_moreItem_width);
+        float height = getResources().getDimension(R.dimen.custom_showcase_moreItem_height);
+        showcaseDrawer.customShowcaseSize(width, height);
+
+        showcaseView = new ShowcaseView.Builder(this)
+                .setTarget(new ViewTarget(changeDateHolder))
+                .setShowcaseDrawer(showcaseDrawer)
+                .blockAllTouches()
+                .replaceEndButton(customButton)
+                .build();
+        Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_MOREITEMITINERARY, String.valueOf(true), false, getApplicationContext());
+        RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        lps.addRule(RelativeLayout.CENTER_IN_PARENT);
+        int margin = Utils.dp(getApplicationContext(), 16);
+        lps.setMargins(0, 0, 0, margin);
+        showcaseView.setButtonPosition(lps);
+        final int screenSize = getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK;
+        showcaseView.overrideButtonClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (counter) {
+                    case 0: {
+                        showcaseView.setShowcase(new ViewTarget(showItinerary), true);
+                        showcaseView.setContentText("روی این دکمه کلیک کن تا برنامه بازدیدهای هر روز رو به تفکیک ببینی");
+                        showcaseView.setContentTitle("دیدن برنامه روز به روز سفر");
+                        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+                        break;
+                    }
+
+                    case 1: {
+                        showcaseView.setShowcase(new ViewTarget(showReservation), true);
+                        showcaseView.setContentTitle("رزرو اقامتگاه");
+                        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+                        showcaseView.setContentText("بر اساس برنامه سفری که انتخاب کردی، ما بهت پیشنهاد میکنیم تا توی چه شهر هایی شب رو اقامت داشته باشی تا سفر پرخاطره تری داشته باشی");
+                        break;
+                    }
+
+//                    case 2: {
+//                        showcaseView.setShowcase(new ViewTarget(commentHolder), true);
+//                        showcaseView.setContentTitle(getString(R.string.tutorialAttractionTitle));
+//                        showcaseView.setContentText(getString(R.string.tutorialAttractionText));
+//                        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+//                        showcaseView.setButtonText("بستن");
+//                        break;
+//                    }
+                    case 2: {
+                        showcaseView.setTarget(com.github.amlcurran.showcaseview.targets.Target.NONE);
+                        showcaseView.setContentTitle("");
+                        showcaseView.hide();
+//                showcaseView.setButtonText("بستن");
+                        //setAlpha(0.4f, v0,v1, v2,v3);
+                        break;
+                    }
+//            case 4: {
+//                showcaseView.hide();
+//                //  setAlpha(1.0f, v0,v1, v2,v3);
+//                break;
+//            }
+                }
+                counter++;
+            }
+        });
+        showcaseView.setButtonText(getString(R.string.tutorialNext));
+        showcaseView.setContentText("تاریخ شروع سفر");
+        showcaseView.setContentTitle("تاریخ آغاز سفرت رو وارد کن");
+        showcaseView.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
+        showcaseView.setButtonPosition(lps);
+
+    }
+
+//    changeDateHolder
+//            showItinerary1
+//            commenttoolbar
 }

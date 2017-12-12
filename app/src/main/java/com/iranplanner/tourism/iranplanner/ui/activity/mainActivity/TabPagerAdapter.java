@@ -76,7 +76,7 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
                 return currentTab;
 
             case 2:
-                currentTab = MainSearchFragment.newInstance();
+                currentTab = MainSearchFragment.newInstance(onVisibleShowCaseViewListener);
                 return currentTab;
             case 3:
                 currentTab = MapPandaFragment.newInstance(onVisibleShowCaseViewListener);
