@@ -16,7 +16,7 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="200dp"
             android:fitsSystemWindows="true"
             app:contentScrim="@color/main_blue"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -34,19 +34,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="@drawable/dark_shadow"
+                    android:rotation="180" />
+
                 <TextView
                     android:id="@+id/eventStatusTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
                     android:layout_margin="10dp"
                     android:background="@drawable/drawable_status_tv"
                     android:paddingBottom="8dp"
                     android:paddingEnd="@dimen/padding_standard"
                     android:paddingStart="@dimen/padding_standard"
                     android:paddingTop="8dp"
-                    android:text="اتمام یافته" />
+                    android:text="اتمام یافته"
+                    android:textColor="@color/white" />
 
             </RelativeLayout>
 
@@ -80,8 +87,8 @@
                 style="@style/StandardTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_short"
-                android:layout_marginStart="@dimen/margin_short"
+                android:layout_marginEnd="@dimen/margin_standard"
+                android:layout_marginStart="@dimen/margin_standard"
                 android:layout_marginTop="@dimen/margin_standard"
                 android:text="جشنواره ی سیب و عناب در شهرستان دماوند"
                 android:textColor="#181818" />
@@ -90,15 +97,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_standard"
-                android:layout_marginLeft="@dimen/margin_short"
-                android:layout_marginRight="@dimen/margin_short"
+                android:layout_marginEnd="@dimen/margin_standard"
+                android:layout_marginStart="@dimen/margin_standard"
                 android:layout_marginTop="@dimen/margin_short"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/eventCityTv"
                     style="@style/StandardText"
-                    fontPath="fonts/iransans-bold.ttf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="دماوند"
@@ -126,6 +132,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:layout_marginEnd="@dimen/margin_short"
                 android:layout_marginStart="@dimen/margin_short"
                 android:orientation="horizontal">
 
@@ -151,8 +158,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginStart="@dimen/margin_short"
-                android:visibility="gone"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="40dp"
@@ -175,6 +182,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:layout_marginEnd="@dimen/margin_short"
                 android:layout_marginStart="@dimen/margin_short"
                 android:orientation="horizontal">
 
@@ -183,7 +191,7 @@
                     android:layout_height="match_parent"
                     android:paddingBottom="10dp"
                     android:paddingTop="10dp"
-                    android:src="@drawable/calendar" />
+                    android:src="@mipmap/ic_attraction_blue" />
 
                 <TextView
                     android:id="@+id/eventAddressTv"
@@ -192,7 +200,7 @@
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:text="آدرس : استان اهران شهرستان دماوند" />
+                    android:text="آدرس : استان اهران شهرستان دماوند " />
 
             </LinearLayout>
 
@@ -201,8 +209,8 @@
                 fontPath="fonts/iransans-bold.ttf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_short"
-                android:layout_marginStart="@dimen/margin_short"
+                android:layout_marginEnd="@dimen/margin_standard"
+                android:layout_marginStart="@dimen/margin_standard"
                 android:layout_marginTop="@dimen/margin_standard"
                 android:text="درباره این رویداد :"
                 android:textColor="@color/greyDark"
@@ -217,6 +225,13 @@
                 android:layout_marginStart="@dimen/margin_standard"
                 android:layout_marginTop="@dimen/margin_short"
                 android:text="لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد. در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد وزمان مورد نیاز شامل حروفچینی دستاوردهای اصلی و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد." />
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                tools:context="com.hila.vas.vito.activities.NearMeActivity" />
 
         </LinearLayout>
 

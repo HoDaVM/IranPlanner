@@ -32,7 +32,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  */
 
 public abstract class StandardActivity extends AppCompatActivity {
-    LocaleUtils localeUtils=new LocaleUtils();
+    LocaleUtils localeUtils = new LocaleUtils();
 
     public static final String TAG = "DEBUG::::";
 
@@ -52,6 +52,7 @@ public abstract class StandardActivity extends AppCompatActivity {
         localeUtils.setLocale(new Locale("fa"));
         localeUtils.updateConfig((Application) getApplicationContext(), getBaseContext().getResources().getConfiguration());
     }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -105,29 +106,29 @@ public abstract class StandardActivity extends AppCompatActivity {
         super.onResume();
     }
 
-      public int getActionBarSize() {
+    public int getActionBarSize() {
         return (int) getResources().getDimension(R.dimen.actionBarSize);
     }
 
     public class LocaleUtils {
-        private  Locale sLocale;
+        private Locale sLocale;
 
-        public  void setLocale(Locale locale) {
+        public void setLocale(Locale locale) {
             sLocale = locale;
-            if(sLocale != null) {
+            if (sLocale != null) {
                 Locale.setDefault(sLocale);
             }
         }
 
-        public  void updateConfig(ContextThemeWrapper wrapper) {
-            if(sLocale != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        public void updateConfig(ContextThemeWrapper wrapper) {
+            if (sLocale != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 Configuration configuration = new Configuration();
                 configuration.setLocale(sLocale);
                 wrapper.applyOverrideConfiguration(configuration);
             }
         }
 
-        public  void updateConfig(Application app, Configuration configuration) {
+        public void updateConfig(Application app, Configuration configuration) {
             if (sLocale != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 //Wrapping the configuration to avoid Activity endless loop
                 Configuration config = new Configuration(configuration);
@@ -136,8 +137,7 @@ public abstract class StandardActivity extends AppCompatActivity {
                 config.locale = sLocale;
                 Resources res = app.getBaseContext().getResources();
                 res.updateConfiguration(config, res.getDisplayMetrics());
-            }
-            else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 Configuration configurationw = getResources().getConfiguration();
                 if (/*isSlectedLanguageRTL*/true) {
                     configuration.setLayoutDirection(new Locale("fa"));
@@ -151,7 +151,7 @@ public abstract class StandardActivity extends AppCompatActivity {
 
     protected abstract int getLayoutId();
 
-    public void setCollapseFont(CollapsingToolbarLayout toolbar){
+    public void setCollapseFont(CollapsingToolbarLayout toolbar) {
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/IRANSansMobile.ttf");
 

@@ -1,5 +1,6 @@
 package com.iranplanner.tourism.iranplanner.ui.activity.event;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -38,8 +39,9 @@ import entity.ItineraryLodgingCity;
 import entity.ResultEvent;
 import entity.ResultLodging;
 import tools.Util;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class EventActivity extends StandardActivity {
+public class EventActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private SupportMapFragment mapFragment;
     private GoogleMap mMap;
@@ -49,6 +51,8 @@ public class EventActivity extends StandardActivity {
     private TextView
             tvEventStatus, tvEventName, tvEventCity, tvEventSubTitle, tvEventHoldingDate, tvEventVisitationHour, tvEventAddress, tvEventAbout;
     private ImageView banner;
+
+    private long holdingDateTimestamp, endDateTimestamp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,10 +84,10 @@ public class EventActivity extends StandardActivity {
     }
 
     private void init() {
-//        mapFragment = (SupportMapFragment) getSupportFragmentManager()
-//                .findFragmentById(R.id.map);
-//
-//        mapFragment.getMapAsync(this);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
         tvEventStatus = (TextView) findViewById(R.id.eventStatusTv);
         tvEventName = (TextView) findViewById(R.id.eventTitleTv);
@@ -103,37 +107,49 @@ public class EventActivity extends StandardActivity {
         else
             address = "آدرس : " + resultEvent.getEventInfo().getEventAddress();
 
-        tvEventName.setText(resultEvent.getEventInfo().getEventProvinceTitle());
+        tvEventName.setText(resultEvent.getEventInfo().getEventTitle());
         tvEventCity.setText(resultEvent.getEventInfo().getEventCityTitle());
-        tvEventSubTitle.setText(resultEvent.getEventInfo().getEventTitle());
+        tvEventSubTitle.setText(resultEvent.getEventInfo().getEventProvinceTitle());
 
-        long holdingDateTimestamp = Long.parseLong(resultEvent.getEventInfo().getEventDateStart());
-        String holdingDate = Util.persianNumbers("تاریخ برگزاری : " + Utils.getSimpleDate(convertTime(holdingDateTimestamp)));
+        holdingDateTimestamp = Long.parseLong(resultEvent.getEventInfo().getEventDateStart());
+        endDateTimestamp = Long.parseLong(resultEvent.getEventInfo().getEventDateEnd());
+        String holdingDate = Util.persianNumbers("تاریخ برگزاری : " + "از " + Utils.getSimpleDate(convertTime(holdingDateTimestamp)) + " تا "
+                + Utils.getSimpleDate(convertTime(endDateTimestamp)));
 
         tvEventHoldingDate.setText(holdingDate);
         tvEventVisitationHour.setText(resultEvent.getEventInfo().getEventDateDuration());
 
         tvEventAddress.setText(address);
         tvEventAbout.setText(Html.fromHtml(resultEvent.getEventInfo().getEventBody()));
+
+        setEventStatus();
     }
 
-//    @Override
-//    public void onMapReady(GoogleMap googleMap) {
-//        mMap = googleMap;
-//        mMap.getUiSettings().setAllGesturesEnabled(false);
-//        mMap.getUiSettings().setMapToolbarEnabled(true);
-//        mMap.getUiSettings().setZoomControlsEnabled(false);
-//
-//        MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker));
-//        Double lan = 35.6892;
-//        Double lon = 51.3890;
-//
-//        marker = mMap.addMarker(markerOptions
-//                .position(new LatLng(lan, lon))
-//                .title("Amin is Awesome")
-//        );
-//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lan, lon), 15.0f));
-//    }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.getUiSettings().setAllGesturesEnabled(false);
+        mMap.getUiSettings().setMapToolbarEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(false);
+
+        MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker));
+        Double lan = 35.6892;
+        Double lon = 51.3890;
+
+        marker = mMap.addMarker(markerOptions
+                .position(new LatLng(lan, lon))
+                .title("Amin is Awesome")
+        );
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lan, lon), 15.0f));
+    }
+
+    private void setEventStatus() {
+        Long currentTimestamp = System.currentTimeMillis();
+        if (currentTimestamp > holdingDateTimestamp && currentTimestamp < endDateTimestamp) {
+            tvEventStatus.setText("درحال برگزاری");
+            tvEventStatus.getBackground().setColorFilter(getColor(R.color.greenpress), PorterDuff.Mode.SRC_ATOP);
+        }
+    }
 
     private Date convertTime(long time) {
         Date date = new Date(time);
@@ -148,7 +164,12 @@ public class EventActivity extends StandardActivity {
     }
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.activity_event;
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
+
+//    @Override
+//    protected int getLayoutId() {
+//        return R.layout.activity_event;
+//    }
 }
