@@ -432,33 +432,34 @@ public class attractionDetailActivity extends AppCompatActivity implements OnMap
         mMap.getUiSettings().setAllGesturesEnabled(false);
         mMap.getUiSettings().setMapToolbarEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(false);
-        resulAttraction.getAttractionPositionLat();
-        resulAttraction.getAttractionPositionLon();
-        float lan = Float.valueOf(resulAttraction.getAttractionPositionLat());
-        float lon = Float.valueOf(resulAttraction.getAttractionPositionLon());
-        MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker));
+        if (resulAttraction.getAttractionPositionLat() != null && resulAttraction.getAttractionPositionLon() != null) {
+            float lan = Float.valueOf(resulAttraction.getAttractionPositionLat());
+            float lon = Float.valueOf(resulAttraction.getAttractionPositionLon());
+            MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker));
 
-        marker = mMap.addMarker(markerOptions
-                .position(new LatLng(lan, lon))
-                .title(resulAttraction.getCityTitle())
-                .snippet(":)"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lan, lon), 15.0f));
+            marker = mMap.addMarker(markerOptions
+                    .position(new LatLng(lan, lon))
+                    .title(resulAttraction.getCityTitle())
+                    .snippet(":)"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lan, lon), 15.0f));
 
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                Log.e("map is ckicked", "true");
-                Intent intent = new Intent(getApplicationContext(), MapFullActivity.class);
-                ItineraryLodgingCity i = new ItineraryLodgingCity();
-                i.setCityPositionLat(resulAttraction.getAttractionPositionLat());
-                i.setCityPositionLon(resulAttraction.getAttractionPositionLon());
-                List<ItineraryLodgingCity> lodgingCities = new ArrayList<ItineraryLodgingCity>();
-                lodgingCities.add(i);
-                intent.putExtra("lodgingCities", (Serializable) lodgingCities);
-                intent.putExtra("resulAttraction", (Serializable) resulAttraction);
-                startActivity(intent);
-            }
-        });
+            mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng latLng) {
+                    Log.e("map is ckicked", "true");
+                    Intent intent = new Intent(getApplicationContext(), MapFullActivity.class);
+                    ItineraryLodgingCity i = new ItineraryLodgingCity();
+                    i.setCityPositionLat(resulAttraction.getAttractionPositionLat());
+                    i.setCityPositionLon(resulAttraction.getAttractionPositionLon());
+                    List<ItineraryLodgingCity> lodgingCities = new ArrayList<ItineraryLodgingCity>();
+                    lodgingCities.add(i);
+                    intent.putExtra("lodgingCities", (Serializable) lodgingCities);
+                    intent.putExtra("resulAttraction", (Serializable) resulAttraction);
+                    startActivity(intent);
+                }
+            });
+        }
+
     }
 
     private void showProgressDialog() {

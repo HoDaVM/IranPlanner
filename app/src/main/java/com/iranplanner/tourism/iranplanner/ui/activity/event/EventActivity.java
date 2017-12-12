@@ -147,7 +147,7 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
         Long currentTimestamp = System.currentTimeMillis();
         if (currentTimestamp > holdingDateTimestamp && currentTimestamp < endDateTimestamp) {
             tvEventStatus.setText("درحال برگزاری");
-            tvEventStatus.getBackground().setColorFilter(getColor(R.color.greenpress), PorterDuff.Mode.SRC_ATOP);
+            tvEventStatus.getBackground().setColorFilter(getResources().getColor(R.color.greenpress), PorterDuff.Mode.SRC_ATOP);
         }
     }
 

@@ -853,8 +853,8 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
     private void setShowCase() {
         Button customButton = (Button) this.getLayoutInflater().inflate(R.layout.showcase_custom_button, null);
         CustomShowcaseView showcaseDrawer = new CustomShowcaseView(getResources());
-        float width = getResources().getDimension(R.dimen.custom_showcase_moreItem_width);
-        float height = getResources().getDimension(R.dimen.custom_showcase_moreItem_height);
+        float width = getResources().getDimension(R.dimen.custom_showcas1);
+        float height = getResources().getDimension(R.dimen.custom_showcas1);
         showcaseDrawer.customShowcaseSize(width, height);
 
         showcaseView = new ShowcaseView.Builder(this)
@@ -888,18 +888,11 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
                         showcaseView.setShowcase(new ViewTarget(showReservation), true);
                         showcaseView.setContentTitle("رزرو اقامتگاه");
                         showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
-                        showcaseView.setContentText("بر اساس برنامه سفری که انتخاب کردی، ما بهت پیشنهاد میکنیم تا توی چه شهر هایی شب رو اقامت داشته باشی تا سفر پرخاطره تری داشته باشی");
+                        showcaseView.setContentText("بر اساس برنامه سفری که انتخاب کردی، ما بهت پیشنهاد میکنیم تا توی چه شهر هایی شب رو اقامت داشته باشی تا سفرپرخاطره تری داشته باشی");
+                        showcaseView.setButtonText("بستن");
                         break;
                     }
 
-//                    case 2: {
-//                        showcaseView.setShowcase(new ViewTarget(commentHolder), true);
-//                        showcaseView.setContentTitle(getString(R.string.tutorialAttractionTitle));
-//                        showcaseView.setContentText(getString(R.string.tutorialAttractionText));
-//                        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
-//                        showcaseView.setButtonText("بستن");
-//                        break;
-//                    }
                     case 2: {
                         showcaseView.setTarget(com.github.amlcurran.showcaseview.targets.Target.NONE);
                         showcaseView.setContentTitle("");

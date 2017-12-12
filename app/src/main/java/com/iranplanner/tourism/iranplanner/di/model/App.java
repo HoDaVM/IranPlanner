@@ -1,7 +1,6 @@
 package com.iranplanner.tourism.iranplanner.di.model;
 
 import android.Manifest;
-import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -16,9 +15,7 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.di.data.component.DaggerNetComponent;
@@ -31,8 +28,6 @@ import java.util.Map;
 
 import server.Config;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
-
-import static android.content.ContentValues.TAG;
 
 
 /**
@@ -51,10 +46,19 @@ public class App extends MultiDexApplication {
 
     private LocationManager locationManager;
     private Location location = null;
-
+    private void overrideFont() {
+        // for Override font
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/IRANSansMobile.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );}
     @Override
     public void onCreate() {
         super.onCreate();
+
+        overrideFont();
+
         mNetComponent = DaggerNetComponent.builder()
                 .appModule(new AppModule(this))
                 .netModule(new NetModule(Config.BASEURL))

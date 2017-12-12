@@ -60,6 +60,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -202,6 +203,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         recyclerView.setAdapter(adapter);
         if (snapHelper == null) {
             snapHelper = new PagerSnapHelper();
+            recyclerView.setOnFlingListener(null);
             snapHelper.attachToRecyclerView(recyclerView);
         }
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -215,7 +217,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
                     if (markerNames.size() > 0) {
                         markerShow.get(positions).showInfoWindow();
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(positions)));
-                        CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+                        CameraUpdate zoom = CameraUpdateFactory.zoomTo(12);
                         mMap.animateCamera(zoom);
                     }
 
@@ -289,8 +291,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.map_panda, container, false);
-        mapFragment = (MySupportMapFragmen) getChildFragmentManager()
-                .findFragmentById(R.id.mapView);
+        mapFragment = (MySupportMapFragmen) getChildFragmentManager().findFragmentById(R.id.mapView);
 
         recyclerView = rootView.findViewById(R.id.reservationListRecyclerView);
         btnFilter = rootView.findViewById(R.id.btnFilter);
@@ -433,46 +434,49 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     }
 
     private void setDrawable(boolean drawable) {
-        if (drawable) {
-            mMap.getUiSettings().setScrollGesturesEnabled(drawable);
-            setDraw = false;
-            btnSelectPolygon.setBackground(getResources().getDrawable(R.mipmap.ic_drawing_map_round));
-            txtDraw.setText("ترسیم محدوده");
-        } else {
-            mMap.getUiSettings().setScrollGesturesEnabled(drawable);
-            setDraw = true;
-            clearPolyLine();
-            btnSelectPolygon.setBackground(getResources().getDrawable(R.mipmap.ic_map_zoomout_round));
-            txtDraw.setText("لغو ترسیم");
-
-        }
+        if (mMap != null) {
 
 
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            if (drawable) {
+                mMap.getUiSettings().setScrollGesturesEnabled(drawable);
+                setDraw = false;
+                btnSelectPolygon.setBackground(getResources().getDrawable(R.mipmap.ic_drawing_map_round));
+                txtDraw.setText("ترسیم محدوده");
+            } else {
+                mMap.getUiSettings().setScrollGesturesEnabled(drawable);
+                setDraw = true;
+                clearPolyLine();
+                btnSelectPolygon.setBackground(getResources().getDrawable(R.mipmap.ic_map_zoomout_round));
+                txtDraw.setText("لغو ترسیم");
 
-
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                int c = 0;
-                int markerPosition = 0;
-                for (ResultPandaMap resultLodging : resultPandaMapList) {
-                    String s[] = marker.getTitle().split("-");
-                    if (resultLodging.getPoint().getTitle().equals(s[s.length - 1])) {
-                        showMarkers(markerPoints, markerType);
-                        mMap.addMarker(new MarkerOptions().position(markerPoints.get(c))
-                                .title(markerNames.get(c))/*.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_blue_pin))*/);
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(c)));
-                        Log.e("marker", marker.getTitle());
-                        markerPosition = c;
-                    }
-                    c++;
-                }
-                recyclerView.getLayoutManager().scrollToPosition(markerPosition);
-
-                return false;
             }
-        });
 
+
+            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+
+
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    int c = 0;
+                    int markerPosition = 0;
+                    for (ResultPandaMap resultLodging : resultPandaMapList) {
+                        String s[] = marker.getTitle().split("-");
+                        if (resultLodging.getPoint().getTitle().equals(s[s.length - 1])) {
+                            showMarkers(markerPoints, markerType);
+                            mMap.addMarker(new MarkerOptions().position(markerPoints.get(c))
+                                    .title(markerNames.get(c))/*.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_blue_pin))*/);
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(c)));
+                            Log.e("marker", marker.getTitle());
+                            markerPosition = c;
+                        }
+                        c++;
+                    }
+                    recyclerView.getLayoutManager().scrollToPosition(markerPosition);
+
+                    return false;
+                }
+            });
+        }
     }
 
     private void draw_final_polygon() {

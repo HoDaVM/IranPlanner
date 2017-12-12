@@ -282,6 +282,7 @@ public class MainSearchFragment extends StandardFragment implements MainSearchCo
         if (message.contains("HTTP 400 BAD REQUEST")) {
             Toast.makeText(getContext(), "در این مسیر برنامه سفری یافت نشد", Toast.LENGTH_LONG).show();
         }
+
     }
 
     @Override

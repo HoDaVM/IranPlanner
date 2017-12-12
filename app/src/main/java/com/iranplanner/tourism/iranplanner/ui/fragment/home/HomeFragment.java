@@ -247,6 +247,8 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
     RelativeLayout attractionSportHolder;
     @BindView(R.id.attractionRelgonHolder)
     RelativeLayout attractionRelgonHolder;
+    @BindView(R.id.overlapImageHolder2)
+    RelativeLayout overlapImageHolder;
     @BindView(R.id.toolbarTitleParent)
     LinearLayout toolbarTitleParent;
     @BindView(R.id.txtEventsTitle)
@@ -606,19 +608,23 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
 
     @Override
     public void showLodgingList(ResultLodgingList resultLodgingList) {
-        List<ResultLodging> resultLodgings = resultLodgingList.getResultLodging();
-        Intent intent = new Intent(getContext(), ReservationHotelListActivity.class);
-        intent.putExtra("resultLodgings", (Serializable) resultLodgings);
-        long time = System.currentTimeMillis();
-        Date startOfTravel = new Date(time);
-        intent.putExtra("nextOffset", resultLodgingList.getStatistics().getOffsetNext().toString());
+        if (resultLodgingList.getResultLodging().size() != 0) {
+            List<ResultLodging> resultLodgings = resultLodgingList.getResultLodging();
+            Intent intent = new Intent(getContext(), ReservationHotelListActivity.class);
+            intent.putExtra("resultLodgings", (Serializable) resultLodgings);
+            long time = System.currentTimeMillis();
+            Date startOfTravel = new Date(time);
+            intent.putExtra("nextOffset", resultLodgingList.getStatistics().getOffsetNext().toString());
 
-        intent.putExtra("startOfTravel", startOfTravel);
-        intent.putExtra("durationTravel", 3);
-        intent.putExtra("todayDate", resultLodgingList.getStatistics().getDateNow());
-        intent.putExtra("cityName", cityName);
+            intent.putExtra("startOfTravel", startOfTravel);
+            intent.putExtra("durationTravel", 3);
+            intent.putExtra("todayDate", resultLodgingList.getStatistics().getDateNow());
+            intent.putExtra("cityName", cityName);
 
-        startActivity(intent);
+            startActivity(intent);
+        } else {
+            Toast.makeText(getContext(), "در این شهر اقامتگاهی یافت نشد", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -651,25 +657,27 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
     public void showItineraries(ResultItineraryList resultItineraryList, String typeOfSearch) {
 
         List<ResultItinerary> data = resultItineraryList.getResultItinerary();
+        if (data.size() > 0) {
+            Intent intent = new Intent(getActivity(), ItineraryListFragment.class);
+            intent.putExtra("resuliItineraryList", (Serializable) data);
+            intent.putExtra("fromWhere", typeOfSearch);
+            intent.putExtra("nextOffset", resultItineraryList.getStatistics().getOffsetNext().toString());
+            intent.putExtra("provinceId", "");
+            intent.putExtra("attractionId", "");
+            if (typeOfSearch.equals("fromCityToCity")) {
+                intent.putExtra("endCity", "");
+            } else {
+                intent.putExtra("endCity", "");
+            }
 
-        Intent intent = new Intent(getActivity(), ItineraryListFragment.class);
-        intent.putExtra("resuliItineraryList", (Serializable) data);
-        intent.putExtra("fromWhere", typeOfSearch);
-        intent.putExtra("nextOffset", resultItineraryList.getStatistics().getOffsetNext().toString());
-        intent.putExtra("provinceId", "");
-        intent.putExtra("attractionId", "");
-        if (typeOfSearch.equals("fromCityToCity")) {
-            intent.putExtra("endCity", "");
-        } else {
-            intent.putExtra("endCity", "");
+            startActivity(intent);
         }
 
-        startActivity(intent);
     }
 
     @Override
     public void showError(String message) {
-        Toast.makeText(getContext(), "مقصد مورد نظر یافت نشد", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), " موردی یافت نشد", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -782,15 +790,20 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
 
     @Override
     public void ShowEventLists(ResultEvents resultEvents) {
-        List<ResultEvent> resultEvnt = resultEvents.getResultEvent();
-        Intent intent = new Intent(getActivity(), EventListActivity.class);
-        intent.putExtra("ResultEvent", (Serializable) resultEvnt);
+        if (resultEvents.getResultEvent().size() > 0) {
+            List<ResultEvent> resultEvnt = resultEvents.getResultEvent();
+            Intent intent = new Intent(getActivity(), EventListActivity.class);
+            intent.putExtra("ResultEvent", (Serializable) resultEvnt);
 
-        if (cityName.equals("default"))
-            intent.putExtra("title", "ایران");
-        else intent.putExtra("title", cityName);
+            if (cityName.equals("default"))
+                intent.putExtra("title", "ایران");
+            else intent.putExtra("title", cityName);
 
-        startActivity(intent);
+            startActivity(intent);
+        } else {
+            Toast.makeText(getContext(), "رویدادی یافت نشد", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
@@ -950,10 +963,12 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
 
     @Override
     public void ShowItineryDetail(ResultItineraryList resultItineraryList) {
-        Intent intent = new Intent(getActivity(), MoreItemItineraryActivity.class);
-        intent.putExtra("itineraryData", (Serializable) resultItineraryList.getResultItinerary().get(0));
-        intent.putExtra("duration", "");
-        startActivity(intent);
+        if (resultItineraryList.getResultItinerary().size() > 0) {
+            Intent intent = new Intent(getActivity(), MoreItemItineraryActivity.class);
+            intent.putExtra("itineraryData", (Serializable) resultItineraryList.getResultItinerary().get(0));
+            intent.putExtra("duration", "");
+            startActivity(intent);
+        }
     }
 
 //    @Override
@@ -1186,6 +1201,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
             views.add(TypeHotelHolder);
             views.add(overlapImageItineraryHolder);
             views.add(TypeAttractionHolder);
+            views.add(overlapImageHolder);
 
             onVisibleShowCaseViewListener.onVisibleShowCase("homeFragment", views);
         }

@@ -212,9 +212,14 @@ public class SplashActivity extends StandardActivity implements MainSearchPresen
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(receiver);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(receiver);
+
+    }
 
     @Override
     public void showComments(ResultCommentList resultCommentList) {

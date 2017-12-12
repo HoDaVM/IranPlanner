@@ -300,7 +300,7 @@
                         android:layout_height="match_parent"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
-                        android:background="@drawable/hotel"
+                        android:background="@drawable/hotel_home"
                         android:scaleType="fitXY" />
                 </RelativeLayout>
 

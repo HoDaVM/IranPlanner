@@ -168,6 +168,7 @@ public class SettingFragment extends StandardFragment implements View.OnClickLis
                 Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_SETTINGFRAGMENT, String.valueOf(false), false,getContext());
                 Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_PANDAFRAGMENT, String.valueOf(false), false,getContext());
                 Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_MOREITEMITINERARY, String.valueOf(false), false,getContext());
+                Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_SEARCHINERARY, String.valueOf(false), false,getContext());
                 final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 View dialogView = inflater.inflate(R.layout.custom_alert, null);

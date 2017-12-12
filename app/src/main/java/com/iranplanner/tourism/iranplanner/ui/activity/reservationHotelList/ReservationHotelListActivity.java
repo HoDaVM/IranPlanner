@@ -105,8 +105,9 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
         getExtras();
         txtDurationHotel.setText(" به مدت " + Util.persianNumbers(durationTravel + " شب "));
         txtTypeHotel.setText("از " + Util.persianNumbers(Utils.getSimpleDate(startOfTravel)));
-
-        setUpRecyclerView();
+        if (resultLodgings.size() > 0) {
+            setUpRecyclerView();
+        }
         setupToolbar();
 
         holderDate.setOnClickListener(this);

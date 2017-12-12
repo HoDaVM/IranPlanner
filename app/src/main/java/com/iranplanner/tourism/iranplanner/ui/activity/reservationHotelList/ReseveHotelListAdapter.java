@@ -70,10 +70,10 @@ public class ReseveHotelListAdapter extends RecyclerView.Adapter<ReseveHotelList
         if (resultLodgings.get(i).getLodgingRoomPriceRuleDetail().getLodgingRoomPriceDetailValue() != null && !resultLodgings.get(i).getLodgingRoomPriceRuleDetail().getLodgingRoomPriceDetailValue().equals("")) {
             viewHolder.txtShowPercent.setText(Util.persianNumbers(resultLodgings.get(i).getLodgingRoomPriceRuleDetail().getLodgingRoomPriceDetailValue()) + "تخفیف ");
         }
-if(resultLodgings.get(i).getLodgingRoomPriceDetail().get(0).getLodgingRoomMinPrice()!=null){
-     price = resultLodgings.get(i).getLodgingRoomPriceDetail().get(0).getLodgingRoomMinPrice() / 10;
+        if (resultLodgings.get(i).getLodgingRoomPriceDetail().get(0).getLodgingRoomMinPrice() != null) {
+            price = resultLodgings.get(i).getLodgingRoomPriceDetail().get(0).getLodgingRoomMinPrice() / 10;
 
-}
+        }
 
         DecimalFormat formatter = new DecimalFormat("#,###,###");
         String s = formatter.format(price);

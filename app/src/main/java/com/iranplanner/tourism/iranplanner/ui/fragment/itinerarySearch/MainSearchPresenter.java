@@ -70,11 +70,15 @@ public class MainSearchPresenter extends MainSearchContract {
                     @Override
                     public void onCompleted() {
                         mView.showComplete();
+                        mView.dismissProgress();
+
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         mView.showError(e.getMessage());
+                        mView.dismissProgress();
+
                     }
 
                     @Override
@@ -99,11 +103,14 @@ public class MainSearchPresenter extends MainSearchContract {
                     @Override
                     public void onCompleted() {
                         mView.showComplete();
+                        mView.dismissProgress();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         mView.showError(e.getMessage());
+                        mView.dismissProgress();
+
                     }
 
                     @Override

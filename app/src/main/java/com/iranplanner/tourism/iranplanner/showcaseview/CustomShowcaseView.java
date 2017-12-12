@@ -1,5 +1,6 @@
 package com.iranplanner.tourism.iranplanner.showcaseview;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -7,6 +8,8 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
+import android.graphics.Typeface;
+import android.text.TextPaint;
 
 import com.github.amlcurran.showcaseview.ShowcaseDrawer;
 import com.iranplanner.tourism.iranplanner.R;

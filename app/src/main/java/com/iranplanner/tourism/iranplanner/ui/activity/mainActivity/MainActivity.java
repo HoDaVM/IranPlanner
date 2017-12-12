@@ -2,11 +2,14 @@ package com.iranplanner.tourism.iranplanner.ui.activity.mainActivity;
 
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +17,7 @@ import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.TextPaint;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +48,8 @@ import entity.GetHomeResult;
 import server.Config;
 import tools.Constants;
 import tools.Util;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends StandardActivity implements ForceUpdateChecker.OnUpdateNeededListener, OnVisibleShowCaseViewListener {
     GetHomeResult homeResult;
@@ -380,34 +386,17 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
     }
 
     private void setShowCase(final List<View> views) {
-//        RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-//        lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-//        int margin = ((Number) (getResources().getDisplayMetrics().density * 12)).intValue();
-//        lps.setMargins(margin, margin, margin, margin);
-//
-//        ViewTarget target = new ViewTarget(views.get(0));
-//        showcaseView = new ShowcaseView.Builder(this)
-//                .withMaterialShowcase()
-//                .setTarget(target)
-//
-//                .setStyle(R.style.CustomShowcaseTheme2)
-//                .setShowcaseEventListener(this)
-//                .replaceEndButton(R.layout.view_custom_button)
-//                .build();
-//        showcaseView.setButtonPosition(lps);
         Button customButton = (Button) this.getLayoutInflater().inflate(R.layout.showcase_custom_button, null);
-//        CustomShowcaseView showcaseDrawer = new CustomShowcaseView(getResources());
-//        float width = getResources().getDimension(R.dimen.custom_showcase_width);
-//        float height = getResources().getDimension(R.dimen.custom_showcase_height);
-//        showcaseDrawer.customShowcaseSize(width, height);
+        CustomShowcaseView showcaseDrawer = new CustomShowcaseView(getResources());
+        float width = getResources().getDimension(R.dimen.custom_showcase);
+        float height = getResources().getDimension(R.dimen.custom_showcase);
+        showcaseDrawer.customShowcaseSize(width, height);
 
         showcaseView = new ShowcaseView.Builder(this)
                 .setTarget(new ViewTarget(views.get(0)))
-//                .setShowcaseDrawer(showcaseDrawer)
+                .setShowcaseDrawer(showcaseDrawer)
                 .blockAllTouches()
                 .replaceEndButton(customButton)
-                .setStyle(R.style.CustomShowcaseTheme2)
                 .build();
         Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_HOMEfRAGMENT, String.valueOf(true), false, getApplicationContext());
         RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -447,6 +436,14 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
                         break;
                     }
                     case 3: {
+                        showcaseView.setShowcase(new ViewTarget(views.get(4)), true);
+                        showcaseView.setContentTitle(getString(R.string.tutorialEventTitle));
+                        showcaseView.setContentText(getString(R.string.tutorialEventText));
+                        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+                        showcaseView.setButtonText("بستن");
+                        break;
+                    }
+                    case 4: {
                         showcaseView.setTarget(Target.NONE);
                         showcaseView.setContentTitle("");
                         showcaseView.hide();
@@ -472,8 +469,8 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
     private void setShowCaseSetting(View view) {
         Button customButton = (Button) this.getLayoutInflater().inflate(R.layout.showcase_custom_button, null);
         CustomShowcaseView showcaseDrawer = new CustomShowcaseView(getResources());
-        float width = getResources().getDimension(R.dimen.custom_showcase_width);
-        float height = getResources().getDimension(R.dimen.custom_showcase_height);
+        float width = getResources().getDimension(R.dimen.custom_showcase);
+        float height = getResources().getDimension(R.dimen.custom_showcase);
         showcaseDrawer.customShowcaseSize(width, height);
 
         showcaseView = new ShowcaseView.Builder(this)
@@ -498,8 +495,8 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
     private void setShowCasePanda(final List<View> views) {
         Button customButtonPanda = (Button) this.getLayoutInflater().inflate(R.layout.showcase_custom_button, null);
         CustomShowcaseView showcaseDrawer = new CustomShowcaseView(getResources());
-        float width = getResources().getDimension(R.dimen.custom_showcase_width);
-        float height = getResources().getDimension(R.dimen.custom_showcase_height);
+        float width = getResources().getDimension(R.dimen.custom_showcase);
+        float height = getResources().getDimension(R.dimen.custom_showcase);
         showcaseDrawer.customShowcaseSize(width, height);
 
         showcaseViewPanda = new ShowcaseView.Builder(this)
@@ -528,6 +525,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
                         showcaseViewPanda.setContentTitle("فیلتر کردن ");
                         showcaseViewPanda.setShowcase(new ViewTarget(views.get(1)), true);
                         showcaseViewPanda.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
+                        showcaseView.setButtonText("بستن");
                         break;
                     }
 
@@ -552,6 +550,10 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
 
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
     private void setShowCaseItinerary(final List<View> views) {
         Button customButton = (Button) this.getLayoutInflater().inflate(R.layout.showcase_custom_button, null);
         CustomShowcaseView showcaseDrawer = new CustomShowcaseView(getResources());
@@ -569,7 +571,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
         RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         lps.addRule(RelativeLayout.CENTER_IN_PARENT);
-        int margin = Utils.dp(getApplicationContext(), 16);
+        int margin = Utils.dp(getApplicationContext(), 40);
         lps.setMargins(0, 0, 0, margin);
         showcaseView.setButtonPosition(lps);
         final int screenSize = getResources().getConfiguration().screenLayout &
