@@ -282,9 +282,9 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
                 .itineraryModule(new ItineraryModule(this));
         builder.build().inject(this);
         itineraryPresenter.getWidgetResult("nodeuser", itineraryData.getItineraryId(), Util.getUseRIdFromShareprefrence(getApplicationContext()), "itinerary", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
-//        if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_MOREITEMITINERARY, "false", false, getApplicationContext()))) {
+        if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_MOREITEMITINERARY, "false", false, getApplicationContext()))) {
         setShowCase();
-//        }
+        }
     }
 
     private Menu menu = null;
@@ -504,7 +504,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
                 LatLngBounds bounds = builder.build();
 //        int width = getResources().getDisplayMetrics().widthPixels;
 //        int height = getResources().getDisplayMetrics().heightPixels;
-                int padding = (int) (width * 0.12); // offset from edges of the map 12% of screen
+                int padding = (int) (width * 0.10); // offset from edges of the map 12% of screen
                 CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
                 mMap.animateCamera(cu);
             }
@@ -754,8 +754,10 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         mMap = googleMap;
         //------------- no zoom
         mMap.getUiSettings().setAllGesturesEnabled(false);
-        mMap.getUiSettings().setMapToolbarEnabled(true);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.getUiSettings().setZoomControlsEnabled(false);
+
+
 
         //Initialize Google Play Services
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -803,14 +805,20 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                Log.e("map is ckicked", "true");
-                Intent intent = new Intent(getApplicationContext(), MapFullActivity.class);
-                List<ItineraryLodgingCity> lodgingCities = itineraryData.getItineraryLodgingCity();
-                intent.putExtra("lodgingCities", (Serializable) lodgingCities);
-                startActivity(intent);
+                fullmap();
             }
         });
 
+
+
+    }
+
+    private void fullmap(){
+        Log.e("map is ckicked", "true");
+        Intent intent = new Intent(getApplicationContext(), MapFullActivity.class);
+        List<ItineraryLodgingCity> lodgingCities = itineraryData.getItineraryLodgingCity();
+        intent.putExtra("lodgingCities", (Serializable) lodgingCities);
+        startActivity(intent);
     }
 
     @Override

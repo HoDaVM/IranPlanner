@@ -657,7 +657,8 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
             @Override
             public void onResponse(Call<ResultLodgingRoomList> call, Response<ResultLodgingRoomList> response) {
                 Log.e("result of ResultRooms", "true");
-                if (response.body() != null) {
+                if (response.body() != null && response.body().getResultRoom().size()>0) {
+
                     dismissProgress();
                     ResultLodgingRoomList res = response.body();
                     List<ResultRoom> ResultRooms = res.getResultRoom();

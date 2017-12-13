@@ -92,16 +92,16 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
             if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                 //Show Information about why you need the permission
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Need Location Permission");
-                builder.setMessage("This app needs Location permission.");
-                builder.setPositiveButton("Grant", new DialogInterface.OnClickListener() {
+                builder.setTitle("توجه");
+                builder.setMessage("برای کارکرد بهتر اپلیکیشن نیاز به دسترسی موقعیت مکانی دارد");
+                builder.setPositiveButton("بله", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_FINE_LOCATION_PERMISSION_CONSTANT);
                     }
                 });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("خیر", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -112,9 +112,9 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
                 //Previously Permission Request was cancelled with 'Dont Ask Again',
                 // Redirect to Settings after showing Information about why you need the permission
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Need Storage Permission");
-                builder.setMessage("This app needs storage permission.");
-                builder.setPositiveButton("Grant", new DialogInterface.OnClickListener() {
+                builder.setTitle("توجه");
+                builder.setMessage("برای کارکرد بهتر اپلیکیشن نیاز به دسترسی موقعیت مکانی دارد");
+                builder.setPositiveButton("بله", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -123,10 +123,10 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
                         Uri uri = Uri.fromParts("package", getPackageName(), null);
                         intent.setData(uri);
                         startActivityForResult(intent, REQUEST_PERMISSION_SETTING);
-                        Toast.makeText(getBaseContext(), "Go to Permissions to Grant Storage", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getBaseContext(), "Go to Permissions to Grant Storage", Toast.LENGTH_LONG).show();
                     }
                 });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("خیر", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -486,7 +486,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
         int margin = Utils.dp(getApplicationContext(), 16);
         lps.setMargins(0, 0, 0, margin);
         showcaseView.setButtonPosition(lps);
-        showcaseView.setButtonText(getString(R.string.tutorialNext));
+        showcaseView.setButtonText("بستن");
         showcaseView.setContentText(getString(R.string.tutorialReservation));
         showcaseView.setContentTitle(getString(R.string.tutorialReservationTitle));
         showcaseView.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
@@ -525,7 +525,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
                         showcaseViewPanda.setContentTitle("فیلتر کردن ");
                         showcaseViewPanda.setShowcase(new ViewTarget(views.get(1)), true);
                         showcaseViewPanda.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
-                        showcaseView.setButtonText("بستن");
+                        showcaseViewPanda.setButtonText("بستن");
                         break;
                     }
 

@@ -124,7 +124,7 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_attraction_list_more);
+        setContentView(R.layout.activity_attraction_list_more);
         ButterKnife.bind(this);
 
         DaggerAttractionListMoreComponent.builder().netComponent(((App) getApplicationContext()).getNetComponent())

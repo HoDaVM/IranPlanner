@@ -501,7 +501,16 @@
             android:layout_below="@+id/supplierAddress"
             android:background="@color/greyLight"
             android:focusableInTouchMode="true">
-
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_corner_green"
+                android:textColor="@color/white_"
+                android:text="بزرگنمایی"
+                android:textSize="13sp"
+                android:layout_margin="@dimen/margin_xxshort"
+                android:padding="@dimen/margin_xshort"
+                android:translationZ="1dp"/>
             <fragment
                 android:id="@+id/map"
                 android:name="com.google.android.gms.maps.SupportMapFragment"

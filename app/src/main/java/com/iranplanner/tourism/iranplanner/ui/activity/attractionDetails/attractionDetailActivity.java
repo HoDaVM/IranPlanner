@@ -430,7 +430,7 @@ public class attractionDetailActivity extends AppCompatActivity implements OnMap
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.getUiSettings().setAllGesturesEnabled(false);
-        mMap.getUiSettings().setMapToolbarEnabled(true);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.getUiSettings().setZoomControlsEnabled(false);
         if (resulAttraction.getAttractionPositionLat() != null && resulAttraction.getAttractionPositionLon() != null) {
             float lan = Float.valueOf(resulAttraction.getAttractionPositionLat());
@@ -441,7 +441,7 @@ public class attractionDetailActivity extends AppCompatActivity implements OnMap
                     .position(new LatLng(lan, lon))
                     .title(resulAttraction.getCityTitle())
                     .snippet(":)"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lan, lon), 15.0f));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lan, lon), 12.0f));
 
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override

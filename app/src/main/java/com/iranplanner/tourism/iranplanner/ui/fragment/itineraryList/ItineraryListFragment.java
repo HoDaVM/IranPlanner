@@ -70,7 +70,7 @@ public class ItineraryListFragment extends StandardActivity implements MainSearc
     String nextOffset, endCity;
     String attractionId, cityFrom;
 
-    private ProgressBar waitingLoading;
+//    private ProgressBar waitingLoading;
 
     private boolean loading = true;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
@@ -129,7 +129,7 @@ public class ItineraryListFragment extends StandardActivity implements MainSearc
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         recyclerView = (RecyclerView) findViewById(R.id.card_recycler_view);
-        waitingLoading = (ProgressBar) findViewById(R.id.waitingLoading);
+//        waitingLoading = (ProgressBar) findViewById(R.id.waitingLoading);
         checkFromWhereGetBundle();
         DaggerMainScreenComponent.builder()
                 .netComponent(((App) getApplicationContext()).getNetComponent())
@@ -166,21 +166,21 @@ public class ItineraryListFragment extends StandardActivity implements MainSearc
                     if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                         if (fromCityToCity && loading) {
                             mainPresenter.loadItineraryFromCity("list", "fa", data.get(0).getItineraryFromCityId().toString(), "20", nextOffset, endCity, Util.getTokenFromSharedPreferences(ItineraryListFragment.this), Util.getAndroidIdFromSharedPreferences(ItineraryListFragment.this));
-                            waitingLoading.setVisibility(View.VISIBLE);
+//                            waitingLoading.setVisibility(View.VISIBLE);
                             loading = false;
                         } else if (fromProvince) {
                             mainPresenter.loadItineraryFromProvince("searchprovince", provinceId, nextOffset, Util.getTokenFromSharedPreferences(ItineraryListFragment.this), Util.getAndroidIdFromSharedPreferences(ItineraryListFragment.this));
-                            waitingLoading.setVisibility(View.VISIBLE);
+//                            waitingLoading.setVisibility(View.VISIBLE);
 
                         } else if (fromAttraction) {
 
                             mainPresenter.loadItineraryFromAttraction("searchattractioncity", "fa", cityFrom, "10", nextOffset, attractionId, Util.getTokenFromSharedPreferences(ItineraryListFragment.this), Util.getAndroidIdFromSharedPreferences(ItineraryListFragment.this));
-                            waitingLoading.setVisibility(View.VISIBLE);
+//                            waitingLoading.setVisibility(View.VISIBLE);
                         } else if (fromCity) {
 //                            getItineraryCity(cityFrom, nextOffset, cityFrom);
 //                            waitingLoading.setVisibility(View.VISIBLE);
                             mainPresenter.loadItineraryFromCity("list", "fa", data.get(0).getItineraryFromCityId().toString(), "20", nextOffset, endCity, Util.getTokenFromSharedPreferences(ItineraryListFragment.this), Util.getAndroidIdFromSharedPreferences(ItineraryListFragment.this));
-                            waitingLoading.setVisibility(View.VISIBLE);
+//                            waitingLoading.setVisibility(View.VISIBLE);
                             loading = false;
                         }
 
@@ -198,7 +198,7 @@ public class ItineraryListFragment extends StandardActivity implements MainSearc
         if (!nextOffset.equals(resultItineraryList.getStatistics().getOffsetNext().toString())) {
             data.addAll(jj);
             adapter.notifyDataSetChanged();
-            waitingLoading.setVisibility(View.INVISIBLE);
+//            waitingLoading.setVisibility(View.INVISIBLE);
             nextOffset = resultItineraryList.getStatistics().getOffsetNext().toString();
         }
     }
@@ -211,9 +211,9 @@ public class ItineraryListFragment extends StandardActivity implements MainSearc
         if (message.contains("Unable to resolve host ") || message.contains("Software caused connection abort")) {
             Toast.makeText(this, "عدم دسترسی به اینترنت", Toast.LENGTH_LONG).show();
         }
-        if (waitingLoading.isEnabled()) {
-            waitingLoading.setVisibility(View.INVISIBLE);
-        }
+//        if (waitingLoading.isEnabled()) {
+//            waitingLoading.setVisibility(View.INVISIBLE);
+//        }
 
 //        if (message.contains("HTTP 400 BAD REQUEST")) {
 //            Toast.makeText(getContext(), "اتمام برنامه سفر", Toast.LENGTH_LONG).show();
@@ -224,12 +224,17 @@ public class ItineraryListFragment extends StandardActivity implements MainSearc
     public void showComplete() {
 //        Toast.makeText(getContext(), "complete", Toast.LENGTH_LONG).show();
         loading = true;
-        waitingLoading.setVisibility(View.INVISIBLE);
+//        waitingLoading.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void showProgress() {
-        progressDialog = Util.showProgressDialog(this, "لطفا منتظر بمانید", this);
+        if(progressDialog!=null&&progressDialog.isShowing()){
+
+        }else {
+            progressDialog = Util.showProgressDialog(this, "لطفا منتظر بمانید", this);
+
+        }
     }
 
     @Override

@@ -35,7 +35,7 @@ import entity.ResultItinerary;
  * Created by h.vahidimehr on 15/01/2017.
  */
 
-public class MapDirection  {
+public class MapDirection {
 
     Context context;
     private GoogleMap mMap;
@@ -61,10 +61,13 @@ public class MapDirection  {
         MarkerOptions options = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker));
 
         for (ItineraryLodgingCity lodgingCity : lodgingCities) {
-            LatLng point = new LatLng(Float.valueOf(lodgingCity.getCityPositionLat()), Float.valueOf(lodgingCity.getCityPositionLon()));
-            MarkerPoints.add(point);
-            options.position(point);
-            markers.add(mMap.addMarker(options));
+            if (lodgingCity.getCityPositionLat() != null && lodgingCity.getCityPositionLon() != null) {
+                LatLng point = new LatLng(Float.valueOf(lodgingCity.getCityPositionLat()), Float.valueOf(lodgingCity.getCityPositionLon()));
+                MarkerPoints.add(point);
+                options.position(point);
+                markers.add(mMap.addMarker(options));
+            }
+
         }
 
         // Add new marker to the Google Map Android API V2

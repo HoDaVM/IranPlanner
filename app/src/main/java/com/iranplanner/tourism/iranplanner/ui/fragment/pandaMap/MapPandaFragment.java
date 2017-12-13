@@ -191,6 +191,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     boolean setDraw = true;
     SnapHelper snapHelper;
     List<entity.CityProvince> CityProvince;
+    private boolean onItemclick = false;
 
     private void setUpRecyclerView(List<ResultPandaMap> resultPandaMapList) {
 
@@ -225,21 +226,25 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
             }
         });
 
+
         recyclerView.addOnItemTouchListener(new RecyclerItemOnClickListener(getContext(), new RecyclerItemOnClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, final int position) {
 //                showMarkers(markerPoints, markerType);
+                if (!onItemclick) {
+                    onItemclick=true;
+                    if (markerType.get(position).equals("attraction")) {
+                        attractionListMorePresenter.getAttractionDetailNear("full", markerId.get(position), "fa", "0", Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
+                    }
 
-                if (markerType.get(position).equals("attraction")) {
-                    attractionListMorePresenter.getAttractionDetailNear("full", markerId.get(position), "fa", "0", Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
-                }
+                    if (markerType.get(position).equals("lodging")) {
+                        reservationHotelListPresenter.getHotelReserve("full", markerId.get(position), "20", "0", Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
 
-                if (markerType.get(position).equals("lodging")) {
-                    reservationHotelListPresenter.getHotelReserve("full", markerId.get(position), "20", "0", Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
+                    }
+                    if (markerType.get(position).equals("event")) {
+                        homePresenter.getEventDetail("full", "fa", markerId.get(position), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
+                    }
 
-                }
-                if (markerType.get(position).equals("event")) {
-                    homePresenter.getEventDetail("full", "fa", markerId.get(position), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
                 }
 
             }
@@ -644,6 +649,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     @Override
     public void showHotelReserveList(ResultLodgingHotel resultLodgingHotel) {
+        onItemclick=false;
         if (resultLodgingHotel != null) {
             ResultLodging resultLodgingHotelDetail = resultLodgingHotel.getResultLodging();
             Intent intent = new Intent(getContext(), ReservationHotelDetailActivity.class);
@@ -660,7 +666,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     @Override
     public void showError(String message) {
-
+        onItemclick=false;
     }
 
     @Override
@@ -670,7 +676,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     @Override
     public void showComplete() {
-
+        onItemclick=false;
     }
 
     @Override
@@ -685,6 +691,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     @Override
     public void ShowEventDetail(ResultEvents resultEvent) {
+        onItemclick=false;
         Log.e("get", "eventDetail");
         Intent intent = new Intent(getContext(), EventActivity.class);
         intent.putExtra("ResultEvent", (Serializable) resultEvent.getResultEvent().get(0));
@@ -693,8 +700,13 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     @Override
     public void showProgress() {
-        progressBar = Util.showProgressDialog(getContext(), "لطفا منتظر بمانید", getActivity());
 
+        if (progressBar != null && progressBar.isShowing()) {
+
+        } else {
+            progressBar = Util.showProgressDialog(getContext(), "لطفا منتظر بمانید", getActivity());
+
+        }
     }
 
     @Override
@@ -718,6 +730,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     @Override
     public void showAttractionDetail(ShowAtractionDetailMore showAttractionFull) {
+        onItemclick=false;
         ResulAttraction resulAttraction = showAttractionFull.getResultAttractionFull().getResulAttraction();
         List<ResultAttractionList> resultAttractions = (List<ResultAttractionList>) showAttractionFull.getResultAttractionFull().getResultAttractionList();
         Intent intent = new Intent(getActivity(), attractionDetailActivity.class);

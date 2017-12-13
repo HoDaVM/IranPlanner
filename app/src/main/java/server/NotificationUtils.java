@@ -93,50 +93,59 @@ public class NotificationUtils {
 
 
     private void showSmallNotification(NotificationCompat.Builder mBuilder, int icon, String title, String message, String timeStamp, PendingIntent resultPendingIntent, Uri alarmSound) {
+try {
+    NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
-        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+    inboxStyle.addLine(message);
 
-        inboxStyle.addLine(message);
-
-        Notification notification;
-        notification = mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
-                .setAutoCancel(true)
-                .setContentTitle(title)
-                .setContentIntent(resultPendingIntent)
-                .setSound(alarmSound)
-                .setStyle(inboxStyle)
-                .setWhen(System.currentTimeMillis())
+    Notification notification;
+    notification = mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
+            .setAutoCancel(true)
+            .setContentTitle(title)
+            .setContentIntent(resultPendingIntent)
+            .setSound(alarmSound)
+            .setStyle(inboxStyle)
+            .setWhen(System.currentTimeMillis())
 //                .setWhen(getTimeMilliSec(timeStamp))
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
-                .setContentText(message)
-                .build();
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
+            .setContentText(message)
+            .build();
 
-        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(Config.NOTIFICATION_ID, notification);
+    NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+    notificationManager.notify(Config.NOTIFICATION_ID, notification);
+}catch (Exception e){
+
+}
+
     }
 
     private void showBigNotification(Bitmap bitmap, NotificationCompat.Builder mBuilder, int icon, String title, String message, String timeStamp, PendingIntent resultPendingIntent, Uri alarmSound) {
-        NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
-        bigPictureStyle.setBigContentTitle(title);
-        bigPictureStyle.setSummaryText(Html.fromHtml(message).toString());
-        bigPictureStyle.bigPicture(bitmap);
-        Notification notification;
-        notification = mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
-                .setAutoCancel(true)
-                .setContentTitle(title)
-                .setContentIntent(resultPendingIntent)
-                .setSound(alarmSound)
-                .setStyle(bigPictureStyle)
-                .setWhen(System.currentTimeMillis())
+      try {
+          NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
+          bigPictureStyle.setBigContentTitle(title);
+          bigPictureStyle.setSummaryText(Html.fromHtml(message).toString());
+          bigPictureStyle.bigPicture(bitmap);
+          Notification notification;
+          notification = mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
+                  .setAutoCancel(true)
+                  .setContentTitle(title)
+                  .setContentIntent(resultPendingIntent)
+                  .setSound(alarmSound)
+                  .setStyle(bigPictureStyle)
+                  .setWhen(System.currentTimeMillis())
 //                .setWhen(getTimeMilliSec(timeStamp))
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
-                .setContentText(message)
-                .build();
+                  .setSmallIcon(R.mipmap.ic_launcher)
+                  .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
+                  .setContentText(message)
+                  .build();
 
-        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(Config.NOTIFICATION_ID_BIG_IMAGE, notification);
+          NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+          notificationManager.notify(Config.NOTIFICATION_ID_BIG_IMAGE, notification);
+      }catch (Exception e){
+
+      }
+
     }
 
     /**
@@ -200,8 +209,13 @@ public class NotificationUtils {
 
     // Clears notification tray messages
     public static void clearNotifications(Context context) {
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancelAll();
+        try {
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancelAll();
+        }catch (Exception e){
+
+        }
+
     }
 
     public static long getTimeMilliSec(String timeStamp) {
