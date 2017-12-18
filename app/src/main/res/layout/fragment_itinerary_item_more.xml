@@ -3,10 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+
     android:layout_height="match_parent">
-
-
-
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -17,18 +15,16 @@
 
         <android.support.design.widget.CollapsingToolbarLayout
             fontPath="fonts/IRANSansMobile.ttf"
-
-
             android:id="@+id/collapse"
             android:layout_width="match_parent"
+            android:layoutDirection="rtl"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
             android:stateListAnimator="@drawable/state_list_animator"
             app:collapsedTitleGravity="start"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            >
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <RelativeLayout
                 android:id="@+id/imageHolder"
@@ -52,7 +48,13 @@
                     android:scaleType="centerCrop"
                     app:layout_collapseMode="parallax" />
 
-
+                <ImageView
+                    android:id="@+id/imgHomed"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/dark_shadow"
+                    android:translationZ="1dp" />
 
             </RelativeLayout>
 

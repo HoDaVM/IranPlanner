@@ -102,7 +102,7 @@ public class ActivityHotelReservationConfirm extends StandardActivity implements
             edtLastNameReservation = bundle.getString("edtLastNameReservation");
             textPhoneAddress = bundle.getString("textPhoneAddress");
             roomBundle = (entity.Bundle) bundle.getSerializable("RoomBundle");
-            hotelName = bundle.getString("hoelName");
+            hotelName = bundle.getString("hoelRName");
         } else if (bundleFrom.equals("HotelReservationStatusActivity")) {
             roomBundle = (entity.Bundle) bundle.getSerializable("RoomBundle");
             ResultRooms = roomBundle.getResultRoom();
@@ -340,6 +340,7 @@ public class ActivityHotelReservationConfirm extends StandardActivity implements
         if (reservationRequestDeleteRoom.getStatus().getStatus() == 200) {
             ResultRooms.remove(0);
             confirmReservationViewPagerAdapter.notifyDataSetChanged();
+            indicator.setViewPager(pager);
             Toast.makeText(getApplicationContext(), "اتاق مورد نظر حذف شد !", Toast.LENGTH_LONG).show();
             Log.e("delete", "room");
         }

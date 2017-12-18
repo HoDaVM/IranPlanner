@@ -10,12 +10,18 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.iranplanner.tourism.iranplanner.R;
 
 public class ContactUsActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback {
-
+    private GoogleMap mMap;
     private EditText etMessage;
     private TextInputEditText etName;
 
@@ -27,6 +33,9 @@ public class ContactUsActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void init() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("تماس باما");
@@ -75,6 +84,21 @@ public class ContactUsActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        if (googleMap != null) {
+            mMap = googleMap;
+            mMap.getUiSettings().setAllGesturesEnabled(false);
+            mMap.getUiSettings().setMapToolbarEnabled(true);
+            mMap.getUiSettings().setZoomControlsEnabled(true);
+            MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker));
+            Double lan = 35.812881;
+            Double lon = 51.420301;
+
+            googleMap.addMarker(markerOptions
+                    .position(new LatLng(lan, lon))
+                    .title("ایران پلنر")
+            );
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lan, lon), 12.0f));
+        }
     }
 
 }

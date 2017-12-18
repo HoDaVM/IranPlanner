@@ -127,20 +127,23 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.getUiSettings().setAllGesturesEnabled(false);
-        mMap.getUiSettings().setMapToolbarEnabled(true);
-        mMap.getUiSettings().setZoomControlsEnabled(false);
+        if (googleMap != null && resultEvent.getEventInfo().getEventPosLat() != null && resultEvent.getEventInfo().getEventPosLat() != null) {
+            mMap = googleMap;
+            mMap.getUiSettings().setAllGesturesEnabled(false);
+            mMap.getUiSettings().setMapToolbarEnabled(true);
+            mMap.getUiSettings().setZoomControlsEnabled(false);
 
-        MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker));
-        Double lan = 35.6892;
-        Double lon = 51.3890;
+            MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker));
+            Double lan = Double.valueOf(resultEvent.getEventInfo().getEventPosLat());
+            Double lon = Double.valueOf(resultEvent.getEventInfo().getEventPosLon());
 
-        marker = mMap.addMarker(markerOptions
-                .position(new LatLng(lan, lon))
-                .title("Amin is Awesome")
-        );
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lan, lon), 15.0f));
+            marker = mMap.addMarker(markerOptions
+                    .position(new LatLng(lan, lon))
+                    .title(resultEvent.getEventInfo().getEventTitle())
+            );
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lan, lon), 12.0f));
+        }
+
     }
 
     private void setEventStatus() {

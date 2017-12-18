@@ -49,10 +49,10 @@ public class EventInfo implements Serializable{
     private String eventDateDuration;
     @SerializedName("event_pos_lat")
     @Expose
-    private Double eventPosLat;
+    private String eventPosLat;
     @SerializedName("event_pos_lon")
     @Expose
-    private Double eventPosLon;
+    private String eventPosLon;
     @SerializedName("event_time_start")
     @Expose
     private String eventTimeStart;
@@ -173,19 +173,19 @@ public class EventInfo implements Serializable{
         this.eventDateDuration = eventDateDuration;
     }
 
-    public Double getEventPosLat() {
+    public String getEventPosLat() {
         return eventPosLat;
     }
 
-    public void setEventPosLat(Double eventPosLat) {
+    public void setEventPosLat(String eventPosLat) {
         this.eventPosLat = eventPosLat;
     }
 
-    public Double getEventPosLon() {
+    public String getEventPosLon() {
         return eventPosLon;
     }
 
-    public void setEventPosLon(Double eventPosLon) {
+    public void setEventPosLon(String eventPosLon) {
         this.eventPosLon = eventPosLon;
     }
 

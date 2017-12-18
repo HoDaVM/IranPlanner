@@ -215,7 +215,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
                 if (newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
                     View centerView = snapHelper.findSnapView(horizontalLayoutManagaer);
                     int positions = horizontalLayoutManagaer.getPosition(centerView);
-                    if (markerNames.size() > 0) {
+                    if (markerNames.size() > 0 && mMap!=null) {
                         markerShow.get(positions).showInfoWindow();
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(positions)));
                         CameraUpdate zoom = CameraUpdateFactory.zoomTo(12);
@@ -232,7 +232,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
             public void onItemClick(View view, final int position) {
 //                showMarkers(markerPoints, markerType);
                 if (!onItemclick) {
-                    onItemclick=true;
+                    onItemclick = true;
                     if (markerType.get(position).equals("attraction")) {
                         attractionListMorePresenter.getAttractionDetailNear("full", markerId.get(position), "fa", "0", Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
                     }
@@ -276,7 +276,12 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         } catch (Exception e) {
 
         }
-        mMap.clear();
+        try {
+            mMap.clear();
+        } catch (Exception e) {
+
+        }
+
 
     }
 
@@ -407,24 +412,27 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        if (googleMap != null) {
+            mMap = googleMap;
 //        mMap.getUiSettings().setScrollGesturesEnabled(false);
-        setDrawable(setDraw);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Iran, 10.0f));
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            setDrawable(setDraw);
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Iran, 10.0f));
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-            if (ContextCompat.checkSelfPermission(getContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    buildGoogleApiClient();
+                    mMap.setMyLocationEnabled(true);
+                    mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                }
+            } else {
                 buildGoogleApiClient();
                 mMap.setMyLocationEnabled(true);
                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
             }
-        } else {
-            buildGoogleApiClient();
-            mMap.setMyLocationEnabled(true);
-            mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
+
     }
 
     GoogleApiClient mGoogleApiClient;
@@ -490,6 +498,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     }
 
     private void drawPolylineOnMap() {
+        if(mMap!=null){
         PolygonOptions polygonOptions = new PolygonOptions();
         polygonOptions.addAll(PolylinePoints);
         polygonOptions.strokeWidth(8);
@@ -498,20 +507,21 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         if (PolylinePoints.size() > 0) {
             polygon = mMap.addPolygon(polygonOptions);
             PandaMapList = new PandaMapList(polygon.getPoints());
-        }
+        }}
     }
 
     private void getResultDraw() {
-        VisibleRegion visibleRegion = mMap.getProjection().getVisibleRegion();
-        LatLng farLeft = visibleRegion.farLeft;
-        LatLng nearRight = visibleRegion.nearRight;
-        String searchText = search.getText().toString();
-        if (PolylinePoints.size() > 0) {
-            mapPandaPresenter.getDrawResult(PandaMapList, searchText, chooseAttraction, chooseHotel, chooseEvent, farLeft.toString(), nearRight.toString(), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
-        } else {
-            mapPandaPresenter.getDrawResult(searchText, chooseAttraction, chooseHotel, chooseEvent, farLeft.toString(), nearRight.toString(), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
+        if(mMap!=null) {
+            VisibleRegion visibleRegion = mMap.getProjection().getVisibleRegion();
+            LatLng farLeft = visibleRegion.farLeft;
+            LatLng nearRight = visibleRegion.nearRight;
+            String searchText = search.getText().toString();
+            if (PolylinePoints.size() > 0) {
+                mapPandaPresenter.getDrawResult(PandaMapList, searchText, chooseAttraction, chooseHotel, chooseEvent, farLeft.toString(), nearRight.toString(), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
+            } else {
+                mapPandaPresenter.getDrawResult(searchText, chooseAttraction, chooseHotel, chooseEvent, farLeft.toString(), nearRight.toString(), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
+            }
         }
-
     }
 
     public void Draw_Map() {
@@ -519,7 +529,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
 //        specify latitude and longitude of both source and destination Polyline
 
-        if (PolylinePoints.size() > 1) {
+        if (PolylinePoints.size() > 1 && mMap!=null) {
             polyline = mMap.addPolyline(new PolylineOptions().add(PolylinePoints.get(source), PolylinePoints.get(destination)).width(8));
             source++;
             destination++;
@@ -529,21 +539,21 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     }
 
     private void showMarkers(List<LatLng> draw, List<String> markerType) {
+        if (mMap != null) {
+            int index = 0;
+            for (LatLng latLng : draw) {
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                markerOptions.title(markerNames.get(index));
 
-        int index = 0;
-        for (LatLng latLng : draw) {
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(latLng);
-            markerOptions.title(markerNames.get(index));
+                markerOptions.icon(setMarkerIcon(index));
 
-            markerOptions.icon(setMarkerIcon(index));
-
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            Marker marker = mMap.addMarker(markerOptions);
-            markerShow.add(marker);
-            index++;
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                Marker marker = mMap.addMarker(markerOptions);
+                markerShow.add(marker);
+                index++;
+            }
         }
-
     }
 
     private BitmapDescriptor setMarkerIcon(int index) {
@@ -562,7 +572,8 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     @Override
     public void onDrag(MotionEvent motionEvent) {
-        if (setDraw && !isResultForDraw) {
+
+        if (mMap != null && setDraw && !isResultForDraw) {
             Log.d("ON_DRAG", String.format("ME: %s", motionEvent));
             Log.d("ON_DRAG", String.format("ME: %s", motionEvent));
             // Handle motion event:
@@ -649,7 +660,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     @Override
     public void showHotelReserveList(ResultLodgingHotel resultLodgingHotel) {
-        onItemclick=false;
+        onItemclick = false;
         if (resultLodgingHotel != null) {
             ResultLodging resultLodgingHotelDetail = resultLodgingHotel.getResultLodging();
             Intent intent = new Intent(getContext(), ReservationHotelDetailActivity.class);
@@ -666,7 +677,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     @Override
     public void showError(String message) {
-        onItemclick=false;
+        onItemclick = false;
     }
 
     @Override
@@ -676,7 +687,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     @Override
     public void showComplete() {
-        onItemclick=false;
+        onItemclick = false;
     }
 
     @Override
@@ -691,7 +702,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     @Override
     public void ShowEventDetail(ResultEvents resultEvent) {
-        onItemclick=false;
+        onItemclick = false;
         Log.e("get", "eventDetail");
         Intent intent = new Intent(getContext(), EventActivity.class);
         intent.putExtra("ResultEvent", (Serializable) resultEvent.getResultEvent().get(0));
@@ -730,7 +741,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     @Override
     public void showAttractionDetail(ShowAtractionDetailMore showAttractionFull) {
-        onItemclick=false;
+        onItemclick = false;
         ResulAttraction resulAttraction = showAttractionFull.getResultAttractionFull().getResulAttraction();
         List<ResultAttractionList> resultAttractions = (List<ResultAttractionList>) showAttractionFull.getResultAttractionFull().getResultAttractionList();
         Intent intent = new Intent(getActivity(), attractionDetailActivity.class);
@@ -773,7 +784,9 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     }
 
     private void zoomCamera(LatLng point, Float zoom) {
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom));
+        if (mMap != null) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom));
+        }
 
     }
 
@@ -854,16 +867,17 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.e("location", "change");
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(location.getLatitude(), location.getLongitude()))
-                .zoom(17)
-                .bearing(90)
-                .tilt(40)
-                .build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
+        if (mMap != null) {
+            Log.e("location", "change");
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(location.getLatitude(), location.getLongitude()))
+                    .zoom(17)
+                    .bearing(90)
+                    .tilt(40)
+                    .build();
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
     }
 
     @Override
@@ -876,18 +890,19 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
                     buildAlertMessageNoGps(1);
 
                 } else {
-                    mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                    Location location = mMap.getMyLocation();
-                    if (location != null) {
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+                    if (mMap != null) {
+                        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                        Location location = mMap.getMyLocation();
+                        if (location != null) {
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
 
-                        CameraPosition cameraPosition = new CameraPosition.Builder()
-                                .target(new LatLng(location.getLatitude(), location.getLongitude()))
-                                .zoom(15)
-                                .build();
-                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                            CameraPosition cameraPosition = new CameraPosition.Builder()
+                                    .target(new LatLng(location.getLatitude(), location.getLongitude()))
+                                    .zoom(15)
+                                    .build();
+                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                        }
                     }
-
                 }
                 break;
             case R.id.btnFilter:

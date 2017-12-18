@@ -62,10 +62,12 @@
                 android:paddingLeft="@dimen/padding_standard"
                 android:paddingRight="@dimen/padding_standard"
                 android:text="@string/iranplanner_address"
-                android:layout_marginTop="@dimen/margin_short"/>
+                android:layout_marginTop="@dimen/margin_standard"
+                android:textColor="@color/greyDark"
+                />
 
             <TextView
-                style="@style/StandardTitle"
+                style="@style/StandardText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_standard"
@@ -74,7 +76,7 @@
                 android:text="@string/iranplanner_email" />
 
             <TextView
-                style="@style/StandardTitle"
+                style="@style/StandardText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/padding_standard"
@@ -85,7 +87,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_standard"
-                android:hint="نام و نام خانوادگی">
+                android:hint="نام و نام خانوادگی"
+                style="@style/StandardText">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/contactUsNameEt"
@@ -102,6 +105,7 @@
                 android:layout_marginStart="@dimen/margin_standard"
                 android:background="@drawable/corner_layout"
                 android:hint="متن پیام"
+                style="@style/StandardText"
                 android:minLines="3"
                 android:padding="@dimen/padding_short" />
 
@@ -113,7 +117,8 @@
                 android:layout_margin="@dimen/margin_standard"
                 android:background="@color/main_blue"
                 android:text="ارسال پبام"
-                android:textColor="#f2f2f2" />
+                android:textColor="#f2f2f2"
+                style="@style/StandardText"/>
 
         </LinearLayout>
 
