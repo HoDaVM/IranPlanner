@@ -6,11 +6,16 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
 
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,7 +27,9 @@ import com.iranplanner.tourism.iranplanner.di.data.component.DaggerNetComponent;
 import com.iranplanner.tourism.iranplanner.di.data.component.NetComponent;
 import com.iranplanner.tourism.iranplanner.di.data.module.AppModule;
 import com.iranplanner.tourism.iranplanner.di.data.module.NetModule;
+import com.iranplanner.tourism.iranplanner.ui.activity.mainActivity.MainActivity;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,9 +63,10 @@ public class App extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        enableLocationCheck();
+        prepareDirectories();
         overrideFont();
-
+        instance = this;
         mNetComponent = DaggerNetComponent.builder()
                 .appModule(new AppModule(this))
                 .netModule(new NetModule(Config.BASEURL))
@@ -98,7 +106,8 @@ public class App extends MultiDexApplication {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             return;
 
-        enableLocationCheck();
+
+
     }
 
     public NetComponent getNetComponent() {
@@ -147,4 +156,97 @@ public class App extends MultiDexApplication {
         public void onProviderDisabled(String provider) {
         }
     };
+
+    private static App instance;
+    public static App getInstance() {
+        return instance;
+    }
+    public String appBaseFolder;
+    public String getImagesPath() {
+        return appBaseFolder + "Images/";
+    }
+
+    public static String[] STORAGE_PERMISSIONS = {//5
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+    public void prepareDirectories() {
+        File baseFile;
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1 ||  isWriteStoragePermissionGranted() /*(checkGroupPermissions(App.STORAGE_PERMISSIONS))*/) {
+            String path = Environment.getExternalStorageDirectory().toString();
+            baseFile = new File(path, getResources().getString(R.string.app_name));
+        } else {
+            String path = getFilesDir().getPath();
+            baseFile = new File(path);
+        }
+
+        baseFile.mkdir();
+        if (!baseFile.exists() || !baseFile.isDirectory()) {
+            throw new IllegalStateException("Unable to create IranPlanner base folder.");
+        }
+
+        String p = baseFile.getPath();
+        appBaseFolder = p.endsWith("/") ? p : p + "/";
+        createDirectories();
+    }
+
+    private void createDirectories() {
+//        new File(getAudiosPath()).mkdir();
+//        new File(getVideosPath()).mkdir();
+        new File(getImagesPath()).mkdir();
+//        new File(getTempPath()).mkdir();
+    }
+
+    public static boolean checkGroupPermissions(String... permissions) {
+        boolean permission = true;// = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//        List<Integer> permissionStates = new ArrayList<Integer>();
+        for (String str : permissions) {
+            if (ContextCompat.checkSelfPermission(getInstance(), str) != PackageManager.PERMISSION_GRANTED) {
+                permission = false;
+                break;
+            }
+        }
+        return permission;
+    }
+
+
+    public  boolean isReadStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG,"Permission is granted1");
+                return true;
+            } else {
+
+                Log.v(TAG,"Permission is revoked1");
+//                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 3);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(TAG,"Permission is granted1");
+            return true;
+        }
+    }
+
+    public  boolean isWriteStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG,"Permission is granted2");
+                return true;
+            } else {
+
+                Log.v(TAG,"Permission is revoked2");
+//                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(TAG,"Permission is granted2");
+            return true;
+        }
+    }
+
 }

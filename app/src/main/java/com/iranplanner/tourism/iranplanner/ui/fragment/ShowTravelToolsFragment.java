@@ -26,19 +26,19 @@ public class ShowTravelToolsFragment extends StandardFragment {
         switch (type) {
             case "food":
                 toolsText.setText("خوراک محلی");
-                toolsImg.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.food));
+                toolsImg.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.hotel_home));
 
                 break;
 
             case "suggestion":
                 toolsText.setText("پیشنهادات ");
-                toolsImg.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.suggestion));
+                toolsImg.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.hotel_home));
 
 
                 break;
             case "handcraft":
                 toolsText.setText("صنایع دستی");
-                toolsImg.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.handcraft));
+                toolsImg.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.hotel_home));
 
 
                 break;

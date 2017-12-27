@@ -69,14 +69,14 @@ public class ShowTavelToolsAdapter extends PagerAdapter {
         ImageView toolsImg = (ImageView) page.findViewById(R.id.toolsImg);
         if (position == 2) {
             toolsText.setText("غذای محلی");
-            toolsImg.setImageDrawable(container.getContext().getResources().getDrawable(R.drawable.food));
+            toolsImg.setImageDrawable(container.getContext().getResources().getDrawable(R.drawable.hotel_home));
         } else if (position == 1) {
             toolsText.setText("صنایع دستی");
-            toolsImg.setImageDrawable(container.getContext().getResources().getDrawable(R.drawable.handcraft));
+            toolsImg.setImageDrawable(container.getContext().getResources().getDrawable(R.drawable.hotel_home));
 
         } else if (position == 0) {
             toolsText.setText("پیشنهادات");
-            toolsImg.setImageDrawable(container.getContext().getResources().getDrawable(R.drawable.suggestion));
+            toolsImg.setImageDrawable(container.getContext().getResources().getDrawable(R.drawable.hotel_home));
 
         }
 

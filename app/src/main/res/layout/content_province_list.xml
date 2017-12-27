@@ -152,7 +152,7 @@
                     android:layout_height="100dp"
                     android:layout_alignParentRight="true"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/image_dummy" />
+                    />
 
                 <TextView
                     android:id="@+id/txtProvinceName"

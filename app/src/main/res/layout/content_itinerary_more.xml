@@ -369,31 +369,8 @@
             android:layout_height="10dp"
             android:layout_below="@+id/ShowMoreInfoHolder"
             android:background="@color/greyLight"
-            android:visibility="gone"></RelativeLayout>
-        <!--pageMore-->
-        <RelativeLayout
-            android:id="@+id/viewPagerMore"
-            android:layout_width="match_parent"
-            android:layout_height="240dp"
-            android:gravity="center"
-            android:paddingLeft="@dimen/margin_short"
-            android:visibility="gone">
+            ></RelativeLayout>
 
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/toolsPager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:paddingLeft="@dimen/margin_standard"
-                android:paddingRight="@dimen/margin_short"
-                android:paddingTop="@dimen/padding_standard">
-
-            </android.support.v4.view.ViewPager>
-
-
-        </RelativeLayout>
     </RelativeLayout>
     <!--GroupHolder-->
 
@@ -531,6 +508,32 @@
                 android:layout_alignParentTop="true"
                 android:focusableInTouchMode="true"
                 tools:context="com.iranplanner.tourism.iranplanner.ui.activity.moreItemItinerary.MoreItemItineraryActivity" />
+        </RelativeLayout>
+        <!--pageMore-->
+        <RelativeLayout
+            android:id="@+id/viewPagerMore"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:gravity="center"
+            android:paddingLeft="@dimen/margin_short"
+            android:layout_below="@+id/mapHolder"
+            android:visibility="gone"
+            >
+
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/toolsPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingLeft="@dimen/margin_standard"
+                android:paddingRight="@dimen/margin_short"
+                android:paddingTop="@dimen/padding_standard">
+
+            </android.support.v4.view.ViewPager>
+
+
         </RelativeLayout>
 
     </RelativeLayout>

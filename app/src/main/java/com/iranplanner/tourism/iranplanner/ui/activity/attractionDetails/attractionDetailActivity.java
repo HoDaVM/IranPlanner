@@ -1,18 +1,37 @@
 package com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Typeface;
+import android.media.ExifInterface;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
@@ -43,15 +62,25 @@ import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.RecyclerItemOnClickListener;
 import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.ui.activity.MapFullActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.OnCutImageListener;
+import com.iranplanner.tourism.iranplanner.ui.activity.PhotoCropFragment;
+import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.AttractionListMoreContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.AttractionListMorePresenter;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentListActivity;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -64,18 +93,20 @@ import entity.ResulAttraction;
 import entity.ResultAttractionList;
 import entity.ResultComment;
 import entity.ResultCommentList;
-import entity.ResultData;
 import entity.ResultWidget;
 import entity.ResultWidgetFull;
 import entity.ShowAtractionDetailMore;
 import entity.ShowAttractionListMore;
-import entity.ShowAttractionMoreList;
 import tools.Constants;
 import tools.Util;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class attractionDetailActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener, AttractionDetailContract.View, AttractionListMoreContract.View {
+import static android.graphics.BitmapFactory.decodeFile;
+
+public class attractionDetailActivity extends StandardActivity implements OnMapReadyCallback, View.OnClickListener, AttractionDetailContract.View, AttractionListMoreContract.View
+        , OnCutImageListener {
+    private static final int REQUEST_CAMERA = 0;
     @Inject
     AttractionDetailPresenter attractionDetailPresenter;
     @Inject
@@ -162,15 +193,21 @@ public class attractionDetailActivity extends AppCompatActivity implements OnMap
     ImageView wishImg;
     @BindView(R.id.triangleShowAttraction)
     ImageView triangleShowAttraction;
+    @BindView(R.id.cameraaa)
+    ImageView cameraaa;
     @BindView(R.id.recyclerBestAttraction)
     RecyclerView recyclerBestAttraction;
     DaggerAtractionDetailComponent.Builder builder;
     private List<ResultAttractionList> resultAttractionList;
     private ProgressDialog progressBar;
+    private int FROMCAMERA = 4;
+    private int FROMGALLERY = 1;
+    String imgPath;
+    private Uri mImageUri;
 
     private void findView() {
 //        setContentView(R.layout.activity_attraction_detail);
-        setContentView(R.layout.fragment_attraction_detail);
+//        setContentView(R.layout.fragment_attraction_detail);
         ButterKnife.bind(this);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
     }
@@ -285,7 +322,6 @@ public class attractionDetailActivity extends AppCompatActivity implements OnMap
         overrideFont();
         getExtra();
         setNearAttraction(resultAttractionList);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(resulAttraction.getAttractionTitle());
@@ -352,7 +388,301 @@ public class attractionDetailActivity extends AppCompatActivity implements OnMap
                 .attractionDetailModule(new AttractionDetailModule(this, this));
         builder.build().inject(this);
         attractionDetailPresenter.getWidgetResult("nodeuser", resulAttraction.getAttractionId(), Util.getUseRIdFromShareprefrence(getApplicationContext()), "attraction", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+        cameraaa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (shouldAskPermissions()) {
+                    askPermissions();
+                }else {
+                    selectImage();
+                }
 
+            }
+        });
+    }
+
+    Intent CamIntent, GalIntent, CropIntent;
+    File file;
+    Uri uri;
+    public static final int RequestPermissionCode = 1;
+    Bitmap selectedImage = null;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FROMGALLERY) {
+
+            if (data != null) {
+
+                uri = data.getData();
+
+                final Uri imageUri = data.getData();
+
+                try {
+                    final InputStream imageStream;
+                    imageStream = getContentResolver().openInputStream(imageUri);
+                    selectedImage = BitmapFactory.decodeStream(imageStream);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                final PhotoCropFragment photoCropFragment = new PhotoCropFragment(this);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("IMAGE_TO_CROP", selectedImage);
+                bundle.putParcelable("path", imageUri);
+                photoCropFragment.setArguments(bundle);
+                loadFragment(this, photoCropFragment, R.id.pe_container, true, 0, 0);
+
+
+            }
+        } else if (requestCode == FROMCAMERA) {
+
+            selectedImage = decodeFile(imgPath);
+            final PhotoCropFragment photoCropFragment = new PhotoCropFragment(this);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("IMAGE_TO_CROP", selectedImage);
+            photoCropFragment.setArguments(bundle);
+            loadFragment(this, photoCropFragment, R.id.pe_container, true, 0, 0);
+
+        }
+
+
+//        if (resultCode == Activity.RESULT_OK) {
+//            Bitmap bm = null;
+//            if (requestCode == FROMCAMERA) {
+//                bm = grabImage();
+//            }
+//
+//            if (bm != null) {
+//                final PhotoCropFragment photoCropFragment = new PhotoCropFragment();
+//                Bundle bundle = new Bundle();
+//                bundle.putParcelable("IMAGE_TO_CROP", bm);
+//
+//
+//
+//            }
+//        }
+    }
+
+
+    public Bitmap grabImage() {
+        ContentResolver cr = this.getContentResolver();
+        Bitmap bitmap = null;
+        int tryCount = 0;
+        try {
+            while ((bitmap = MediaStore.Images.Media.getBitmap(cr, mImageUri)) == null) {
+                Thread.sleep(10);
+                tryCount++;
+                if (tryCount > 500) {
+                    return null;
+                }
+            }
+
+            //bitmap = MediaStore.Images.Media.getBitmap(cr, mImageUri);
+            int orientation = 0;
+            Matrix matrix = new Matrix();
+            try {
+                ExifInterface ei = new ExifInterface(mImageUri.getPath());
+                int exif = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                switch (exif) {
+                    case ExifInterface.ORIENTATION_ROTATE_90:
+                        orientation = 90;
+                        break;
+                    case ExifInterface.ORIENTATION_ROTATE_180:
+                        orientation = 180;
+                        break;
+                    case ExifInterface.ORIENTATION_ROTATE_270:
+                        orientation = 270;
+                        break;
+                }
+                matrix.preRotate(orientation);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            //Rotate image bitmap to correct orientation.
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+            double ratio = (double) width / (double) height;
+
+
+//        if ((width > height) && (width > MAX_IMAGE_TO_CROP_PIXEL)) {
+//            width = MAX_IMAGE_TO_CROP_PIXEL;
+//            height = (int) ((double) MAX_IMAGE_TO_CROP_PIXEL / ratio);
+//        } else if (height > MAX_IMAGE_TO_CROP_PIXEL) {
+//            height = MAX_IMAGE_TO_CROP_PIXEL;
+//            width = (int) ((double) MAX_IMAGE_TO_CROP_PIXEL * ratio);
+//        }
+            bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int RC, String per[], int[] PResult) {
+
+        switch (RC) {
+
+            case RequestPermissionCode:
+
+                if (PResult.length > 0 && PResult[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    Toast.makeText(getApplicationContext(), "Permission Granted, Now your application can access CAMERA.", Toast.LENGTH_LONG).show();
+
+                } else {
+
+                    Toast.makeText(getApplicationContext(), "Permission Canceled, Now your application cannot access CAMERA.", Toast.LENGTH_LONG).show();
+
+                }
+                break;
+            case 200:
+            {
+                selectImage();
+            }
+        }
+    }
+
+
+    String mCurrentPhotoPath;
+
+    protected boolean shouldAskPermissions() {
+        return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
+    }
+
+    @TargetApi(23)
+    protected void askPermissions() {
+        String[] permissions = {
+                "android.permission.READ_EXTERNAL_STORAGE",
+                Manifest.permission.CAMERA
+
+        };
+        int requestCode = 200;
+        ActivityCompat.requestPermissions(attractionDetailActivity.this, permissions, requestCode);
+
+    }
+
+    /* Checks if external storage is available for read and write */
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    /* Checks if external storage is available to at least read */
+    public boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    private File createImageFile() throws IOException {
+
+
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + ".jpg";
+        File file = new File(App.getInstance().getImagesPath(), imageFileName);
+        if (file.exists()) {
+            file.delete();
+        }
+        file.createNewFile();
+        imgPath = file.getAbsolutePath();
+        return file;
+
+
+    }
+
+    private File createImageFiles() {
+        if (shouldAskPermissions()) {
+            askPermissions();
+        }
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = null;
+        try {
+            image = File.createTempFile(imageFileName, ".jpg", storageDir);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Save a file: path for use with ACTION_VIEW intents
+        imgPath = "file:" + image.getAbsolutePath();
+        return image;
+    }
+
+    public void getImageFromCamera() {
+
+//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        File photo = null;
+//
+//        try {
+//            photo = createImageFile();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        if (photo != null) {
+//                mImageUri = Uri.fromFile(photo);
+//                intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+//                startActivityForResult(intent, FROMCAMERA);
+//        }
+
+        ///------------------------------------------- provider
+
+        File photo = null;
+        try {
+
+            photo = createImageFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (photo != null) {
+            if (Build.VERSION.SDK_INT > 21) {
+
+    uri = FileProvider.getUriForFile(this, "com.iranplanner.tourism.iranplanner", photo);
+
+
+    CamIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+    uri = FileProvider.getUriForFile(this, "com.iranplanner.tourism.iranplanner", photo);
+    CamIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uri);
+    CamIntent.putExtra("return-data", true);
+    startActivityForResult(CamIntent, FROMCAMERA);
+
+
+
+
+            } else {
+                try{
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    mImageUri = Uri.fromFile(photo);
+                    imgPath = mImageUri.getPath();
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+                    startActivityForResult(intent, FROMCAMERA);
+                }catch (Exception e){
+
+                }
+
+            }
+        }
+    }
+
+
+    public void getImageFromGallery() {
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent, FROMGALLERY);
     }
 
     @Override
@@ -855,4 +1185,95 @@ public class attractionDetailActivity extends AppCompatActivity implements OnMap
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_attraction_detail;
+    }
+
+    @Override
+    public void onCropImage(Bitmap bitmap) {
+        imageAttraction.setImageBitmap(bitmap);
+    }
+
+    private void selectImage() {
+        final CharSequence[] items = {"از دوربین", "از گالری", "انصراف"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("انتخاب عکس");
+
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (items[item].equals("از دوربین")) {
+//                    requestCameraPermission();
+                    getImageFromCamera();
+
+                } else if (items[item].equals("از گالری")) {
+                    getImageFromGallery();
+                } else if (items[item].equals("انصراف")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+
+    public void showCamera() {
+//        Log.i(TAG, "Show camera button pressed. Checking permission.");
+        // BEGIN_INCLUDE(camera_permission)
+        // Check if the Camera permission is already available.
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Camera permission has not been granted.
+
+            requestCameraPermission();
+
+        } else {
+
+        // Camera permissions is already available, show the camera preview.
+        Log.i(TAG,
+                "CAMERA permission has already been granted. Displaying camera preview.");
+//            showCameraPreview();
+//            if (shouldAskPermissions()) {
+//                askPermissions();
+//            }
+
+        }
+        // END_INCLUDE(camera_permission)
+
+    }
+
+    private void requestCameraPermission() {
+        Log.i(TAG, "CAMERA permission has NOT been granted. Requesting permission.");
+
+        // BEGIN_INCLUDE(camera_permission_request)
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.CAMERA)) {
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // For example if the user has previously denied the permission.
+            Log.i(TAG,
+                    "Displaying camera permission rationale to provide additional context.");
+//            Snackbar.make(mLayout, "hey",
+//                    Snackbar.LENGTH_INDEFINITE)
+//                    .setAction(R.string.ok, new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+            ActivityCompat.requestPermissions(attractionDetailActivity.this,
+                    new String[]{Manifest.permission.CAMERA},
+                    REQUEST_CAMERA);
+//
+//                        }
+//                    })
+//                    .show();
+        } else {
+
+            // Camera permission has not been granted yet. Request it directly.
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+                    REQUEST_CAMERA);
+        }
+        // END_INCLUDE(camera_permission_request)
+    }
+
 }

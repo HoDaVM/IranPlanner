@@ -24,7 +24,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginTop="2dp"
-            android:src="@drawable/emam2"
+
             />
 
         <TextView

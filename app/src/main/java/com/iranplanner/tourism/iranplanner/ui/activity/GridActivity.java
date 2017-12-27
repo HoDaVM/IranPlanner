@@ -21,42 +21,6 @@ public class GridActivity extends Activity {
     GridView grid;
     List<ResultSouvenir> resultComments;
 
-//    String[] web = {
-//            "Google",
-//            "Github",
-//            "Instagram",
-//            "Facebook",
-//            "Flickr",
-//            "Pinterest",
-//            "Quora",
-//            "Twitter",
-//            "Vimeo",
-//            "WordPress",
-//            "Youtube",
-//            "Stumbleupon",
-//            "SoundCloud",
-//            "Reddit",
-//            "Blogger"
-//
-//    } ;
-//    int[] imageId = {
-//            R.drawable.emam2,
-//            R.drawable.emam2,
-//            R.drawable.emam2,
-//            R.drawable.emam2,
-//            R.drawable.emam2,
-//            R.drawable.emam2,
-//            R.drawable.emam2,
-//            R.drawable.emam2,
-//            R.drawable.emam2,
-//            R.drawable.emam2,
-//            R.drawable.emam2,
-//            R.drawable.emam2,
-//            R.drawable.emam2,
-//            R.drawable.emam2,
-//            R.drawable.emam2
-//
-//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

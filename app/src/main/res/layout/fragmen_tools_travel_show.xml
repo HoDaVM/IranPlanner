@@ -7,7 +7,7 @@
         android:id="@+id/toolsImg"
         android:layout_width="200dp"
         android:layout_height="150dp"
-        android:src="@drawable/food"
+
         android:scaleType="centerCrop"/>
 
     <!--<RelativeLayout-->

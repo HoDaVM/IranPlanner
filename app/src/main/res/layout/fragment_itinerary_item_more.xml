@@ -99,7 +99,7 @@
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_weight="1"
-            android:background="@drawable/button_corner_pink"
+            android:background="@drawable/button_corner_blue"
             android:text="نمایش برنامه سفر"
             android:textColor="@color/white_" />
 
@@ -110,7 +110,7 @@
             android:layout_height="45dp"
             android:layout_marginRight="@dimen/margin_xxxshort"
             android:layout_weight="1"
-            android:background="@drawable/button_corner_green"
+            android:background="@drawable/button_corner_greend"
             android:text="رزرو مراکز اقامتی"
             android:textColor="@color/white_" />
 

@@ -1,23 +1,35 @@
 package tools;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -28,6 +40,8 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.coinpany.core.android.widget.Utils;
+import com.iranplanner.tourism.iranplanner.R;
+import com.iranplanner.tourism.iranplanner.di.model.App;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -43,7 +57,127 @@ import server.Config;
  * Created by Hoda on 10/01/2017.
  */
 public class Util {
+    public static float density = 1;
+    public static Point displaySize = new Point();
+    private static Boolean isTablet = null;
 
+    public static boolean isTablet() {
+        if (isTablet == null) {
+            isTablet = App.getInstance().getResources().getBoolean(R.bool.isTablet);
+        }
+        return isTablet;
+    }
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    public static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    public static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    @SuppressLint("NewApi")
+    public static String getPath(final Uri uri) {
+        try {
+            final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+            if (isKitKat && DocumentsContract.isDocumentUri(App.getInstance(), uri)) {
+                if (isExternalStorageDocument(uri)) {
+                    final String docId = DocumentsContract.getDocumentId(uri);
+                    final String[] split = docId.split(":");
+                    final String type = split[0];
+                    if ("primary".equalsIgnoreCase(type)) {
+                        return Environment.getExternalStorageDirectory() + "/" + split[1];
+                    }
+                } else if (isDownloadsDocument(uri)) {
+                    final String id = DocumentsContract.getDocumentId(uri);
+                    final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                    return getDataColumn(App.getInstance(), contentUri, null, null);
+                } else if (isMediaDocument(uri)) {
+                    final String docId = DocumentsContract.getDocumentId(uri);
+                    final String[] split = docId.split(":");
+                    final String type = split[0];
+
+                    Uri contentUri = null;
+                    if (type.equals("image")) {
+                        contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+
+                    } else if (type.equals("video")) {
+                        contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+
+                    } else if (type.equals("audio")) {
+                        contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+
+                    }
+
+                    final String selection = "_id=?";
+                    final String[] selectionArgs = new String[]{
+                            split[1]
+                    };
+
+                    return getDataColumn(App.getInstance(), contentUri, selection, selectionArgs);
+                }
+            } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+                return getDataColumn(App.getInstance(), uri, null, null);
+            } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+                return uri.getPath();
+            }
+        } catch (Exception e) {
+            Log.e("tmessages", e.getMessage());
+        }
+        return null;
+    }
+
+    public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
+
+        Cursor cursor = null;
+        final String column = "_data";
+        final String[] projection = {
+                column
+        };
+
+        try {
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int column_index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(column_index);
+            }
+        } catch (Exception e) {
+            Log.e("tmessages", e.getMessage());
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return null;
+    }
+    static {
+        density = App.getInstance().getResources().getDisplayMetrics().density;
+        checkDisplaySize();
+    }
+    public static void checkDisplaySize() {
+        try {
+            WindowManager manager = (WindowManager) App.getInstance().getSystemService(Context.WINDOW_SERVICE);
+            if (manager != null) {
+                Display display = manager.getDefaultDisplay();
+                if (display != null) {
+                    if (Build.VERSION.SDK_INT < 13) {
+                        displaySize.set(display.getWidth(), display.getHeight());
+                    } else {
+                        display.getSize(displaySize);
+                    }
+                }
+            }
+        } catch (Exception e) {
+        }
+    }
+    public static int dp(float value) {
+
+
+        return (int) Math.ceil(density * value);
+    }
     public static boolean isNetworkAvailable(Context context) {
 //            ConnectivityManager connectivityManager
 //                    = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -354,9 +488,9 @@ public class Util {
         return builder.toString();
     }
 
-    public static float dpToPx(Context context, int dp) {
+    public static float dpToPx(Context context, int dpp) {
         Resources r = context.getResources();
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpp, r.getDisplayMetrics());
     }
 
     /**

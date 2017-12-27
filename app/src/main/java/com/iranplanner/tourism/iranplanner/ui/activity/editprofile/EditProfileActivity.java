@@ -1,10 +1,19 @@
 package com.iranplanner.tourism.iranplanner.ui.activity.editprofile;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,6 +36,7 @@ import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -45,6 +55,7 @@ import tools.widget.PersianDatePicker;
  */
 
 public class EditProfileActivity extends StandardActivity implements View.OnClickListener, EditProfileContract.View {
+    private static final int GALLERY_REQUEST = 1;
     private TextView txtNewsValueShow, txtBirthdayValueShow, email_verify, email_address, txtDate, btnEditProfile, btnOpenEditProfile, txtTitle, txtGenderValueShow, txtNameValueShow, txtFamilyValueShow, txtPhonValueShow, txtBirthdayShow, txtLodgingValueShow;
     private EditText input_tel, input_name, input_family, input_lodging;
     private RelativeLayout changeDateHolder, verifyEmailHolder;
@@ -52,7 +63,7 @@ public class EditProfileActivity extends StandardActivity implements View.OnClic
     private RadioButton radioWoman, radioMan;
     private ProgressDialog progressDialog;
     private LinearLayout editProfileHolder, showProfileHolder;
-    private ImageView ImgUserEmailStatus;
+    private ImageView ImgUserEmailStatus,imageProfile;
 
     private String from;
     private long birthday;
@@ -78,6 +89,15 @@ public class EditProfileActivity extends StandardActivity implements View.OnClic
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         init();
+        imageProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EnableRuntimePermission();
+//                selectImage();
+                GetImageFromGallery();
+
+            }
+        });
     }
 
     @Override
@@ -124,6 +144,8 @@ public class EditProfileActivity extends StandardActivity implements View.OnClic
         txtLodgingValueShow = (TextView) findViewById(R.id.txtLodgingValueShow);
         txtBirthdayValueShow = (TextView) findViewById(R.id.txtBirthdayValueShow);
         txtNewsValueShow = (TextView) findViewById(R.id.txtNewsValueShow);
+        imageProfile =  findViewById(R.id.imageProfile);
+
         //----
         if (from == null || from.equals("editKey")) {
             editProfileHolder.setVisibility(View.VISIBLE);
@@ -413,6 +435,213 @@ public class EditProfileActivity extends StandardActivity implements View.OnClic
                     break;
             }
             dismiss();
+        }
+    }
+
+
+
+
+    private void selectImage() {
+        final CharSequence[] items = {"از دوربین", "از گالری", "انصراف"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(EditProfileActivity.this);
+        builder.setTitle("انتخاب عکس");
+
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (items[item].equals("از دوربین")) {
+                    ClickImageFromCamera();
+//                    dispatchTakePictureIntent();
+                } else if (items[item].equals("از گالری")) {
+                    GetImageFromGallery();
+//                    if (ApplicationContext.checkGroupPermissions(ApplicationContext.STORAGE_PERMISSIONS)) {
+//                        Intent intent = new Intent(
+//                                Intent.ACTION_PICK,
+//                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                        intent.setType("image/*");
+//                        startActivityForResult(
+//                                Intent.createChooser(intent, "انتخاب عکس"),
+//                                SELECT_FILE);
+//                    } else {
+//                        ApplicationContext.createPermissionDialog(getActivity(), getString(R.string.app_name), getString(R.string.PermissionNoStorage));
+//                    }
+                } else if (items[item].equals("انصراف")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+
+    Intent CamIntent, GalIntent, CropIntent ;
+    File file;
+    Uri uri;
+    public  static final int RequestPermissionCode  = 1 ;
+    ImageView imageView;
+    public void ClickImageFromCamera() {
+
+        CamIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+
+        file = new File(Environment.getExternalStorageDirectory(),
+                "file" + String.valueOf(System.currentTimeMillis()) + ".jpg");
+        uri = Uri.fromFile(file);
+
+        CamIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uri);
+
+        CamIntent.putExtra("return-data", true);
+
+        startActivityForResult(CamIntent, 0);
+
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        super.startActivityForResult(intent, requestCode);
+    }
+
+    public void GetImageFromGallery(){
+
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
+
+//        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+//        photoPickerIntent.setType("image/*");
+//        startActivityForResult(photoPickerIntent, 2);
+
+//        GalIntent = new Intent(Intent.ACTION_PICK,
+//                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//
+//        startActivityForResult(Intent.createChooser(GalIntent, "Select Image From Gallery"), 2);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//
+//        if (requestCode == 0 && resultCode == RESULT_OK) {
+//
+//            ImageCropFunction();
+//
+//        }
+//        else if (requestCode == 2) {
+//
+//            if (data != null) {
+//
+//                uri = data.getData();
+//
+//                ImageCropFunction();
+//
+//            }
+//        }
+//        else if (requestCode == 1) {
+//
+//            if (data != null) {
+//
+//                Bundle bundle = data.getExtras();
+//
+//                Bitmap bitmap = bundle.getParcelable("data");
+//
+//                imageView.setImageBitmap(bitmap);
+//
+//            }
+//        }
+//        super.onActivityResult(requestCode, resultCode, data);
+//    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (requestCode == 0 && resultCode == RESULT_OK) {
+//
+//            ImageCropFunction();
+//
+//        }
+//        else if (requestCode == 2) {
+//
+//            if (data != null) {
+//
+//                uri = data.getData();
+//
+//                ImageCropFunction();
+//
+//            }
+//        }
+//        else if (requestCode == 1) {
+//
+//            if (data != null) {
+//
+//                Bundle bundle = data.getExtras();
+//
+//                Bitmap bitmap = bundle.getParcelable("data");
+//
+//                imageView.setImageBitmap(bitmap);
+//
+//            }
+//        }
+//    }
+
+    public void ImageCropFunction() {
+
+        // Image Crop Code
+        try {
+            CropIntent = new Intent("com.android.camera.action.CROP");
+
+            CropIntent.setDataAndType(uri, "image/*");
+
+            CropIntent.putExtra("crop", "true");
+            CropIntent.putExtra("outputX", 180);
+            CropIntent.putExtra("outputY", 180);
+            CropIntent.putExtra("aspectX", 3);
+            CropIntent.putExtra("aspectY", 4);
+            CropIntent.putExtra("scaleUpIfNeeded", true);
+            CropIntent.putExtra("return-data", true);
+
+            startActivityForResult(CropIntent, 1);
+
+        } catch (ActivityNotFoundException e) {
+
+        }
+    }
+    //Image Crop Code End Here
+
+    public void EnableRuntimePermission(){
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(EditProfileActivity.this,
+                Manifest.permission.CAMERA))
+        {
+
+            Toast.makeText(getApplicationContext(),"CAMERA permission allows us to Access CAMERA app", Toast.LENGTH_LONG).show();
+
+        } else {
+
+            ActivityCompat.requestPermissions(EditProfileActivity.this,new String[]{
+                    Manifest.permission.CAMERA}, RequestPermissionCode);
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int RC, String per[], int[] PResult) {
+
+        switch (RC) {
+
+            case RequestPermissionCode:
+
+                if (PResult.length > 0 && PResult[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    Toast.makeText(getApplicationContext(),"Permission Granted, Now your application can access CAMERA.", Toast.LENGTH_LONG).show();
+
+                } else {
+
+                    Toast.makeText(getApplicationContext(),"Permission Canceled, Now your application cannot access CAMERA.", Toast.LENGTH_LONG).show();
+
+                }
+                break;
         }
     }
 }
