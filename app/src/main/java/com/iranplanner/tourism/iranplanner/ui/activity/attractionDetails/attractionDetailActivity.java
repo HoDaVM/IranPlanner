@@ -17,6 +17,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.media.ExifInterface;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
@@ -58,6 +60,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.iranplanner.tourism.iranplanner.BuildConfig;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.RecyclerItemOnClickListener;
 import com.iranplanner.tourism.iranplanner.di.model.App;
@@ -68,10 +71,12 @@ import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.AttractionListMoreContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.AttractionListMorePresenter;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentListActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.mainActivity.MainActivity;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -393,7 +398,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
             public void onClick(View v) {
                 if (shouldAskPermissions()) {
                     askPermissions();
-                }else {
+                } else {
                     selectImage();
                 }
 
@@ -410,6 +415,8 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+
         if (requestCode == FROMGALLERY) {
 
             if (data != null) {
@@ -422,11 +429,22 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                     final InputStream imageStream;
                     imageStream = getContentResolver().openInputStream(imageUri);
                     selectedImage = BitmapFactory.decodeStream(imageStream);
+
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
                 final PhotoCropFragment photoCropFragment = new PhotoCropFragment(this);
                 Bundle bundle = new Bundle();
+//                Bitmap selectedImagegrab= grabImage(selectedImage,uri);
+//               if(selectedImagegrab!=null){
+//
+//                   bundle.putParcelable("IMAGE_TO_CROP", selectedImagegrab);
+//
+//               }else {
+//                   bundle.putParcelable("IMAGE_TO_CROP", selectedImage);
+//
+//               }
+
                 bundle.putParcelable("IMAGE_TO_CROP", selectedImage);
                 bundle.putParcelable("path", imageUri);
                 photoCropFragment.setArguments(bundle);
@@ -437,9 +455,10 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         } else if (requestCode == FROMCAMERA) {
 
             selectedImage = decodeFile(imgPath);
+
             final PhotoCropFragment photoCropFragment = new PhotoCropFragment(this);
             Bundle bundle = new Bundle();
-            bundle.putParcelable("IMAGE_TO_CROP", selectedImage);
+            bundle.putParcelable("IMAGE_TO_CROP", grabImage(selectedImage, imgPath));
             photoCropFragment.setArguments(bundle);
             loadFragment(this, photoCropFragment, R.id.pe_container, true, 0, 0);
 
@@ -464,24 +483,25 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     }
 
 
-    public Bitmap grabImage() {
-        ContentResolver cr = this.getContentResolver();
-        Bitmap bitmap = null;
+    public Bitmap grabImage(Bitmap bitmap, String path) {
+//        ContentResolver cr = this.getContentResolver();
+//        Bitmap bitmap = null;
         int tryCount = 0;
         try {
-            while ((bitmap = MediaStore.Images.Media.getBitmap(cr, mImageUri)) == null) {
-                Thread.sleep(10);
-                tryCount++;
-                if (tryCount > 500) {
-                    return null;
-                }
-            }
+//            while ((bitmap = MediaStore.Images.Media.getBitmap(cr, path)) == null) {
+//                Thread.sleep(10);
+//                tryCount++;
+//                if (tryCount > 500) {
+//                    return null;
+//                }
+//            }
 
-            //bitmap = MediaStore.Images.Media.getBitmap(cr, mImageUri);
+//            bitmap = MediaStore.Images.Media.getBitmap(cr, path);
             int orientation = 0;
             Matrix matrix = new Matrix();
             try {
-                ExifInterface ei = new ExifInterface(mImageUri.getPath());
+                ExifInterface ei = new ExifInterface(path);
+
                 int exif = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
                 switch (exif) {
                     case ExifInterface.ORIENTATION_ROTATE_90:
@@ -538,15 +558,14 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
                 }
                 break;
-            case 200:
-            {
+            case 200: {
                 selectImage();
             }
         }
     }
 
 
-    String mCurrentPhotoPath;
+//    String mCurrentPhotoPath;
 
     protected boolean shouldAskPermissions() {
         return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
@@ -600,45 +619,9 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
     }
 
-    private File createImageFiles() {
-        if (shouldAskPermissions()) {
-            askPermissions();
-        }
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
-        File image = null;
-        try {
-            image = File.createTempFile(imageFileName, ".jpg", storageDir);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Save a file: path for use with ACTION_VIEW intents
-        imgPath = "file:" + image.getAbsolutePath();
-        return image;
-    }
 
     public void getImageFromCamera() {
 
-//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        File photo = null;
-//
-//        try {
-//            photo = createImageFile();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        if (photo != null) {
-//                mImageUri = Uri.fromFile(photo);
-//                intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
-//                startActivityForResult(intent, FROMCAMERA);
-//        }
-
-        ///------------------------------------------- provider
 
         File photo = null;
         try {
@@ -650,27 +633,25 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
         if (photo != null) {
             if (Build.VERSION.SDK_INT > 21) {
+//                try {
+                    CamIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 
-    uri = FileProvider.getUriForFile(this, "com.iranplanner.tourism.iranplanner", photo);
-
-
-    CamIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-    uri = FileProvider.getUriForFile(this, "com.iranplanner.tourism.iranplanner", photo);
-    CamIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uri);
-    CamIntent.putExtra("return-data", true);
-    startActivityForResult(CamIntent, FROMCAMERA);
-
-
+                    mImageUri = FileProvider.getUriForFile(getApplicationContext(), "dreamgo.corp.provider", photo);
+                    CamIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+                    startActivityForResult(CamIntent, FROMCAMERA);
+//                } catch (Exception e) {
+//
+//                }
 
 
             } else {
-                try{
+                try {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     mImageUri = Uri.fromFile(photo);
                     imgPath = mImageUri.getPath();
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
                     startActivityForResult(intent, FROMCAMERA);
-                }catch (Exception e){
+                } catch (Exception e) {
 
                 }
 
@@ -1231,9 +1212,9 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
         } else {
 
-        // Camera permissions is already available, show the camera preview.
-        Log.i(TAG,
-                "CAMERA permission has already been granted. Displaying camera preview.");
+            // Camera permissions is already available, show the camera preview.
+            Log.i(TAG,
+                    "CAMERA permission has already been granted. Displaying camera preview.");
 //            showCameraPreview();
 //            if (shouldAskPermissions()) {
 //                askPermissions();

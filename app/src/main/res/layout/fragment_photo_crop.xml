@@ -15,7 +15,7 @@
             android:id="@+id/fe_title"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:background="@color/colorPrimary">
+            android:background="@color/main_blue">
 
             <TextView
                 style="@style/StandardTitle"
@@ -24,7 +24,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:singleLine="true"
-                android:text="برش تصویر"
+                android:text="تنظیم سایز تصویر "
                 android:textColor="#FFF"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -37,7 +37,7 @@
                 android:layout_centerVertical="true"
                 style="@style/CSelectableItemBackground"
                 android:padding="10dp"
-                android:src="@drawable/ic_google" />
+                android:src="@mipmap/ic_arow_right" />
 
             <ImageButton
                 android:id="@+id/cancelBtn"
@@ -47,15 +47,8 @@
                 android:layout_centerVertical="true"
                 style="@style/CSelectableItemBackground"
                 android:padding="10dp"
-                android:src="@drawable/ic_draw_map" />
+                android:src="@mipmap/ic_go" />
 
-            <Button
-                android:id="@+id/btn_RotateImg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:enabled="false"
-                android:text="Rotate Image" />
         </RelativeLayout>
 
         <com.iranplanner.tourism.iranplanner.ui.activity.PhotoCropView

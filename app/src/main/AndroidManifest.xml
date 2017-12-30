@@ -31,14 +31,26 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute"
         tools:replace="allowBackup,supportsRtl">
+        <!--<provider-->
+            <!--android:name="android.support.v4.content.FileProvider"-->
+            <!--android:authorities="${applicationId}.provider"-->
+            <!--android:exported="false"-->
+            <!--android:grantUriPermissions="true">-->
+            <!--<meta-data-->
+                <!--android:name="android.support.FILE_PROVIDER_PATHS"-->
+                <!--android:resource="@xml/provider_paths"/>-->
+        <!--</provider>-->
+
         <provider
-            android:name=".GenericFileProvider"
-            android:authorities="com.iranplanner.tourism.iranplanner"
+            android:name="android.support.v4.content.FileProvider"
+            android:grantUriPermissions="true"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:authorities="dreamgo.corp.provider">
+
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"/>
+
         </provider>
         <meta-data
             android:name="asset_statements"
