@@ -2,32 +2,24 @@ package com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.media.ExifInterface;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ShareCompat;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -60,23 +52,21 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.iranplanner.tourism.iranplanner.BuildConfig;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.RecyclerItemOnClickListener;
 import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.ui.activity.MapFullActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.OnCutImageListener;
-import com.iranplanner.tourism.iranplanner.ui.activity.PhotoCropFragment;
+import com.iranplanner.tourism.iranplanner.ui.camera.GetPhoto;
+import com.iranplanner.tourism.iranplanner.ui.camera.PhotoCropFragment;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.AttractionListMoreContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.AttractionListMorePresenter;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentListActivity;
-import com.iranplanner.tourism.iranplanner.ui.activity.mainActivity.MainActivity;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -184,7 +174,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     ImageView doneImg;
     @BindView(R.id.dislikeImg)
     ImageView dislikeImg;
-    @BindView(R.id.okImg)
+    @BindView(R.id.commentImg)
     ImageView okImg;
     @BindView(R.id.likeImg)
     ImageView likeImg;
@@ -198,10 +188,11 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     ImageView wishImg;
     @BindView(R.id.triangleShowAttraction)
     ImageView triangleShowAttraction;
-    @BindView(R.id.cameraaa)
-    ImageView cameraaa;
+
     @BindView(R.id.recyclerBestAttraction)
     RecyclerView recyclerBestAttraction;
+    @BindView(R.id.cameraHolder)
+    LinearLayout cameraHolder;
     DaggerAtractionDetailComponent.Builder builder;
     private List<ResultAttractionList> resultAttractionList;
     private ProgressDialog progressBar;
@@ -209,6 +200,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     private int FROMGALLERY = 1;
     String imgPath;
     private Uri mImageUri;
+    GetPhoto getPhoto;
 
     private void findView() {
 //        setContentView(R.layout.activity_attraction_detail);
@@ -393,7 +385,9 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                 .attractionDetailModule(new AttractionDetailModule(this, this));
         builder.build().inject(this);
         attractionDetailPresenter.getWidgetResult("nodeuser", resulAttraction.getAttractionId(), Util.getUseRIdFromShareprefrence(getApplicationContext()), "attraction", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
-        cameraaa.setOnClickListener(new View.OnClickListener() {
+         getPhoto=new GetPhoto(getApplicationContext(),this);
+
+        cameraHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (shouldAskPermissions()) {
@@ -420,8 +414,6 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         if (requestCode == FROMGALLERY) {
 
             if (data != null) {
-
-                uri = data.getData();
 
                 final Uri imageUri = data.getData();
 
@@ -454,13 +446,16 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
             }
         } else if (requestCode == FROMCAMERA) {
 
-            selectedImage = decodeFile(imgPath);
+    data.getStringExtra("imgPath");
+    selectedImage = decodeFile(data.getStringExtra("imgPath"));
 
-            final PhotoCropFragment photoCropFragment = new PhotoCropFragment(this);
-            Bundle bundle = new Bundle();
-            bundle.putParcelable("IMAGE_TO_CROP", grabImage(selectedImage, imgPath));
-            photoCropFragment.setArguments(bundle);
-            loadFragment(this, photoCropFragment, R.id.pe_container, true, 0, 0);
+    final PhotoCropFragment photoCropFragment = new PhotoCropFragment(this);
+    Bundle bundle = new Bundle();
+    bundle.putParcelable("IMAGE_TO_CROP", getPhoto.grabImage(selectedImage, data.getStringExtra("imgPath")));
+    photoCropFragment.setArguments(bundle);
+    loadFragment(this, photoCropFragment, R.id.pe_container, true, 0, 0);
+
+
 
         }
 
@@ -633,17 +628,10 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
         if (photo != null) {
             if (Build.VERSION.SDK_INT > 21) {
-//                try {
                     CamIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-
                     mImageUri = FileProvider.getUriForFile(getApplicationContext(), "dreamgo.corp.provider", photo);
                     CamIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
                     startActivityForResult(CamIntent, FROMCAMERA);
-//                } catch (Exception e) {
-//
-//                }
-
-
             } else {
                 try {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -841,8 +829,8 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                     OnClickedIntrestedWidget("like", Constants.likeImg, likeImg);
                 }
                 break;
-            case R.id.okImg:
-                rotateImage = "okImg";
+            case R.id.commentImg:
+                rotateImage = "commentImg";
                 if (LikeValue == 2) {
                     OnClickedIntrestedWidget("like", Constants.intrestDefault, okImg);
                 } else {
@@ -983,7 +971,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                 likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
 
                 break;
-            case "okImg":
+            case "commentImg":
                 okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_on));
                 rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_on));
                 likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
@@ -1190,7 +1178,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                     getImageFromCamera();
 
                 } else if (items[item].equals("از گالری")) {
-                    getImageFromGallery();
+                   getPhoto. getImageFromGallery();
                 } else if (items[item].equals("انصراف")) {
                     dialog.dismiss();
                 }
@@ -1199,62 +1187,4 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         builder.show();
     }
 
-
-    public void showCamera() {
-//        Log.i(TAG, "Show camera button pressed. Checking permission.");
-        // BEGIN_INCLUDE(camera_permission)
-        // Check if the Camera permission is already available.
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Camera permission has not been granted.
-
-            requestCameraPermission();
-
-        } else {
-
-            // Camera permissions is already available, show the camera preview.
-            Log.i(TAG,
-                    "CAMERA permission has already been granted. Displaying camera preview.");
-//            showCameraPreview();
-//            if (shouldAskPermissions()) {
-//                askPermissions();
-//            }
-
-        }
-        // END_INCLUDE(camera_permission)
-
-    }
-
-    private void requestCameraPermission() {
-        Log.i(TAG, "CAMERA permission has NOT been granted. Requesting permission.");
-
-        // BEGIN_INCLUDE(camera_permission_request)
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.CAMERA)) {
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example if the user has previously denied the permission.
-            Log.i(TAG,
-                    "Displaying camera permission rationale to provide additional context.");
-//            Snackbar.make(mLayout, "hey",
-//                    Snackbar.LENGTH_INDEFINITE)
-//                    .setAction(R.string.ok, new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-            ActivityCompat.requestPermissions(attractionDetailActivity.this,
-                    new String[]{Manifest.permission.CAMERA},
-                    REQUEST_CAMERA);
-//
-//                        }
-//                    })
-//                    .show();
-        } else {
-
-            // Camera permission has not been granted yet. Request it directly.
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
-                    REQUEST_CAMERA);
-        }
-        // END_INCLUDE(camera_permission_request)
-    }
-
-}
+  }

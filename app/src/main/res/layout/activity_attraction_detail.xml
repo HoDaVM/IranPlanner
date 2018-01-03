@@ -234,7 +234,7 @@
                                     android:paddingTop="@dimen/padding_short">
 
                                     <ImageView
-                                        android:id="@+id/okImg"
+                                        android:id="@+id/commentImg"
                                         android:layout_width="30dp"
                                         android:layout_height="30dp"
                                         android:padding="@dimen/margin_xxshort"

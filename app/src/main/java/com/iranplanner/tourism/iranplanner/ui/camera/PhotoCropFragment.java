@@ -1,4 +1,4 @@
-package com.iranplanner.tourism.iranplanner.ui.activity;
+package com.iranplanner.tourism.iranplanner.ui.camera;
 
 
 import android.graphics.Bitmap;
@@ -19,10 +19,10 @@ import android.view.ViewGroup;
 
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.di.model.App;
+import com.iranplanner.tourism.iranplanner.ui.activity.OnCutImageListener;
 
 import java.io.File;
 import java.io.FileDescriptor;
-import java.io.IOException;
 
 import tools.Util;
 

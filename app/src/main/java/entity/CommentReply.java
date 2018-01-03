@@ -1,13 +1,15 @@
-
 package entity;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.List;
 
-public class ResultComment implements Serializable {
+/**
+ * Created by h.vahidimehr on 31/12/2017.
+ */
+
+public class CommentReply implements Serializable {
     @SerializedName("user_id")
     @Expose
     private String userId;
@@ -23,15 +25,9 @@ public class ResultComment implements Serializable {
     @SerializedName("comment_id")
     @Expose
     private String commentId;
-    @SerializedName("comment_ntype")
+    @SerializedName("comment_type")
     @Expose
-    private String commentNtype;
-    @SerializedName("comment_gtype")
-    @Expose
-    private String commentGtype;
-    @SerializedName("comment_nid")
-    @Expose
-    private String commentNid;
+    private String commentType;
     @SerializedName("user_fname")
     @Expose
     private String userFname;
@@ -44,9 +40,21 @@ public class ResultComment implements Serializable {
     @SerializedName("user_register")
     @Expose
     private String userRegister;
-    @SerializedName("comment_reply")
+    @SerializedName("reply_register_date_formated")
     @Expose
-    private List<CommentReply> commentReply = null;
+    private Object replyRegisterDateFormated;
+    @SerializedName("reply_register_date_shamsi")
+    @Expose
+    private Object replyRegisterDateShamsi;
+    @SerializedName("reply_comment_date_formated")
+    @Expose
+    private String replyCommentDateFormated;
+    @SerializedName("reply_comment_date_shamsi")
+    @Expose
+    private String replyCommentDateShamsi;
+    @SerializedName("reply_comment_date_time")
+    @Expose
+    private String replyCommentDateTime;
 
     public String getUserId() {
         return userId;
@@ -88,28 +96,12 @@ public class ResultComment implements Serializable {
         this.commentId = commentId;
     }
 
-    public String getCommentNtype() {
-        return commentNtype;
+    public String getCommentType() {
+        return commentType;
     }
 
-    public void setCommentNtype(String commentNtype) {
-        this.commentNtype = commentNtype;
-    }
-
-    public String getCommentGtype() {
-        return commentGtype;
-    }
-
-    public void setCommentGtype(String commentGtype) {
-        this.commentGtype = commentGtype;
-    }
-
-    public String getCommentNid() {
-        return commentNid;
-    }
-
-    public void setCommentNid(String commentNid) {
-        this.commentNid = commentNid;
+    public void setCommentType(String commentType) {
+        this.commentType = commentType;
     }
 
     public String getUserFname() {
@@ -144,11 +136,43 @@ public class ResultComment implements Serializable {
         this.userRegister = userRegister;
     }
 
-    public List<CommentReply> getCommentReply() {
-        return commentReply;
+    public Object getReplyRegisterDateFormated() {
+        return replyRegisterDateFormated;
     }
 
-    public void setCommentReply(List<CommentReply> commentReply) {
-        this.commentReply = commentReply;
+    public void setReplyRegisterDateFormated(Object replyRegisterDateFormated) {
+        this.replyRegisterDateFormated = replyRegisterDateFormated;
+    }
+
+    public Object getReplyRegisterDateShamsi() {
+        return replyRegisterDateShamsi;
+    }
+
+    public void setReplyRegisterDateShamsi(Object replyRegisterDateShamsi) {
+        this.replyRegisterDateShamsi = replyRegisterDateShamsi;
+    }
+
+    public String getReplyCommentDateFormated() {
+        return replyCommentDateFormated;
+    }
+
+    public void setReplyCommentDateFormated(String replyCommentDateFormated) {
+        this.replyCommentDateFormated = replyCommentDateFormated;
+    }
+
+    public String getReplyCommentDateShamsi() {
+        return replyCommentDateShamsi;
+    }
+
+    public void setReplyCommentDateShamsi(String replyCommentDateShamsi) {
+        this.replyCommentDateShamsi = replyCommentDateShamsi;
+    }
+
+    public String getReplyCommentDateTime() {
+        return replyCommentDateTime;
+    }
+
+    public void setReplyCommentDateTime(String replyCommentDateTime) {
+        this.replyCommentDateTime = replyCommentDateTime;
     }
 }

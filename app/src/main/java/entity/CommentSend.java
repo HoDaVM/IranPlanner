@@ -14,14 +14,19 @@ public class CommentSend implements Serializable {
     String nid;
     String gtype;
     String gvalue;
+    String cparent;
+    String ctype;
 
-    public CommentSend(String uid, String cid, String ntype, String nid, String gtype, String gvalue) {
+    public CommentSend(String uid, String cid, String ntype, String nid, String gtype, String gvalue, String cparent, String ctype) {
         this.uid = uid;
         this.cid = cid;
         this.ntype = ntype;
         this.nid = nid;
         this.gtype = gtype;
         this.gvalue = gvalue;
+        this.cparent=cparent;
+        this.ctype=ctype;
+
     }
 
     public String getUid() {
@@ -46,6 +51,22 @@ public class CommentSend implements Serializable {
 
     public void setGtype(String gtype) {
         this.gtype = gtype;
+    }
+
+    public String getcparent() {
+        return cparent;
+    }
+
+    public void setcparent(String cparent) {
+        this.cparent = cparent;
+    }
+
+    public String getctype() {
+        return ctype;
+    }
+
+    public void setctype(String ctype) {
+        this.ctype = ctype;
     }
 
     public String getNtype() {

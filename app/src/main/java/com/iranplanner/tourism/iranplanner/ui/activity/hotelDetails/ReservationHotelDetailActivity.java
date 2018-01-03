@@ -63,7 +63,6 @@ import entity.ResultLodgingRoomList;
 import entity.ResultRoom;
 import entity.ShowAtractionDetailMore;
 import entity.ShowAttractionListMore;
-import entity.ShowAttractionMoreList;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -171,7 +170,7 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
         bookmarkImg = (ImageView) findViewById(R.id.bookmarkImg);
         doneImg = (ImageView) findViewById(R.id.doneImg);
         dislikeImg = (ImageView) findViewById(R.id.dislikeImg);
-        okImg = (ImageView) findViewById(R.id.okImg);
+        okImg = (ImageView) findViewById(R.id.commentImg);
         likeImg = (ImageView) findViewById(R.id.likeImg);
         rateImg = (ImageView) findViewById(R.id.rateImg);
         beftorVisitedImg = (ImageView) findViewById(R.id.beftorVisitedImg);
@@ -403,7 +402,7 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
 //        rateHolder.setOnClickListener(this);
 //        doneHolder.setOnClickListener(this);
 //        likeImg.setOnClickListener(this);
-//        okImg.setOnClickListener(this);
+//        commentImg.setOnClickListener(this);
 //        dislikeImg.setOnClickListener(this);
 //        nowVisitedImg.setOnClickListener(this);
 //        wishImg.setOnClickListener(this);
@@ -419,11 +418,11 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
 //        if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 1) {
 //            likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_air));
 //            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_air));
-//            okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_grey_));
+//            commentImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_grey_));
 //            dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_grey_));
 //        }
 //        if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 2) {
-//            okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_pink));
+//            commentImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_pink));
 //            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_pink));
 //            dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_grey_));
 //            likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_grey));
@@ -432,7 +431,7 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
 //            dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_pink));
 //            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_pink));
 //            likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_grey));
-//            okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_grey_));
+//            commentImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_grey_));
 //        }
 //        if (resultWidget.get(0).getWidgetVisitedValue() != null && resultWidget.get(0).getWidgetVisitedValue() == 1) {
 //            nowVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_done_pink));
@@ -571,8 +570,8 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
                     Toast.makeText(getApplicationContext(), "شما به حساب کاربری خود وارد نشده اید", Toast.LENGTH_LONG).show();
                 }
                 break;
-            case R.id.okImg:
-                rotateImage = "okImg";
+            case R.id.commentImg:
+                rotateImage = "commentImg";
                 if (!Util.getUseRIdFromShareprefrence(getApplicationContext()).isEmpty()) {
                     animWaiting(okImg);
                     String uid = Util.getUseRIdFromShareprefrence(getApplicationContext());
@@ -841,8 +840,8 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
 //                dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_pink));
 //                rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_pink));
 //                break;
-//            case "okImg":
-//                okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_pink));
+//            case "commentImg":
+//                commentImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_pink));
 //                rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_pink));
 //                break;
 //            case "likeImg":

@@ -1,23 +1,16 @@
-package com.iranplanner.tourism.iranplanner.ui.activity;
+package com.iranplanner.tourism.iranplanner.ui.camera;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.ExifInterface;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
-
-import java.io.File;
-import java.io.IOException;
 
 import tools.Util;
 

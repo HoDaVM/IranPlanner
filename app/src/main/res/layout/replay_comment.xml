@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/replySenderPic"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="3dp"
+        android:src="@drawable/ic_google"
+        app:civ_border_color="#CCCC"
+        app:civ_border_width="1dp" />
+
+    <RelativeLayout
+        android:id="@+id/commentMainLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/replySenderPic"
+        android:background="@android:drawable/editbox_background_normal"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:padding="10dp"
+        >
+
+        <RelativeLayout
+            android:id="@+id/replyUserLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"            >
+
+            <TextView
+                android:id="@+id/replySenderName"
+                style="@style/StandardTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:gravity="right"
+                android:text="hoda"
+                android:textColor="@color/main_blue"
+                android:textStyle="bold"
+                android:textSize="11sp"/>
+
+            <TextView
+                android:id="@id/commentSentTime"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:gravity="left"
+                android:text="1 ساعت"
+                android:textColor="#888"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/replyText"
+            style="@style/SmallText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/replyUserLayout"
+            android:layout_centerVertical="true"
+            android:gravity="right"
+            android:text="لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای"
+            />
+
+    </RelativeLayout>
+</RelativeLayout>

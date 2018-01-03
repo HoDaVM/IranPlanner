@@ -2,14 +2,19 @@ package com.iranplanner.tourism.iranplanner.ui.activity.comment;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,7 +26,9 @@ import com.iranplanner.tourism.iranplanner.RecyclerItemOnClickListener;
 import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.standard.DataTransferInterface;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails.attractionDetailActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,11 +59,13 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
     String nextOffset;
     List<ResultComment> resultComments;
     RecyclerView recyclerView;
-    ResultItineraryAttraction attraction;
+    ResultItineraryAttraction attractionData;
     String fromWhere;
     DaggerCommentComponent.Builder builder;
     @Inject
     CommentPresenter commentPresenter;
+    private String cParent;
+    int STATIC_INTEGER_VALUE_COMMENT = 103;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,16 +90,24 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
         fromWhere = extras.getString("fromWhere");
         if (fromWhere.equals("Itinerary")) {
             itineraryData = (ResultItinerary) extras.getSerializable("itineraryData");
-            nextOffset = (String) extras.getSerializable("nextOffset");
-            commentTitle.setText(itineraryData.getItineraryFromCityName() + " " + itineraryData.getItineraryToCityName() + " " + Util.persianNumbers(itineraryData.getItineraryDuration()) + " روز");
+
+            if (itineraryData != null) {
+                commentTitle.setText(itineraryData.getItineraryFromCityName() + " " + itineraryData.getItineraryToCityName() + " " + Util.persianNumbers(itineraryData.getItineraryDuration()) + " روز");
+                nextOffset = (String) extras.getSerializable("nextOffset");
+            }
 
         } else if (fromWhere.equals("Attraction")) {
-            attraction = (ResultItineraryAttraction) extras.getSerializable("attraction");
-            nextOffset = (String) extras.getSerializable("nextOffset");
-            commentTitle.setText(attraction.getAttractionTitle());
-        }
+            attractionData = (ResultItineraryAttraction) extras.getSerializable("attractionData");
 
-        adapter = new CommentListAdapter(CommentListActivity.this, this, resultComments, getApplicationContext(), R.layout.fragment_comment_item);
+            if (attractionData != null) {
+                nextOffset = (String) extras.getSerializable("nextOffset");
+                commentTitle.setText(attractionData.getAttractionTitle());
+            }
+        }
+        cParent = "";
+        cParent = extras.getString("cParent");
+
+        adapter = new CommentListAdapter(CommentListActivity.this, this, resultComments, getApplicationContext(), R.layout.fragment_comment_item, cParent);
         recyclerView.setAdapter(adapter);
         mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -101,13 +118,33 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
         recyclerView.addOnItemTouchListener(new RecyclerItemOnClickListener(getApplicationContext(), new RecyclerItemOnClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, final int position) {
-//                ImageView reservationBtn = (ImageView) view.findViewById(R.id.ReservationBtn);
-//                reservationBtn.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Log.e("reserve", "click");
-//                    }
-//                });
+                TextView reservationBtn = view.findViewById(R.id.replyBtn);
+                reservationBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.e("reserve", "click");
+                        List<ResultComment> rComment = new ArrayList<>();
+                        ResultComment r = new ResultComment();
+                        r = resultComments.get(position);
+                        rComment.add(r);
+
+
+                        Intent intent = new Intent(CommentListActivity.this, CommentListActivity.class);
+                        intent.putExtra("resultComments", (Serializable) rComment);
+                        intent.putExtra("nextOffset", "20");
+                        intent.putExtra("fromWhere", fromWhere);
+                        intent.putExtra("cParent", rComment.get(0).getCommentId());
+                        if (fromWhere.equals("Itinerary")) {
+                            intent.putExtra("itineraryData", (Serializable) itineraryData);
+
+                        } else if (fromWhere.equals("Attraction")) {
+                            intent.putExtra("attractionData", (Serializable) attractionData);
+                        }
+
+//                        startActivityForResult(intent, STATIC_INTEGER_VALUE_COMMENT);
+                        startActivity(intent);
+                    }
+                });
             }
         }));
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -169,7 +206,7 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
 
         );
         sendCommentBtn.setOnClickListener(new View.OnClickListener()
-                    //// TODO: 9/20/17 salam hoda chetori injaro ba farid barresi konnn
+                                                  //// TODO: 9/20/17 salam hoda chetori injaro ba farid barresi konnn
                                           {
                                               @Override
                                               public void onClick(View v) {
@@ -179,9 +216,9 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
                                                       sending = true;
                                                       sendCommentBtn.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_send_grey));
                                                       if (fromWhere.equals("Itinerary")) {
-                                                          commentPresenter.callInsertComment(new CommentSend(userId, "1", "itinerary", itineraryData.getItineraryId(), "comment", String.valueOf(txtAddComment.getText())),Util.getTokenFromSharedPreferences(getApplicationContext()),Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                                                          commentPresenter.callInsertComment(new CommentSend(userId, "1", "itinerary", itineraryData.getItineraryId(), "comment", String.valueOf(txtAddComment.getText()), cParent, ""), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                                                       } else if (fromWhere.equals("Attraction")) {
-                                                          commentPresenter.callInsertComment(new CommentSend(userId, "1", "itinerary", attraction.getAttractionId(), "attraction", String.valueOf(txtAddComment.getText())),Util.getTokenFromSharedPreferences(getApplicationContext()),Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                                                          commentPresenter.callInsertComment(new CommentSend(userId, "1", "itinerary", attractionData.getAttractionId(), "attraction", String.valueOf(txtAddComment.getText()), cParent, ""), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                                                       }
                                                       txtAddComment.setText("");
                                                   } else if (userId.isEmpty()) {
@@ -192,6 +229,21 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
                                           }
 
         );
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (STATIC_INTEGER_VALUE_COMMENT == requestCode) {
+            ResultCommentList r = (ResultCommentList) data.getExtras().get("replyComment");
+            for (ResultComment resultComment : resultComments) {
+                if (resultComment.getCommentId().equals(r.getResultComment().get(0).getCommentId())) {
+                    resultComment = r.getResultComment().get(0);
+                }
+            }
+            adapter.notifyDataSetChanged();
+
+        }
     }
 
     @Override
@@ -216,14 +268,25 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
         entity.Status status = resultCommentList.getStatus();
         if (status.getStatus() == 200) {
             sending = false;
-            CustomDialogAlert customDialogAlert = new CustomDialogAlert(CommentListActivity.this);
-            customDialogAlert.show();
+            if (cParent != null && !cParent.equals("")) {
+//                Intent resultIntent = new Intent();
+//                resultIntent.putExtra("replyComment", resultCommentList);
+//                setResult(Activity.RESULT_OK, resultIntent);
+                finish();
+            }
+
         }
     }
 
     @Override
     public void showError(String message) {
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
     }
 
     @Override

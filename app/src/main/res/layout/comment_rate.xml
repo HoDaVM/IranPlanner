@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/LikeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="3">
+
+                <LinearLayout
+                    android:id="@+id/cameraHolder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/padding_short">
+
+                    <ImageView
+                        android:id="@+id/addImg"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:padding="@dimen/margin_xxshort"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/ic_photo_camera" />
+
+                    <TextView
+                        android:id="@+id/addTxt"
+                        style="@style/SmallText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_xshort"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:maxLines="1"
+                        android:text="تصویر +"
+                        android:visibility="gone"/>
+
+                </LinearLayout>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/main_blue" />
+                <LinearLayout
+                    android:id="@+id/commentHolder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/padding_short">
+
+                    <ImageView
+                        android:id="@+id/commentImg"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:padding="@dimen/margin_xxshort"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/ic_nearme" />
+
+                    <TextView
+                        android:id="@+id/commentTxt"
+                        style="@style/SmallText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_xshort"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:maxLines="1"
+                        android:text="کامنت"
+                        android:visibility="gone"/>
+
+
+                </LinearLayout>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/main_blue" />
+                <LinearLayout
+                    android:id="@+id/likeHolder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/padding_short">
+
+                    <ImageView
+                        android:id="@+id/likeImg"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:padding="@dimen/margin_xxshort"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/ic_like_off" />
+
+                    <TextView
+                        android:id="@+id/likeTxt"
+                        style="@style/SmallText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_xshort"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:maxLines="1"
+                        android:text="دوست دارم"
+                        android:visibility="gone"/>
+
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/borderLayout"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_below="@+id/LikeLayout"
+            android:background="@color/greyLight"></RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/hotelNameHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/borderLayout"
+            android:padding="@dimen/margin_short">
+            <TextView
+                android:id="@+id/txtHotelName"
+                style="@style/StandardTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="نظر شما چیه"
+                android:translationZ="1dp" />
+
+
+
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtHotelName"
+                android:layout_centerHorizontal="true"
+                style="?android:attr/ratingBarStyleIndicator"
+                android:isIndicator="false" />
+            <TextView
+                android:id="@+id/txtHotelType"
+                style="@style/StandardTextGrey"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ratingBar"
+                android:layout_centerHorizontal="true"
+                android:text="تا الان سه نفر به اینجا امتیاز دادند"
+                android:textColor="@color/dark_blue"
+                android:translationZ="1dp" />
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/borderLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_below="@+id/hotelNameHolder"
+            android:background="@color/greyLight"></RelativeLayout>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

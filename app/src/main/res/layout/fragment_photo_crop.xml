@@ -51,7 +51,7 @@
 
         </RelativeLayout>
 
-        <com.iranplanner.tourism.iranplanner.ui.activity.PhotoCropView
+        <com.iranplanner.tourism.iranplanner.ui.camera.PhotoCropView
             android:id="@+id/photoCropView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
