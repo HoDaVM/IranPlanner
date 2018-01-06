@@ -2,6 +2,7 @@ package com.iranplanner.tourism.iranplanner.ui.activity.comment;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -14,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -141,8 +144,8 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
                             intent.putExtra("attractionData", (Serializable) attractionData);
                         }
 
-//                        startActivityForResult(intent, STATIC_INTEGER_VALUE_COMMENT);
-                        startActivity(intent);
+                        startActivityForResult(intent, STATIC_INTEGER_VALUE_COMMENT);
+//                        startActivity(intent);
                     }
                 });
             }
@@ -235,15 +238,19 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (STATIC_INTEGER_VALUE_COMMENT == requestCode) {
-            ResultCommentList r = (ResultCommentList) data.getExtras().get("replyComment");
-            for (ResultComment resultComment : resultComments) {
-                if (resultComment.getCommentId().equals(r.getResultComment().get(0).getCommentId())) {
-                    resultComment = r.getResultComment().get(0);
-                }
-            }
-            adapter.notifyDataSetChanged();
-
+            setDataSetChange((ResultCommentList) data.getExtras().get("replyComment"));
         }
+    }
+
+    private void setDataSetChange(ResultCommentList resultC) {
+        int i = 0;
+        for (ResultComment resultComment : resultComments) {
+            if (resultComment.getCommentId().equals(resultC.getResultComment().get(0).getCommentId())) {
+                resultComments.set(i, resultC.getResultComment().get(0));
+            }
+            i++;
+        }
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -269,12 +276,16 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
         if (status.getStatus() == 200) {
             sending = false;
             if (cParent != null && !cParent.equals("")) {
-//                Intent resultIntent = new Intent();
-//                resultIntent.putExtra("replyComment", resultCommentList);
-//                setResult(Activity.RESULT_OK, resultIntent);
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("replyComment", resultCommentList);
+                setResult(Activity.RESULT_OK, resultIntent);
                 finish();
+            } else {
+                resultComments.add(resultCommentList.getResultComment().get(0));
+                //hide keyboard
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
             }
-
         }
     }
 
