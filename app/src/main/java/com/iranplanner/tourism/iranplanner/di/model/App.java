@@ -1,11 +1,16 @@
 package com.iranplanner.tourism.iranplanner.di.model;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -168,7 +173,8 @@ public class App extends MultiDexApplication {
 
     public static String[] STORAGE_PERMISSIONS = {//5
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA
     };
     public void prepareDirectories() {
         File baseFile;
@@ -247,6 +253,26 @@ public class App extends MultiDexApplication {
             Log.v(TAG,"Permission is granted2");
             return true;
         }
+    }
+
+    public static void createPermissionDialog(final Activity context, String appName, String permissionDescription) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(appName);
+        builder.setMessage(permissionDescription);
+        builder.setPositiveButton("permission", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    intent.setData(Uri.parse("package:" + App.getInstance().getPackageName()));
+                    context.startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        builder.setNegativeButton("cancel", null);
+        builder.show();
     }
 
 }

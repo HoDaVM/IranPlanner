@@ -52,7 +52,7 @@
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:background="@color/main_blue" />
+                    android:background="@color/greySemilight" />
                 <LinearLayout
                     android:id="@+id/commentHolder"
                     android:layout_width="wrap_content"
@@ -87,7 +87,7 @@
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:background="@color/main_blue" />
+                    android:background="@color/greySemilight" />
                 <LinearLayout
                     android:id="@+id/likeHolder"
                     android:layout_width="wrap_content"
@@ -125,13 +125,13 @@
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:layout_below="@+id/LikeLayout"
-            android:background="@color/greyLight"></RelativeLayout>
+            android:background="@color/white_"></RelativeLayout>
         <RelativeLayout
-            android:id="@+id/hotelNameHolder"
+            android:id="@+id/ratingPeopleHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/borderLayout"
-            android:padding="@dimen/margin_short">
+            >
             <TextView
                 android:id="@+id/txtHotelName"
                 style="@style/StandardTitle"
@@ -151,7 +151,8 @@
                 android:layout_below="@+id/txtHotelName"
                 android:layout_centerHorizontal="true"
                 style="?android:attr/ratingBarStyleIndicator"
-                android:isIndicator="false" />
+                android:isIndicator="true"
+                />
             <TextView
                 android:id="@+id/txtHotelType"
                 style="@style/StandardTextGrey"
@@ -161,8 +162,13 @@
                 android:layout_centerHorizontal="true"
                 android:text="تا الان سه نفر به اینجا امتیاز دادند"
                 android:textColor="@color/dark_blue"
-                android:translationZ="1dp" />
+                android:translationZ="1dp"
+                android:layout_marginBottom="@dimen/margin_xshort"/>
 
+            <com.coinpany.core.android.widget.CDivider
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/txtHotelType"/>
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/borderLayout2"

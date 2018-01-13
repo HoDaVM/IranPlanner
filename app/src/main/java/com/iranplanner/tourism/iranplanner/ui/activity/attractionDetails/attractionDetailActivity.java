@@ -2,12 +2,16 @@ package com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -18,8 +22,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,11 +34,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +60,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.iranplanner.tourism.iranplanner.BuildConfig;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.RecyclerItemOnClickListener;
 import com.iranplanner.tourism.iranplanner.di.model.App;
@@ -71,6 +80,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -193,12 +203,11 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     RecyclerView recyclerBestAttraction;
     @BindView(R.id.cameraHolder)
     LinearLayout cameraHolder;
+    @BindView(R.id.ratingPeopleHolder)
+    RelativeLayout ratingPeopleHolder;
     DaggerAtractionDetailComponent.Builder builder;
     private List<ResultAttractionList> resultAttractionList;
     private ProgressDialog progressBar;
-    private int FROMCAMERA = 4;
-    private int FROMGALLERY = 1;
-    String imgPath;
     private Uri mImageUri;
     GetPhoto getPhoto;
 
@@ -315,6 +324,10 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mImageUri = (Uri) savedInstanceState.getParcelable("IMAGE_URI");
+        }
+
         findView();
         overrideFont();
         getExtra();
@@ -379,280 +392,38 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         beftorVisitedImg.setOnClickListener(this);
         bookmarkHolder.setOnClickListener(this);
         commentHolder.setOnClickListener(this);
+        ratingPeopleHolder.setOnClickListener(this);
 
         builder = DaggerAtractionDetailComponent.builder()
                 .netComponent(((App) getApplicationContext()).getNetComponent())
                 .attractionDetailModule(new AttractionDetailModule(this, this));
         builder.build().inject(this);
         attractionDetailPresenter.getWidgetResult("nodeuser", resulAttraction.getAttractionId(), Util.getUseRIdFromShareprefrence(getApplicationContext()), "attraction", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
-         getPhoto=new GetPhoto(getApplicationContext(),this);
+        getPhoto = new GetPhoto(getApplicationContext(), this);
 
         cameraHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (shouldAskPermissions()) {
-                    askPermissions();
-                } else {
+                App.getInstance().prepareDirectories();
+
+                if (Build.VERSION.SDK_INT < 23) {
                     selectImage();
+                } else {
+                    if (App.checkGroupPermissions(App.STORAGE_PERMISSIONS)) {
+                        selectImage();
+                    } else {
+                        requestPermissions(App.STORAGE_PERMISSIONS, 5);
+                    }
                 }
 
             }
         });
     }
 
-    Intent CamIntent, GalIntent, CropIntent;
-    File file;
-    Uri uri;
+    Intent CamIntent;
+
     public static final int RequestPermissionCode = 1;
-    Bitmap selectedImage = null;
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-
-        if (requestCode == FROMGALLERY) {
-
-            if (data != null) {
-
-                final Uri imageUri = data.getData();
-
-                try {
-                    final InputStream imageStream;
-                    imageStream = getContentResolver().openInputStream(imageUri);
-                    selectedImage = BitmapFactory.decodeStream(imageStream);
-
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                final PhotoCropFragment photoCropFragment = new PhotoCropFragment(this);
-                Bundle bundle = new Bundle();
-//                Bitmap selectedImagegrab= grabImage(selectedImage,uri);
-//               if(selectedImagegrab!=null){
-//
-//                   bundle.putParcelable("IMAGE_TO_CROP", selectedImagegrab);
-//
-//               }else {
-//                   bundle.putParcelable("IMAGE_TO_CROP", selectedImage);
-//
-//               }
-
-                bundle.putParcelable("IMAGE_TO_CROP", selectedImage);
-                bundle.putParcelable("path", imageUri);
-                photoCropFragment.setArguments(bundle);
-                loadFragment(this, photoCropFragment, R.id.pe_container, true, 0, 0);
-
-
-            }
-        } else if (requestCode == FROMCAMERA) {
-
-    data.getStringExtra("imgPath");
-    selectedImage = decodeFile(data.getStringExtra("imgPath"));
-
-    final PhotoCropFragment photoCropFragment = new PhotoCropFragment(this);
-    Bundle bundle = new Bundle();
-    bundle.putParcelable("IMAGE_TO_CROP", getPhoto.grabImage(selectedImage, data.getStringExtra("imgPath")));
-    photoCropFragment.setArguments(bundle);
-    loadFragment(this, photoCropFragment, R.id.pe_container, true, 0, 0);
-
-
-
-        }
-
-
-//        if (resultCode == Activity.RESULT_OK) {
-//            Bitmap bm = null;
-//            if (requestCode == FROMCAMERA) {
-//                bm = grabImage();
-//            }
-//
-//            if (bm != null) {
-//                final PhotoCropFragment photoCropFragment = new PhotoCropFragment();
-//                Bundle bundle = new Bundle();
-//                bundle.putParcelable("IMAGE_TO_CROP", bm);
-//
-//
-//
-//            }
-//        }
-    }
-
-
-    public Bitmap grabImage(Bitmap bitmap, String path) {
-//        ContentResolver cr = this.getContentResolver();
-//        Bitmap bitmap = null;
-        int tryCount = 0;
-        try {
-//            while ((bitmap = MediaStore.Images.Media.getBitmap(cr, path)) == null) {
-//                Thread.sleep(10);
-//                tryCount++;
-//                if (tryCount > 500) {
-//                    return null;
-//                }
-//            }
-
-//            bitmap = MediaStore.Images.Media.getBitmap(cr, path);
-            int orientation = 0;
-            Matrix matrix = new Matrix();
-            try {
-                ExifInterface ei = new ExifInterface(path);
-
-                int exif = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-                switch (exif) {
-                    case ExifInterface.ORIENTATION_ROTATE_90:
-                        orientation = 90;
-                        break;
-                    case ExifInterface.ORIENTATION_ROTATE_180:
-                        orientation = 180;
-                        break;
-                    case ExifInterface.ORIENTATION_ROTATE_270:
-                        orientation = 270;
-                        break;
-                }
-                matrix.preRotate(orientation);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            //Rotate image bitmap to correct orientation.
-            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-
-            int width = bitmap.getWidth();
-            int height = bitmap.getHeight();
-            double ratio = (double) width / (double) height;
-
-
-//        if ((width > height) && (width > MAX_IMAGE_TO_CROP_PIXEL)) {
-//            width = MAX_IMAGE_TO_CROP_PIXEL;
-//            height = (int) ((double) MAX_IMAGE_TO_CROP_PIXEL / ratio);
-//        } else if (height > MAX_IMAGE_TO_CROP_PIXEL) {
-//            height = MAX_IMAGE_TO_CROP_PIXEL;
-//            width = (int) ((double) MAX_IMAGE_TO_CROP_PIXEL * ratio);
-//        }
-            bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return bitmap;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int RC, String per[], int[] PResult) {
-
-        switch (RC) {
-
-            case RequestPermissionCode:
-
-                if (PResult.length > 0 && PResult[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    Toast.makeText(getApplicationContext(), "Permission Granted, Now your application can access CAMERA.", Toast.LENGTH_LONG).show();
-
-                } else {
-
-                    Toast.makeText(getApplicationContext(), "Permission Canceled, Now your application cannot access CAMERA.", Toast.LENGTH_LONG).show();
-
-                }
-                break;
-            case 200: {
-                selectImage();
-            }
-        }
-    }
-
-
-//    String mCurrentPhotoPath;
-
-    protected boolean shouldAskPermissions() {
-        return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
-    }
-
-    @TargetApi(23)
-    protected void askPermissions() {
-        String[] permissions = {
-                "android.permission.READ_EXTERNAL_STORAGE",
-                Manifest.permission.CAMERA
-
-        };
-        int requestCode = 200;
-        ActivityCompat.requestPermissions(attractionDetailActivity.this, permissions, requestCode);
-
-    }
-
-    /* Checks if external storage is available for read and write */
-    public boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
-    }
-
-    /* Checks if external storage is available to at least read */
-    public boolean isExternalStorageReadable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) ||
-                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            return true;
-        }
-        return false;
-    }
-
-    private File createImageFile() throws IOException {
-
-
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + ".jpg";
-        File file = new File(App.getInstance().getImagesPath(), imageFileName);
-        if (file.exists()) {
-            file.delete();
-        }
-        file.createNewFile();
-        imgPath = file.getAbsolutePath();
-        return file;
-
-
-    }
-
-
-    public void getImageFromCamera() {
-
-
-        File photo = null;
-        try {
-
-            photo = createImageFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (photo != null) {
-            if (Build.VERSION.SDK_INT > 21) {
-                    CamIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    mImageUri = FileProvider.getUriForFile(getApplicationContext(), "dreamgo.corp.provider", photo);
-                    CamIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
-                    startActivityForResult(CamIntent, FROMCAMERA);
-            } else {
-                try {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    mImageUri = Uri.fromFile(photo);
-                    imgPath = mImageUri.getPath();
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
-                    startActivityForResult(intent, FROMCAMERA);
-                } catch (Exception e) {
-
-                }
-
-            }
-        }
-    }
-
-
-    public void getImageFromGallery() {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, FROMGALLERY);
-    }
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -669,23 +440,6 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 //        menu.findItem(R.id.menuAttractionShare).setVisible(true);
         return true;
     }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.menuAttractionLike:
-//                Toast.makeText(this, "Liked!", Toast.LENGTH_SHORT).show();
-//                OnClickedIntrestedWidget("like", Constants.intrestDefault, null);
-////                menu.findItem(R.id.menuAttractionLike).setIcon(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
-//                item.setIcon(R.mipmap.ic_like_off);
-//                return true;
-//            case R.id.menuAttractionShare:
-//                Toast.makeText(this, "Shared!", Toast.LENGTH_SHORT).show();
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
 
     private void setInterestResponce(List<ResultWidget> resultWidget) {
         if (resultWidget.get(0).getWidgetBookmarkValue() != null && resultWidget.get(0).getWidgetBookmarkValue() == 1) {
@@ -879,6 +633,11 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                 } else {
                     OnClickedIntrestedWidget("bookmark", Constants.bookmarkImg, bookmarkImg);
                 }
+                break;
+            case R.id.ratingPeopleHolder:
+                //todo
+                CustomDialogAlert customDialogAlert = new CustomDialogAlert(this);
+                customDialogAlert.show();
                 break;
 
 
@@ -1165,6 +924,185 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         imageAttraction.setImageBitmap(bitmap);
     }
 
+
+    public class CustomDialogAlert extends Dialog implements
+            View.OnClickListener {
+
+        public Activity c;
+        public Dialog d;
+        public TextView txtNo,
+                txtRateName1,
+                txtRateName2,
+                txtRateName3,
+                txtRateName4;
+        public RatingBar ratingBar1,
+                ratingBar2,
+                ratingBar3,
+                ratingBar4,
+                alertDescription;
+
+
+        public CustomDialogAlert(Activity a) {
+            super(a);
+            // TODO Auto-generated constructor stub
+            this.c = a;
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+//            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.raiting_layout);
+            txtNo = findViewById(R.id.txtNo);
+            txtRateName1 = findViewById(R.id.txtRateName1);
+            txtRateName2 = findViewById(R.id.txtRateName2);
+            txtRateName3 = findViewById(R.id.txtRateName3);
+            txtRateName4 = findViewById(R.id.txtRateName4);
+
+            ratingBar1 = findViewById(R.id.ratingBar1);
+            ratingBar2 = findViewById(R.id.ratingBar2);
+            ratingBar3 = findViewById(R.id.ratingBar3);
+            ratingBar4 = findViewById(R.id.ratingBar4);
+            txtRateName1.setText("سهولت دسترسی");
+            txtRateName2.setText("امکانات رفاهی");
+            txtRateName3.setText("ارزش بازدید");
+            txtRateName4.setText("منحصر به فرد بودن");
+
+            txtNo.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.txtNo:
+                    dismiss();
+                    break;
+            }
+            dismiss();
+        }
+    }
+
+    //----------------------
+
+    private void dispatchTakePictureIntent() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File photo = null;
+
+        try {
+            photo = createImageFiles();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (photo != null) {
+            if (Build.VERSION.SDK_INT > 21) {
+                CamIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                mImageUri = FileProvider.getUriForFile(attractionDetailActivity.this, BuildConfig.APPLICATION_ID + ".provider", photo);
+                CamIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+                startActivityForResult(CamIntent, REQUEST_CAMERA);
+            } else {
+                mImageUri = Uri.fromFile(photo);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+                //start camera intent
+                startActivityForResult(intent, REQUEST_CAMERA);
+            }
+        }
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mImageUri != null) {
+            outState.putParcelable("IMAGE_URI", mImageUri);
+        }
+    }
+
+    private File createImageFiles() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + ".jpg";
+        File file = new File(App.getInstance().getImagesPath(), imageFileName);
+
+        if (file.exists()) {
+            file.delete();
+        }
+        file.createNewFile();
+        return file;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 5) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED /*&& grantResults[1] == PackageManager.PERMISSION_GRANTED*/) {
+                App.getInstance().prepareDirectories();
+                selectImage();
+                return;
+            }
+        }
+    }
+
+
+    public Bitmap grabImage() {
+        ContentResolver cr = getContentResolver();
+        Bitmap bitmap = null;
+        int tryCount = 0;
+        try {
+            while ((bitmap = MediaStore.Images.Media.getBitmap(cr, mImageUri)) == null) {
+                Thread.sleep(10);
+                tryCount++;
+                if (tryCount > 500) {
+                    return null;
+                }
+            }
+
+            //bitmap = MediaStore.Images.Media.getBitmap(cr, mImageUri);
+            int orientation = 0;
+            Matrix matrix = new Matrix();
+            try {
+                ExifInterface ei = new ExifInterface(mImageUri.getPath());
+                int exif = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                switch (exif) {
+                    case ExifInterface.ORIENTATION_ROTATE_90:
+                        orientation = 90;
+                        break;
+                    case ExifInterface.ORIENTATION_ROTATE_180:
+                        orientation = 180;
+                        break;
+                    case ExifInterface.ORIENTATION_ROTATE_270:
+                        orientation = 270;
+                        break;
+                }
+                matrix.preRotate(orientation);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            //Rotate image bitmap to correct orientation.
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+            double ratio = (double) width / (double) height;
+
+
+//        if ((width > height) && (width > MAX_IMAGE_TO_CROP_PIXEL)) {
+//            width = MAX_IMAGE_TO_CROP_PIXEL;
+//            height = (int) ((double) MAX_IMAGE_TO_CROP_PIXEL / ratio);
+//        } else if (height > MAX_IMAGE_TO_CROP_PIXEL) {
+//            height = MAX_IMAGE_TO_CROP_PIXEL;
+//            width = (int) ((double) MAX_IMAGE_TO_CROP_PIXEL * ratio);
+//        }
+            bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
+    private static final int SELECT_FILE = 14;
+
     private void selectImage() {
         final CharSequence[] items = {"از دوربین", "از گالری", "انصراف"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1174,11 +1112,19 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 if (items[item].equals("از دوربین")) {
-//                    requestCameraPermission();
-                    getImageFromCamera();
-
+                    dispatchTakePictureIntent();
                 } else if (items[item].equals("از گالری")) {
-                   getPhoto. getImageFromGallery();
+                    if (App.checkGroupPermissions(App.STORAGE_PERMISSIONS)) {
+                        Intent intent = new Intent(
+                                Intent.ACTION_PICK,
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        intent.setType("image/*");
+                        startActivityForResult(
+                                Intent.createChooser(intent, "انتخاب عکس"),
+                                SELECT_FILE);
+                    } else {
+                        App.createPermissionDialog(attractionDetailActivity.this, getString(R.string.app_name), "permission");
+                    }
                 } else if (items[item].equals("انصراف")) {
                     dialog.dismiss();
                 }
@@ -1187,4 +1133,60 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         builder.show();
     }
 
-  }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            Bitmap bm = null;
+            if (requestCode == REQUEST_CAMERA) {
+                bm = grabImage();
+            } else if (requestCode == SELECT_FILE) {
+                Uri selectedImageUri = data.getData();
+                String[] projection = {MediaStore.MediaColumns.DATA};
+                CursorLoader cursorLoader = new CursorLoader(attractionDetailActivity.this, selectedImageUri, projection, null, null,
+                        null);
+                Cursor cursor = cursorLoader.loadInBackground();
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+                cursor.moveToFirst();
+
+                String selectedImagePath = cursor.getString(column_index);
+
+                bm = BitmapFactory.decodeFile(selectedImagePath/*, options*/);
+
+                int orientation = 0;
+                Matrix matrix = new Matrix();
+                try {
+                    ExifInterface ei = new ExifInterface(selectedImagePath);
+                    int exif = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                    switch (exif) {
+                        case ExifInterface.ORIENTATION_ROTATE_90:
+                            orientation = 90;
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_180:
+                            orientation = 180;
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_270:
+                            orientation = 270;
+                            break;
+                    }
+                    matrix.preRotate(orientation);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                //Rotate image bitmap to correct orientation.
+                bm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
+
+            }
+            if (bm != null) {
+                final PhotoCropFragment photoCropFragment1 = new PhotoCropFragment(this);
+                Bundle bundle1 = new Bundle();
+                bundle1.putParcelable("IMAGE_TO_CROP", bm);
+                photoCropFragment1.setArguments(bundle1);
+                loadFragment(this, photoCropFragment1, R.id.pe_container, true, 0, 0);
+            }
+        }
+
+    }
+}
