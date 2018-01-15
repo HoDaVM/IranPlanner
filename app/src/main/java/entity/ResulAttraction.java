@@ -74,7 +74,17 @@ public class ResulAttraction implements Serializable {
     @SerializedName("attraction_body")
     @Expose
     private String attractionBody;
+    @SerializedName("rate")
+    @Expose
+    private Rate rate;
 
+    public Rate getRate() {
+        return rate;
+    }
+
+    public void setRate(Rate rate) {
+        this.rate = rate;
+    }
     public String getAttractionImgUrl() {
         return attractionImgUrl;
     }

@@ -44,9 +44,33 @@ public class ResultComment implements Serializable {
     @SerializedName("user_register")
     @Expose
     private String userRegister;
+    @SerializedName("comment_service")
+    @Expose
+    private String comment_service;
+    @SerializedName("user_photo")
+    @Expose
+    private String userPhoto;
+
+    public String getUserPhoto() {
+        return userPhoto;
+    }
+
+    public void setUserPhoto(String userPhoto) {
+        this.userPhoto = userPhoto;
+    }
+
     @SerializedName("comment_reply")
+
     @Expose
     private List<CommentReply> commentReply = null;
+
+    public String getComment_service() {
+        return comment_service;
+    }
+
+    public void setComment_service(String comment_service) {
+        this.comment_service = comment_service;
+    }
 
     public String getUserId() {
         return userId;

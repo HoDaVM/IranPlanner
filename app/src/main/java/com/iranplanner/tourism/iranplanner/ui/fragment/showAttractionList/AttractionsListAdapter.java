@@ -59,30 +59,7 @@ public class AttractionsListAdapter extends RecyclerView.Adapter<AttractionsList
         int totalMinute = Integer.parseInt(attractions.get(i).getAttarctionEstimatedTime());
         Util.convertMinuteToHour(totalMinute, viewHolder.textTimeDuration);
 
-        if (attractions.get(i).getItineraryImgUrl() != null) {
-            String url = attractions.get(i).getItineraryImgUrl();
-            Glide.with(context)
-                    .load(url)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .listener(new RequestListener<String, GlideDrawable>() {
 
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            //// TODO: 22/01/2017  get defeult picture
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            return false;
-                        }
-                    })
-                    .into(viewHolder.ImageAttraction);
-
-        } else {
-            Glide.clear(viewHolder.ImageAttraction);
-            viewHolder.ImageAttraction.setImageDrawable(null);
-        }
     }
 
     @Override

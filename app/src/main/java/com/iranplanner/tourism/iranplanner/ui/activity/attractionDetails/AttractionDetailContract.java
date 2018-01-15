@@ -32,9 +32,11 @@ public abstract class AttractionDetailContract extends Presenter<AttractionDetai
         void setIntrestValue(InterestResult InterestResult);
 
         ///--------------map
-
+        void showProgress();
 
         public void showDirectionOnMap(PolylineOptions rectLine);
+
+        void dismissProgress();
     }
 
 

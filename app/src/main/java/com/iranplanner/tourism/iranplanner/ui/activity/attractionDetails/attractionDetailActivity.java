@@ -198,6 +198,9 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     ImageView wishImg;
     @BindView(R.id.triangleShowAttraction)
     ImageView triangleShowAttraction;
+    @BindView(R.id.ratingBar)
+    RatingBar ratingBar;  @BindView(R.id.txtHotelType)
+    TextView txtHotelType;
 
     @BindView(R.id.recyclerBestAttraction)
     RecyclerView recyclerBestAttraction;
@@ -337,8 +340,8 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         getSupportActionBar().setTitle(resulAttraction.getAttractionTitle());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setCustomView(R.layout.abs_layout);
-
-
+        ratingBar.setRating(Float.valueOf(resulAttraction.getRate().getRateFinalAvg()));
+        txtHotelType.setText(  "تا کنون "+ Util.persianNumbers(resulAttraction.getRate().getRateFinalCount())+" به اینجا امتیاز داده اند ");
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse);
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/IRANSansMobile.ttf");
@@ -528,9 +531,10 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.commentHolder:
-                showProgressDialog();
+
                 builder.build().inject(this);
                 attractionDetailPresenter.getAttractionCommentList("pagecomments", resulAttraction.getAttractionId(), "attraction", "0", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+
                 break;
             case R.id.MoreInoText:
                 if (showMore) {
@@ -963,6 +967,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
             ratingBar2 = findViewById(R.id.ratingBar2);
             ratingBar3 = findViewById(R.id.ratingBar3);
             ratingBar4 = findViewById(R.id.ratingBar4);
+
             txtRateName1.setText("سهولت دسترسی");
             txtRateName2.setText("امکانات رفاهی");
             txtRateName3.setText("ارزش بازدید");

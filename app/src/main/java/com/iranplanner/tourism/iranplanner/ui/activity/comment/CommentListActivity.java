@@ -38,6 +38,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import entity.CommentSend;
+import entity.ResulAttraction;
 import entity.ResultComment;
 import entity.ResultCommentList;
 import entity.ResultItinerary;
@@ -62,7 +63,7 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
     String nextOffset;
     List<ResultComment> resultComments;
     RecyclerView recyclerView;
-    ResultItineraryAttraction attractionData;
+    ResulAttraction attractionData;
     String fromWhere;
     DaggerCommentComponent.Builder builder;
     @Inject
@@ -100,7 +101,7 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
             }
 
         } else if (fromWhere.equals("Attraction")) {
-            attractionData = (ResultItineraryAttraction) extras.getSerializable("attractionData");
+            attractionData = (ResulAttraction) extras.getSerializable("attraction");
 
             if (attractionData != null) {
                 nextOffset = (String) extras.getSerializable("nextOffset");
@@ -109,15 +110,13 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
         }
         cParent = "";
         cParent = extras.getString("cParent");
-
-        adapter = new CommentListAdapter(CommentListActivity.this, this, resultComments, getApplicationContext(), R.layout.fragment_comment_item, cParent);
-        recyclerView.setAdapter(adapter);
-        mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        if (nextOffset != null && Integer.valueOf(nextOffset) > 1) {
-            recyclerView.smoothScrollToPosition(Integer.valueOf(nextOffset) - 1);
-        }
-
+            adapter = new CommentListAdapter(CommentListActivity.this, this, resultComments, getApplicationContext(), R.layout.fragment_comment_item, cParent);
+            recyclerView.setAdapter(adapter);
+            mLayoutManager = new LinearLayoutManager(getApplicationContext());
+            recyclerView.setLayoutManager(mLayoutManager);
+            if (nextOffset != null && Integer.valueOf(nextOffset) > 1) {
+                recyclerView.smoothScrollToPosition(Integer.valueOf(nextOffset) - 1);
+            }
         recyclerView.addOnItemTouchListener(new RecyclerItemOnClickListener(getApplicationContext(), new RecyclerItemOnClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, final int position) {
@@ -168,7 +167,11 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
                                                          totalItemCount = mLayoutManager.getItemCount();
                                                          pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
 //                                                         if ((visibleItemCount + pastVisiblesItems) == totalItemCount) {
-                                                         commentPresenter.getCommentList("pagecomments", itineraryData.getItineraryId(), "itinerary", nextOffset);
+                                                         if (fromWhere.equals("Itinerary")) {
+                                                             commentPresenter.getCommentList("pagecomments", itineraryData.getItineraryId(), "itinerary", nextOffset);
+                                                         } else if (fromWhere.equals("Attraction")) {
+                                                             commentPresenter.getCommentList("pagecomments", attractionData.getAttractionId(), "itinerary", nextOffset);
+                                                         }
 
 //                                                         }
                                                      }
@@ -221,7 +224,7 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
                                                       if (fromWhere.equals("Itinerary")) {
                                                           commentPresenter.callInsertComment(new CommentSend(userId, "1", "itinerary", itineraryData.getItineraryId(), "comment", String.valueOf(txtAddComment.getText()), cParent, ""), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                                                       } else if (fromWhere.equals("Attraction")) {
-                                                          commentPresenter.callInsertComment(new CommentSend(userId, "1", "itinerary", attractionData.getAttractionId(), "attraction", String.valueOf(txtAddComment.getText()), cParent, ""), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                                                          commentPresenter.callInsertComment(new CommentSend(userId, "1", "attraction", attractionData.getAttractionId(), "comment", String.valueOf(txtAddComment.getText()), cParent, ""), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                                                       }
                                                       txtAddComment.setText("");
                                                   } else if (userId.isEmpty()) {
@@ -283,7 +286,7 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
             } else {
                 resultComments.add(resultCommentList.getResultComment().get(0));
                 //hide keyboard
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
             }
         }
@@ -309,6 +312,10 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
     public void showComplete() {
 
     }
+
+
+
+
 
     public class CustomDialogAlert extends Dialog implements
             View.OnClickListener {

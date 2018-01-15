@@ -12,6 +12,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.coinpany.core.android.widget.Utils;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.standard.DataTransferInterface;
@@ -21,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import entity.CommentReply;
 import entity.ResultComment;
 
@@ -60,6 +66,31 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         viewHolder.commentSenderName.setText(resultComments.get(i).getUserFname());
         viewHolder.commentSentTime.setText(Utils.timeElapsedFromDate(getDate(resultComments.get(i).getCommentDate())) + " پیش");
 
+        if (resultComments.get(i).getUserPhoto() != null) {
+            String url = resultComments.get(i).getUserPhoto();
+            Glide.with(context)
+                    .load(url)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .listener(new RequestListener<String, GlideDrawable>() {
+
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            //// TODO: 22/01/2017  get defeult picture
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            return false;
+                        }
+                    })
+                    .into(viewHolder.commentSenderPic);
+
+        } else {
+            Glide.clear(viewHolder.commentSenderPic);
+            viewHolder.commentSenderPic.setImageDrawable(null);
+        }
+
 //        viewHolder.replyBtn.setVisibility(item.commentConfig.isReplyEnable() ? View.VISIBLE : View.GONE);
 //        mediaController.loadImage(holder1.commentSenderPic, item.User.ProfilePic, R.drawable.samplepic_2);
 
@@ -96,7 +127,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
             viewHolder.replyUserMainLayout.setVisibility(View.GONE);
             viewHolder.replyBtn.setText("پاسخ");
         }
-        if(cParent!=null && !cParent.equals("")) {
+        if(cParent!=null && !cParent.equals("") || resultComments.get(i).getComment_service().equals("foursquare")) {
             viewHolder.replyBtn.setVisibility(View.GONE);
         }else {
 

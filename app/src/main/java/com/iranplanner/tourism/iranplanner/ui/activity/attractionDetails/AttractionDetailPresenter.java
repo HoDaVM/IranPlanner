@@ -60,6 +60,7 @@ public class AttractionDetailPresenter extends AttractionDetailContract {
 
     @Override
     public void getAttractionCommentList(String action, String nId, String nType, String offset, String cid, String andId) {
+        mView.showProgress();
         retrofit.create(AttractionService.class)
                 .getItineraryCommentList(action, nId, nType, offset,cid,andId).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -69,16 +70,19 @@ public class AttractionDetailPresenter extends AttractionDetailContract {
                     @Override
                     public void onCompleted() {
                         mView.showComplete();
+                        mView.dismissProgress();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         mView.showError(e.getMessage());
+                        mView.dismissProgress();
                     }
 
                     @Override
                     public void onNext(ResultCommentList resultCommentList) {
                         mView.showComment(resultCommentList, "Attraction");
+                        mView.dismissProgress();
                     }
                 });
 
