@@ -169,41 +169,60 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
             }
         }
 
+        ForceUpdateChecker.with(this).onUpdateNeeded(this).check();
+        viewPager.setOffscreenPageLimit(4);
+
+        permissionStatus = getSharedPreferences("permissionStatus", MODE_PRIVATE);
         mainTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getPosition() == 1) {
+
+                    if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_SETTINGFRAGMENT, "false", false, getApplicationContext()))) {
+                        mainTabLayout.setVisibility(View.INVISIBLE);
+                    }
                     final Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_SETTINGFRAGMENT, "false", false, getApplicationContext()))) {
+                            if (settingView != null && !Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_SETTINGFRAGMENT, "false", false, getApplicationContext()))) {
+                                counter=0;
                                 setShowCaseSetting(settingView.get(0));
+                                mainTabLayout.setVisibility(View.VISIBLE);
                             }
                         }
-                    }, 150);
+                    }, 250);
                 } else if (tab.getPosition() == 3) {
+                    if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_PANDAFRAGMENT, "false", false, getApplicationContext()))) {
+                        mainTabLayout.setVisibility(View.INVISIBLE);
+                    }
                     final Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_PANDAFRAGMENT, "false", false, getApplicationContext()))) {
+                            if (pandaView != null && !Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_PANDAFRAGMENT, "false", false, getApplicationContext()))) {
                                 counter = 0;
                                 setShowCasePanda(pandaView);
+                                mainTabLayout.setVisibility(View.VISIBLE);
                             }
                         }
-                    }, 150);
+                    }, 250);
                 } else if (tab.getPosition() == 2) {
+                    if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_SEARCHINERARY, "false", false, getApplicationContext()))) {
+                        mainTabLayout.setVisibility(View.INVISIBLE);
+                    }
+
                     final Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_SEARCHINERARY, "false", false, getApplicationContext()))) {
+                            if (itineraryView != null && !Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_SEARCHINERARY, "false", false, getApplicationContext()))) {
                                 counter = 0;
                                 setShowCaseItinerary(itineraryView);
+                                mainTabLayout.setVisibility(View.VISIBLE);
                             }
                         }
-                    }, 150);
+                    }, 250);
                 }
 
             }
@@ -218,15 +237,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
 
             }
         });
-        int position = 0;
-        mainTabLayout.getTabAt(position).getCustomView().setSelected(true);
-        viewPager.setCurrentItem(position);
-        Util.displayFirebaseRegId(this);
 
-        ForceUpdateChecker.with(this).onUpdateNeeded(this).check();
-        viewPager.setOffscreenPageLimit(4);
-
-        permissionStatus = getSharedPreferences("permissionStatus", MODE_PRIVATE);
     }
 
     private void redirectStore(String updateUrl) {
@@ -432,7 +443,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
                         showcaseView.setContentTitle(getString(R.string.tutorialAttractionTitle));
                         showcaseView.setContentText(getString(R.string.tutorialAttractionText));
                         showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
-                        showcaseView.setButtonText("بستن");
+                        showcaseView.setButtonText("بعدی");
                         break;
                     }
                     case 3: {
