@@ -75,6 +75,8 @@ import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentListActivi
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -102,6 +104,9 @@ import entity.ResultWidget;
 import entity.ResultWidgetFull;
 import entity.ShowAtractionDetailMore;
 import entity.ShowAttractionListMore;
+import ir.adad.client.AdListener;
+import ir.adad.client.AdView;
+import ir.adad.client.Adad;
 import tools.Constants;
 import tools.Util;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -213,7 +218,32 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     private ProgressDialog progressBar;
     private Uri mImageUri;
     GetPhoto getPhoto;
+    private AdListener mAdListener = new AdListener() {
 
+        @Override
+        public void onAdLoaded() {
+            Toast.makeText(getApplicationContext(), "Banner Ad loaded", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onAdFailedToLoad() {
+            Toast.makeText(getApplicationContext(),"Banner ad failed to load", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onMessageReceive(JSONObject message) {
+
+            Toast.makeText(getApplicationContext(),"Banner ", Toast.LENGTH_SHORT).show();
+
+        }
+
+        @Override
+        public void onRemoveAdsRequested() {
+            Toast.makeText(getApplicationContext(), "User requested to remove Banner ads from app", Toast.LENGTH_SHORT).show();
+            //Move your user to shopping center of your app
+        }
+
+    };
     private void findView() {
 //        setContentView(R.layout.activity_attraction_detail);
 //        setContentView(R.layout.fragment_attraction_detail);
@@ -421,6 +451,8 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
             }
         });
+
+        ((AdView) findViewById(R.id.banner_ad_view)).setAdListener(mAdListener);
     }
 
     Intent CamIntent;
@@ -920,6 +952,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
     @Override
     protected int getLayoutId() {
+        Adad.initialize(getApplicationContext());
         return R.layout.fragment_attraction_detail;
     }
 

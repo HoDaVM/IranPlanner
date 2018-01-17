@@ -169,13 +169,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_below="@+id/txtHotelType"/>
+            <ir.adad.client.Banner
+                android:id="@+id/banner_ad_view"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_below="@+id/txtHotelType"                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"/>
         </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/borderLayout2"
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:layout_below="@+id/hotelNameHolder"
-            android:background="@color/greyLight"></RelativeLayout>
+
 
     </RelativeLayout>
 

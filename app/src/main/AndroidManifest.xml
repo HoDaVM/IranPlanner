@@ -178,6 +178,33 @@
         <activity android:name=".ui.activity.forgetPassword.ForgetPasswordActivity" />
         <activity android:name=".ui.activity.customJourney.CustomJourney" />
         <activity android:name=".ui.activity.customJourney.CreateCustomJourney"></activity>
+
+        <activity
+            android:name="ir.adad.client.AdadActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@android:style/Theme.Translucent"/>
+
+
+        <meta-data
+            android:name="AdadToken"
+            android:value="e6018ff4f63a44c8a23f269109ab66fd" />
+        <meta-data
+            android:name="AdadBannersEnabledOnStart"
+            android:value="true" />
+        <meta-data
+            android:name="AdadTestMode"
+            android:value="true" />
+        <meta-data
+            android:name="AdadShowRemoveAds"
+            android:value="true" />
+        <meta-data
+            android:name="AdadLogging"
+            android:value="true" />
+        <meta-data
+            android:name="AdadLoggingLevel"
+            android:value="debug" />
+
+
     </application>
 
 </manifest>
