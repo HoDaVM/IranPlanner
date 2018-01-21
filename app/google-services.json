@@ -64,6 +64,72 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
+              "client_id": "436926546770-eqnhooq96f6668fe520rlhap1s0v34t6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sunsct.iranplanner"
+              }
+            },
+            {
+              "client_id": "436926546770-fhl89cqj1andj263r5hbm8tb6foh36sh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:436926546770:android:276c2e0062c010de",
+        "android_client_info": {
+          "package_name": "com.hila.vas.vito"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "436926546770-bujlov40r8f772jtnotihn668tt0ha59.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hila.vas.vito",
+            "certificate_hash": "fa93803f6853761788c059790bd86c73519a59e0"
+          }
+        },
+        {
+          "client_id": "436926546770-fhl89cqj1andj263r5hbm8tb6foh36sh.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "436926546770-av5l8fihd4lhcutg7abq46ejjtuis46c.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "436926546770-n93fhubvgkjf4pqr1h3ssou76einkkg6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBubtqc_Bh4LMVzFPuSCTMyBLaD0V2aDVk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "436926546770-eqnhooq96f6668fe520rlhap1s0v34t6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sunsct.iranplanner"
+              }
+            },
+            {
               "client_id": "436926546770-fhl89cqj1andj263r5hbm8tb6foh36sh.apps.googleusercontent.com",
               "client_type": 3
             }

@@ -1,4 +1,6 @@
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
@@ -6,10 +8,19 @@ buildscript {
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'io.fabric.tools:gradle:1.24.4'
+
     }
 }
-apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
+allprojects {
+    // ...
+    repositories {
+        // ...
+        maven {
+            url 'https://maven.google.com/'
+        }
+    }
+}
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
@@ -24,8 +35,8 @@ android {
         applicationId "com.iranplanner.tourism.iranplanner"
         minSdkVersion 17
         targetSdkVersion 26
-        versionCode 9
-        versionName "1.0.3"
+        versionCode 10
+        versionName "1.0.4"
         multiDexEnabled true
     }
     buildTypes {
@@ -112,6 +123,7 @@ dependencies {
     compile "com.google.dagger:dagger:2.11"
     annotationProcessor "com.google.dagger:dagger-compiler:2.11"
     compile 'com.github.amlcurran.showcaseview:library:5.4.3'
+    compile 'ir.adad.androidsdkv3:AdadSDKv3:3.3.1'
 
 }
 

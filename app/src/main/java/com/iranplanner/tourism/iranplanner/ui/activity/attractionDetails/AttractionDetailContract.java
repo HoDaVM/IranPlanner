@@ -8,7 +8,10 @@ import com.iranplanner.tourism.iranplanner.ui.presenter.Presenter;
 
 import entity.InterestResult;
 import entity.ResultCommentList;
+import entity.ResultParamUser;
+import entity.ResultRatePost;
 import entity.ResultWidgetFull;
+import entity.SendParamUser;
 
 
 /**
@@ -37,6 +40,7 @@ public abstract class AttractionDetailContract extends Presenter<AttractionDetai
         public void showDirectionOnMap(PolylineOptions rectLine);
 
         void dismissProgress();
+        void setRate(ResultParamUser resultParamUser);
     }
 
 
@@ -52,6 +56,8 @@ public abstract class AttractionDetailContract extends Presenter<AttractionDetai
     public abstract boolean doTranslateAnimationUp(RelativeLayout relativeLayout, RelativeLayout relativeLayout2, ImageView imageView);
 
     public abstract boolean doTranslateAnimationDown(RelativeLayout relativeLayout, RelativeLayout relativeLayout2, ImageView imageView, int height);
+
+  public abstract void rateSend(SendParamUser request, String cid, String andId);
 
     //------------------------map
 

@@ -26,14 +26,19 @@ import javax.inject.Inject;
 import entity.InterestResult;
 import entity.ResultCommentList;
 import entity.ResultItineraryAttractionList;
+import entity.ResultParamUser;
+import entity.ResultRatePost;
 import entity.ResultWidgetFull;
+import entity.SendParamUser;
 import entity.map.DestinationResult;
 import entity.map.Leg;
 import entity.map.Route;
 import entity.map.StartLocation_;
 import entity.map.Step;
 import retrofit2.Retrofit;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 import rx.Observable;
 import rx.Observer;
@@ -57,12 +62,11 @@ public class AttractionDetailPresenter extends AttractionDetailContract {
     }
 
 
-
     @Override
     public void getAttractionCommentList(String action, String nId, String nType, String offset, String cid, String andId) {
         mView.showProgress();
         retrofit.create(AttractionService.class)
-                .getItineraryCommentList(action, nId, nType, offset,cid,andId).subscribeOn(Schedulers.io())
+                .getItineraryCommentList(action, nId, nType, offset, cid, andId).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(new Observer<ResultCommentList>() {
@@ -91,7 +95,7 @@ public class AttractionDetailPresenter extends AttractionDetailContract {
     @Override
     public void getWidgetResult(String action, String id, String uid, String ntype, String cid, String andId) {
         retrofit.create(AttractionService.class)
-                .getWidgetResult(action, id, uid, ntype,  cid,  andId).subscribeOn(Schedulers.io())
+                .getWidgetResult(action, id, uid, ntype, cid, andId).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(new Observer<ResultWidgetFull>() {
@@ -118,7 +122,7 @@ public class AttractionDetailPresenter extends AttractionDetailContract {
     @Override
     public void getInterest(String action, String uid, String cid, String ntype, String nid, String gtype, String gvalue, String andId) {
         retrofit.create(AttractionService.class)
-                .getInterest(action, uid, cid, ntype, nid, gtype, gvalue,andId).subscribeOn(Schedulers.io())
+                .getInterest(action, uid, cid, ntype, nid, gtype, gvalue, andId).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(new Observer<InterestResult>() {
@@ -196,6 +200,35 @@ public class AttractionDetailPresenter extends AttractionDetailContract {
     }
 
     @Override
+    public void rateSend(SendParamUser request, String cid, String andId) {
+        retrofit.create(AttractionService.class)
+                .rateSend( request,  cid,  andId).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(new Observer<ResultParamUser>() {
+
+                    @Override
+                    public void onCompleted() {
+//                        mView.showComplete();
+                        Log.e("direction path", "complete");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+//                        mView.showError(e.getMessage());
+                        Log.e("e", e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ResultParamUser resultParamUser) {
+mView.setRate(resultParamUser);
+                    }
+                });
+
+
+    }
+
+    @Override
     public void getDirection(String origin, String destination) {
         retrofit.create(AttractionService.class)
                 .getDirection(origin, destination).subscribeOn(Schedulers.io())
@@ -206,13 +239,13 @@ public class AttractionDetailPresenter extends AttractionDetailContract {
                     @Override
                     public void onCompleted() {
 //                        mView.showComplete();
-                        Log.e("direction path","complete");
+                        Log.e("direction path", "complete");
                     }
 
                     @Override
                     public void onError(Throwable e) {
 //                        mView.showError(e.getMessage());
-                        Log.e("e",e.getMessage());
+                        Log.e("e", e.getMessage());
                     }
 
                     @Override
@@ -312,10 +345,16 @@ public class AttractionDetailPresenter extends AttractionDetailContract {
                 @Query("gtype") String gtype,
                 @Query("gvalue") String gvalue,
                 @Query("andId") String andId);
+
         //        https://maps.googleapis.com/maps/api/directions/json?origin=35.6859016418457,51.38629913330078&destination=36.40290069580078,55.01570129394531&sensor=false
         @GET("/maps/api/directions/json")
         Observable<DestinationResult> getDirection(@Query("origin") String origin,
                                                    @Query("destination") String destination);
 
+        //https://api.parsdid.com/iranplanner/app/api-data.php?action=rate
+        @POST("api-data.php?action=rate")
+        Observable<ResultParamUser> rateSend(@Body SendParamUser request, @Query("cid") String cid, @Query("andId") String andId);
     }
+
+
 }

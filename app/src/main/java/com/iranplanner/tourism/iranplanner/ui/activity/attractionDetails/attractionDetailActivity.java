@@ -96,12 +96,15 @@ import butterknife.ButterKnife;
 
 import entity.InterestResult;
 import entity.ItineraryLodgingCity;
+import entity.RateParam;
 import entity.ResulAttraction;
 import entity.ResultAttractionList;
 import entity.ResultComment;
 import entity.ResultCommentList;
+import entity.ResultParamUser;
 import entity.ResultWidget;
 import entity.ResultWidgetFull;
+import entity.SendParamUser;
 import entity.ShowAtractionDetailMore;
 import entity.ShowAttractionListMore;
 import ir.adad.client.AdListener;
@@ -204,7 +207,8 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     @BindView(R.id.triangleShowAttraction)
     ImageView triangleShowAttraction;
     @BindView(R.id.ratingBar)
-    RatingBar ratingBar;  @BindView(R.id.txtHotelType)
+    RatingBar ratingBar;
+    @BindView(R.id.txtHotelType)
     TextView txtHotelType;
 
     @BindView(R.id.recyclerBestAttraction)
@@ -227,13 +231,13 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
         @Override
         public void onAdFailedToLoad() {
-            Toast.makeText(getApplicationContext(),"Banner ad failed to load", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Banner ad failed to load", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onMessageReceive(JSONObject message) {
 
-            Toast.makeText(getApplicationContext(),"Banner ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Banner ", Toast.LENGTH_SHORT).show();
 
         }
 
@@ -244,6 +248,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         }
 
     };
+
     private void findView() {
 //        setContentView(R.layout.activity_attraction_detail);
 //        setContentView(R.layout.fragment_attraction_detail);
@@ -371,7 +376,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setCustomView(R.layout.abs_layout);
         ratingBar.setRating(Float.valueOf(resulAttraction.getRate().getRateFinalAvg()));
-        txtHotelType.setText(  "تا کنون "+ Util.persianNumbers(resulAttraction.getRate().getRateFinalCount())+" به اینجا امتیاز داده اند ");
+        txtHotelType.setText("تا کنون " + Util.persianNumbers(resulAttraction.getRate().getRateFinalCount()) + " به اینجا امتیاز داده اند ");
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse);
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/IRANSansMobile.ttf");
@@ -821,6 +826,11 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         progressBar.dismiss();
     }
 
+    @Override
+    public void setRate(ResultParamUser resultParamUser) {
+        ratingBar.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalAvg()));
+    }
+
 
     @Override
     public void showAttractionDetail(ShowAtractionDetailMore showAttractionFull) {
@@ -967,7 +977,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
         public Activity c;
         public Dialog d;
-        public TextView txtNo,
+        public TextView txtNo, txtOk,
                 txtRateName1,
                 txtRateName2,
                 txtRateName3,
@@ -991,6 +1001,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 //            requestWindowFeature(Window.FEATURE_NO_TITLE);
             setContentView(R.layout.raiting_layout);
             txtNo = findViewById(R.id.txtNo);
+            txtOk = findViewById(R.id.txtOk);
             txtRateName1 = findViewById(R.id.txtRateName1);
             txtRateName2 = findViewById(R.id.txtRateName2);
             txtRateName3 = findViewById(R.id.txtRateName3);
@@ -1007,6 +1018,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
             txtRateName4.setText("منحصر به فرد بودن");
 
             txtNo.setOnClickListener(this);
+            txtOk.setOnClickListener(this);
         }
 
         @Override
@@ -1014,6 +1026,12 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
             switch (v.getId()) {
                 case R.id.txtNo:
                     dismiss();
+                    break;
+                case R.id.txtOk:
+//                {"uid":"101","cid":"20","ntype":"attraction","nid":"30","rate_param":{"param1":"1","param2":"2","param3":"5"}}
+
+                    SendParamUser ss = new SendParamUser(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "attraction", resulAttraction.getAttractionId(), new RateParam(String.valueOf(ratingBar1.getRating()), String.valueOf(ratingBar2.getRating()), String.valueOf(ratingBar3.getRating()), String.valueOf(ratingBar4.getRating())));
+                    attractionDetailPresenter.rateSend(ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                     break;
             }
             dismiss();
