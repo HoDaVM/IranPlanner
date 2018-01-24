@@ -17,22 +17,39 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.ui.activity.OnCutImageListener;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
+import javax.inject.Inject;
+
+import entity.InterestResult;
+import entity.ResultCommentList;
+import entity.ResultParamUser;
+import entity.ResultWidgetFull;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import tools.Util;
 
-public class PhotoCropFragment extends Fragment {
+public class PhotoCropFragment extends Fragment  implements UploadPhotoContract.View{
     private static String photoPath;
     public Bitmap imageToCrop;
     PhotoCropView photoCropView;
     private BitmapDrawable drawable;
     private PhotoEditActivityDelegate photoEditActivityDelegate;
     OnCutImageListener onCutImageListener;
+    @Inject
+    UploadPhotoPresenter uploadPhotoPresenter;
+//    DaggerAtractionDetailComponent.Builder builder;
+    DaggerUploadPhotoComponent.Builder builder;
     public PhotoCropFragment(OnCutImageListener onCutImageListener) {
         this.onCutImageListener=onCutImageListener;
     }
@@ -168,12 +185,15 @@ public class PhotoCropFragment extends Fragment {
             public void onClick(View v) {
 
                 if(onCutImageListener!=null) {
+                    sendImageToServer(photoCropView.getBitmap());
                     getActivity().onBackPressed();
                     onCutImageListener.onCropImage(photoCropView.getBitmap());
+
                 }
 
             }
         });
+
 
         rootView.findViewById(R.id.cancelBtn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,12 +203,54 @@ public class PhotoCropFragment extends Fragment {
         });
 
 
+
+
         return rootView;
 
 
 //        return rootView;
     }
 
+    private void sendImageToServer(Bitmap bitmap){
+
+
+
+        DaggerUploadPhotoComponent.builder().netComponent(((App) getContext().getApplicationContext()).getNetComponent())
+                .uploadPhotoModule(new UploadPhotoModule(this))
+                .build().inject(this);
+        File f = null;
+        try {
+            f = Util.createImageFiles();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+//Convert bitmap to byte array
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50 /*ignored for PNG*/, bos);
+        byte[] bitmapdata = bos.toByteArray();
+
+//write the bytes in file
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(f);
+            fos.write(bitmapdata);
+            fos.flush();
+            RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), f);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("file", f.getName(), reqFile);
+
+            String descriptionString = "hello, this is description speaking";
+            RequestBody description =
+                    RequestBody.create(
+                            okhttp3.MultipartBody.FORM, descriptionString);
+            uploadPhotoPresenter.upload(description, body);
+        } catch (Exception e) {
+            e.printStackTrace();
+            e.printStackTrace();
+            e.printStackTrace();
+        }
+
+    }
     public void setPhotoEditActivityDelegate(PhotoEditActivityDelegate photoEditActivityDelegate) {
         this.photoEditActivityDelegate = photoEditActivityDelegate;
     }
@@ -231,6 +293,30 @@ public class PhotoCropFragment extends Fragment {
         super.onDestroy();
         drawable = null;
     }
+
+    @Override
+    public void showError(String message) {
+
+    }
+
+    @Override
+    public void showComplete() {
+
+    }
+
+
+
+    @Override
+    public void showProgress() {
+
+    }
+
+
+    @Override
+    public void dismissProgress() {
+
+    }
+
 
 
     public interface PhotoEditActivityDelegate {

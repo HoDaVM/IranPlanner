@@ -35,10 +35,16 @@ import entity.map.Leg;
 import entity.map.Route;
 import entity.map.StartLocation_;
 import entity.map.Step;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 import rx.Observable;
 import rx.Observer;
@@ -202,7 +208,7 @@ public class AttractionDetailPresenter extends AttractionDetailContract {
     @Override
     public void rateSend(SendParamUser request, String cid, String andId) {
         retrofit.create(AttractionService.class)
-                .rateSend( request,  cid,  andId).subscribeOn(Schedulers.io())
+                .rateSend(request, cid, andId).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(new Observer<ResultParamUser>() {
@@ -221,10 +227,37 @@ public class AttractionDetailPresenter extends AttractionDetailContract {
 
                     @Override
                     public void onNext(ResultParamUser resultParamUser) {
-mView.setRate(resultParamUser);
+                        mView.setRate(resultParamUser);
                     }
                 });
 
+    }
+
+    @Override
+    public void getRate(SendParamUser request, String cid, String andId) {
+        retrofit.create(AttractionService.class)
+                .rateSend(request, cid, andId).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(new Observer<ResultParamUser>() {
+
+                    @Override
+                    public void onCompleted() {
+//                        mView.showComplete();
+                        Log.e("direction path", "complete");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+//                        mView.showError(e.getMessage());
+                        Log.e("e", e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ResultParamUser resultParamUser) {
+                        mView.setRateUser(resultParamUser);
+                    }
+                });
 
     }
 
@@ -283,6 +316,33 @@ mView.setRate(resultParamUser);
                     }
                 });
 
+    }
+
+    @Override
+    public void upload(RequestBody description, MultipartBody.Part file) {
+        retrofit.create(AttractionService.class)
+                .upload(description,file).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(new Observer<ResponseBody>() {
+
+                    @Override
+                    public void onCompleted() {
+//                        mView.showComplete();
+                        Log.e("direction path", "complete");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+//                        mView.showError(e.getMessage());
+                        Log.e("e", e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody resultParamUser) {
+                        Log.e("Ddd","dfds");
+                    }
+                });
     }
 
 
@@ -354,7 +414,20 @@ mView.setRate(resultParamUser);
         //https://api.parsdid.com/iranplanner/app/api-data.php?action=rate
         @POST("api-data.php?action=rate")
         Observable<ResultParamUser> rateSend(@Body SendParamUser request, @Query("cid") String cid, @Query("andId") String andId);
+
+
+        //        https://api.parsdid.com/iranplanner/app/api-data.php?action=rateinfo
+        @POST("api-data.php?action=rateinfo")
+        Observable<ResultParamUser> getRate(@Body SendParamUser request, @Query("cid") String cid, @Query("andId") String andId);
+
+//        https://api.parsdid.com/iranplanner/app/api-upload.php?action=test
+
+        @Multipart
+        @POST("api-upload.php?action=test")
+        Observable<ResponseBody> upload(@Part("description") RequestBody description,
+                                        @Part MultipartBody.Part file);
     }
+
 
 
 }

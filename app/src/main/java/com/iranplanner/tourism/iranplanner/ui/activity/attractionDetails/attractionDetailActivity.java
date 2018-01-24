@@ -6,7 +6,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.Service;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,6 +23,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -72,22 +75,30 @@ import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.AttractionListMoreContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.AttractionListMorePresenter;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentListActivity;
+import com.iranplanner.tourism.iranplanner.ui.camera.PhotoUtils;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 
+import org.apache.http.HttpRequest;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -110,6 +121,19 @@ import entity.ShowAttractionListMore;
 import ir.adad.client.AdListener;
 import ir.adad.client.AdView;
 import ir.adad.client.Adad;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Multipart;
+import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import tools.Constants;
 import tools.Util;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -118,7 +142,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import static android.graphics.BitmapFactory.decodeFile;
 
 public class attractionDetailActivity extends StandardActivity implements OnMapReadyCallback, View.OnClickListener, AttractionDetailContract.View, AttractionListMoreContract.View
-        , OnCutImageListener {
+        , OnCutImageListener,PhotoUtils.OnImageUriSelect {
     private static final int REQUEST_CAMERA = 0;
     @Inject
     AttractionDetailPresenter attractionDetailPresenter;
@@ -226,32 +250,30 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
         @Override
         public void onAdLoaded() {
-            Toast.makeText(getApplicationContext(), "Banner Ad loaded", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), "Banner Ad loaded", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onAdFailedToLoad() {
-            Toast.makeText(getApplicationContext(), "Banner ad failed to load", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), "Banner ad failed to load", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onMessageReceive(JSONObject message) {
 
-            Toast.makeText(getApplicationContext(), "Banner ", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), "Banner ", Toast.LENGTH_SHORT).show();
 
         }
 
         @Override
         public void onRemoveAdsRequested() {
-            Toast.makeText(getApplicationContext(), "User requested to remove Banner ads from app", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), "User requested to remove Banner ads from app", Toast.LENGTH_SHORT).show();
             //Move your user to shopping center of your app
         }
 
     };
 
     private void findView() {
-//        setContentView(R.layout.activity_attraction_detail);
-//        setContentView(R.layout.fragment_attraction_detail);
         ButterKnife.bind(this);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
     }
@@ -431,6 +453,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         bookmarkHolder.setOnClickListener(this);
         commentHolder.setOnClickListener(this);
         ratingPeopleHolder.setOnClickListener(this);
+        PhotoUtils photoUtils;
 
         builder = DaggerAtractionDetailComponent.builder()
                 .netComponent(((App) getApplicationContext()).getNetComponent())
@@ -445,10 +468,24 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                 App.getInstance().prepareDirectories();
 
                 if (Build.VERSION.SDK_INT < 23) {
-                    selectImage();
+//                    selectImage();
+                    new PhotoUtils(attractionDetailActivity.this, new PhotoUtils.OnImageUriSelect() {
+                        @Override
+                        public void onSelectImage(Uri uri) {
+                            mImageUri=uri;
+                        }
+                    });
+
                 } else {
                     if (App.checkGroupPermissions(App.STORAGE_PERMISSIONS)) {
-                        selectImage();
+//                        selectImage();
+                        new PhotoUtils(attractionDetailActivity.this, new PhotoUtils.OnImageUriSelect() {
+                            @Override
+                            public void onSelectImage(Uri uri) {
+                                mImageUri=uri;
+                            }
+                        }).selectImage();
+
                     } else {
                         requestPermissions(App.STORAGE_PERMISSIONS, 5);
                     }
@@ -677,8 +714,8 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                 break;
             case R.id.ratingPeopleHolder:
                 //todo
-                CustomDialogAlert customDialogAlert = new CustomDialogAlert(this);
-                customDialogAlert.show();
+                SendParamUser ss = new SendParamUser(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "attraction", resulAttraction.getAttractionId());
+                attractionDetailPresenter.getRate(ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                 break;
 
 
@@ -831,6 +868,11 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         ratingBar.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalAvg()));
     }
 
+    @Override
+    public void setRateUser(ResultParamUser resultParamUser) {
+        CustomDialogAlert customDialogAlert = new CustomDialogAlert(this, resultParamUser);
+        customDialogAlert.show();
+    }
 
     @Override
     public void showAttractionDetail(ShowAtractionDetailMore showAttractionFull) {
@@ -971,12 +1013,18 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         imageAttraction.setImageBitmap(bitmap);
     }
 
+    @Override
+    public void onSelectImage(Uri uri) {
+        mImageUri=uri;
+    }
+
 
     public class CustomDialogAlert extends Dialog implements
             View.OnClickListener {
 
         public Activity c;
         public Dialog d;
+        public ResultParamUser resultParamUser;
         public TextView txtNo, txtOk,
                 txtRateName1,
                 txtRateName2,
@@ -989,10 +1037,11 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                 alertDescription;
 
 
-        public CustomDialogAlert(Activity a) {
+        public CustomDialogAlert(Activity a, ResultParamUser resultParamUser) {
             super(a);
             // TODO Auto-generated constructor stub
             this.c = a;
+            this.resultParamUser = resultParamUser;
         }
 
         @Override
@@ -1012,11 +1061,14 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
             ratingBar3 = findViewById(R.id.ratingBar3);
             ratingBar4 = findViewById(R.id.ratingBar4);
 
-            txtRateName1.setText("سهولت دسترسی");
-            txtRateName2.setText("امکانات رفاهی");
-            txtRateName3.setText("ارزش بازدید");
-            txtRateName4.setText("منحصر به فرد بودن");
-
+            txtRateName1.setText(resultParamUser.getResultRatePost().getRateFinalParam().get(0).getValueTitle());
+            txtRateName2.setText(resultParamUser.getResultRatePost().getRateFinalParam().get(1).getValueTitle());
+            txtRateName3.setText(resultParamUser.getResultRatePost().getRateFinalParam().get(2).getValueTitle());
+            txtRateName4.setText(resultParamUser.getResultRatePost().getRateFinalParam().get(3).getValueTitle());
+            ratingBar1.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalParam().get(0).getValueAvg()));
+            ratingBar2.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalParam().get(1).getValueAvg()));
+            ratingBar3.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalParam().get(2).getValueAvg()));
+            ratingBar4.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalParam().get(3).getValueAvg()));
             txtNo.setOnClickListener(this);
             txtOk.setOnClickListener(this);
         }
@@ -1040,31 +1092,31 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
     //----------------------
 
-    private void dispatchTakePictureIntent() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File photo = null;
-
-        try {
-            photo = createImageFiles();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (photo != null) {
-            if (Build.VERSION.SDK_INT > 21) {
-                CamIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                mImageUri = FileProvider.getUriForFile(attractionDetailActivity.this, BuildConfig.APPLICATION_ID + ".provider", photo);
-                CamIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
-                startActivityForResult(CamIntent, REQUEST_CAMERA);
-            } else {
-                mImageUri = Uri.fromFile(photo);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
-                //start camera intent
-                startActivityForResult(intent, REQUEST_CAMERA);
-            }
-        }
-
-    }
+//    private void dispatchTakePictureIntent() {
+//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        File photo = null;
+//
+//        try {
+//            photo = Util.createImageFiles();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        if (photo != null) {
+//            if (Build.VERSION.SDK_INT > 21) {
+//                CamIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+//                mImageUri = FileProvider.getUriForFile(attractionDetailActivity.this, BuildConfig.APPLICATION_ID + ".provider", photo);
+//                CamIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+//                startActivityForResult(CamIntent, REQUEST_CAMERA);
+//            } else {
+//                mImageUri = Uri.fromFile(photo);
+//                intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+//                //start camera intent
+//                startActivityForResult(intent, REQUEST_CAMERA);
+//            }
+//        }
+//
+//    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -1074,18 +1126,18 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         }
     }
 
-    private File createImageFiles() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + ".jpg";
-        File file = new File(App.getInstance().getImagesPath(), imageFileName);
-
-        if (file.exists()) {
-            file.delete();
-        }
-        file.createNewFile();
-        return file;
-    }
+//    private File createImageFiles() throws IOException {
+//        // Create an image file name
+//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+//        String imageFileName = "JPEG_" + timeStamp + ".jpg";
+//        File file = new File(App.getInstance().getImagesPath(), imageFileName);
+//
+//        if (file.exists()) {
+//            file.delete();
+//        }
+//        file.createNewFile();
+//        return file;
+//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -1093,7 +1145,13 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         if (requestCode == 5) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED /*&& grantResults[1] == PackageManager.PERMISSION_GRANTED*/) {
                 App.getInstance().prepareDirectories();
-                selectImage();
+                new PhotoUtils(attractionDetailActivity.this, new PhotoUtils.OnImageUriSelect() {
+                    @Override
+                    public void onSelectImage(Uri uri) {
+                        mImageUri=uri;
+                    }
+                }).selectImage();
+
                 return;
             }
         }
@@ -1113,7 +1171,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                 }
             }
 
-            //bitmap = MediaStore.Images.Media.getBitmap(cr, mImageUri);
+            bitmap = MediaStore.Images.Media.getBitmap(cr, mImageUri);
             int orientation = 0;
             Matrix matrix = new Matrix();
             try {
@@ -1159,35 +1217,35 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
     private static final int SELECT_FILE = 14;
 
-    private void selectImage() {
-        final CharSequence[] items = {"از دوربین", "از گالری", "انصراف"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("انتخاب عکس");
-
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                if (items[item].equals("از دوربین")) {
-                    dispatchTakePictureIntent();
-                } else if (items[item].equals("از گالری")) {
-                    if (App.checkGroupPermissions(App.STORAGE_PERMISSIONS)) {
-                        Intent intent = new Intent(
-                                Intent.ACTION_PICK,
-                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        intent.setType("image/*");
-                        startActivityForResult(
-                                Intent.createChooser(intent, "انتخاب عکس"),
-                                SELECT_FILE);
-                    } else {
-                        App.createPermissionDialog(attractionDetailActivity.this, getString(R.string.app_name), "permission");
-                    }
-                } else if (items[item].equals("انصراف")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
+//    private void selectImage() {
+//        final CharSequence[] items = {"از دوربین", "از گالری", "انصراف"};
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+//        builder.setTitle("انتخاب عکس");
+//
+//        builder.setItems(items, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int item) {
+//                if (items[item].equals("از دوربین")) {
+//                    dispatchTakePictureIntent();
+//                } else if (items[item].equals("از گالری")) {
+//                    if (App.checkGroupPermissions(App.STORAGE_PERMISSIONS)) {
+//                        Intent intent = new Intent(
+//                                Intent.ACTION_PICK,
+//                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                        intent.setType("image/*");
+//                        startActivityForResult(
+//                                Intent.createChooser(intent, "انتخاب عکس"),
+//                                SELECT_FILE);
+//                    } else {
+//                        App.createPermissionDialog(attractionDetailActivity.this, getString(R.string.app_name), "permission");
+//                    }
+//                } else if (items[item].equals("انصراف")) {
+//                    dialog.dismiss();
+//                }
+//            }
+//        });
+//        builder.show();
+//    }
 
 
     @Override
@@ -1200,6 +1258,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                 bm = grabImage();
             } else if (requestCode == SELECT_FILE) {
                 Uri selectedImageUri = data.getData();
+
                 String[] projection = {MediaStore.MediaColumns.DATA};
                 CursorLoader cursorLoader = new CursorLoader(attractionDetailActivity.this, selectedImageUri, projection, null, null,
                         null);
@@ -1236,13 +1295,19 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
             }
             if (bm != null) {
-                final PhotoCropFragment photoCropFragment1 = new PhotoCropFragment(this);
+                final PhotoCropFragment photoCropFragment = new PhotoCropFragment(this);
                 Bundle bundle1 = new Bundle();
                 bundle1.putParcelable("IMAGE_TO_CROP", bm);
-                photoCropFragment1.setArguments(bundle1);
-                loadFragment(this, photoCropFragment1, R.id.pe_container, true, 0, 0);
+                photoCropFragment.setArguments(bundle1);
+                loadFragment(this, photoCropFragment, R.id.pe_container, true, 0, 0);
             }
         }
+
+    }
+
+
+
+    public void ttt(int requestCode, int resultCode, Intent data){
 
     }
 }

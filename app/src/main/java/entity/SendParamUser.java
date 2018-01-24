@@ -14,6 +14,14 @@ public class SendParamUser implements Serializable {
         this.ntype = ntype;
         this.nid = nid;
         this.rateParam = rateParam;
+
+           }
+
+    public SendParamUser(String uid, String cid, String ntype, String nid) {
+        this.uid = uid;
+        this.cid = cid;
+        this.ntype = ntype;
+        this.nid = nid;
     }
 
     @SerializedName("uid")

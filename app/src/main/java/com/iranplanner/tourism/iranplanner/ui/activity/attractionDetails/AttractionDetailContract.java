@@ -12,6 +12,13 @@ import entity.ResultParamUser;
 import entity.ResultRatePost;
 import entity.ResultWidgetFull;
 import entity.SendParamUser;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.http.Multipart;
+import retrofit2.http.POST;
+import retrofit2.http.Part;
+import rx.Observable;
 
 
 /**
@@ -40,9 +47,10 @@ public abstract class AttractionDetailContract extends Presenter<AttractionDetai
         public void showDirectionOnMap(PolylineOptions rectLine);
 
         void dismissProgress();
-        void setRate(ResultParamUser resultParamUser);
-    }
 
+        void setRate(ResultParamUser resultParamUser);
+        void setRateUser(ResultParamUser resultParamUser);
+    }
 
 
     public abstract void getAttractionCommentList(String action, String nId, String nType, String offset, String cid, String andId);
@@ -57,11 +65,15 @@ public abstract class AttractionDetailContract extends Presenter<AttractionDetai
 
     public abstract boolean doTranslateAnimationDown(RelativeLayout relativeLayout, RelativeLayout relativeLayout2, ImageView imageView, int height);
 
-  public abstract void rateSend(SendParamUser request, String cid, String andId);
+    public abstract void rateSend(SendParamUser request, String cid, String andId);
 
+    public abstract void getRate(SendParamUser request, String cid, String andId);
     //------------------------map
 
 
     //    public abstract void getDirection(String origin, String destination);
     public abstract void getDirection(String origin, String destination);
+
+
+    public abstract void upload( RequestBody description, MultipartBody.Part file);
 }

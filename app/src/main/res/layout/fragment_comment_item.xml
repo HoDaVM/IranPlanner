@@ -50,9 +50,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:gravity="left"
+                    android:gravity="start"
                     android:maxLines="1"
-                    android:text="1 ساعت"
+
 
                     android:textSize="12sp" />
                 <RelativeLayout
@@ -65,11 +65,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
                     android:layout_toEndOf="@id/commentSenderPic"
                     android:layout_toStartOf="@id/commentSentTime"
-                    android:gravity="right">
+                    android:gravity="end">
 
                     <TextView
 
@@ -77,20 +77,20 @@
                         style="@style/StandardTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="right"
+                        android:gravity="end"
                         android:maxLines="1"
-                        android:text="نام" />
+                        />
 
                     <TextView
                         android:id="@+id/email_sender"
                         style="@style/SmallText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignRight="@id/commentSenderName"
+                        android:layout_alignEnd="@id/commentSenderName"
                         android:layout_below="@id/commentSenderName"
-                        android:gravity="right"
+                        android:gravity="end"
                         android:maxLines="1"
-                        android:text="vahidimehr@gmail.com"
+                        android:text="@string/vahidimehr_gmail_com"
                         android:textSize="12sp"
                         android:visibility="gone"/>
                 </RelativeLayout>
@@ -112,11 +112,9 @@
                     style="@style/StandardText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_short"
-                    android:layout_marginRight="@dimen/margin_short"
+                    android:layout_marginStart="@dimen/margin_short"
+                    android:layout_marginEnd="@dimen/margin_short"
                     android:layout_marginTop="@dimen/margin_short"
-                    android:gravity="right"
-                    android:text="test"
                     android:textColor="#000" />
 
                 <RelativeLayout
@@ -134,9 +132,8 @@
                         android:layout_alignParentEnd="true"
                         android:gravity="center"
                         android:padding="@dimen/margin_short"
-                        android:text="پاسخ"
                         android:textColor="@color/main_blue"
-
+android:text="پاسخ"
                         android:background="@drawable/button_corner_blue_stroke"
                         />
 
@@ -147,7 +144,7 @@
                         android:background="@mipmap/ic_comment_like"
                         android:id="@+id/imageButton"
                         android:layout_centerVertical="true"
-                        />
+                        android:contentDescription="TODO" />
 
                     <TextView
                         android:id="@+id/textView"
@@ -157,7 +154,7 @@
                         android:layout_alignBaseline="@+id/replyBtn"
                         android:layout_alignBottom="@+id/replyBtn"
                         android:layout_toEndOf="@+id/imageButton"
-                        android:text="12 نفر پسندیدند"
+                        android:text="@string/_12"
                         android:textSize="9sp"
                         android:layout_centerVertical="true"/>
 
@@ -179,7 +176,7 @@
             android:id="@+id/viewSwitcher"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
       />
 
     </LinearLayout>

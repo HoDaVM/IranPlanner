@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class RateFinalParam implements Serializable{
+public class RateFinalParam implements Serializable {
 
     @SerializedName("gtype")
     @Expose
@@ -20,6 +20,17 @@ public class RateFinalParam implements Serializable{
     @SerializedName("value_avg")
     @Expose
     private String valueAvg;
+    @SerializedName("value_title")
+    @Expose
+    private String valueTitle;
+
+    public String getValueTitle() {
+        return valueTitle;
+    }
+
+    public void setValueTitle(String valueTitle) {
+        this.valueTitle = valueTitle;
+    }
 
     public String getGtype() {
         return gtype;
