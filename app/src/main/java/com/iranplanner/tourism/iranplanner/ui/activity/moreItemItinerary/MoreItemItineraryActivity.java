@@ -34,6 +34,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,9 +72,10 @@ import com.iranplanner.tourism.iranplanner.di.model.App;
 
 import com.iranplanner.tourism.iranplanner.showcaseview.CustomShowcaseView;
 import com.iranplanner.tourism.iranplanner.ui.activity.MapFullActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentContract;
+import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentPresenter;
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelReservationListOfCity.ReservationListActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.showAttraction.ShowAttractionActivity;
-import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentListActivity;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
@@ -81,13 +83,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
 import entity.InterestResult;
 import entity.ItineraryLodgingCity;
 import entity.ItineraryPercentage;
+import entity.RateParam;
 import entity.ResultComment;
 import entity.ResultCommentList;
 import entity.ResultData;
@@ -95,11 +97,13 @@ import entity.ResultItinerary;
 import entity.ResultItineraryAttraction;
 import entity.ResultItineraryAttractionDay;
 import entity.ResultItineraryAttractionList;
+import entity.ResultParamUser;
 import entity.ResultWidget;
 
 import entity.ResultWidgetFull;
 
 
+import entity.SendParamUser;
 import entity.ShowAttractionListItinerary;
 import tools.Constants;
 
@@ -110,13 +114,15 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MoreItemItineraryActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
+        GoogleApiClient.OnConnectionFailedListener, CommentContract.View,
         LocationListener,
         View.OnClickListener,
         ItineraryContract.View {
 
     @Inject
     ItineraryPresenter itineraryPresenter;
+    @Inject
+    CommentPresenter commentPresenter;
 
     private CollapsingToolbarLayout collapsingToolbar;
     private GoogleMap mMap;
@@ -154,7 +160,12 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
     int LikeValue;
     int VisitedValue;
     int WishValue;
+    LinearLayout commentHolder;
     DaggerItineraryComponent.Builder builder;
+    RatingBar ratingBar;
+    LinearLayout likeHolder;
+    ImageView likeImg;
+    RelativeLayout ratingPeopleHolder;
 
     private void findView() {
 
@@ -174,13 +185,18 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         textPercentage1 = (TextView) findViewById(R.id.textPercentage1);
         textPercentage2 = (TextView) findViewById(R.id.textPercentage2);
         textPercentage3 = (TextView) findViewById(R.id.textPercentage3);
+        ratingPeopleHolder = findViewById(R.id.ratingPeopleHolder);
         txtDate = (TextView) findViewById(R.id.txtDate);
         changeDateHolder = (LinearLayout) findViewById(R.id.changeDateHolder);
         imgItineraryListMore = (ImageView) findViewById(R.id.imgItineraryListMore);
         contentFullDescription = (CTouchyWebView) findViewById(R.id.contentFullDescription);
+        commentHolder = findViewById(R.id.commentHolder);
         txtOk = (TextView) findViewById(R.id.txtOk);
         MoreInoText = (TextView) findViewById(R.id.MoreInoText);
         AppBarLayout appBar = (AppBarLayout) findViewById(R.id.app_bar);
+        ratingBar = findViewById(R.id.ratingBar);
+        likeImg = findViewById(R.id.likeImg);
+        likeHolder = findViewById(R.id.likeHolder);
         ViewCompat.setElevation(appBar, Util.dpToPx(this, 28));
     }
 
@@ -240,6 +256,9 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         showItinerary.setOnClickListener(this);
         MoreInoText.setOnClickListener(this);
         showReservation.setOnClickListener(this);
+        commentHolder.setOnClickListener(this);
+        ratingPeopleHolder.setOnClickListener(this);
+        likeHolder.setOnClickListener(this);
 
         //-------------------map
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -285,7 +304,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
 
         builder = DaggerItineraryComponent.builder()
                 .netComponent(((App) getApplicationContext()).getNetComponent())
-                .itineraryModule(new ItineraryModule(this));
+                .itineraryModule(new ItineraryModule(this, this));
         builder.build().inject(this);
         itineraryPresenter.getWidgetResult("nodeuser", itineraryData.getItineraryId(), Util.getUseRIdFromShareprefrence(getApplicationContext()), "itinerary", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
         if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_MOREITEMITINERARY, "false", false, getApplicationContext()))) {
@@ -310,7 +329,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
 //            here comes the comment code section
                 showProgressDialog();
                 builder.build().inject(this);
-                itineraryPresenter.getItineraryCommentList("pagecomments", itineraryId, "itinerary", "0", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                commentPresenter.getCommentList("pagecomments", itineraryId, "itinerary", "0");
                 break;
         }
         return true;
@@ -340,7 +359,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
             case R.id.commentHolder:
                 showProgressDialog();
                 builder.build().inject(this);
-                itineraryPresenter.getItineraryCommentList("pagecomments", itineraryId, "itinerary", "0", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                commentPresenter.getCommentList("pagecomments", itineraryId, "itinerary", "0");
                 break;
 
             case R.id.showReservation:
@@ -374,20 +393,30 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
                 itineraryPresenter.getItineraryAttractionListDay("attractionday", "fa", itineraryId, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
 
                 break;
+            case R.id.ratingPeopleHolder:
+                //todo
+                DaggerItineraryComponent.builder()
+                        .netComponent(((App) getApplicationContext()).getNetComponent())
+                        .itineraryModule(new ItineraryModule(this, this))
+                        .build().inject(this);
+                SendParamUser ss = new SendParamUser(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "itinerary", itineraryId);
+                commentPresenter.getRate("rateinfo", ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                break;
+            case R.id.likeHolder:
+
+                if (LikeValue == 1) {
+                    OnClickedIntrestedWidget("like", Constants.intrestDefault, likeImg);
+                    likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
+
+
+                } else {
+                    OnClickedIntrestedWidget("like", Constants.likeImg, likeImg);
+                    likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
+                }
+                break;
         }
     }
 
-    private void OnClickedIntrestedWidget(String gType, String gValue, ImageView imageView) {
-        if (!Util.getUseRIdFromShareprefrence(getApplicationContext()).isEmpty()) {
-//            itineraryPresenter.doWaitingAnimation(imageView);
-            String user = Util.getUseRIdFromShareprefrence(getApplicationContext());
-            String ss = Util.getAndroidIdFromSharedPreferences(getApplicationContext());
-            itineraryPresenter.getInterest("widget", user, "1", "itinerary", itineraryId, gType, gValue, ss);
-        } else {
-            Log.e("user is not login", "error");
-            Toast.makeText(getApplicationContext(), "شما به حساب کاربری خود وارد نشده اید", Toast.LENGTH_LONG).show();
-        }
-    }
 
     private String getShowMoreString(String myData) {
         int count = 0;
@@ -606,6 +635,22 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
     }
 
     @Override
+    public void showComments(ResultCommentList resultCommentList) {
+        List<ResultComment> resultComments = resultCommentList.getResultComment();
+        Intent intent = new Intent(MoreItemItineraryActivity.this, CommentListActivity.class);
+        intent.putExtra("resultComments", (Serializable) resultComments);
+        intent.putExtra("itineraryData", (Serializable) itineraryData);
+        intent.putExtra("nextOffset", resultCommentList.getStatistics().getOffsetNext().toString());
+        intent.putExtra("fromWhere", "Itinerary");
+        startActivity(intent);
+    }
+
+    @Override
+    public void sendCommentMessage(ResultCommentList resultCommentList) {
+
+    }
+
+    @Override
     public void showError(String message) {
 //        menu.findItem(R.id.menuItineraryFav).setIcon(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
 
@@ -620,6 +665,11 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
 //        if (message.contains("HTTP 400 BAD REQUEST")) {
 //            Toast.makeText(getApplicationContext(), "در این مسیر برنامه سفری یافت نشد", Toast.LENGTH_LONG).show();
 //        }
+    }
+
+    @Override
+    public void commentResult(String message) {
+
     }
 
     @Override
@@ -642,6 +692,108 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
 
     @Override
     public void setLoadWidget(ResultWidgetFull resultWidgetFull) {
+        List<ResultWidget> resultWidget = resultWidgetFull.getResultWidget();
+        setWidgetValue(resultWidget);
+    }
+
+    private void setWidgetValue(List<ResultWidget> resultWidget) {
+        if (resultWidget.get(0).getWidgetLikeValue() != null) {
+            LikeValue = resultWidget.get(0).getWidgetLikeValue();
+        }
+
+        if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 1) {
+            likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
+        } else {
+            likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
+        }
+
+    }
+
+    @Override
+    public void setRate(ResultParamUser resultParamUser) {
+        ratingBar.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalAvg()));
+
+    }
+
+    @Override
+    public void setRateUser(ResultParamUser resultParamUser) {
+        CustomDialogAlert customDialogAlert = new CustomDialogAlert(this, resultParamUser);
+        customDialogAlert.show();
+    }
+
+    public class CustomDialogAlert extends Dialog implements
+            View.OnClickListener {
+
+        public Activity c;
+        public Dialog d;
+        public ResultParamUser resultParamUser;
+        public TextView txtNo, txtOk,
+                txtRateName1,
+                txtRateName2,
+                txtRateName3,
+                txtRateName4;
+        public RatingBar ratingBar1,
+                ratingBar2,
+                ratingBar3,
+                ratingBar4,
+                alertDescription;
+
+
+        public CustomDialogAlert(Activity a, ResultParamUser resultParamUser) {
+            super(a);
+            // TODO Auto-generated constructor stub
+            this.c = a;
+            this.resultParamUser = resultParamUser;
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+//            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.raiting_layout);
+            txtNo = findViewById(R.id.txtNo);
+            txtOk = findViewById(R.id.txtOk);
+            txtRateName1 = findViewById(R.id.txtRateName1);
+            txtRateName2 = findViewById(R.id.txtRateName2);
+            txtRateName3 = findViewById(R.id.txtRateName3);
+            txtRateName4 = findViewById(R.id.txtRateName4);
+
+            ratingBar1 = findViewById(R.id.ratingBar1);
+            ratingBar2 = findViewById(R.id.ratingBar2);
+            ratingBar3 = findViewById(R.id.ratingBar3);
+            ratingBar4 = findViewById(R.id.ratingBar4);
+            try {
+                txtRateName1.setText(resultParamUser.getResultRatePost().getRateFinalParam().get(0).getValueTitle());
+                txtRateName2.setText(resultParamUser.getResultRatePost().getRateFinalParam().get(1).getValueTitle());
+                txtRateName3.setText(resultParamUser.getResultRatePost().getRateFinalParam().get(2).getValueTitle());
+                txtRateName4.setText(resultParamUser.getResultRatePost().getRateFinalParam().get(3).getValueTitle());
+                ratingBar1.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalParam().get(0).getValueAvg()));
+                ratingBar2.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalParam().get(1).getValueAvg()));
+                ratingBar3.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalParam().get(2).getValueAvg()));
+                ratingBar4.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalParam().get(3).getValueAvg()));
+            } catch (Exception e) {
+
+            }
+
+            txtNo.setOnClickListener(this);
+            txtOk.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.txtNo:
+                    dismiss();
+                    break;
+                case R.id.txtOk:
+
+                    SendParamUser ss = new SendParamUser(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "itinerary", itineraryId, new RateParam(String.valueOf(ratingBar1.getRating()), String.valueOf(ratingBar2.getRating()), String.valueOf(ratingBar3.getRating()), String.valueOf(ratingBar4.getRating())));
+                    commentPresenter.rateSend("rate", ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+
+                    break;
+            }
+            dismiss();
+        }
     }
 
     @Override
@@ -650,22 +802,17 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         return true;
     }
 
+    private void setInterestResponce(List<ResultWidget> resultWidget) {
+
+        if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 1) {
+            LikeValue = 1;
+            likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
+        }
+    }
+
     @Override
     public void setIntrestedWidget(InterestResult InterestResult) {
-        if (toggleFav()) {
-
-//            menu.findItem(R.id.menuItineraryFav).setIcon(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
-        } else {
-//            menu.findItem(R.id.menuItineraryFav).setIcon(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
-
-        }
-
-        ResultData resultData = InterestResult.getResultData();
-        //// TODO: 14/02/2017
-//        rotate.setRepeatCount(0);
-//        checkWhichImageIntrested(rotateImage);
-//                    bookmarkImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_bookmark_pink));
-
+        setInterestResponce(InterestResult.getResultWidget());
     }
 
     @Override
@@ -695,6 +842,20 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
     @Override
     public void showMarkerAt(float latitude, float longitude) {
 
+    }
+
+    private void OnClickedIntrestedWidget(String gType, String gValue, ImageView imageView) {
+        if (!Util.getUseRIdFromShareprefrence(getApplicationContext()).isEmpty()) {
+            builder = DaggerItineraryComponent.builder()
+                    .netComponent(((App) getApplicationContext()).getNetComponent())
+                    .itineraryModule(new ItineraryModule(this, this));
+            builder.build().inject(this);
+            commentPresenter.getInterest("widget", Util.getUseRIdFromShareprefrence(getApplicationContext()), "1", "itinerary", itineraryId, gType, gValue, Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+
+        } else {
+            Log.e("user is not login", "error");
+            Toast.makeText(getApplicationContext(), "شما به حساب کاربری خود وارد نشده اید", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -781,7 +942,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
 
         DaggerItineraryComponent.builder()
                 .netComponent(((App) getApplicationContext()).getGoogleNetComponent())
-                .itineraryModule(new ItineraryModule(this))
+                .itineraryModule(new ItineraryModule(this, this))
                 .build().inject(this);
 
         //-----------------
@@ -915,11 +1076,6 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
                         //setAlpha(0.4f, v0,v1, v2,v3);
                         break;
                     }
-//            case 4: {
-//                showcaseView.hide();
-//                //  setAlpha(1.0f, v0,v1, v2,v3);
-//                break;
-//            }
                 }
                 counter++;
             }
@@ -932,7 +1088,4 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
 
     }
 
-//    changeDateHolder
-//            showItinerary1
-//            commenttoolbar
 }
