@@ -7,12 +7,15 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical">
-
+    <include
+        android:id="@+id/comment_rate"
+        layout="@layout/comment_rate"
+        />
     <RelativeLayout
         android:id="@+id/changeDateTimeHolder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/comment_rate"
         app:layout_collapseMode="pin">
 
         <LinearLayout
@@ -73,7 +76,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginRight="@dimen/margin_standard"
-                    android:padding="@dimen/margin_short">
+                    android:padding="@dimen/margin_short"
+                    >
 
                     <TextView
                         android:id="@+id/txtDurationHotel"

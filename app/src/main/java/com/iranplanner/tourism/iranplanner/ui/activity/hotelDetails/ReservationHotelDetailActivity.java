@@ -1,5 +1,7 @@
 package com.iranplanner.tourism.iranplanner.ui.activity.hotelDetails;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -20,6 +22,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,8 +43,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.iranplanner.tourism.iranplanner.R;
+import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.ui.activity.MapFullActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.AttractionListMorePresenter;
+import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentContract;
+import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentListActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentPresenter;
 import com.iranplanner.tourism.iranplanner.ui.activity.showRoom.ShowRoomActivity;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -56,11 +63,16 @@ import javax.inject.Inject;
 
 import entity.InterestResult;
 import entity.ItineraryLodgingCity;
+import entity.RateParam;
+import entity.ResultComment;
 import entity.ResultCommentList;
-import entity.ResultData;
 import entity.ResultLodging;
 import entity.ResultLodgingRoomList;
+import entity.ResultParamUser;
 import entity.ResultRoom;
+import entity.ResultWidget;
+import entity.ResultWidgetFull;
+import entity.SendParamUser;
 import entity.ShowAtractionDetailMore;
 import entity.ShowAttractionListMore;
 import okhttp3.OkHttpClient;
@@ -71,6 +83,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import server.Config;
 import server.getJsonInterface;
+import tools.Constants;
 import tools.CustomDialogDate;
 import tools.CustomDialogNumberPicker;
 import tools.Util;
@@ -81,7 +94,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * Created by h.vahidimehr on 28/02/2017.
  */
 
-public class ReservationHotelDetailActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener, AttractionListMorePresenter.View {
+public class ReservationHotelDetailActivity extends AppCompatActivity implements OnMapReadyCallback, CommentContract.View,
+        View.OnClickListener, AttractionListMorePresenter.View, HotelDetailContract.View {
 
     private GoogleMap mMap;
     //    ResultItineraryAttraction attraction;
@@ -95,7 +109,7 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
     String myData;
     TextView txtDateCheckIn, txtOk, MoreInoText, txtHotelType, txtHotelName, txtAddress, txtDate, txtDurationHotel;
     RelativeLayout TypeDurationHolder, holderDate, ratingHolder, GroupHolder, interestingLayout, VisitedLayout, LikeLayout, changeDateHolder;
-    LinearLayout rateHolder, bookmarkHolder, doneHolder, nowVisitedHolder, beftorVisitedHolder, likeHolder, okHolder, dislikeHolder;
+    LinearLayout rateHolder, bookmarkHolder, doneHolder, nowVisitedHolder, beftorVisitedHolder, likeHolder, okHolder, dislikeHolder, commentHolder;
     ImageView bookmarkImg, doneImg, dislikeImg, okImg, likeImg, rateImg, beftorVisitedImg, nowVisitedImg, wishImg, triangleShowAttraction;
     boolean ratingHolderFlag = false;
     String rotateImage;
@@ -106,10 +120,16 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
     Button roomReservationBtn;
     private String todayDate;
     private ProgressDialog progressDialog;
-     ImageView imgStar1, imgStar2, imgStar3, imgStar4, imgStar5;
+    ImageView imgStar1, imgStar2, imgStar3, imgStar4, imgStar5;
     RelativeLayout starHolder;
+    int LikeValue;
+    DaggerHotelDetailComponent.Builder builder;
     @Inject
-    AttractionListMorePresenter attractionListMorePresenter;
+    CommentPresenter commentPresenter;
+    @Inject
+    HotelDetailPresenter hotelDetailPresenter;
+    RelativeLayout ratingPeopleHolder;
+    RatingBar ratingBar;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -177,6 +197,9 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
         nowVisitedImg = (ImageView) findViewById(R.id.nowVisitedImg);
         wishImg = (ImageView) findViewById(R.id.wishImg);
         triangleShowAttraction = (ImageView) findViewById(R.id.triangleShowAttraction);
+        commentHolder = findViewById(R.id.commentHolder);
+        ratingPeopleHolder = findViewById(R.id.ratingPeopleHolder);
+        ratingBar = findViewById(R.id.ratingBar);
 //        setupTablayout();
     }
 
@@ -216,17 +239,6 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
         }
     }
 
-    //    private void setAttractionTypeImage(){
-//        if (attraction.getAttarctionItineraryTypeId().equals("2930")) {
-//            imageTypeAttraction.setImageDrawable(getResources().getDrawable(R.mipmap.ic_religious));
-//        } else if (attraction.getAttarctionItineraryTypeId().equals("2931")) {
-//            imageTypeAttraction.setImageDrawable(getResources().getDrawable(R.mipmap.ic_nature));
-//        } else if (attraction.getAttarctionItineraryTypeId().equals("2932")) {
-//            imageTypeAttraction.setImageDrawable(getResources().getDrawable(R.mipmap.ic_history));
-//        } else if (attraction.getAttarctionItineraryTypeId().equals("2933")) {
-//            imageTypeAttraction.setImageDrawable(getResources().getDrawable(R.mipmap.ic_entertainment));
-//        }
-//    }
     private void setWebViewContent(String myData) {
         contentFullDescription.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -318,25 +330,25 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
     }
 
 
-    private void setStar(){
+    private void setStar() {
         if (resultLodgingHotelDetail.getLodgingRateInt().equals("1")) {
-           starHolder.setVisibility(View.VISIBLE);
-           imgStar1.setVisibility(View.VISIBLE);
+            starHolder.setVisibility(View.VISIBLE);
+            imgStar1.setVisibility(View.VISIBLE);
         } else if (resultLodgingHotelDetail.getLodgingRateInt().equals("2")) {
-          starHolder.setVisibility(View.VISIBLE);
-          imgStar1.setVisibility(View.VISIBLE);
-          imgStar2.setVisibility(View.VISIBLE);
+            starHolder.setVisibility(View.VISIBLE);
+            imgStar1.setVisibility(View.VISIBLE);
+            imgStar2.setVisibility(View.VISIBLE);
         } else if (resultLodgingHotelDetail.getLodgingRateInt().equals("3")) {
-           starHolder.setVisibility(View.VISIBLE);
-           imgStar1.setVisibility(View.VISIBLE);
-           imgStar2.setVisibility(View.VISIBLE);
-           imgStar3.setVisibility(View.VISIBLE);
+            starHolder.setVisibility(View.VISIBLE);
+            imgStar1.setVisibility(View.VISIBLE);
+            imgStar2.setVisibility(View.VISIBLE);
+            imgStar3.setVisibility(View.VISIBLE);
         } else if (resultLodgingHotelDetail.getLodgingRateInt().equals("4")) {
-           starHolder.setVisibility(View.VISIBLE);
-           imgStar1.setVisibility(View.VISIBLE);
-           imgStar2.setVisibility(View.VISIBLE);
-           imgStar3.setVisibility(View.VISIBLE);
-           imgStar4.setVisibility(View.VISIBLE);
+            starHolder.setVisibility(View.VISIBLE);
+            imgStar1.setVisibility(View.VISIBLE);
+            imgStar2.setVisibility(View.VISIBLE);
+            imgStar3.setVisibility(View.VISIBLE);
+            imgStar4.setVisibility(View.VISIBLE);
         } else if (resultLodgingHotelDetail.getLodgingRateInt().equals("5")) {
             starHolder.setVisibility(View.VISIBLE);
             imgStar1.setVisibility(View.VISIBLE);
@@ -357,8 +369,6 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
         txtHotelName.setText(resultLodgingHotelDetail.getLodgingName());
         txtHotelType.setText("نوع مرکز اقامتی: " + resultLodgingHotelDetail.getLodgingTypeTitle());
         txtAddress.setText(resultLodgingHotelDetail.getLodgingAddress());
-//        txtDate.setText(Utils.getSimpleDate(startOfTravel));
-//        txtDuration.setText(Utils.persianNumbers(String.valueOf(durationTravel)) + " شب");
         roomReservationBtn.setOnClickListener(this);
         setStar();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -382,72 +392,22 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
 
         holderDate.setOnClickListener(this);
         TypeDurationHolder.setOnClickListener(this);
+        commentHolder.setOnClickListener(this);
+        likeHolder.setOnClickListener(this);
+        ratingPeopleHolder.setOnClickListener(this);
 
+
+        DaggerHotelDetailComponent.builder()
+                .netComponent(((App) getApplicationContext()).getNetComponent())
+                .hotelDetailModule(new HotelDetailModule(this, this))
+                .build().inject(this);
         setImageHolder();
-
-//        interestingLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                int width = interestingLayout.getWidth();
-//                int height = interestingLayout.getHeight();
-//                if (width > 0 && height > 0) {
-//                    VisitedLayout.setVisibility(View.INVISIBLE);
-//                    LikeLayout.setVisibility(View.INVISIBLE);
-//                }
-//            }
-//        });
+        commentPresenter.getWidgetResult("nodeuser", resultLodgingHotelDetail.getLodgingId(), Util.getUseRIdFromShareprefrence(getApplicationContext()), "lodging", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
         mapFragment.getMapAsync(this);
-//        MoreInoText.setOnClickListener(this);
-//        ratingHolder.setOnClickListener(this);
-//        rateHolder.setOnClickListener(this);
-//        doneHolder.setOnClickListener(this);
-//        likeImg.setOnClickListener(this);
-//        commentImg.setOnClickListener(this);
-//        dislikeImg.setOnClickListener(this);
-//        nowVisitedImg.setOnClickListener(this);
-//        wishImg.setOnClickListener(this);
-//        beftorVisitedImg.setOnClickListener(this);
-//        bookmarkHolder.setOnClickListener(this);
+
 
     }
 
-//    private void setInterestResponce(List<ResultWidget> resultWidget) {
-//        if (resultWidget.get(0).getWidgetBookmarkValue() != null && resultWidget.get(0).getWidgetBookmarkValue() == 1) {
-//            bookmarkImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_bookmark_pink));
-//        }
-//        if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 1) {
-//            likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_air));
-//            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_air));
-//            commentImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_grey_));
-//            dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_grey_));
-//        }
-//        if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 2) {
-//            commentImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_pink));
-//            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_pink));
-//            dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_grey_));
-//            likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_grey));
-//        }
-//        if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 3) {
-//            dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_pink));
-//            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_pink));
-//            likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_grey));
-//            commentImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_grey_));
-//        }
-//        if (resultWidget.get(0).getWidgetVisitedValue() != null && resultWidget.get(0).getWidgetVisitedValue() == 1) {
-//            nowVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_done_pink));
-//            doneImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_done_pink));
-//            beftorVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_done_grey));
-//        }
-//        if (resultWidget.get(0).getWidgetVisitedValue() != null && resultWidget.get(0).getWidgetVisitedValue() == 2) {
-//            beftorVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_done_pink));
-//            doneImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_done_pink));
-//            nowVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_done_grey));
-//        }
-//        if (resultWidget.get(0).getWidgetWishValue() != null && resultWidget.get(0).getWidgetWishValue() == 1) {
-//            wishImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_wish_pink));
-//        }
-//
-//    }
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -525,108 +485,49 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
 
 
                 break;
-            case R.id.ratingHolder:
-                if (ratingHolderFlag) {
-                    translateUp();
-                }
-                break;
+
             case R.id.holderDate:
-
                 showDialogDate();
-
-                break;
-            case R.id.rateHolder:
-                if (!ratingHolderFlag) {
-                    VisitedLayout.setVisibility(View.INVISIBLE);
-                    LikeLayout.setVisibility(View.VISIBLE);
-                    rotateImage = "rateImg";
-                    translateDown();
-                    break;
-                } else {
-                    translateUp();
-                    break;
-                }
-
-            case R.id.doneHolder:
-                if (!ratingHolderFlag) {
-                    LikeLayout.setVisibility(View.INVISIBLE);
-                    VisitedLayout.setVisibility(View.VISIBLE);
-                    rotateImage = "doneImg";
-                    translateDown();
-                    break;
-                } else {
-                    translateUp();
-                    break;
-                }
-
-            case R.id.likeImg:
-                rotateImage = "likeImg";
-                if (!Util.getUseRIdFromShareprefrence(getApplicationContext()).isEmpty()) {
-                    animWaiting(likeImg);
-                    String uid = Util.getUseRIdFromShareprefrence(getApplicationContext());
-
-                } else {
-                    Log.e("user is not login", "error");
-                    Toast.makeText(getApplicationContext(), "شما به حساب کاربری خود وارد نشده اید", Toast.LENGTH_LONG).show();
-                }
-                break;
-            case R.id.commentImg:
-                rotateImage = "commentImg";
-                if (!Util.getUseRIdFromShareprefrence(getApplicationContext()).isEmpty()) {
-                    animWaiting(okImg);
-                    String uid = Util.getUseRIdFromShareprefrence(getApplicationContext());
-
-                } else {
-                    Log.e("user is not login", "error");
-                    Toast.makeText(getApplicationContext(), "شما به حساب کاربری خود وارد نشده اید", Toast.LENGTH_LONG).show();
-                }
-                break;
-            case R.id.dislikeImg:
-                rotateImage = "dislikeImg";
-                if (!Util.getUseRIdFromShareprefrence(getApplicationContext()).isEmpty()) {
-                    animWaiting(dislikeImg);
-                    String uid = Util.getUseRIdFromShareprefrence(getApplicationContext());
-
-                } else {
-                    Log.e("user is not login", "error");
-                    Toast.makeText(getApplicationContext(), "شما به حساب کاربری خود وارد نشده اید", Toast.LENGTH_LONG).show();
-                }
                 break;
 
-            case R.id.wishImg:
-                rotateImage = "wishImg";
-                if (!Util.getUseRIdFromShareprefrence(getApplicationContext()).isEmpty()) {
-                    animWaiting(wishImg);
-                    String uid = Util.getUseRIdFromShareprefrence(getApplicationContext());
-                } else {
-                    Log.e("user is not login", "error");
-                    Toast.makeText(getApplicationContext(), "شما به حساب کاربری خود وارد نشده اید", Toast.LENGTH_LONG).show();
-                }
-                break;
-            case R.id.beftorVisitedImg:
-                rotateImage = "beftorVisitedImg";
-                if (!Util.getUseRIdFromShareprefrence(getApplicationContext()).isEmpty()) {
-                    animWaiting(beftorVisitedImg);
-                    String uid = Util.getUseRIdFromShareprefrence(getApplicationContext());
-                } else {
-                    Log.e("user is not login", "error");
-                    Toast.makeText(getApplicationContext(), "شما به حساب کاربری خود وارد نشده اید", Toast.LENGTH_LONG).show();
-                }
-                break;
-            case R.id.bookmarkHolder:
-                rotateImage = "bookmarkImg";
-                if (!Util.getUseRIdFromShareprefrence(getApplicationContext()).isEmpty()) {
-                    animWaiting(bookmarkImg);
-                    String uid = Util.getUseRIdFromShareprefrence(getApplicationContext());
 
-                } else {
-                    Log.e("user is not login", "error");
-                    Toast.makeText(getApplicationContext(), "شما به حساب کاربری خود وارد نشده اید", Toast.LENGTH_LONG).show();
-                }
+            case R.id.ratingPeopleHolder:
+                SendParamUser ss = new SendParamUser(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "lodging", resultLodgingHotelDetail.getLodgingId());
+                commentPresenter.getRate("rateinfo", ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                 break;
+
+//            case R.id.likeImg:
+//                rotateImage = "likeImg";
+//                if (LikeValue == 1) {
+//                    OnClickedIntrestedWidget("like", Constants.intrestDefault, likeImg);
+//                    likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
+//
+//
+//                } else {
+//                    OnClickedIntrestedWidget("like", Constants.likeImg, likeImg);
+//                    likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
+//
+//                }
+
+            case R.id.commentHolder:
+                commentPresenter.getCommentList("pagecomments", resultLodgingHotelDetail.getLodgingId(), "lodging", "0");
+                break;
+
             case R.id.roomReservationBtn:
-                showProgress();
-                getLodgingResevationRoom(String.valueOf(resultLodgingHotelDetail.getLodgingId()));
+//                showProgress();
+                hotelDetailPresenter.getResultLodgingRoomList("room", String.valueOf(resultLodgingHotelDetail.getLodgingId()), "", "");
+                break;
+            case R.id.likeHolder:
+                if (LikeValue == 1) {
+                    OnClickedIntrestedWidget("like", Constants.intrestDefault, likeImg);
+                    likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
+
+
+                } else {
+                    OnClickedIntrestedWidget("like", Constants.likeImg, likeImg);
+                    likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
+
+                }
                 break;
         }
     }
@@ -643,44 +544,13 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
         });
     }
 
-    public void getLodgingResevationRoom(String hotelID) {
-//        getResultLodgingRoomList
-        Retrofit retrofit = new Retrofit.Builder()
-                .client(setHttpClient())
-                .baseUrl(Config.BASEURL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        getJsonInterface getJsonInterface = retrofit.create(server.getJsonInterface.class);
-        Call<ResultLodgingRoomList> callc = getJsonInterface.getResultLodgingRoomList("room", hotelID, "", "");
-        callc.enqueue(new Callback<ResultLodgingRoomList>() {
-            @Override
-            public void onResponse(Call<ResultLodgingRoomList> call, Response<ResultLodgingRoomList> response) {
-                Log.e("result of ResultRooms", "true");
-                if (response.body() != null && response.body().getResultRoom().size()>0) {
-
-                    dismissProgress();
-                    ResultLodgingRoomList res = response.body();
-                    List<ResultRoom> ResultRooms = res.getResultRoom();
-                    Intent intent = new Intent(getApplicationContext(), ShowRoomActivity.class);
-
-                    intent.putExtra("ResultRooms", (Serializable) ResultRooms);
-                    intent.putExtra("resultLodgingHotelDetail", (Serializable) resultLodgingHotelDetail);
-                    intent.putExtra("startOfTravel", startOfTravel);
-                    intent.putExtra("durationTravel", durationTravel);
-                    intent.putExtra("hotelName", resultLodgingHotelDetail.getLodgingName());
-                    startActivity(intent);
-                }
-                else {
-                    dismissProgress();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResultLodgingRoomList> call, Throwable t) {
-                Log.e("result of intresting", "false");
-                dismissProgress();
-            }
-        });
+    private void OnClickedIntrestedWidget(String gType, String gValue, ImageView imageView) {
+        if (!Util.getUseRIdFromShareprefrence(getApplicationContext()).isEmpty()) {
+            commentPresenter.getInterest("widget", Util.getUseRIdFromShareprefrence(getApplicationContext()), "1", "lodging", resultLodgingHotelDetail.getLodgingId(), gType, gValue, Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+        } else {
+            Log.e("user is not login", "error");
+            Toast.makeText(getApplicationContext(), "شما به حساب کاربری خود وارد نشده اید", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void translateDown() {
@@ -748,7 +618,7 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
 
                 if (response.body() != null) {
                     InterestResult jsonResponse = response.body();
-                    ResultData resultData = jsonResponse.getResultData();
+//                    ResultData resultData = jsonResponse.getResultData();
                     //// TODO: 14/02/2017
                     rotate.setRepeatCount(0);
                     checkWhichImageIntrested(rotateImage);
@@ -769,7 +639,13 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
 
     @Override
     public void showComments(ResultCommentList resultCommentList) {
-
+        List<ResultComment> resultComments = resultCommentList.getResultComment();
+        Intent intent = new Intent(ReservationHotelDetailActivity.this, CommentListActivity.class);
+        intent.putExtra("resultComments", (Serializable) resultComments);
+        intent.putExtra("lodgingData", (Serializable) resultLodgingHotelDetail);
+        intent.putExtra("nextOffset", resultCommentList.getStatistics().getOffsetNext().toString());
+        intent.putExtra("fromWhere", "Lodging");
+        startActivity(intent);
     }
 
     @Override
@@ -792,14 +668,63 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    public void setIntrestedWidget(InterestResult interestResult) {
+
+    }
+
+    @Override
+    public void setLoadWidget(ResultWidgetFull resultWidgetFull) {
+        List<ResultWidget> resultWidget = resultWidgetFull.getResultWidget();
+        setWidgetValue(resultWidget);
+    }
+
+    private void setWidgetValue(List<ResultWidget> resultWidget) {
+
+        if (resultWidget.get(0).getWidgetLikeValue() != null) {
+            LikeValue = resultWidget.get(0).getWidgetLikeValue();
+        }
+        if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 1) {
+            likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
+            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
+        } else if (resultWidget.get(0).getWidgetLikeValue() == null || resultWidget.get(0).getWidgetLikeValue() == 0) {
+            likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
+        }
+
+    }
+
+    @Override
+    public void setRate(ResultParamUser resultParamUser) {
+        ratingBar.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalAvg()));
+    }
+
+    @Override
+    public void setRateUser(ResultParamUser resultParamUser) {
+        CustomDialogAlert customDialogAlert = new CustomDialogAlert(this, resultParamUser);
+        customDialogAlert.show();
+    }
+
     public void showProgress() {
         progressDialog = Util.showProgressDialog(getApplicationContext(), "لطفا منتظر بمانید", ReservationHotelDetailActivity.this);
     }
 
     public void dismissProgress() {
-        Util.dismissProgress(progressDialog);
-    }
+            Util.dismissProgress(progressDialog);
+         }
 
+    @Override
+    public void setLodgingRoomList(ResultLodgingRoomList resultLodgingRoomList) {
+        if (resultLodgingRoomList != null) {
+            List<ResultRoom> ResultRooms = resultLodgingRoomList.getResultRoom();
+            Intent intent = new Intent(getApplicationContext(), ShowRoomActivity.class);
+            intent.putExtra("ResultRooms", (Serializable) ResultRooms);
+            intent.putExtra("resultLodgingHotelDetail", (Serializable) resultLodgingHotelDetail);
+            intent.putExtra("startOfTravel", startOfTravel);
+            intent.putExtra("durationTravel", durationTravel);
+            intent.putExtra("hotelName", resultLodgingHotelDetail.getLodgingName());
+            startActivity(intent);
+        }
+    }
 
 
     @Override
@@ -856,4 +781,78 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
 //        }
     }
 
+    public class CustomDialogAlert extends Dialog implements
+            View.OnClickListener {
+
+        public Activity c;
+        public Dialog d;
+        public ResultParamUser resultParamUser;
+        public TextView txtNo, txtOk,
+                txtRateName1,
+                txtRateName2,
+                txtRateName3,
+                txtRateName4;
+        public RatingBar ratingBar1,
+                ratingBar2,
+                ratingBar3,
+                ratingBar4,
+                alertDescription;
+
+
+        public CustomDialogAlert(Activity a, ResultParamUser resultParamUser) {
+            super(a);
+            // TODO Auto-generated constructor stub
+            this.c = a;
+            this.resultParamUser = resultParamUser;
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+//            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.raiting_layout);
+            txtNo = findViewById(R.id.txtNo);
+            txtOk = findViewById(R.id.txtOk);
+            txtRateName1 = findViewById(R.id.txtRateName1);
+            txtRateName2 = findViewById(R.id.txtRateName2);
+            txtRateName3 = findViewById(R.id.txtRateName3);
+            txtRateName4 = findViewById(R.id.txtRateName4);
+
+            ratingBar1 = findViewById(R.id.ratingBar1);
+            ratingBar2 = findViewById(R.id.ratingBar2);
+            ratingBar3 = findViewById(R.id.ratingBar3);
+            ratingBar4 = findViewById(R.id.ratingBar4);
+            try {
+                txtRateName1.setText(resultParamUser.getResultRatePost().getRateFinalParam().get(0).getValueTitle());
+                txtRateName2.setText(resultParamUser.getResultRatePost().getRateFinalParam().get(1).getValueTitle());
+                txtRateName3.setText(resultParamUser.getResultRatePost().getRateFinalParam().get(2).getValueTitle());
+                txtRateName4.setText(resultParamUser.getResultRatePost().getRateFinalParam().get(3).getValueTitle());
+                ratingBar1.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalParam().get(0).getValueAvg()));
+                ratingBar2.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalParam().get(1).getValueAvg()));
+                ratingBar3.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalParam().get(2).getValueAvg()));
+                ratingBar4.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalParam().get(3).getValueAvg()));
+            } catch (Exception e) {
+
+            }
+
+            txtNo.setOnClickListener(this);
+            txtOk.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.txtNo:
+                    dismiss();
+                    break;
+                case R.id.txtOk:
+
+                    SendParamUser ss = new SendParamUser(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "lodging", resultLodgingHotelDetail.getLodgingId(), new RateParam(String.valueOf(ratingBar1.getRating()), String.valueOf(ratingBar2.getRating()), String.valueOf(ratingBar3.getRating()), String.valueOf(ratingBar4.getRating())));
+                    commentPresenter.rateSend("rate", ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+
+                    break;
+            }
+            dismiss();
+        }
+    }
 }

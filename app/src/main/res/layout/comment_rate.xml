@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -125,18 +125,20 @@
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:layout_below="@+id/LikeLayout"
-            android:background="@color/white_"></RelativeLayout>
+            android:background="@color/greyLight"></RelativeLayout>
         <RelativeLayout
             android:id="@+id/ratingPeopleHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/borderLayout"
             >
+
             <TextView
-                android:id="@+id/txtHotelName"
+                android:id="@+id/txtRateName"
                 style="@style/StandardTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:text="امتیاز بده"
                 android:translationZ="1dp" />
@@ -148,13 +150,13 @@
                 android:id="@+id/ratingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/txtHotelName"
+                android:layout_below="@+id/txtRateName"
                 android:layout_centerHorizontal="true"
                 style="?android:attr/ratingBarStyleIndicator"
                 android:isIndicator="true"
                 />
             <TextView
-                android:id="@+id/txtHotelType"
+                android:id="@+id/txtRateType"
                 style="@style/StandardTextGrey"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -168,7 +170,7 @@
             <com.coinpany.core.android.widget.CDivider
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_below="@+id/txtHotelType"/>
+                android:layout_below="@+id/txtRateType"/>
 
         </RelativeLayout>
 
