@@ -38,11 +38,15 @@ import java.util.List;
 import javax.inject.Inject;
 
 import entity.CommentSend;
+import entity.InterestResult;
 import entity.ResulAttraction;
 import entity.ResultComment;
 import entity.ResultCommentList;
 import entity.ResultItinerary;
 import entity.ResultItineraryAttraction;
+import entity.ResultLodging;
+import entity.ResultParamUser;
+import entity.ResultWidgetFull;
 import tools.Util;
 
 
@@ -64,6 +68,7 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
     List<ResultComment> resultComments;
     RecyclerView recyclerView;
     ResulAttraction attractionData;
+    ResultLodging lodgingData;
     String fromWhere;
     DaggerCommentComponent.Builder builder;
     @Inject
@@ -107,6 +112,13 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
                 nextOffset = (String) extras.getSerializable("nextOffset");
                 commentTitle.setText(attractionData.getAttractionTitle());
             }
+        } else if (fromWhere.equals("Lodging")) {
+            lodgingData = (ResultLodging) extras.getSerializable("lodgingData");
+
+            if (lodgingData != null) {
+                nextOffset = (String) extras.getSerializable("nextOffset");
+                commentTitle.setText(lodgingData.getLodgingName());
+            }
         }
         cParent = "";
         cParent = extras.getString("cParent");
@@ -141,6 +153,8 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
 
                         } else if (fromWhere.equals("Attraction")) {
                             intent.putExtra("attractionData", (Serializable) attractionData);
+                        }else if (fromWhere.equals("Lodging")) {
+                            intent.putExtra("lodgingData", (Serializable) lodgingData);
                         }
 
                         startActivityForResult(intent, STATIC_INTEGER_VALUE_COMMENT);
@@ -170,7 +184,9 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
                                                          if (fromWhere.equals("Itinerary")) {
                                                              commentPresenter.getCommentList("pagecomments", itineraryData.getItineraryId(), "itinerary", nextOffset);
                                                          } else if (fromWhere.equals("Attraction")) {
-                                                             commentPresenter.getCommentList("pagecomments", attractionData.getAttractionId(), "itinerary", nextOffset);
+                                                             commentPresenter.getCommentList("pagecomments", attractionData.getAttractionId(), "attraction", nextOffset);
+                                                         }else if (fromWhere.equals("Lodging")) {
+                                                             commentPresenter.getCommentList("pagecomments", attractionData.getAttractionId(), "lodging", nextOffset);
                                                          }
 
 //                                                         }
@@ -225,6 +241,8 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
                                                           commentPresenter.callInsertComment(new CommentSend(userId, "1", "itinerary", itineraryData.getItineraryId(), "comment", String.valueOf(txtAddComment.getText()), cParent, ""), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                                                       } else if (fromWhere.equals("Attraction")) {
                                                           commentPresenter.callInsertComment(new CommentSend(userId, "1", "attraction", attractionData.getAttractionId(), "comment", String.valueOf(txtAddComment.getText()), cParent, ""), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                                                      }else if (fromWhere.equals("Lodging")) {
+                                                          commentPresenter.callInsertComment(new CommentSend(userId, "1", "lodging", lodgingData.getLodgingId(), "comment", String.valueOf(txtAddComment.getText()), cParent, ""), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                                                       }
                                                       txtAddComment.setText("");
                                                   } else if (userId.isEmpty()) {
@@ -313,8 +331,25 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
 
     }
 
+    @Override
+    public void setIntrestedWidget(InterestResult interestResult) {
 
+    }
 
+    @Override
+    public void setLoadWidget(ResultWidgetFull resultWidgetFull) {
+
+    }
+
+    @Override
+    public void setRate(ResultParamUser resultParamUser) {
+
+    }
+
+    @Override
+    public void setRateUser(ResultParamUser resultParamUser) {
+
+    }
 
 
     public class CustomDialogAlert extends Dialog implements

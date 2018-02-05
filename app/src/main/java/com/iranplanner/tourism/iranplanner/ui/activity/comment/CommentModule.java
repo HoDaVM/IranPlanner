@@ -17,7 +17,8 @@ public class CommentModule {
     public CommentModule(CommentContract.View mView) {
         this.mView = mView;
     }
-@CustomScope
+
+    @CustomScope
     @Provides
     CommentContract.View providesMainScreenContractView() {
         return mView;
