@@ -68,90 +68,90 @@ public class AttractionDetailPresenter extends AttractionDetailContract {
     }
 
 
-    @Override
-    public void getAttractionCommentList(String action, String nId, String nType, String offset, String cid, String andId) {
-        mView.showProgress();
-        retrofit.create(AttractionService.class)
-                .getItineraryCommentList(action, nId, nType, offset, cid, andId).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(new Observer<ResultCommentList>() {
-
-                    @Override
-                    public void onCompleted() {
-                        mView.showComplete();
-                        mView.dismissProgress();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mView.showError(e.getMessage());
-                        mView.dismissProgress();
-                    }
-
-                    @Override
-                    public void onNext(ResultCommentList resultCommentList) {
-                        mView.showComment(resultCommentList, "Attraction");
-                        mView.dismissProgress();
-                    }
-                });
-
-    }
-
-    @Override
-    public void getWidgetResult(String action, String id, String uid, String ntype, String cid, String andId) {
-        retrofit.create(AttractionService.class)
-                .getWidgetResult(action, id, uid, ntype, cid, andId).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(new Observer<ResultWidgetFull>() {
-
-                    @Override
-                    public void onCompleted() {
+//    @Override
+//    public void getAttractionCommentList(String action, String nId, String nType, String offset, String cid, String andId) {
+//        mView.showProgress();
+//        retrofit.create(AttractionService.class)
+//                .getItineraryCommentList(action, nId, nType, offset, cid, andId).subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .unsubscribeOn(Schedulers.io())
+//                .subscribe(new Observer<ResultCommentList>() {
+//
+//                    @Override
+//                    public void onCompleted() {
 //                        mView.showComplete();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mView.showError(e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(ResultWidgetFull resultWidgetFull) {
-//                        mView.showAttraction(resultCommentList);
-                        mView.setLoadWidget(resultWidgetFull);
-
-                    }
-                });
-    }
-
-    @Override
-    public void getInterest(String action, String uid, String cid, String ntype, String nid, String gtype, String gvalue, String andId) {
-        retrofit.create(AttractionService.class)
-                .getInterest(action, uid, cid, ntype, nid, gtype, gvalue, andId).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(new Observer<InterestResult>() {
-
-                    @Override
-                    public void onCompleted() {
-//                        rotate.setRepeatCount(0);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mView.showError(e.getMessage());
-//                        rotate.setRepeatCount(0);
-                    }
-
-                    @Override
-                    public void onNext(InterestResult interestResult) {
-                        mView.setIntrestedWidget(interestResult);
-//                        rotate.setRepeatCount(0);
-
-                    }
-                });
-    }
+//                        mView.dismissProgress();
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        mView.showError(e.getMessage());
+//                        mView.dismissProgress();
+//                    }
+//
+//                    @Override
+//                    public void onNext(ResultCommentList resultCommentList) {
+//                        mView.showComment(resultCommentList, "Attraction");
+//                        mView.dismissProgress();
+//                    }
+//                });
+//
+//    }
+//
+//    @Override
+//    public void getWidgetResult(String action, String id, String uid, String ntype, String cid, String andId) {
+//        retrofit.create(AttractionService.class)
+//                .getWidgetResult(action, id, uid, ntype, cid, andId).subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .unsubscribeOn(Schedulers.io())
+//                .subscribe(new Observer<ResultWidgetFull>() {
+//
+//                    @Override
+//                    public void onCompleted() {
+////                        mView.showComplete();
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        mView.showError(e.getMessage());
+//                    }
+//
+//                    @Override
+//                    public void onNext(ResultWidgetFull resultWidgetFull) {
+////                        mView.showAttraction(resultCommentList);
+//                        mView.setLoadWidget(resultWidgetFull);
+//
+//                    }
+//                });
+//    }
+//
+//    @Override
+//    public void getInterest(String action, String uid, String cid, String ntype, String nid, String gtype, String gvalue, String andId) {
+//        retrofit.create(AttractionService.class)
+//                .getInterest(action, uid, cid, ntype, nid, gtype, gvalue, andId).subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .unsubscribeOn(Schedulers.io())
+//                .subscribe(new Observer<InterestResult>() {
+//
+//                    @Override
+//                    public void onCompleted() {
+////                        rotate.setRepeatCount(0);
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        mView.showError(e.getMessage());
+////                        rotate.setRepeatCount(0);
+//                    }
+//
+//                    @Override
+//                    public void onNext(InterestResult interestResult) {
+//                        mView.setIntrestedWidget(interestResult);
+////                        rotate.setRepeatCount(0);
+//
+//                    }
+//                });
+//    }
 
     @Override
     public void doWaitingAnimation(ImageView image) {
@@ -193,73 +193,76 @@ public class AttractionDetailPresenter extends AttractionDetailContract {
 
     }
 
-    @Override
-    public boolean doTranslateAnimationDown(RelativeLayout relativeLayout, RelativeLayout relativeLayout2, ImageView imageView, int height) {
-        AnimatorSet mAnimatorSet = new AnimatorSet();
-        mAnimatorSet.playTogether(
-                ObjectAnimator.ofFloat(relativeLayout, "translationY", height),
-                ObjectAnimator.ofFloat(relativeLayout2, "translationY", height),
-                ObjectAnimator.ofFloat(imageView, "translationY", -55));
-        mAnimatorSet.setDuration(1000);
-        mAnimatorSet.start();
-        return true;
-    }
+//    @Override
+//    public boolean doTranslateAnimationDown(RelativeLayout relativeLayout, RelativeLayout relativeLayout2, ImageView imageView, int height) {
+//        AnimatorSet mAnimatorSet = new AnimatorSet();
+//        mAnimatorSet.playTogether(
+//                ObjectAnimator.ofFloat(relativeLayout, "translationY", height),
+//                ObjectAnimator.ofFloat(relativeLayout2, "translationY", height),
+//                ObjectAnimator.ofFloat(imageView, "translationY", -55));
+//        mAnimatorSet.setDuration(1000);
+//        mAnimatorSet.start();
+//        return true;
+//    }
 
-    @Override
-    public void rateSend(SendParamUser request, String cid, String andId) {
-        retrofit.create(AttractionService.class)
-                .rateSend(request, cid, andId).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(new Observer<ResultParamUser>() {
 
-                    @Override
-                    public void onCompleted() {
-//                        mView.showComplete();
-                        Log.e("direction path", "complete");
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-//                        mView.showError(e.getMessage());
-                        Log.e("e", e.getMessage());
-                    }
 
-                    @Override
-                    public void onNext(ResultParamUser resultParamUser) {
-                        mView.setRate(resultParamUser);
-                    }
-                });
-
-    }
-
-    @Override
-    public void getRate(SendParamUser request, String cid, String andId) {
-        retrofit.create(AttractionService.class)
-                .rateSend(request, cid, andId).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(new Observer<ResultParamUser>() {
-
-                    @Override
-                    public void onCompleted() {
-//                        mView.showComplete();
-                        Log.e("direction path", "complete");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-//                        mView.showError(e.getMessage());
-                        Log.e("e", e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(ResultParamUser resultParamUser) {
-                        mView.setRateUser(resultParamUser);
-                    }
-                });
-
-    }
+//    @Override
+//    public void rateSend(SendParamUser request, String cid, String andId) {
+//        retrofit.create(AttractionService.class)
+//                .rateSend(request, cid, andId).subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .unsubscribeOn(Schedulers.io())
+//                .subscribe(new Observer<ResultParamUser>() {
+//
+//                    @Override
+//                    public void onCompleted() {
+////                        mView.showComplete();
+//                        Log.e("direction path", "complete");
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+////                        mView.showError(e.getMessage());
+//                        Log.e("e", e.getMessage());
+//                    }
+//
+//                    @Override
+//                    public void onNext(ResultParamUser resultParamUser) {
+//                        mView.setRate(resultParamUser);
+//                    }
+//                });
+//
+//    }
+//
+//    @Override
+//    public void getRate(SendParamUser request, String cid, String andId) {
+//        retrofit.create(AttractionService.class)
+//                .rateSend(request, cid, andId).subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .unsubscribeOn(Schedulers.io())
+//                .subscribe(new Observer<ResultParamUser>() {
+//
+//                    @Override
+//                    public void onCompleted() {
+////                        mView.showComplete();
+//                        Log.e("direction path", "complete");
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+////                        mView.showError(e.getMessage());
+//                        Log.e("e", e.getMessage());
+//                    }
+//
+//                    @Override
+//                    public void onNext(ResultParamUser resultParamUser) {
+//                        mView.setRateUser(resultParamUser);
+//                    }
+//                });
+//
+//    }
 
     @Override
     public void getDirection(String origin, String destination) {

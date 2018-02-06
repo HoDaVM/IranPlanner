@@ -401,6 +401,10 @@
 
         </RelativeLayout>
         <!--showMore   bishtar bekhanid  -->
+
+        <include layout="@layout/comment_rate"
+
+            />
         <RelativeLayout
             android:id="@+id/ShowMoreInfoHolder"
             android:layout_width="wrap_content"

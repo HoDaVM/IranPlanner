@@ -13,13 +13,18 @@
         android:layout_height="match_parent">
 
         <!--dateHolder-->
+        <include
+            android:id="@+id/comment_rate"
+            layout="@layout/comment_rate"
+           />
         <RelativeLayout
             android:id="@+id/dateHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:paddingLeft="@dimen/padding_big"
-            android:paddingRight="@dimen/padding_big">
+            android:paddingRight="@dimen/padding_big"
+            android:layout_below="@+id/comment_rate">
 
             <ImageView
                 android:id="@+id/triangle"

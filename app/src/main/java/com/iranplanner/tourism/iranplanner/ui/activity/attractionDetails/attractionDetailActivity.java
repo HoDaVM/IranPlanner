@@ -69,6 +69,8 @@ import com.iranplanner.tourism.iranplanner.RecyclerItemOnClickListener;
 import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.ui.activity.MapFullActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.OnCutImageListener;
+import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentContract;
+import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentPresenter;
 import com.iranplanner.tourism.iranplanner.ui.camera.GetPhoto;
 import com.iranplanner.tourism.iranplanner.ui.camera.PhotoCropFragment;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
@@ -79,32 +81,19 @@ import com.iranplanner.tourism.iranplanner.ui.camera.PhotoUtils;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 
-import org.apache.http.HttpRequest;
 import org.json.JSONObject;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
-import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 import entity.InterestResult;
 import entity.ItineraryLodgingCity;
 import entity.RateParam;
@@ -121,19 +110,6 @@ import entity.ShowAttractionListMore;
 import ir.adad.client.AdListener;
 import ir.adad.client.AdView;
 import ir.adad.client.Adad;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Multipart;
-import retrofit2.http.POST;
-import retrofit2.http.Part;
-import retrofit2.http.PartMap;
 import tools.Constants;
 import tools.Util;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -141,13 +117,16 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static android.graphics.BitmapFactory.decodeFile;
 
-public class attractionDetailActivity extends StandardActivity implements OnMapReadyCallback, View.OnClickListener, AttractionDetailContract.View, AttractionListMoreContract.View
-        , OnCutImageListener,PhotoUtils.OnImageUriSelect {
+public class attractionDetailActivity extends StandardActivity implements OnMapReadyCallback, View.OnClickListener, AttractionDetailContract.View, AttractionListMoreContract.View, CommentContract.View
+        , OnCutImageListener, PhotoUtils.OnImageUriSelect {
     private static final int REQUEST_CAMERA = 0;
     @Inject
     AttractionDetailPresenter attractionDetailPresenter;
     @Inject
     AttractionListMorePresenter attractionListMorePresenter;
+    @Inject
+    CommentPresenter commentPresenter;
+
     private GoogleMap mMap;
     ResulAttraction resulAttraction;
     Marker marker;
@@ -232,8 +211,8 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     ImageView triangleShowAttraction;
     @BindView(R.id.ratingBar)
     RatingBar ratingBar;
-    @BindView(R.id.txtHotelType)
-    TextView txtHotelType;
+    @BindView(R.id.txtRateType)
+    TextView txtRateType;
 
     @BindView(R.id.recyclerBestAttraction)
     RecyclerView recyclerBestAttraction;
@@ -398,7 +377,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setCustomView(R.layout.abs_layout);
         ratingBar.setRating(Float.valueOf(resulAttraction.getRate().getRateFinalAvg()));
-        txtHotelType.setText("تا کنون " + Util.persianNumbers(resulAttraction.getRate().getRateFinalCount()) + " به اینجا امتیاز داده اند ");
+        txtRateType.setText("تا کنون " + Util.persianNumbers(resulAttraction.getRate().getRateFinalCount()) + " به اینجا امتیاز داده اند ");
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse);
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/IRANSansMobile.ttf");
@@ -457,9 +436,9 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
         builder = DaggerAtractionDetailComponent.builder()
                 .netComponent(((App) getApplicationContext()).getNetComponent())
-                .attractionDetailModule(new AttractionDetailModule(this, this));
+                .attractionDetailModule(new AttractionDetailModule(this, this, this));
         builder.build().inject(this);
-        attractionDetailPresenter.getWidgetResult("nodeuser", resulAttraction.getAttractionId(), Util.getUseRIdFromShareprefrence(getApplicationContext()), "attraction", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+        commentPresenter.getWidgetResult("nodeuser", resulAttraction.getAttractionId(), Util.getUseRIdFromShareprefrence(getApplicationContext()), "attraction", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
         getPhoto = new GetPhoto(getApplicationContext(), this);
 
         cameraHolder.setOnClickListener(new View.OnClickListener() {
@@ -519,40 +498,43 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     }
 
     private void setInterestResponce(List<ResultWidget> resultWidget) {
-        if (resultWidget.get(0).getWidgetBookmarkValue() != null && resultWidget.get(0).getWidgetBookmarkValue() == 1) {
-            bookmarkImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_bookmarkgreen));
-        }
+
+
+//        if (resultWidget.get(0).getWidgetBookmarkValue() != null && resultWidget.get(0).getWidgetBookmarkValue() == 1) {
+//            bookmarkImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_bookmarkgreen));
+//        }
         if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 1) {
+            LikeValue = 1;
             likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
-            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
-            okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_off));
-            dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_off));
+//            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
+//            okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_off));
+//            dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_off));
         }
-        if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 2) {
-            okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_on));
-            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_on));
-            dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_off));
-            likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
-        }
-        if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 3) {
-            dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_on));
-            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_on));
-            likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
-            okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_off));
-        }
-        if (resultWidget.get(0).getWidgetVisitedValue() != null && resultWidget.get(0).getWidgetVisitedValue() == 1) {
-            nowVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_now_seen_on));
-            doneImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_now_seen_on));
-            beftorVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_off));
-        }
-        if (resultWidget.get(0).getWidgetVisitedValue() != null && resultWidget.get(0).getWidgetVisitedValue() == 2) {
-            beftorVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_on));
-            doneImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_on));
-            nowVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_off));
-        }
-        if (resultWidget.get(0).getWidgetWishValue() != null && resultWidget.get(0).getWidgetWishValue() == 1) {
-            wishImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_wish_pink));
-        }
+//        if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 2) {
+//            okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_on));
+//            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_on));
+//            dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_off));
+//            likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
+//        }
+//        if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 3) {
+//            dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_on));
+//            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_on));
+//            likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
+//            okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_off));
+//        }
+//        if (resultWidget.get(0).getWidgetVisitedValue() != null && resultWidget.get(0).getWidgetVisitedValue() == 1) {
+//            nowVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_now_seen_on));
+//            doneImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_now_seen_on));
+//            beftorVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_off));
+//        }
+//        if (resultWidget.get(0).getWidgetVisitedValue() != null && resultWidget.get(0).getWidgetVisitedValue() == 2) {
+//            beftorVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_on));
+//            doneImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_on));
+//            nowVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_off));
+//        }
+//        if (resultWidget.get(0).getWidgetWishValue() != null && resultWidget.get(0).getWidgetWishValue() == 1) {
+//            wishImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_wish_pink));
+//        }
 
     }
 
@@ -607,8 +589,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
             case R.id.commentHolder:
 
                 builder.build().inject(this);
-                attractionDetailPresenter.getAttractionCommentList("pagecomments", resulAttraction.getAttractionId(), "attraction", "0", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
-
+                commentPresenter.getCommentList("pagecomments", resulAttraction.getAttractionId(), "attraction", "0");
                 break;
             case R.id.MoreInoText:
                 if (showMore) {
@@ -624,98 +605,103 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                 }
 
                 break;
-            case R.id.ratingHolder:
-                if (ratingHolderFlag) {
-//                    translateUp();
-                }
-                break;
-            case R.id.rateHolder:
-                if (!ratingHolderFlag) {
-                    VisitedLayout.setVisibility(View.INVISIBLE);
-                    LikeLayout.setVisibility(View.VISIBLE);
-                    rotateImage = "rateImg";
-//                    translateDown();
-                    break;
-                } else {
-//                    translateUp();
-                    break;
-                }
+//            case R.id.ratingHolder:
+//                if (ratingHolderFlag) {
+////                    translateUp();
+//                }
+//                break;
+//            case R.id.rateHolder:
+//                if (!ratingHolderFlag) {
+//                    VisitedLayout.setVisibility(View.INVISIBLE);
+//                    LikeLayout.setVisibility(View.VISIBLE);
+//                    rotateImage = "rateImg";
+////                    translateDown();
+//                    break;
+//                } else {
+////                    translateUp();
+//                    break;
+//                }
 
-            case R.id.doneHolder:
-                if (!ratingHolderFlag) {
-                    LikeLayout.setVisibility(View.INVISIBLE);
-                    VisitedLayout.setVisibility(View.VISIBLE);
-                    rotateImage = "doneImg";
-//                    translateDown();
-                    break;
-                } else {
-//                    translateUp();
-                    break;
-                }
+//            case R.id.doneHolder:
+//                if (!ratingHolderFlag) {
+//                    LikeLayout.setVisibility(View.INVISIBLE);
+//                    VisitedLayout.setVisibility(View.VISIBLE);
+//                    rotateImage = "doneImg";
+////                    translateDown();
+//                    break;
+//                } else {
+////                    translateUp();
+//                    break;
+//                }
 
             case R.id.likeImg:
                 rotateImage = "likeImg";
                 if (LikeValue == 1) {
                     OnClickedIntrestedWidget("like", Constants.intrestDefault, likeImg);
+                    likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
+
+
                 } else {
                     OnClickedIntrestedWidget("like", Constants.likeImg, likeImg);
-                }
-                break;
-            case R.id.commentImg:
-                rotateImage = "commentImg";
-                if (LikeValue == 2) {
-                    OnClickedIntrestedWidget("like", Constants.intrestDefault, okImg);
-                } else {
-                    OnClickedIntrestedWidget("like", Constants.okImg, okImg);
-                }
-                break;
-            case R.id.dislikeImg:
-                rotateImage = "dislikeImg";
-                if (LikeValue == 2) {
-                    OnClickedIntrestedWidget("like", Constants.intrestDefault, dislikeImg);
-                } else {
-                    OnClickedIntrestedWidget("like", Constants.dislikeImg, dislikeImg);
-                }
-                break;
-            case R.id.wishImg:
-                rotateImage = "wishImg";
-                if (WishValue == 1) {
-                    OnClickedIntrestedWidget("wish", Constants.intrestDefault, wishImg);
-                } else {
-                    OnClickedIntrestedWidget("wish", Constants.wishImg, wishImg);
-                }
-                break;
-            case R.id.nowVisitedImg:
-                rotateImage = "nowVisitedImg";
+                    likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
 
-                if (VisitedValue == 1) {
-                    OnClickedIntrestedWidget("visited", Constants.intrestDefault, nowVisitedImg);
-                } else {
-                    OnClickedIntrestedWidget("visited", Constants.nowVisitedImg, nowVisitedImg);
                 }
                 break;
-            case R.id.beftorVisitedImg:
-                rotateImage = "beftorVisitedImg";
-                if (VisitedValue == 2) {
-                    OnClickedIntrestedWidget("visited", Constants.intrestDefault, beftorVisitedImg);
-                } else {
-                    OnClickedIntrestedWidget("visited", Constants.beftorVisitedImg, beftorVisitedImg);
-                }
-                break;
-            case R.id.bookmarkHolder:
-
-                rotateImage = "bookmarkImg";
-
-                if (BookmarkValue == 1) {
-                    OnClickedIntrestedWidget("bookmark", Constants.intrestDefault, bookmarkImg);
-                } else {
-                    OnClickedIntrestedWidget("bookmark", Constants.bookmarkImg, bookmarkImg);
-                }
-                break;
+//            case R.id.commentImg:
+//                rotateImage = "commentImg";
+//                if (LikeValue == 2) {
+//                    OnClickedIntrestedWidget("like", Constants.intrestDefault, okImg);
+//                } else {
+//                    OnClickedIntrestedWidget("like", Constants.okImg, okImg);
+//                }
+//                break;
+//            case R.id.dislikeImg:
+//                rotateImage = "dislikeImg";
+//                if (LikeValue == 2) {
+//                    OnClickedIntrestedWidget("like", Constants.intrestDefault, dislikeImg);
+//                } else {
+//                    OnClickedIntrestedWidget("like", Constants.dislikeImg, dislikeImg);
+//                }
+//                break;
+//            case R.id.wishImg:
+//                rotateImage = "wishImg";
+//                if (WishValue == 1) {
+//                    OnClickedIntrestedWidget("wish", Constants.intrestDefault, wishImg);
+//                } else {
+//                    OnClickedIntrestedWidget("wish", Constants.wishImg, wishImg);
+//                }
+//                break;
+//            case R.id.nowVisitedImg:
+//                rotateImage = "nowVisitedImg";
+//
+//                if (VisitedValue == 1) {
+//                    OnClickedIntrestedWidget("visited", Constants.intrestDefault, nowVisitedImg);
+//                } else {
+//                    OnClickedIntrestedWidget("visited", Constants.nowVisitedImg, nowVisitedImg);
+//                }
+//                break;
+//            case R.id.beftorVisitedImg:
+//                rotateImage = "beftorVisitedImg";
+//                if (VisitedValue == 2) {
+//                    OnClickedIntrestedWidget("visited", Constants.intrestDefault, beftorVisitedImg);
+//                } else {
+//                    OnClickedIntrestedWidget("visited", Constants.beftorVisitedImg, beftorVisitedImg);
+//                }
+//                break;
+//            case R.id.bookmarkHolder:
+//
+//                rotateImage = "bookmarkImg";
+//
+//                if (BookmarkValue == 1) {
+//                    OnClickedIntrestedWidget("bookmark", Constants.intrestDefault, bookmarkImg);
+//                } else {
+//                    OnClickedIntrestedWidget("bookmark", Constants.bookmarkImg, bookmarkImg);
+//                }
+//                break;
             case R.id.ratingPeopleHolder:
                 //todo
                 SendParamUser ss = new SendParamUser(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "attraction", resulAttraction.getAttractionId());
-                attractionDetailPresenter.getRate(ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                commentPresenter.getRate("rate", ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                 break;
 
 
@@ -724,8 +710,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
     private void OnClickedIntrestedWidget(String gType, String gValue, ImageView imageView) {
         if (!Util.getUseRIdFromShareprefrence(getApplicationContext()).isEmpty()) {
-//            attractionDetailPresenter.doWaitingAnimation(imageView);
-            attractionDetailPresenter.getInterest("widget", Util.getUseRIdFromShareprefrence(getApplicationContext()), "1", "attraction", resulAttraction.getAttractionId(), gType, gValue, Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+            commentPresenter.getInterest("widget", Util.getUseRIdFromShareprefrence(getApplicationContext()), "1", "attraction", resulAttraction.getAttractionId(), gType, gValue, Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
 
         } else {
             Log.e("user is not login", "error");
@@ -830,7 +815,14 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
     @Override
     public void showComments(ResultCommentList resultCommentList) {
-
+        List<ResultComment> resultComments = resultCommentList.getResultComment();
+        Intent intent = new Intent(attractionDetailActivity.this, CommentListActivity.class);
+        intent.putExtra("resultComments", (Serializable) resultComments);
+        intent.putExtra("attraction", (Serializable) resulAttraction);
+        intent.putExtra("nextOffset", resultCommentList.getStatistics().getOffsetNext().toString());
+        intent.putExtra("fromWhere", "Attraction");
+        startActivity(intent);
+//        progressDialog.dismiss();
     }
 
     @Override
@@ -891,18 +883,6 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
 
     @Override
-    public void showComment(ResultCommentList resultCommentList, String commentType) {
-        List<ResultComment> resultComments = resultCommentList.getResultComment();
-        Intent intent = new Intent(attractionDetailActivity.this, CommentListActivity.class);
-        intent.putExtra("resultComments", (Serializable) resultComments);
-        intent.putExtra("attraction", (Serializable) resulAttraction);
-        intent.putExtra("nextOffset", resultCommentList.getStatistics().getOffsetNext().toString());
-        intent.putExtra("fromWhere", commentType);
-        startActivity(intent);
-        progressDialog.dismiss();
-    }
-
-    @Override
     public void setLoadWidget(ResultWidgetFull resultWidgetFull) {
         List<ResultWidget> resultWidget = resultWidgetFull.getResultWidget();
         setWidgetValue(resultWidget);
@@ -915,7 +895,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 ////        rotate.setRepeatCount(0);
 //        checkWhichImageIntrested(rotateImage);
 //        menu.findItem(R.id.menuAttractionLike).setIcon(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
-
+        setWidgetValue(InterestResult.getResultWidget());
     }
 
     @Override
@@ -924,10 +904,6 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
     }
 
-    @Override
-    public void setIntrestValue(InterestResult InterestResult) {
-
-    }
 
     @Override
     public void showDirectionOnMap(PolylineOptions rectLine) {
@@ -937,64 +913,64 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
     private void setWidgetValue(List<ResultWidget> resultWidget) {
 
-        if (resultWidget.get(0).getWidgetBookmarkValue() != null) {
-            BookmarkValue = resultWidget.get(0).getWidgetBookmarkValue();
-        }
+//        if (resultWidget.get(0).getWidgetBookmarkValue() != null) {
+//            BookmarkValue = resultWidget.get(0).getWidgetBookmarkValue();
+//        }
         if (resultWidget.get(0).getWidgetLikeValue() != null) {
             LikeValue = resultWidget.get(0).getWidgetLikeValue();
         }
-        if (resultWidget.get(0).getWidgetVisitedValue() != null) {
-            VisitedValue = resultWidget.get(0).getWidgetVisitedValue();
-        }
-        if (resultWidget.get(0).getWidgetWishValue() != null) {
-            WishValue = resultWidget.get(0).getWidgetWishValue();
-        }
+//        if (resultWidget.get(0).getWidgetVisitedValue() != null) {
+//            VisitedValue = resultWidget.get(0).getWidgetVisitedValue();
+//        }
+//        if (resultWidget.get(0).getWidgetWishValue() != null) {
+//            WishValue = resultWidget.get(0).getWidgetWishValue();
+//        }
 
 
-        if (resultWidget.get(0).getWidgetBookmarkValue() != null && resultWidget.get(0).getWidgetBookmarkValue() == 1) {
-            bookmarkImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_bookmarkgreen));
-        } else if (resultWidget.get(0).getWidgetBookmarkValue() == null || resultWidget.get(0).getWidgetBookmarkValue() == 0) {
-            bookmarkImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_bookmark_grey));
-        }
-        if (resultWidget.get(0).getWidgetWishValue() != null && resultWidget.get(0).getWidgetWishValue() == 1) {
-            wishImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_wish_pink));
-        } else if (resultWidget.get(0).getWidgetBookmarkValue() == null || resultWidget.get(0).getWidgetBookmarkValue() == 0) {
-            wishImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_wish_grey));
-        }
+//        if (resultWidget.get(0).getWidgetBookmarkValue() != null && resultWidget.get(0).getWidgetBookmarkValue() == 1) {
+//            bookmarkImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_bookmarkgreen));
+//        } else if (resultWidget.get(0).getWidgetBookmarkValue() == null || resultWidget.get(0).getWidgetBookmarkValue() == 0) {
+//            bookmarkImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_bookmark_grey));
+//        }
+//        if (resultWidget.get(0).getWidgetWishValue() != null && resultWidget.get(0).getWidgetWishValue() == 1) {
+//            wishImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_wish_pink));
+//        } else if (resultWidget.get(0).getWidgetBookmarkValue() == null || resultWidget.get(0).getWidgetBookmarkValue() == 0) {
+//            wishImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_wish_grey));
+//        }
         if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 1) {
             likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
             rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
         } else if (resultWidget.get(0).getWidgetLikeValue() == null || resultWidget.get(0).getWidgetLikeValue() == 0) {
             likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
         }
-        if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 2) {
-            okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_on));
-            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_on));
-        } else if (resultWidget.get(0).getWidgetLikeValue() == null || resultWidget.get(0).getWidgetLikeValue() == 0) {
-            okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_off));
-
-        }
-        if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 3) {
-            dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_on));
-            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_on));
-        } else if (resultWidget.get(0).getWidgetLikeValue() == null || resultWidget.get(0).getWidgetLikeValue() == 0) {
-            dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_off));
-
-        }
-        if (resultWidget.get(0).getWidgetVisitedValue() != null && resultWidget.get(0).getWidgetVisitedValue() == 1) {
-            nowVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_now_seen_on));
-            doneImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_now_seen_on));
-        } else if (resultWidget.get(0).getWidgetVisitedValue() == null || resultWidget.get(0).getWidgetVisitedValue() == 0) {
-            nowVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_off));
-
-        }
-        if (resultWidget.get(0).getWidgetVisitedValue() != null && resultWidget.get(0).getWidgetVisitedValue() == 2) {
-            beftorVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_on));
-            doneImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_on));
-        } else if (resultWidget.get(0).getWidgetVisitedValue() == null || resultWidget.get(0).getWidgetVisitedValue() == 0) {
-            beftorVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_off));
-
-        }
+//        if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 2) {
+//            okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_on));
+//            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_on));
+//        } else if (resultWidget.get(0).getWidgetLikeValue() == null || resultWidget.get(0).getWidgetLikeValue() == 0) {
+//            okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_off));
+//
+//        }
+//        if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 3) {
+//            dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_on));
+//            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_on));
+//        } else if (resultWidget.get(0).getWidgetLikeValue() == null || resultWidget.get(0).getWidgetLikeValue() == 0) {
+//            dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_off));
+//
+//        }
+//        if (resultWidget.get(0).getWidgetVisitedValue() != null && resultWidget.get(0).getWidgetVisitedValue() == 1) {
+//            nowVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_now_seen_on));
+//            doneImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_now_seen_on));
+//        } else if (resultWidget.get(0).getWidgetVisitedValue() == null || resultWidget.get(0).getWidgetVisitedValue() == 0) {
+//            nowVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_off));
+//
+//        }
+//        if (resultWidget.get(0).getWidgetVisitedValue() != null && resultWidget.get(0).getWidgetVisitedValue() == 2) {
+//            beftorVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_on));
+//            doneImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_on));
+//        } else if (resultWidget.get(0).getWidgetVisitedValue() == null || resultWidget.get(0).getWidgetVisitedValue() == 0) {
+//            beftorVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_off));
+//
+//        }
     }
 
     @Override
@@ -1015,7 +991,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
     @Override
     public void onSelectImage(Uri uri) {
-        mImageUri=uri;
+        mImageUri = uri;
     }
 
 
@@ -1060,15 +1036,19 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
             ratingBar2 = findViewById(R.id.ratingBar2);
             ratingBar3 = findViewById(R.id.ratingBar3);
             ratingBar4 = findViewById(R.id.ratingBar4);
+            try {
+                txtRateName1.setText(resultParamUser.getResultRatePost().getRateFinalParam().get(0).getValueTitle());
+                txtRateName2.setText(resultParamUser.getResultRatePost().getRateFinalParam().get(1).getValueTitle());
+                txtRateName3.setText(resultParamUser.getResultRatePost().getRateFinalParam().get(2).getValueTitle());
+                txtRateName4.setText(resultParamUser.getResultRatePost().getRateFinalParam().get(3).getValueTitle());
+                ratingBar1.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalParam().get(0).getValueAvg()));
+                ratingBar2.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalParam().get(1).getValueAvg()));
+                ratingBar3.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalParam().get(2).getValueAvg()));
+                ratingBar4.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalParam().get(3).getValueAvg()));
+            } catch (Exception e) {
 
-            txtRateName1.setText(resultParamUser.getResultRatePost().getRateFinalParam().get(0).getValueTitle());
-            txtRateName2.setText(resultParamUser.getResultRatePost().getRateFinalParam().get(1).getValueTitle());
-            txtRateName3.setText(resultParamUser.getResultRatePost().getRateFinalParam().get(2).getValueTitle());
-            txtRateName4.setText(resultParamUser.getResultRatePost().getRateFinalParam().get(3).getValueTitle());
-            ratingBar1.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalParam().get(0).getValueAvg()));
-            ratingBar2.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalParam().get(1).getValueAvg()));
-            ratingBar3.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalParam().get(2).getValueAvg()));
-            ratingBar4.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalParam().get(3).getValueAvg()));
+            }
+
             txtNo.setOnClickListener(this);
             txtOk.setOnClickListener(this);
         }
@@ -1083,7 +1063,8 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 //                {"uid":"101","cid":"20","ntype":"attraction","nid":"30","rate_param":{"param1":"1","param2":"2","param3":"5"}}
 
                     SendParamUser ss = new SendParamUser(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "attraction", resulAttraction.getAttractionId(), new RateParam(String.valueOf(ratingBar1.getRating()), String.valueOf(ratingBar2.getRating()), String.valueOf(ratingBar3.getRating()), String.valueOf(ratingBar4.getRating())));
-                    attractionDetailPresenter.rateSend(ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+//                    attractionDetailPresenter.rateSend(ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                    commentPresenter.rateSend("rate", ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                     break;
             }
             dismiss();
@@ -1092,31 +1073,31 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
     //----------------------
 
-//    private void dispatchTakePictureIntent() {
-//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        File photo = null;
-//
-//        try {
-//            photo = Util.createImageFiles();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        if (photo != null) {
-//            if (Build.VERSION.SDK_INT > 21) {
-//                CamIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-//                mImageUri = FileProvider.getUriForFile(attractionDetailActivity.this, BuildConfig.APPLICATION_ID + ".provider", photo);
-//                CamIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
-//                startActivityForResult(CamIntent, REQUEST_CAMERA);
-//            } else {
-//                mImageUri = Uri.fromFile(photo);
-//                intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
-//                //start camera intent
-//                startActivityForResult(intent, REQUEST_CAMERA);
-//            }
-//        }
-//
-//    }
+    private void dispatchTakePictureIntent() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File photo = null;
+
+        try {
+            photo = Util.createImageFiles();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (photo != null) {
+            if (Build.VERSION.SDK_INT > 21) {
+                CamIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                mImageUri = FileProvider.getUriForFile(attractionDetailActivity.this, BuildConfig.APPLICATION_ID + ".provider", photo);
+                CamIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+                startActivityForResult(CamIntent, REQUEST_CAMERA);
+            } else {
+                mImageUri = Uri.fromFile(photo);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+                //start camera intent
+                startActivityForResult(intent, REQUEST_CAMERA);
+            }
+        }
+
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -1145,12 +1126,13 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         if (requestCode == 5) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED /*&& grantResults[1] == PackageManager.PERMISSION_GRANTED*/) {
                 App.getInstance().prepareDirectories();
-                new PhotoUtils(attractionDetailActivity.this, new PhotoUtils.OnImageUriSelect() {
-                    @Override
-                    public void onSelectImage(Uri uri) {
-                        mImageUri=uri;
-                    }
-                }).selectImage();
+//                new PhotoUtils(attractionDetailActivity.this, new PhotoUtils.OnImageUriSelect() {
+//                    @Override
+//                    public void onSelectImage(Uri uri) {
+//                        mImageUri=uri;
+//                    }
+//                }).selectImage();
+                selectImage();
 
                 return;
             }
@@ -1217,35 +1199,35 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
     private static final int SELECT_FILE = 14;
 
-//    private void selectImage() {
-//        final CharSequence[] items = {"از دوربین", "از گالری", "انصراف"};
-//        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-//        builder.setTitle("انتخاب عکس");
-//
-//        builder.setItems(items, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int item) {
-//                if (items[item].equals("از دوربین")) {
-//                    dispatchTakePictureIntent();
-//                } else if (items[item].equals("از گالری")) {
-//                    if (App.checkGroupPermissions(App.STORAGE_PERMISSIONS)) {
-//                        Intent intent = new Intent(
-//                                Intent.ACTION_PICK,
-//                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                        intent.setType("image/*");
-//                        startActivityForResult(
-//                                Intent.createChooser(intent, "انتخاب عکس"),
-//                                SELECT_FILE);
-//                    } else {
-//                        App.createPermissionDialog(attractionDetailActivity.this, getString(R.string.app_name), "permission");
-//                    }
-//                } else if (items[item].equals("انصراف")) {
-//                    dialog.dismiss();
-//                }
-//            }
-//        });
-//        builder.show();
-//    }
+    private void selectImage() {
+        final CharSequence[] items = {"از دوربین", "از گالری", "انصراف"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(attractionDetailActivity.this);
+        builder.setTitle("انتخاب عکس");
+
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (items[item].equals("از دوربین")) {
+                    dispatchTakePictureIntent();
+                } else if (items[item].equals("از گالری")) {
+                    if (App.checkGroupPermissions(App.STORAGE_PERMISSIONS)) {
+                        Intent intent = new Intent(
+                                Intent.ACTION_PICK,
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        intent.setType("image/*");
+                        startActivityForResult(
+                                Intent.createChooser(intent, "انتخاب عکس"),
+                                SELECT_FILE);
+                    } else {
+                        App.createPermissionDialog(attractionDetailActivity.this, getString(R.string.app_name), "permission");
+                    }
+                } else if (items[item].equals("انصراف")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
 
 
     @Override
@@ -1306,8 +1288,4 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     }
 
 
-
-    public void ttt(int requestCode, int resultCode, Intent data){
-
-    }
 }

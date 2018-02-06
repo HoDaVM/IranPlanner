@@ -5,15 +5,16 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class InterestResult implements Serializable {
 
     @SerializedName("Status")
     @Expose
     private Status status;
-    @SerializedName("Result_data")
+    @SerializedName("Result_widget")
     @Expose
-    private ResultData resultData;
+    private List<ResultWidget> resultWidget = null;
     @SerializedName("Statistics")
     @Expose
     private Statistics statistics;
@@ -29,12 +30,12 @@ public class InterestResult implements Serializable {
         this.status = status;
     }
 
-    public ResultData getResultData() {
-        return resultData;
+    public List<ResultWidget> getResultWidget() {
+        return resultWidget;
     }
 
-    public void setResultData(ResultData resultData) {
-        this.resultData = resultData;
+    public void setResultWidget(List<ResultWidget> resultWidget) {
+        this.resultWidget = resultWidget;
     }
 
     public Statistics getStatistics() {
