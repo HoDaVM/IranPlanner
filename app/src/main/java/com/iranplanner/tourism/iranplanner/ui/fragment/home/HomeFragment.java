@@ -51,6 +51,7 @@ import com.iranplanner.tourism.iranplanner.showcaseview.CustomShowcaseView;
 import com.iranplanner.tourism.iranplanner.standard.ClickableViewPager;
 import com.iranplanner.tourism.iranplanner.standard.DataTransferInterface;
 import com.iranplanner.tourism.iranplanner.standard.StandardFragment;
+import com.iranplanner.tourism.iranplanner.ui.activity.Main2Activity;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.AttractionListMorePresenter;
 import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.ShowAttractionListMoreActivity;
@@ -478,6 +479,16 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
                 getHotelResults(SelectedType, selectId, "");
                 break;
             case R.id.TypeHotelHolder:
+                if (SelectedType != null && /*SelectedType.equals("city") && */selectId != null && !selectId.equals("311")) {
+//                    reservationPresenter.getLodgingList("list", selectId,  Util.getTokenFromSharedPreferences(getContext()), "20","0", Util.getAndroidIdFromSharedPreferences(getContext()),"");
+                    getHotelResults(SelectedType, selectId, "");
+
+                } else {
+                    openCustomSearchDialog(Constants.homeHotel);
+                    frameLayout.setVisibility(View.INVISIBLE);
+                }
+
+                break;
             case R.id.homeNavHotelHolder:
                 if (SelectedType != null && SelectedType.equals("city") && selectId != null) {
 //                    reservationPresenter.getLodgingList("list", selectId,  Util.getTokenFromSharedPreferences(getContext()), "20","0", Util.getAndroidIdFromSharedPreferences(getContext()),"");

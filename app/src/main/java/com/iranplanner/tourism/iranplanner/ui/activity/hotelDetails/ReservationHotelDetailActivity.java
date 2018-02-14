@@ -66,6 +66,7 @@ import entity.ItineraryLodgingCity;
 import entity.RateParam;
 import entity.ResultComment;
 import entity.ResultCommentList;
+import entity.ResultImageList;
 import entity.ResultLodging;
 import entity.ResultLodgingRoomList;
 import entity.ResultParamUser;
@@ -103,7 +104,7 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
     Marker marker;
     protected CTouchyWebView contentFullDescription;
     ImageView imageTypeAttraction;
-    ImageView imgHotel;
+    ImageView img;
     SupportMapFragment mapFragment;
     Boolean showMore = true;
     String myData;
@@ -130,6 +131,7 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
     HotelDetailPresenter hotelDetailPresenter;
     RelativeLayout ratingPeopleHolder;
     RatingBar ratingBar;
+    TextView txtRateType,txtPhotos;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -167,7 +169,7 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
         textEntranceFee = (TextView) findViewById(R.id.textEntranceFee);
         attractionType = (TextView) findViewById(R.id.attractionType);
         imageTypeAttraction = (ImageView) findViewById(R.id.imageTypeAttraction);
-        imgHotel = (ImageView) findViewById(R.id.imgHotel);
+        img = (ImageView) findViewById(R.id.img);
         roomReservationBtn = (Button) findViewById(R.id.roomReservationBtn);
         holderDate = (RelativeLayout) findViewById(R.id.holderDate);
 
@@ -200,6 +202,8 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
         commentHolder = findViewById(R.id.commentHolder);
         ratingPeopleHolder = findViewById(R.id.ratingPeopleHolder);
         ratingBar = findViewById(R.id.ratingBar);
+        txtRateType = findViewById(R.id.txtRateType);
+        txtPhotos = findViewById(R.id.txtPhotos);
 //        setupTablayout();
     }
 
@@ -231,11 +235,11 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
                             return false;
                         }
                     })
-                    .into(imgHotel);
+                    .into(img);
 
         } else {
-            Glide.clear(imgHotel);
-            imgHotel.setImageDrawable(null);
+            Glide.clear(img);
+            img.setImageDrawable(null);
         }
     }
 
@@ -358,6 +362,7 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
             imgStar5.setVisibility(View.VISIBLE);
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -371,13 +376,34 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
         txtAddress.setText(resultLodgingHotelDetail.getLodgingAddress());
         roomReservationBtn.setOnClickListener(this);
         setStar();
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        TextView aboutCityBtn1 =  findViewById(R.id.aboutCityBtn1);
+////        aboutCityBtn1.setText("اینجااااااااااا");
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setTitle("هتل");
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+//        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse);
+//
+//        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/IRANSansMobile.ttf");
+//
+//        collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.expandedappbar);
+//        collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.collapsedappbar);
+//        collapsingToolbarLayout.setCollapsedTitleTypeface(tf);
+//        collapsingToolbarLayout.setExpandedTitleTypeface(tf);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(resultLodgingHotelDetail.getLodgingName());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.abs_layout);
 
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+
+
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse);
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/IRANSansMobile.ttf");
 
@@ -387,8 +413,11 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
         collapsingToolbarLayout.setExpandedTitleTypeface(tf);
 
 
-
-        collapsingToolbarLayout.setTitle(resultLodgingHotelDetail.getLodgingName());
+        txtPhotos.setText(" 9 عکس");
+        if (resultLodgingHotelDetail.getRate().getRateFinalAvg() != null) {
+            ratingBar.setRating(Float.valueOf(resultLodgingHotelDetail.getRate().getRateFinalAvg()));
+            txtRateType.setText("تا کنون " + Util.persianNumbers(resultLodgingHotelDetail.getRate().getRateFinalCount()) + "نفر به اینجا امتیاز داده اند ");
+        }
 
         holderDate.setOnClickListener(this);
         TypeDurationHolder.setOnClickListener(this);
@@ -412,8 +441,7 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
-        Log.e("taggg", "on support back pressed");
-        return false;
+        return true;
     }
 
     @Override
@@ -696,6 +724,7 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
     @Override
     public void setRate(ResultParamUser resultParamUser) {
         ratingBar.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalAvg()));
+        txtRateType.setText("تا کنون " + Util.persianNumbers(resultParamUser.getResultRatePost().getRateFinalCount() + "نفر به اینجا امتیاز داده اند "));
     }
 
     @Override
@@ -709,8 +738,13 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
     }
 
     public void dismissProgress() {
-            Util.dismissProgress(progressDialog);
-         }
+        Util.dismissProgress(progressDialog);
+    }
+
+    @Override
+    public void showMoreImages(ResultImageList resultImageList) {
+
+    }
 
     @Override
     public void setLodgingRoomList(ResultLodgingRoomList resultLodgingRoomList) {
@@ -846,10 +880,8 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
                     dismiss();
                     break;
                 case R.id.txtOk:
-
                     SendParamUser ss = new SendParamUser(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "lodging", resultLodgingHotelDetail.getLodgingId(), new RateParam(String.valueOf(ratingBar1.getRating()), String.valueOf(ratingBar2.getRating()), String.valueOf(ratingBar3.getRating()), String.valueOf(ratingBar4.getRating())));
                     commentPresenter.rateSend("rate", ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
-
                     break;
             }
             dismiss();

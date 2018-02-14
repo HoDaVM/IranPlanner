@@ -16,89 +16,7 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/app_bar"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:fitsSystemWindows="true"
-            android:theme="@style/AppTheme.AppBarOverlay">
-
-            <android.support.design.widget.CollapsingToolbarLayout
-                android:id="@+id/collapse"
-                fontPath="fonts/IRANSansMobile.ttf"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
-                app:collapsedTitleGravity="start"
-                app:contentScrim="?attr/colorPrimary"
-                app:expandedTitleMarginBottom="40dp"
-                app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-                <RelativeLayout
-                    android:id="@+id/imageHolder"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/imageAttraction"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:fitsSystemWindows="true"
-                        android:scaleType="centerCrop"
-                        app:layout_collapseMode="parallax" />
-
-                    <ImageView
-                        android:id="@+id/imgHotelsShadow"
-                        android:layout_width="match_parent"
-                        android:layout_height="?attr/actionBarSize"
-                        android:background="@drawable/dark_shadow_top"
-                        android:fitsSystemWindows="true"
-                        android:scaleType="centerCrop"
-                        app:layout_collapseMode="parallax" />
-
-                    <RelativeLayout
-                        android:id="@+id/hotelNameHolder"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentBottom="true"
-                        android:background="@drawable/dark_shadow"
-                        android:padding="@dimen/margin_short">
-
-
-                        <TextView
-                            android:id="@+id/attractionPlace"
-                            style="@style/StandardTextGrey"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:layout_alignParentStart="true"
-                            android:layout_marginBottom="@dimen/margin_standard"
-                            android:layout_marginEnd="@dimen/margin_standard"
-                            android:layout_marginStart="@dimen/margin_standard"
-                            android:gravity="bottom"
-                            android:padding="5dp"
-                            android:text="his"
-                            android:textColor="@color/white_" />
-
-                    </RelativeLayout>
-
-                </RelativeLayout>
-
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    fontPath="fonts/IRANSansMobile.ttf"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    app:layout_collapseMode="pin"
-                    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-
-            </android.support.design.widget.CollapsingToolbarLayout>
-
-
-        </android.support.design.widget.AppBarLayout>
+        <include layout="@layout/image_appbar" />
 
         <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -114,19 +32,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <include layout="@layout/comment_rate"
-
-                    />
 
                 <include layout="@layout/content_detail_attraction" />
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 
-        <RelativeLayout
-            android:id="@+id/ShowRoomHolder"
-            android:layout_width="match_parent"
-            android:layout_height="10dp">
-        </RelativeLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 
@@ -134,7 +44,7 @@
         android:id="@+id/banner_ad_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:layout_alignParentBottom="true"/>
+        android:layout_marginBottom="10dp" />
 </RelativeLayout>

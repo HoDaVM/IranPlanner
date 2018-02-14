@@ -152,6 +152,8 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     TextView textTimeDuration;
     @BindView(R.id.textEntranceFee)
     TextView textEntranceFee;
+    @BindView(R.id.txtPhotos)
+    TextView txtPhotos;
     @BindView(R.id.attractionType)
     TextView attractionType;
     @BindView(R.id.txtAddress)
@@ -162,59 +164,18 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     ImageView img;
     @BindView(R.id.commentHolder)
     LinearLayout commentHolder;
-    @BindView(R.id.rateHolder)
-    LinearLayout rateHolder;
-    @BindView(R.id.doneHolder)
-    LinearLayout doneHolder;
-    @BindView(R.id.nowVisitedHolder)
-    LinearLayout nowVisitedHolder;
-    @BindView(R.id.beftorVisitedHolder)
-    LinearLayout beftorVisitedHolder;
-    @BindView(R.id.dislikeHolder)
-    LinearLayout dislikeHolder;
-    @BindView(R.id.okHolder)
-    LinearLayout okHolder;
-    @BindView(R.id.likeHolder)
+   @BindView(R.id.likeHolder)
     LinearLayout likeHolder;
-    @BindView(R.id.bookmarkHolder)
-    LinearLayout bookmarkHolder;
-    @BindView(R.id.ratingHolder)
-    RelativeLayout ratingHolder;
-    @BindView(R.id.GroupHolder)
-    RelativeLayout GroupHolder;
-    @BindView(R.id.interestingLayout)
-    RelativeLayout interestingLayout;
-    @BindView(R.id.VisitedLayout)
-    RelativeLayout VisitedLayout;
-    @BindView(R.id.LikeLayout)
-    RelativeLayout LikeLayout;
     @BindView(R.id.MoreInoText)
     TextView MoreInoText;
-    @BindView(R.id.bookmarkImg)
-    ImageView bookmarkImg;
-    @BindView(R.id.doneImg)
-    ImageView doneImg;
-    @BindView(R.id.dislikeImg)
-    ImageView dislikeImg;
     @BindView(R.id.commentImg)
     ImageView okImg;
     @BindView(R.id.likeImg)
     ImageView likeImg;
-    @BindView(R.id.rateImg)
-    ImageView rateImg;
-    @BindView(R.id.beftorVisitedImg)
-    ImageView beftorVisitedImg;
-    @BindView(R.id.nowVisitedImg)
-    ImageView nowVisitedImg;
-    @BindView(R.id.wishImg)
-    ImageView wishImg;
-    @BindView(R.id.triangleShowAttraction)
-    ImageView triangleShowAttraction;
     @BindView(R.id.ratingBar)
     RatingBar ratingBar;
     @BindView(R.id.txtRateType)
     TextView txtRateType;
-
     @BindView(R.id.recyclerBestAttraction)
     RecyclerView recyclerBestAttraction;
     @BindView(R.id.cameraHolder)
@@ -377,15 +338,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         getSupportActionBar().setTitle(resulAttraction.getAttractionTitle());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setCustomView(R.layout.abs_layout);
-        try {
-            if (resulAttraction.getRate().getRateFinalAvg() != null) {
-                ratingBar.setRating(Float.valueOf(resulAttraction.getRate().getRateFinalAvg()));
-                txtRateType.setText("تا کنون " + Util.persianNumbers(resulAttraction.getRate().getRateFinalCount()) + "نفر به اینجا امتیاز داده اند ");
-            }
-        } catch (Exception e) {
-
-        }
-
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse);
 
@@ -397,6 +350,8 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         collapsingToolbarLayout.setExpandedTitleTypeface(tf);
 
 
+        txtPhotos.setText(" 9 عکس");
+aboutCityBtn1.setVisibility(View.VISIBLE);
         aboutCityBtn1.setText(resulAttraction.getProvinceTitle() + " - " + resulAttraction.getCityTitle());
         if (resulAttraction.getAttractionEstimatedTime() != null) {
             int totalMinute = Integer.parseInt(resulAttraction.getAttractionEstimatedTime());
@@ -417,31 +372,16 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         attractionType.setText(resulAttraction.getAttractionItineraryTypeTitle());
         setAttractionTypeImage();
         txtAddress.setText(resulAttraction.getAttractionAddress());
-        interestingLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                int width = interestingLayout.getWidth();
-                int height = interestingLayout.getHeight();
-                if (width > 0 && height > 0) {
-                    VisitedLayout.setVisibility(View.INVISIBLE);
-                    LikeLayout.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
+
         mapFragment.getMapAsync(this);
-        MoreInoText.setOnClickListener(this);
-        ratingHolder.setOnClickListener(this);
-        rateHolder.setOnClickListener(this);
-        doneHolder.setOnClickListener(this);
+
+
         likeImg.setOnClickListener(this);
         okImg.setOnClickListener(this);
-        dislikeImg.setOnClickListener(this);
-        nowVisitedImg.setOnClickListener(this);
-        wishImg.setOnClickListener(this);
-        beftorVisitedImg.setOnClickListener(this);
-        bookmarkHolder.setOnClickListener(this);
+
         commentHolder.setOnClickListener(this);
         ratingPeopleHolder.setOnClickListener(this);
+        MoreInoText.setOnClickListener(this);
 
 
         img.setOnClickListener(new View.OnClickListener() {
@@ -483,13 +423,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
                 } else {
                     if (App.checkGroupPermissions(App.STORAGE_PERMISSIONS)) {
-//                        selectImage();
-                        new PhotoUtils(attractionDetailActivity.this, new PhotoUtils.OnImageUriSelect() {
-                            @Override
-                            public void onSelectImage(Uri uri) {
-                                mImageUri = uri;
-                            }
-                        }).selectImage();
+                        selectImage();
 
                     } else {
                         requestPermissions(App.STORAGE_PERMISSIONS, 5);
@@ -525,43 +459,10 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
     private void setInterestResponce(List<ResultWidget> resultWidget) {
 
-
-//        if (resultWidget.get(0).getWidgetBookmarkValue() != null && resultWidget.get(0).getWidgetBookmarkValue() == 1) {
-//            bookmarkImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_bookmarkgreen));
-//        }
         if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 1) {
             LikeValue = 1;
             likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
-//            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
-//            okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_off));
-//            dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_off));
         }
-//        if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 2) {
-//            okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_on));
-//            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_on));
-//            dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_off));
-//            likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
-//        }
-//        if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 3) {
-//            dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_on));
-//            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_on));
-//            likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
-//            okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_off));
-//        }
-//        if (resultWidget.get(0).getWidgetVisitedValue() != null && resultWidget.get(0).getWidgetVisitedValue() == 1) {
-//            nowVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_now_seen_on));
-//            doneImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_now_seen_on));
-//            beftorVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_off));
-//        }
-//        if (resultWidget.get(0).getWidgetVisitedValue() != null && resultWidget.get(0).getWidgetVisitedValue() == 2) {
-//            beftorVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_on));
-//            doneImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_on));
-//            nowVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_off));
-//        }
-//        if (resultWidget.get(0).getWidgetWishValue() != null && resultWidget.get(0).getWidgetWishValue() == 1) {
-//            wishImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_wish_pink));
-//        }
-
     }
 
     @Override
@@ -613,7 +514,6 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.commentHolder:
-
                 builder.build().inject(this);
                 commentPresenter.getCommentList("pagecomments", resulAttraction.getAttractionId(), "attraction", "0");
                 break;
@@ -631,34 +531,6 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                 }
 
                 break;
-//            case R.id.ratingHolder:
-//                if (ratingHolderFlag) {
-////                    translateUp();
-//                }
-//                break;
-//            case R.id.rateHolder:
-//                if (!ratingHolderFlag) {
-//                    VisitedLayout.setVisibility(View.INVISIBLE);
-//                    LikeLayout.setVisibility(View.VISIBLE);
-//                    rotateImage = "rateImg";
-////                    translateDown();
-//                    break;
-//                } else {
-////                    translateUp();
-//                    break;
-//                }
-
-//            case R.id.doneHolder:
-//                if (!ratingHolderFlag) {
-//                    LikeLayout.setVisibility(View.INVISIBLE);
-//                    VisitedLayout.setVisibility(View.VISIBLE);
-//                    rotateImage = "doneImg";
-////                    translateDown();
-//                    break;
-//                } else {
-////                    translateUp();
-//                    break;
-//                }
 
             case R.id.likeImg:
                 rotateImage = "likeImg";
@@ -673,57 +545,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
                 }
                 break;
-//            case R.id.commentImg:
-//                rotateImage = "commentImg";
-//                if (LikeValue == 2) {
-//                    OnClickedIntrestedWidget("like", Constants.intrestDefault, okImg);
-//                } else {
-//                    OnClickedIntrestedWidget("like", Constants.okImg, okImg);
-//                }
-//                break;
-//            case R.id.dislikeImg:
-//                rotateImage = "dislikeImg";
-//                if (LikeValue == 2) {
-//                    OnClickedIntrestedWidget("like", Constants.intrestDefault, dislikeImg);
-//                } else {
-//                    OnClickedIntrestedWidget("like", Constants.dislikeImg, dislikeImg);
-//                }
-//                break;
-//            case R.id.wishImg:
-//                rotateImage = "wishImg";
-//                if (WishValue == 1) {
-//                    OnClickedIntrestedWidget("wish", Constants.intrestDefault, wishImg);
-//                } else {
-//                    OnClickedIntrestedWidget("wish", Constants.wishImg, wishImg);
-//                }
-//                break;
-//            case R.id.nowVisitedImg:
-//                rotateImage = "nowVisitedImg";
-//
-//                if (VisitedValue == 1) {
-//                    OnClickedIntrestedWidget("visited", Constants.intrestDefault, nowVisitedImg);
-//                } else {
-//                    OnClickedIntrestedWidget("visited", Constants.nowVisitedImg, nowVisitedImg);
-//                }
-//                break;
-//            case R.id.beftorVisitedImg:
-//                rotateImage = "beftorVisitedImg";
-//                if (VisitedValue == 2) {
-//                    OnClickedIntrestedWidget("visited", Constants.intrestDefault, beftorVisitedImg);
-//                } else {
-//                    OnClickedIntrestedWidget("visited", Constants.beftorVisitedImg, beftorVisitedImg);
-//                }
-//                break;
-//            case R.id.bookmarkHolder:
-//
-//                rotateImage = "bookmarkImg";
-//
-//                if (BookmarkValue == 1) {
-//                    OnClickedIntrestedWidget("bookmark", Constants.intrestDefault, bookmarkImg);
-//                } else {
-//                    OnClickedIntrestedWidget("bookmark", Constants.bookmarkImg, bookmarkImg);
-//                }
-//                break;
+
             case R.id.ratingPeopleHolder:
                 //todo
                 SendParamUser ss = new SendParamUser(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "attraction", resulAttraction.getAttractionId());
@@ -744,100 +566,6 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         }
     }
 
-    private void translateDown() {
-
-        AnimatorSet mAnimatorSet = new AnimatorSet();
-        mAnimatorSet.playTogether(
-                ObjectAnimator.ofFloat(ratingHolder, "translationY", interestingLayout.getHeight()),
-                ObjectAnimator.ofFloat(GroupHolder, "translationY", interestingLayout.getHeight()),
-                ObjectAnimator.ofFloat(triangleShowAttraction, "translationY", -55));
-        mAnimatorSet.setDuration(1000);
-        mAnimatorSet.start();
-        ratingHolderFlag = true;
-
-    }
-
-    private void translateUp() {
-        AnimatorSet mAnimatorSet = new AnimatorSet();
-        mAnimatorSet.playTogether(
-                ObjectAnimator.ofFloat(ratingHolder, "translationY", 0),
-                ObjectAnimator.ofFloat(GroupHolder, "translationY", 0),
-                ObjectAnimator.ofFloat(triangleShowAttraction, "translationY", 0));
-        mAnimatorSet.setDuration(1000);
-        mAnimatorSet.start();
-        ratingHolderFlag = false;
-    }
-
-    private void animWaiting(ImageView image) {
-        rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        rotate.setRepeatCount(5);
-        rotate.setDuration(5000);
-        rotate.setInterpolator(new LinearInterpolator());
-        image.startAnimation(rotate);
-        rotate.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                translateUp();
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-    }
-
-    private void checkWhichImageIntrested(String imageView) {
-
-        String im = imageView;
-        switch (im) {
-            case "bookmarkImg":
-                bookmarkImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_bookmarkgreen));
-                break;
-            case "nowVisitedImg":
-                nowVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_now_seen_on));
-                doneImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_now_seen_on));
-                beftorVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_off));
-
-                break;
-            case "beftorVisitedImg":
-                beftorVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_on));
-                doneImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_on));
-                nowVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_off));
-
-                break;
-            case "dislikeImg":
-                dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_on));
-                rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_on));
-                okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_off));
-                likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
-
-                break;
-            case "commentImg":
-                okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_on));
-                rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_on));
-                likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
-                dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_off));
-                break;
-            case "likeImg":
-                likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
-                rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
-                dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_off));
-                okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_off));
-                break;
-            case "wishImg":
-                wishImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_wish_pink));
-                break;
-            default:
-                break;
-        }
-    }
 
     @Override
     public void showComments(ResultCommentList resultCommentList) {
@@ -924,17 +652,11 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
     @Override
     public void setIntrestedWidget(InterestResult InterestResult) {
-//        ResultData resultData = InterestResult.getResultData();
-//        //// TODO: 14/02/2017
-////        rotate.setRepeatCount(0);
-//        checkWhichImageIntrested(rotateImage);
-//        menu.findItem(R.id.menuAttractionLike).setIcon(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
         setWidgetValue(InterestResult.getResultWidget());
     }
 
     @Override
     public void showAnimationWhenWaiting() {
-        ratingHolderFlag = attractionDetailPresenter.doTranslateAnimationUp(ratingHolder, GroupHolder, triangleShowAttraction);
 
     }
 
@@ -947,64 +669,16 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
     private void setWidgetValue(List<ResultWidget> resultWidget) {
 
-//        if (resultWidget.get(0).getWidgetBookmarkValue() != null) {
-//            BookmarkValue = resultWidget.get(0).getWidgetBookmarkValue();
-//        }
         if (resultWidget.get(0).getWidgetLikeValue() != null) {
             LikeValue = resultWidget.get(0).getWidgetLikeValue();
         }
-//        if (resultWidget.get(0).getWidgetVisitedValue() != null) {
-//            VisitedValue = resultWidget.get(0).getWidgetVisitedValue();
-//        }
-//        if (resultWidget.get(0).getWidgetWishValue() != null) {
-//            WishValue = resultWidget.get(0).getWidgetWishValue();
-//        }
 
-
-//        if (resultWidget.get(0).getWidgetBookmarkValue() != null && resultWidget.get(0).getWidgetBookmarkValue() == 1) {
-//            bookmarkImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_bookmarkgreen));
-//        } else if (resultWidget.get(0).getWidgetBookmarkValue() == null || resultWidget.get(0).getWidgetBookmarkValue() == 0) {
-//            bookmarkImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_bookmark_grey));
-//        }
-//        if (resultWidget.get(0).getWidgetWishValue() != null && resultWidget.get(0).getWidgetWishValue() == 1) {
-//            wishImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_wish_pink));
-//        } else if (resultWidget.get(0).getWidgetBookmarkValue() == null || resultWidget.get(0).getWidgetBookmarkValue() == 0) {
-//            wishImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_wish_grey));
-//        }
         if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 1) {
             likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
-            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
         } else if (resultWidget.get(0).getWidgetLikeValue() == null || resultWidget.get(0).getWidgetLikeValue() == 0) {
             likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
         }
-//        if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 2) {
-//            okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_on));
-//            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_on));
-//        } else if (resultWidget.get(0).getWidgetLikeValue() == null || resultWidget.get(0).getWidgetLikeValue() == 0) {
-//            okImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_ok_off));
 //
-//        }
-//        if (resultWidget.get(0).getWidgetLikeValue() != null && resultWidget.get(0).getWidgetLikeValue() == 3) {
-//            dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_on));
-//            rateImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_on));
-//        } else if (resultWidget.get(0).getWidgetLikeValue() == null || resultWidget.get(0).getWidgetLikeValue() == 0) {
-//            dislikeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_dislike_off));
-//
-//        }
-//        if (resultWidget.get(0).getWidgetVisitedValue() != null && resultWidget.get(0).getWidgetVisitedValue() == 1) {
-//            nowVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_now_seen_on));
-//            doneImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_now_seen_on));
-//        } else if (resultWidget.get(0).getWidgetVisitedValue() == null || resultWidget.get(0).getWidgetVisitedValue() == 0) {
-//            nowVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_off));
-//
-//        }
-//        if (resultWidget.get(0).getWidgetVisitedValue() != null && resultWidget.get(0).getWidgetVisitedValue() == 2) {
-//            beftorVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_on));
-//            doneImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_on));
-//        } else if (resultWidget.get(0).getWidgetVisitedValue() == null || resultWidget.get(0).getWidgetVisitedValue() == 0) {
-//            beftorVisitedImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_before_seen_off));
-//
-//        }
     }
 
     @Override
@@ -1015,7 +689,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     @Override
     protected int getLayoutId() {
         Adad.initialize(getApplicationContext());
-        return R.layout.fragment_attraction_detail;
+        return R.layout.activity_attraction_details;
     }
 
     @Override
@@ -1141,18 +815,6 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         }
     }
 
-//    private File createImageFiles() throws IOException {
-//        // Create an image file name
-//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
-//        String imageFileName = "JPEG_" + timeStamp + ".jpg";
-//        File file = new File(App.getInstance().getImagesPath(), imageFileName);
-//
-//        if (file.exists()) {
-//            file.delete();
-//        }
-//        file.createNewFile();
-//        return file;
-//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

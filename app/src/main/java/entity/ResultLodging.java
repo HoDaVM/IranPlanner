@@ -30,6 +30,17 @@ public class ResultLodging implements Serializable {
     public void setLodgingCheckin(String lodgingCheckin) {
         this.lodgingCheckin = lodgingCheckin;
     }
+    @SerializedName("rate")
+    @Expose
+    private Rate rate;
+
+    public Rate getRate() {
+        return rate;
+    }
+
+    public void setRate(Rate rate) {
+        this.rate = rate;
+    }
 
     @SerializedName("lodging_id")
     @Expose

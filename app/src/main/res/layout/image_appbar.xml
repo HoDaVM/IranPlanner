@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.AppBarLayout android:id="@+id/app_bar"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    android:fitsSystemWindows="true"
+    android:theme="@style/AppTheme.AppBarOverlay"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.design.widget.CollapsingToolbarLayout
+        android:id="@+id/collapse"
+        fontPath="fonts/IRANSansMobile.ttf"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        app:collapsedTitleGravity="start"
+        app:contentScrim="?attr/colorPrimary"
+        app:expandedTitleMarginBottom="40dp"
+        app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
+        app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+        <RelativeLayout
+            android:id="@+id/imageHolder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"
+                app:layout_collapseMode="parallax" />
+
+            <ImageView
+                android:id="@+id/imgHotelsShadow"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@drawable/dark_shadow_top"
+                android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"
+                app:layout_collapseMode="parallax" />
+
+            <RelativeLayout
+                android:id="@+id/hotelNameHolder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/dark_shadow"
+                android:padding="@dimen/margin_short">
+
+
+                <TextView
+                    android:id="@+id/aboutCityBtn1"
+                    style="@style/StandardTextGrey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginEnd="@dimen/margin_standard"
+                    android:layout_marginStart="@dimen/margin_standard"
+                    android:gravity="bottom"
+                    android:padding="5dp"
+                    android:text="his"
+                    android:textColor="@color/white_"
+                    android:visibility="gone"
+                    />
+                <TextView
+                    android:id="@+id/txtPhotos"
+                    style="@style/StandardTextGrey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="@dimen/margin_standard"
+                    android:layout_marginStart="@dimen/margin_standard"
+                    android:gravity="bottom"
+                    android:padding="5dp"
+                    android:text="عکس"
+                    android:textColor="@color/white_"
+                    android:background="@drawable/button_corner_blue_stroke"
+                   />
+
+                <RelativeLayout
+                    android:id="@+id/starShowHolder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="@dimen/padding_24"
+                    android:layout_marginRight="@dimen/padding_24"
+                    android:padding="@dimen/margin_xshort"
+                    >
+
+
+
+                        <ImageView
+                            android:id="@+id/imgStarH1"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginLeft="@dimen/margin_xshort"
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/ic_stars"
+                            android:visibility="visible"
+                            android:layout_alignParentStart="true"/>
+
+                        <ImageView
+                            android:id="@+id/imgStarH2"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginLeft="@dimen/margin_xshort"
+                            android:layout_toLeftOf="@+id/imgStarH1"
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/ic_stars"
+                            android:visibility="invisible"/>
+
+                        <ImageView
+                            android:id="@+id/imgStarH3"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginLeft="@dimen/margin_xshort"
+                            android:layout_toLeftOf="@+id/imgStarH2"
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/ic_stars"
+                            android:visibility="invisible"/>
+
+                        <ImageView
+                            android:id="@+id/imgStarH4"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginLeft="@dimen/margin_xshort"
+                            android:layout_toLeftOf="@+id/imgStarH3"
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/ic_stars"
+                            android:visibility="invisible"/>
+
+                        <ImageView
+                            android:id="@+id/imgStarH5"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_toLeftOf="@+id/imgStarH4"
+
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/ic_stars"
+                            android:visibility="invisible"/>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            fontPath="fonts/IRANSansMobile.ttf"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_collapseMode="pin"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+
+    </android.support.design.widget.CollapsingToolbarLayout>
+
+
+</android.support.design.widget.AppBarLayout>

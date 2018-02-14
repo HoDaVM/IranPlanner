@@ -47,6 +47,7 @@ public class CommentPresenter extends CommentContract {
 
     @Override
     public void getCommentList(String action, String nid, String ntype, String offset) {
+        mView.showProgress();
         retrofit.create(CommentService.class)
                 .getItineraryCommentList(action, nid, ntype, offset).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -61,11 +62,13 @@ public class CommentPresenter extends CommentContract {
                     @Override
                     public void onError(Throwable e) {
                         mView.showError(e.getMessage());
+                        mView.dismissProgress();
                     }
 
                     @Override
                     public void onNext(ResultCommentList resultItineraryList) {
                         mView.showComments(resultItineraryList);
+                        mView.dismissProgress();
                     }
                 });
 //        retrofit.create(ItineraryPresenter.AttractionService.class)

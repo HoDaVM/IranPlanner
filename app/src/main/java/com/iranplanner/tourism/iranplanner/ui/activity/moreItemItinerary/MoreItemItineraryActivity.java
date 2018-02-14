@@ -93,6 +93,7 @@ import entity.RateParam;
 import entity.ResultComment;
 import entity.ResultCommentList;
 import entity.ResultData;
+import entity.ResultImageList;
 import entity.ResultItinerary;
 import entity.ResultItineraryAttraction;
 import entity.ResultItineraryAttractionDay;
@@ -145,7 +146,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
     protected CTouchyWebView contentFullDescription;
     private TextView txtItinerary_attraction_Difficulty;
     private TextView txtItinerary_count_attraction;
-    private ImageView imgItineraryListMore;
+    private ImageView img;
     private TextView itineraryDuration;
     private TextView fromCityName, toCityName;
     private TextView showItinerys;
@@ -166,6 +167,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
     LinearLayout likeHolder;
     ImageView likeImg;
     RelativeLayout ratingPeopleHolder;
+    TextView txtRateType, txtPhotos;
 
     private void findView() {
 
@@ -188,7 +190,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         ratingPeopleHolder = findViewById(R.id.ratingPeopleHolder);
         txtDate = (TextView) findViewById(R.id.txtDate);
         changeDateHolder = (LinearLayout) findViewById(R.id.changeDateHolder);
-        imgItineraryListMore = (ImageView) findViewById(R.id.imgItineraryListMore);
+        img = (ImageView) findViewById(R.id.img);
         contentFullDescription = (CTouchyWebView) findViewById(R.id.contentFullDescription);
         commentHolder = findViewById(R.id.commentHolder);
         txtOk = (TextView) findViewById(R.id.txtOk);
@@ -198,6 +200,9 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         likeImg = findViewById(R.id.likeImg);
         likeHolder = findViewById(R.id.likeHolder);
         ViewCompat.setElevation(appBar, Util.dpToPx(this, 28));
+        txtRateType = findViewById(R.id.txtRateType);
+        txtPhotos = findViewById(R.id.txtPhotos);
+
     }
 
     @Override
@@ -216,28 +221,69 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         String duration = bundle.getString("duration");
         List<ResultWidget> resultWidget = (List<ResultWidget>) bundle.getSerializable("resultWidget");
 
+        String title = "برنامه سفر " + itineraryData.getItineraryFromCityName() + " به " + itineraryData.getItineraryToCityName();
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(android.graphics.Color.WHITE);
-        String title = "برنامه سفر " + itineraryData.getItineraryFromCityName() + " به " + itineraryData.getItineraryToCityName();
+        getSupportActionBar().setTitle(title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.abs_layout);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse);
-        collapsingToolbarLayout.setTitle(title);
-        collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, R.color.white_));
-        collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.white_));
-        toolbar.setNavigationIcon(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
+
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/IRANSansMobile.ttf");
 
+        collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.expandedappbar);
+        collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.collapsedappbar);
         collapsingToolbarLayout.setCollapsedTitleTypeface(tf);
         collapsingToolbarLayout.setExpandedTitleTypeface(tf);
 
+
+        txtPhotos.setText(" 9 عکس");
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        TextView aboutCityBtn1 =  findViewById(R.id.aboutCityBtn1);
+//        aboutCityBtn1.setText("اینجااااااااااا");
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setTitle(title);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//
+//
+//
+//        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse);
+//
+//        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/IRANSansMobile.ttf");
+//
+//        collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.expandedappbar);
+//        collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.collapsedappbar);
+//        collapsingToolbarLayout.setCollapsedTitleTypeface(tf);
+//        collapsingToolbarLayout.setExpandedTitleTypeface(tf);
+//
+//
+//        collapsingToolbarLayout.setTitleEnabled(false);
+
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        TextView aboutCityBtn1 =  findViewById(R.id.aboutCityBtn1);
+////        aboutCityBtn1.setText("اینجااااااااااا");
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setTitle("هتل");
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//
+//
+//        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse);
+//
+//        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/IRANSansMobile.ttf");
+//
+//        collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.expandedappbar);
+//        collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.collapsedappbar);
+//        collapsingToolbarLayout.setCollapsedTitleTypeface(tf);
+//        collapsingToolbarLayout.setExpandedTitleTypeface(tf);
+
+        if (itineraryData.getRate().getRateFinalAvg() != null) {
+            ratingBar.setRating(Float.valueOf(itineraryData.getRate().getRateFinalAvg()));
+            txtRateType.setText("تا کنون " + Util.persianNumbers(itineraryData.getRate().getRateFinalCount()) + "نفر به اینجا امتیاز داده اند ");
+        }
         setTypeOfTravel();
         myData = itineraryData.getItineraryBody();
         setWebViewContent(getShowMoreString(myData));
@@ -308,32 +354,32 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         builder.build().inject(this);
         itineraryPresenter.getWidgetResult("nodeuser", itineraryData.getItineraryId(), Util.getUseRIdFromShareprefrence(getApplicationContext()), "itinerary", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
         if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_MOREITEMITINERARY, "false", false, getApplicationContext()))) {
-        setShowCase();
+            setShowCase();
         }
     }
 
     private Menu menu = null;
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_itinerary_more, menu);
-        this.menu = menu;
-        MenuItem menuItem = menu.getItem(0);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menuItineraryComment:
-//            here comes the comment code section
-                showProgressDialog();
-                builder.build().inject(this);
-                commentPresenter.getCommentList("pagecomments", itineraryId, "itinerary", "0");
-                break;
-        }
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu_itinerary_more, menu);
+//        this.menu = menu;
+//        MenuItem menuItem = menu.getItem(0);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.menuItineraryComment:
+////            here comes the comment code section
+//                showProgressDialog();
+//                builder.build().inject(this);
+//                commentPresenter.getCommentList("pagecomments", itineraryId, "itinerary", "0");
+//                break;
+//        }
+//        return true;
+//    }
 
     private boolean isFav = false;
 
@@ -474,7 +520,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
     private void setImageView() {
         if (itineraryData.getItineraryImgUrl() != null) {
             String url = itineraryData.getItineraryImgUrl();
-            Glide.with(this).load(url).into(imgItineraryListMore);
+            Glide.with(this).load(url).into(img);
         }
     }
 
@@ -712,6 +758,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
     @Override
     public void setRate(ResultParamUser resultParamUser) {
         ratingBar.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalAvg()));
+        txtRateType.setText("تا کنون " + Util.persianNumbers(resultParamUser.getResultRatePost().getRateFinalCount() + "نفر به اینجا امتیاز داده اند "));
 
     }
 
@@ -719,6 +766,23 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
     public void setRateUser(ResultParamUser resultParamUser) {
         CustomDialogAlert customDialogAlert = new CustomDialogAlert(this, resultParamUser);
         customDialogAlert.show();
+    }
+
+    private ProgressDialog progressBar;
+
+    @Override
+    public void showProgress() {
+        progressBar = Util.showProgressDialog(getApplicationContext(), "", MoreItemItineraryActivity.this);
+    }
+
+    @Override
+    public void dismissProgress() {
+        progressBar.dismiss();
+    }
+
+    @Override
+    public void showMoreImages(ResultImageList resultImageList) {
+
     }
 
     public class CustomDialogAlert extends Dialog implements
@@ -925,7 +989,6 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         mMap.getUiSettings().setZoomControlsEnabled(false);
 
 
-
         //Initialize Google Play Services
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
@@ -977,10 +1040,9 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         });
 
 
-
     }
 
-    private void fullmap(){
+    private void fullmap() {
         Log.e("map is ckicked", "true");
         Intent intent = new Intent(getApplicationContext(), MapFullActivity.class);
         List<ItineraryLodgingCity> lodgingCities = itineraryData.getItineraryLodgingCity();

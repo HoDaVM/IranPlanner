@@ -7,7 +7,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class ResultItinerary  implements Serializable  {
-
+    @SerializedName("rate")
+    @Expose
+    private Rate rate;
     @SerializedName("itinerary_id")
     @Expose
     private String itineraryId;
@@ -20,6 +22,15 @@ public class ResultItinerary  implements Serializable  {
     @SerializedName("itinerary_duration_id")
     @Expose
     private String itineraryDurationId;
+
+    public Rate getRate() {
+        return rate;
+    }
+
+    public void setRate(Rate rate) {
+        this.rate = rate;
+    }
+
     @SerializedName("itinerary_from_city_name")
     @Expose
     private String itineraryFromCityName;

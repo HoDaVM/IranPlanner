@@ -8,12 +8,12 @@
         android:id="@+id/gridView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_margin="@dimen/margin_xxshort"
 
         android:drawSelectorOnTop="true"
         android:gravity="center"
         android:numColumns="auto_fit"
-        android:verticalSpacing="5dp"
+        android:verticalSpacing="@dimen/margin_xxshort"
         android:focusable="true"
         android:clickable="true"/>
 

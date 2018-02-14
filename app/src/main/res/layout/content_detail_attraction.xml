@@ -11,362 +11,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/ratingHolder">
 
-        <!--rating Holder-->
-        <RelativeLayout
-            android:id="@+id/ratingHolder"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/interestingLayout"
-            android:background="@color/greyLight"
-            android:visibility="gone">
-
-            <RelativeLayout
-                android:id="@+id/VisitedLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:weightSum="2">
-
-                    <LinearLayout
-                        android:id="@+id/beftorVisitedHolder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingTop="@dimen/padding_short">
-
-                        <ImageView
-                            android:id="@+id/beftorVisitedImg"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:scaleType="centerCrop"
-                            android:src="@mipmap/ic_before_seen_off" />
-
-                        <TextView
-                            android:id="@+id/beftorVisitedTxt"
-                            style="@style/SmallText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:maxLines="1"
-                            android:text="قبلا اینجا بودم" />
-
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/nowVisitedHolder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingTop="@dimen/padding_short">
-
-                        <ImageView
-                            android:id="@+id/nowVisitedImg"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:scaleType="centerCrop"
-                            android:src="@mipmap/ic_now_seen_off" />
-
-                        <TextView
-                            android:id="@+id/nowVisitedTxt"
-                            style="@style/SmallText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:maxLines="1"
-                            android:text="الان اینجا هستم" />
-
-                    </LinearLayout>
-                </LinearLayout>
-
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/LikeLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:weightSum="3">
-
-                    <LinearLayout
-                        android:id="@+id/dislikeHolder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingTop="@dimen/padding_short">
-
-                        <ImageView
-                            android:id="@+id/dislikeImg"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:padding="@dimen/margin_xxshort"
-                            android:scaleType="centerCrop"
-                            android:src="@mipmap/ic_dislike_off" />
-
-                        <TextView
-                            android:id="@+id/dislikeTxt"
-                            style="@style/SmallText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/margin_xshort"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:maxLines="1"
-                            android:text="علاقه مندی" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/okHolder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingTop="@dimen/padding_short">
-
-                        <ImageView
-                            android:id="@+id/okImg"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:padding="@dimen/margin_xxshort"
-                            android:scaleType="centerCrop"
-                            android:src="@mipmap/ic_ok_off" />
-
-                        <TextView
-                            android:id="@+id/okTxt"
-                            style="@style/SmallText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/margin_xshort"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:maxLines="1"
-                            android:text="خوبه" />
-
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/likeHolder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingTop="@dimen/padding_short">
-
-                        <ImageView
-                            android:id="@+id/likeImg"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:padding="@dimen/margin_xxshort"
-                            android:scaleType="centerCrop"
-                            android:src="@mipmap/ic_like_off" />
-
-                        <TextView
-                            android:id="@+id/likeTxt"
-                            style="@style/SmallText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/margin_xshort"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:maxLines="1"
-                            android:text="دوست دارم" />
-
-                    </LinearLayout>
-                </LinearLayout>
-            </RelativeLayout>
-
-        </RelativeLayout>
-        <!--interestingLayout-->
-        <RelativeLayout
-            android:id="@+id/interestingLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/imageHolder"
-            android:background="@color/white_">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:translationZ="1dp"
-                android:visibility="gone"
-                android:weightSum="5">
-
-                <LinearLayout
-                    android:id="@+id/commentHolder"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingTop="@dimen/padding_short">
-
-                    <ImageView
-                        android:id="@+id/commentImg"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:padding="@dimen/margin_xxshort"
-                        android:scaleType="centerCrop"
-                        android:src="@mipmap/ic_reviewgreen" />
-
-                    <TextView
-                        android:id="@+id/commentTxt"
-                        style="@style/StandardTextGrey"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/margin_xshort"
-
-                        android:maxLines="1"
-                        android:text="ثبت نظر" />
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/wish"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingTop="@dimen/padding_short">
-
-                    <ImageView
-                        android:id="@+id/wishImg"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:padding="@dimen/margin_xxshort"
-                        android:scaleType="centerCrop"
-                        android:src="@mipmap/ic_wish_grey" />
-
-                    <TextView
-                        android:id="@+id/wishTxt"
-                        style="@style/StandardTextGrey"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/margin_xshort"
-
-                        android:maxLines="1"
-                        android:text="آرزوی دیدن" />
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/doneHolder"
-                    android:layout_width="wrap_content"
-
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingTop="@dimen/padding_short">
-
-                    <ImageView
-                        android:id="@+id/doneImg"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:padding="@dimen/margin_xxshort"
-                        android:scaleType="centerCrop"
-                        android:src="@mipmap/ic_seen" />
-
-                    <TextView
-                        android:id="@+id/doneTxt"
-                        style="@style/StandardTextGrey"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/margin_xshort"
-
-                        android:maxLines="1"
-                        android:text="دیدن جاذبه" />
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/rateHolder"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingTop="@dimen/padding_short">
-
-                    <ImageView
-                        android:id="@+id/rateImg"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:padding="@dimen/margin_xxshort"
-                        android:scaleType="centerCrop"
-                        android:src="@mipmap/ic_rate_grey" />
-
-                    <TextView
-                        android:id="@+id/txtInterest"
-                        style="@style/StandardTextGrey"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/margin_xshort"
-
-                        android:maxLines="1"
-                        android:text="علاقه مندی" />
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/bookmarkHolder"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingTop="@dimen/padding_short">
-
-                    <ImageView
-                        android:id="@+id/bookmarkImg"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:padding="@dimen/margin_xxshort"
-                        android:scaleType="centerCrop"
-                        android:src="@mipmap/ic_bookmark_grey" />
-
-                    <TextView
-                        android:id="@+id/saveTxt"
-                        style="@style/StandardTextGrey"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/margin_xxshort"
-
-                        android:maxLines="1"
-                        android:text="ذخیره" />
-
-
-                </LinearLayout>
-            </LinearLayout>
-        </RelativeLayout>
-
-
         <!--mapholder-->
         <RelativeLayout
             android:id="@+id/mapHolder"
@@ -400,17 +44,18 @@
                 tools:context="com.iranplanner.tourism.iranplanner.ui.activity.moreItemItinerary.MoreItemItineraryActivity" />
 
         </RelativeLayout>
+
+        <include
+            android:id="@+id/comment_rate"
+            layout="@layout/comment_rate" />
         <!--showMore   bishtar bekhanid  -->
 
-        <include layout="@layout/comment_rate"
 
-            />
         <RelativeLayout
             android:id="@+id/ShowMoreInfoHolder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/ratingHolder"
-            android:layout_toEndOf="@+id/ratingHolder"
+            android:layout_below="@+id/comment_rate"
             android:background="@color/white_"
             android:padding="@dimen/padding_short">
 
@@ -432,7 +77,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/titleBody"
                 android:padding="5dp"
-                android:text="his" />
+                android:text="attractionType" />
 
             <TextView
                 android:id="@+id/titleBody"
@@ -461,9 +106,10 @@
                     android:id="@+id/contentFullDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/StandardTextGrey"
+                    android:layout_alignParentStart="true"
 
-                    />
+                    android:layout_below="@+id/imageTypeAttraction"
+                    android:textAppearance="@style/StandardTextGrey" />
             </RelativeLayout>
 
             <TextView
@@ -483,10 +129,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/supplierLayoutTravelType"
-            android:paddingStart="@dimen/padding_standard"
+            android:paddingBottom="@dimen/margin_short"
             android:paddingEnd="@dimen/padding_standard"
-            android:paddingTop="@dimen/padding_standard"
-            android:paddingBottom="@dimen/margin_short">
+            android:paddingStart="@dimen/padding_standard"
+            android:paddingTop="@dimen/padding_standard">
 
             <TextView
                 android:id="@+id/txtAddressTitle"
@@ -513,90 +159,72 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ShowMoreInfoHolder"
-            android:background="@color/white_">
+            android:layout_centerVertical="true"
+            android:background="@color/white_"
+            android:paddingEnd="@dimen/padding_standard"
+            android:paddingStart="@dimen/padding_standard">
 
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/cityNameHolder1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/overlapImageHolder"
-                android:paddingEnd="@dimen/padding_standard"
-                android:paddingStart="@dimen/padding_standard">
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/cityNameHolder"
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:id="@+id/cityNameHolder1"
+                <ImageView
+                    android:id="@+id/imageCityName1"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_money" />
+
+                <TextView
+                    android:id="@+id/textEntranceFee"
+                    style="@style/StandardTextGrey"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_below="@+id/cityNameHolder"
-                    android:orientation="horizontal">
+                    android:layout_margin="5dp"
+                    android:maxLines="1"
+                    android:text="textCityName" />
 
-                    <ImageView
-                        android:id="@+id/imageCityName1"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:scaleType="centerCrop"
-                        android:src="@mipmap/ic_money" />
+                <ImageButton
+                    android:id="@+id/cameraaa"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/ic_google"
+                    android:visibility="gone" />
+            </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/textEntranceFee"
-                        style="@style/StandardTextGrey"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:maxLines="1"
-                        android:text="textCityName" />
+            <LinearLayout
+                android:id="@+id/cityNameHolder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/margin_short">
 
-                    <ImageButton
-                        android:id="@+id/cameraaa"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/ic_google"
-                        android:visibility="gone" />
-                </LinearLayout>
+                <ImageView
+                    android:id="@+id/imageCityName"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_duration_time_grey" />
 
-                <LinearLayout
-                    android:id="@+id/cityNameHolder"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/textTimeDuration"
+                    style="@style/StandardTextGrey"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:orientation="horizontal"
-                    android:paddingTop="@dimen/margin_short">
-
-                    <ImageView
-                        android:id="@+id/imageCityName"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:scaleType="centerCrop"
-                        android:src="@mipmap/ic_duration_time_grey" />
-
-                    <TextView
-                        android:id="@+id/textTimeDuration"
-                        style="@style/StandardTextGrey"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:maxLines="1"
-                        android:text="textCityName" />
+                    android:layout_margin="5dp"
+                    android:maxLines="1"
+                    android:text="textCityName" />
 
 
-                </LinearLayout>
-
-            </RelativeLayout>
-
-            <ImageView
-                android:id="@+id/triangleShowAttraction"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerHorizontal="true"
-                android:rotation="180"
-                android:src="@drawable/shape_triangle"
-                android:visibility="gone" />
-
-
+            </LinearLayout>
         </RelativeLayout>
 
         <RelativeLayout
@@ -606,36 +234,8 @@
             android:layout_below="@+id/supplierLayoutTravelType"
             android:background="@color/greyLight"></RelativeLayout>
         <!--pageMore-->
-        <RelativeLayout
-            android:id="@+id/viewPagerMore"
-            android:layout_width="match_parent"
-            android:layout_height="240dp"
-            android:layout_below="@+id/borderLayout"
-            android:gravity="center"
-            android:paddingLeft="@dimen/margin_short"
-            android:visibility="gone">
 
-            <TextView
-                style="@style/StandardTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="جاذبه های نزدیک" />
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/toolsPager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:paddingLeft="@dimen/margin_standard"
-                android:paddingRight="@dimen/margin_short"
-                android:paddingTop="@dimen/padding_standard">
-
-            </android.support.v4.view.ViewPager>
-
-
-        </RelativeLayout>
-
+        <!-- nearAttraction-->
         <RelativeLayout
             android:id="@+id/bestAttractionHolder"
             android:layout_width="match_parent"

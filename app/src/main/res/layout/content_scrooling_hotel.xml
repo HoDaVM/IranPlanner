@@ -120,7 +120,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbarFeatureElevation"
-        android:padding="@dimen/margin_short">
+        android:padding="@dimen/margin_short"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/txtHotelType"
@@ -142,7 +143,7 @@
             android:text="name"
             android:translationZ="1dp" />
 
-        <RelativeLayout
+       <!-- <RelativeLayout
             android:id="@+id/starShowHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -197,7 +198,7 @@
                 android:scaleType="centerCrop"
                 android:src="@mipmap/ic_stars"
                 android:visibility="invisible"/>
-        </RelativeLayout>
+        </RelativeLayout>-->
     </RelativeLayout>
 
     <LinearLayout
@@ -330,7 +331,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/moreFacility"
         android:padding="@dimen/padding_short"
-        android:paddingBottom="@dimen/margin_short">
+        android:paddingBottom="@dimen/margin_short"
+        >
 
         <TextView
             android:id="@+id/txtAddressTitle"
