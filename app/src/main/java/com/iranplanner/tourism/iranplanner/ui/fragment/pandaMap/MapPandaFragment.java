@@ -8,7 +8,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -123,6 +126,7 @@ import tools.Constants;
 import tools.Util;
 
 import static android.content.Context.LOCATION_SERVICE;
+import static anywheresoftware.b4a.keywords.B4AApplication.getPackageName;
 
 /**
  * Created by h.vahidimehr on 11/11/2017.
@@ -545,8 +549,11 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(latLng);
                 markerOptions.title(markerNames.get(index));
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(setMarkerIcon(index)));
 
-                markerOptions.icon(setMarkerIcon(index));
+                markerOptions.anchor(0.5f,0.5f);
+
+
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 Marker marker = mMap.addMarker(markerOptions);
@@ -555,19 +562,26 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
             }
         }
     }
+    public Bitmap resizeMapIcons(String iconName, int width, int height){
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", getPackageName()));
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
+        return resizedBitmap;
+    }
+    private Bitmap setMarkerIcon(int index) {
 
-    private BitmapDescriptor setMarkerIcon(int index) {
-        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker);
+        int height = 70;
+        int width = 70;
+        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.mipmap.ic_marker);
         if (markerType.get(index).equals("attraction")) {
-            icon = BitmapDescriptorFactory.fromResource(R.drawable.attraction);
-
+             bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.attraction);
         } else if (markerType.get(index).equals("lodging")) {
-            icon = BitmapDescriptorFactory.fromResource(R.drawable.hotel);
-
+            bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.hotel);
         } else if (markerType.get(index).equals("city")) {
-            icon = BitmapDescriptorFactory.fromResource(R.drawable.city);
+            bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.city);
         }
-        return icon;
+        Bitmap b=bitmapdraw.getBitmap();
+        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+        return smallMarker;
     }
 
     @Override
