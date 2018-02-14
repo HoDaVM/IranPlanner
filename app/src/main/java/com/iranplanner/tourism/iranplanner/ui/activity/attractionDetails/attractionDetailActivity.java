@@ -64,6 +64,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.iranplanner.tourism.iranplanner.BuildConfig;
+import com.iranplanner.tourism.iranplanner.photoViewer.GridImageActivity;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.RecyclerItemOnClickListener;
 import com.iranplanner.tourism.iranplanner.di.model.App;
@@ -85,7 +86,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,6 +101,7 @@ import entity.ResulAttraction;
 import entity.ResultAttractionList;
 import entity.ResultComment;
 import entity.ResultCommentList;
+import entity.ResultImageList;
 import entity.ResultParamUser;
 import entity.ResultWidget;
 import entity.ResultWidgetFull;
@@ -145,8 +146,8 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
     @BindView(R.id.contentFullDescription)
     CTouchyWebView contentFullDescription;
-    @BindView(R.id.attractionPlace)
-    TextView attractionPlace;
+    @BindView(R.id.aboutCityBtn1)
+    TextView aboutCityBtn1;
     @BindView(R.id.textTimeDuration)
     TextView textTimeDuration;
     @BindView(R.id.textEntranceFee)
@@ -157,8 +158,8 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     TextView txtAddress;
     @BindView(R.id.imageTypeAttraction)
     ImageView imageTypeAttraction;
-    @BindView(R.id.imageAttraction)
-    ImageView imageAttraction;
+    @BindView(R.id.img)
+    ImageView img;
     @BindView(R.id.commentHolder)
     LinearLayout commentHolder;
     @BindView(R.id.rateHolder)
@@ -285,11 +286,11 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                             return false;
                         }
                     })
-                    .into(imageAttraction);
+                    .into(img);
 
         } else {
-            Glide.clear(imageAttraction);
-            imageAttraction.setImageDrawable(null);
+            Glide.clear(img);
+            img.setImageDrawable(null);
         }
     }
 
@@ -376,8 +377,16 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         getSupportActionBar().setTitle(resulAttraction.getAttractionTitle());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setCustomView(R.layout.abs_layout);
-        ratingBar.setRating(Float.valueOf(resulAttraction.getRate().getRateFinalAvg()));
-        txtRateType.setText("تا کنون " + Util.persianNumbers(resulAttraction.getRate().getRateFinalCount()) + " به اینجا امتیاز داده اند ");
+        try {
+            if (resulAttraction.getRate().getRateFinalAvg() != null) {
+                ratingBar.setRating(Float.valueOf(resulAttraction.getRate().getRateFinalAvg()));
+                txtRateType.setText("تا کنون " + Util.persianNumbers(resulAttraction.getRate().getRateFinalCount()) + "نفر به اینجا امتیاز داده اند ");
+            }
+        } catch (Exception e) {
+
+        }
+
+
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse);
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/IRANSansMobile.ttf");
@@ -387,7 +396,8 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         collapsingToolbarLayout.setCollapsedTitleTypeface(tf);
         collapsingToolbarLayout.setExpandedTitleTypeface(tf);
 
-        attractionPlace.setText(resulAttraction.getProvinceTitle() + " - " + resulAttraction.getCityTitle());
+
+        aboutCityBtn1.setText(resulAttraction.getProvinceTitle() + " - " + resulAttraction.getCityTitle());
         if (resulAttraction.getAttractionEstimatedTime() != null) {
             int totalMinute = Integer.parseInt(resulAttraction.getAttractionEstimatedTime());
             Util.convertMinuteToHour(totalMinute, textTimeDuration);
@@ -432,6 +442,22 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         bookmarkHolder.setOnClickListener(this);
         commentHolder.setOnClickListener(this);
         ratingPeopleHolder.setOnClickListener(this);
+
+
+        img.setOnClickListener(new View.OnClickListener() {
+
+
+            @Override
+            public void onClick(View v) {
+                int startPosition = 0;
+
+                commentPresenter.getImages("images");
+//                new ImageViewer.Builder(getApplicationContext(), list)
+//                        .setStartPosition(startPosition)
+//                        .show();
+
+            }
+        });
         PhotoUtils photoUtils;
 
         builder = DaggerAtractionDetailComponent.builder()
@@ -447,13 +473,13 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                 App.getInstance().prepareDirectories();
 
                 if (Build.VERSION.SDK_INT < 23) {
-//                    selectImage();
-                    new PhotoUtils(attractionDetailActivity.this, new PhotoUtils.OnImageUriSelect() {
-                        @Override
-                        public void onSelectImage(Uri uri) {
-                            mImageUri=uri;
-                        }
-                    });
+                    selectImage();
+//                    new PhotoUtils(attractionDetailActivity.this, new PhotoUtils.OnImageUriSelect() {
+//                        @Override
+//                        public void onSelectImage(Uri uri) {
+//                            mImageUri=uri;
+//                        }
+//                    });
 
                 } else {
                     if (App.checkGroupPermissions(App.STORAGE_PERMISSIONS)) {
@@ -461,7 +487,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                         new PhotoUtils(attractionDetailActivity.this, new PhotoUtils.OnImageUriSelect() {
                             @Override
                             public void onSelectImage(Uri uri) {
-                                mImageUri=uri;
+                                mImageUri = uri;
                             }
                         }).selectImage();
 
@@ -847,7 +873,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
     @Override
     public void showProgress() {
-        progressBar = Util.showProgressDialog(getApplicationContext(), "منتظر بمانید", attractionDetailActivity.this);
+        progressBar = Util.showProgressDialog(getApplicationContext(), "", attractionDetailActivity.this);
     }
 
     @Override
@@ -856,8 +882,16 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     }
 
     @Override
+    public void showMoreImages(ResultImageList resultImageList) {
+        Intent intent = new Intent(attractionDetailActivity.this, GridImageActivity.class);
+        intent.putExtra("ResultImagesList", (Serializable) resultImageList.getResultImages());
+        startActivity(intent);
+    }
+
+    @Override
     public void setRate(ResultParamUser resultParamUser) {
         ratingBar.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalAvg()));
+        txtRateType.setText("تا کنون " + Util.persianNumbers(resultParamUser.getResultRatePost().getRateFinalCount() + "نفر به اینجا امتیاز داده اند "));
     }
 
     @Override
@@ -986,7 +1020,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
     @Override
     public void onCropImage(Bitmap bitmap) {
-        imageAttraction.setImageBitmap(bitmap);
+        img.setImageBitmap(bitmap);
     }
 
     @Override

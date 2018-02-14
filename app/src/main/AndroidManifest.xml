@@ -130,6 +130,9 @@
             android:name=".ui.activity.GridActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".photoViewer.GridImageActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activity.reservationHotelList.ReservationHotelListActivity"
             android:screenOrientation="portrait" />
         <activity

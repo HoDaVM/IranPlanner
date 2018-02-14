@@ -2,6 +2,7 @@ package com.iranplanner.tourism.iranplanner.ui.activity.comment;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ import entity.InterestResult;
 import entity.ResulAttraction;
 import entity.ResultComment;
 import entity.ResultCommentList;
+import entity.ResultImageList;
 import entity.ResultItinerary;
 import entity.ResultItineraryAttraction;
 import entity.ResultLodging;
@@ -348,6 +350,21 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
 
     @Override
     public void setRateUser(ResultParamUser resultParamUser) {
+
+    }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void dismissProgress() {
+
+    }
+
+    @Override
+    public void showMoreImages(ResultImageList resultImageList) {
 
     }
 

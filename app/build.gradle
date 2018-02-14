@@ -124,6 +124,11 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-compiler:2.11"
     compile 'com.github.amlcurran.showcaseview:library:5.4.3'
     compile 'ir.adad.androidsdkv3:AdadSDKv3:3.3.1'
+//    compile "com.android.support:exifinterface:26.1.0"
+    //--- photoviewer
+    compile 'com.github.stfalcon:frescoimageviewer:0.5.0'
+    compile "com.facebook.fresco:fresco:1.2.0"
+    //--------------
 
 }
 

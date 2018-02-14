@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import entity.CommentSend;
 import entity.InterestResult;
 import entity.ResultCommentList;
+import entity.ResultImageList;
 import entity.ResultParamUser;
 import entity.ResultWidgetFull;
 import entity.SendParamUser;
@@ -93,9 +94,9 @@ public class CommentPresenter extends CommentContract {
     }
 
     @Override
-    public void callInsertComment(CommentSend commentSend,String cid,String andId) {
+    public void callInsertComment(CommentSend commentSend, String cid, String andId) {
         retrofit.create(CommentService.class)
-                .callInsertComment(commentSend,cid,andId).subscribeOn(Schedulers.io())
+                .callInsertComment(commentSend, cid, andId).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(new Observer<ResultCommentList>() {
@@ -174,9 +175,10 @@ public class CommentPresenter extends CommentContract {
     }
 
     @Override
-    public void rateSend(String action,SendParamUser request, String cid, String andId) {
+    public void rateSend(String action, SendParamUser request, String cid, String andId) {
+        mView.showProgress();
         retrofit.create(CommentService.class)
-                .rateSend(action,request, cid, andId).subscribeOn(Schedulers.io())
+                .rateSend(action, request, cid, andId).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(new Observer<ResultParamUser>() {
@@ -191,20 +193,23 @@ public class CommentPresenter extends CommentContract {
                     public void onError(Throwable e) {
 //                        mView.showError(e.getMessage());
                         Log.e("e", e.getMessage());
+                        mView.dismissProgress();
                     }
 
                     @Override
                     public void onNext(ResultParamUser resultParamUser) {
                         mView.setRate(resultParamUser);
+                        mView.dismissProgress();
                     }
                 });
 
     }
 
     @Override
-    public void getRate(String action,SendParamUser request, String cid, String andId) {
+    public void getRate(String action, SendParamUser request, String cid, String andId) {
+        mView.showProgress();
         retrofit.create(CommentService.class)
-                .getRate( action,request, cid, andId).subscribeOn(Schedulers.io())
+                .getRate(action, request, cid, andId).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(new Observer<ResultParamUser>() {
@@ -213,20 +218,56 @@ public class CommentPresenter extends CommentContract {
                     public void onCompleted() {
 //                        mView.showComplete();
                         Log.e("direction path", "complete");
+                        mView.dismissProgress();
+
                     }
 
                     @Override
                     public void onError(Throwable e) {
 //                        mView.showError(e.getMessage());
                         Log.e("e", e.getMessage());
+                        mView.dismissProgress();
+
                     }
 
                     @Override
                     public void onNext(ResultParamUser resultParamUser) {
                         mView.setRateUser(resultParamUser);
+                        mView.dismissProgress();
                     }
                 });
 
+    }
+
+    @Override
+    public void getImages(String action) {
+        mView.showProgress();
+        retrofit.create(CommentService.class)
+                .getImages(action).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(new Observer<ResultImageList>() {
+
+                    @Override
+                    public void onCompleted() {
+                        Log.e("direction path", "complete");
+                        mView.dismissProgress();
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("e", e.getMessage());
+                        mView.dismissProgress();
+
+                    }
+
+                    @Override
+                    public void onNext(ResultImageList resultImageList) {
+                        mView.showMoreImages(resultImageList);
+                        mView.dismissProgress();
+                    }
+                });
     }
 
 
@@ -282,12 +323,18 @@ public class CommentPresenter extends CommentContract {
                 @Query("gvalue") String gvalue,
                 @Query("andId") String andId);
 
+        //        https://api.parsdid.com/iranplanner/app/api-data.php?action=images
+        @GET("api-data.php")
+        Observable<ResultImageList> getImages(
+                @Query("action") String action);
+
         //----------------
         @POST("api-data.php")
-        Observable<ResultParamUser> rateSend(@Query("action") String action,@Body SendParamUser request, @Query("cid") String cid, @Query("andId") String andId);
+        Observable<ResultParamUser> rateSend(@Query("action") String action, @Body SendParamUser request, @Query("cid") String cid, @Query("andId") String andId);
 
         //        https://api.parsdid.com/iranplanner/app/api-data.php?action=rateinfo
         @POST("api-data.php?action=rateinfo")
-        Observable<ResultParamUser> getRate(@Query("action") String action,@Body SendParamUser request, @Query("cid") String cid, @Query("andId") String andId);
+        Observable<ResultParamUser> getRate(@Query("action") String action, @Body SendParamUser request, @Query("cid") String cid, @Query("andId") String andId);
+
     }
 }

@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -32,7 +33,6 @@ import com.iranplanner.tourism.iranplanner.di.data.component.DaggerNetComponent;
 import com.iranplanner.tourism.iranplanner.di.data.component.NetComponent;
 import com.iranplanner.tourism.iranplanner.di.data.module.AppModule;
 import com.iranplanner.tourism.iranplanner.di.data.module.NetModule;
-import com.iranplanner.tourism.iranplanner.ui.activity.mainActivity.MainActivity;
 
 import java.io.File;
 import java.util.HashMap;
@@ -68,6 +68,7 @@ public class App extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fresco.initialize(this);
         enableLocationCheck();
         prepareDirectories();
         overrideFont();

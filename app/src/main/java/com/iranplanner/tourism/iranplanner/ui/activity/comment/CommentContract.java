@@ -6,6 +6,7 @@ import com.iranplanner.tourism.iranplanner.ui.presenter.Presenter;
 import entity.CommentSend;
 import entity.InterestResult;
 import entity.ResultCommentList;
+import entity.ResultImageList;
 import entity.ResultParamUser;
 import entity.ResultWidgetFull;
 import entity.SendParamUser;
@@ -31,6 +32,12 @@ public abstract class CommentContract extends Presenter<CommentContract.View> {
 
         void setRate(ResultParamUser resultParamUser);
         void setRateUser(ResultParamUser resultParamUser);
+
+        void showProgress();
+
+        void dismissProgress();
+
+        void showMoreImages(ResultImageList resultImageList);
     }
 
     public abstract void getCommentList(
@@ -39,12 +46,15 @@ public abstract class CommentContract extends Presenter<CommentContract.View> {
             String ntype,
             String offset);
 
-    public abstract void callInsertComment(CommentSend commentSend, String cid , String andId);
+    public abstract void callInsertComment(CommentSend commentSend, String cid, String andId);
+
     public abstract void getWidgetResult(String action, String id, String uid, String ntype, String cid, String andId);
 
     public abstract void getInterest(String action, String uid, String cid, String ntype, String nid, String gtype, String gvalue, String andId);
 
-    public abstract void rateSend(String action,SendParamUser request, String cid, String andId);
+    public abstract void rateSend(String action, SendParamUser request, String cid, String andId);
 
-    public abstract void getRate(String action,SendParamUser request, String cid, String andId);
+    public abstract void getRate(String action, SendParamUser request, String cid, String andId);
+
+    public abstract void getImages(String action);
 }
