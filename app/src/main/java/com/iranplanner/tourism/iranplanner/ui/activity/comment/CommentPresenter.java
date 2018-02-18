@@ -243,10 +243,10 @@ public class CommentPresenter extends CommentContract {
     }
 
     @Override
-    public void getImages(String action) {
+    public void getImages(String action, String nid, String ntype) {
         mView.showProgress();
         retrofit.create(CommentService.class)
-                .getImages(action).subscribeOn(Schedulers.io())
+                .getImages(action, nid, ntype).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(new Observer<ResultImageList>() {
@@ -329,7 +329,9 @@ public class CommentPresenter extends CommentContract {
         //        https://api.parsdid.com/iranplanner/app/api-data.php?action=images
         @GET("api-data.php")
         Observable<ResultImageList> getImages(
-                @Query("action") String action);
+                @Query("action") String action,
+                @Query("nid") String nid,
+                @Query("ntype") String ntype);
 
         //----------------
         @POST("api-data.php")

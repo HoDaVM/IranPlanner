@@ -23,29 +23,6 @@ public class GridActivity extends StandardActivity {
     List<ResultSouvenir> resultSouvenir;
 
 
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.fragment_grid);
-//        Bundle extras = getIntent().getExtras();
-//        String fromOpen = extras.getString("fromOpen");
-//        if (fromOpen.equals("Souvenirs")) {
-//            resultSouvenir = (List<ResultSouvenir>) extras.getSerializable("resultSouvenirs");
-//        }
-////        CustomGridAdapter adapter = new CustomGridAdapter(GridActivity.this, resultSouvenir, fromOpen);
-//        CustomGridAdapter adapter = new CustomGridAdapter(GridActivity.this, resultSouvenir, fromOpen);
-//
-//        grid = (GridView) findViewById(R.id.gridView);
-//        grid.setAdapter(adapter);
-//        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-////                Toast.makeText(getApplicationContext(), "You Clicked at " +web[+ position], Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//    }
-
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_grid;
@@ -60,10 +37,10 @@ public class GridActivity extends StandardActivity {
             resultSouvenir = (List<ResultSouvenir>) extras.getSerializable("resultSouvenirs");
         }
 //        CustomGridAdapter adapter = new CustomGridAdapter(GridActivity.this, resultSouvenir, fromOpen);
-        CustomGridAdapter adapter = new CustomGridAdapter(GridActivity.this, resultSouvenir, fromOpen);
+//        CustomGridAdapter adapter = new CustomGridAdapter(GridActivity.this, resultSouvenir, fromOpen);
 
         grid = (GridView) findViewById(R.id.gridView);
-        grid.setAdapter(adapter);
+//        grid.setAdapter(adapter);
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

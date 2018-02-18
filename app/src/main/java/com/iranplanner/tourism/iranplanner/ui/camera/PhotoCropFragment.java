@@ -39,16 +39,17 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import tools.Util;
 
-public class PhotoCropFragment extends Fragment  implements UploadPhotoContract.View{
+public class PhotoCropFragment extends Fragment implements UploadPhotoContract.View {
     private static String photoPath;
     public Bitmap imageToCrop;
     PhotoCropView photoCropView;
     private BitmapDrawable drawable;
     private PhotoEditActivityDelegate photoEditActivityDelegate;
     OnCutImageListener onCutImageListener;
+    String nid, uid, ntype;
     @Inject
     UploadPhotoPresenter uploadPhotoPresenter;
-//    DaggerAtractionDetailComponent.Builder builder;
+    //    DaggerAtractionDetailComponent.Builder builder;
     DaggerUploadPhotoComponent.Builder builder;
     public PhotoCropFragment(OnCutImageListener onCutImageListener) {
         this.onCutImageListener=onCutImageListener;
@@ -58,7 +59,7 @@ public class PhotoCropFragment extends Fragment  implements UploadPhotoContract.
     }
 
     public static Bitmap loadBitmap(String path, Uri uri, float maxWidth, float maxHeight, boolean useMaxScale) {
-        photoPath=path;
+        photoPath = path;
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
         FileDescriptor fileDescriptor = null;
@@ -184,7 +185,7 @@ public class PhotoCropFragment extends Fragment  implements UploadPhotoContract.
             @Override
             public void onClick(View v) {
 
-                if(onCutImageListener!=null) {
+                if (onCutImageListener != null) {
                     sendImageToServer(photoCropView.getBitmap());
                     getActivity().onBackPressed();
                     onCutImageListener.onCropImage(photoCropView.getBitmap());
@@ -203,15 +204,13 @@ public class PhotoCropFragment extends Fragment  implements UploadPhotoContract.
         });
 
 
-
-
         return rootView;
 
 
 //        return rootView;
     }
 
-    private void sendImageToServer(Bitmap bitmap){
+    private void sendImageToServer(Bitmap bitmap) {
 
 
 
@@ -239,11 +238,13 @@ public class PhotoCropFragment extends Fragment  implements UploadPhotoContract.
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), f);
             MultipartBody.Part body = MultipartBody.Part.createFormData("file", f.getName(), reqFile);
 
-            String descriptionString = "hello, this is description speaking";
-            RequestBody description =
-                    RequestBody.create(
-                            okhttp3.MultipartBody.FORM, descriptionString);
-            uploadPhotoPresenter.upload(description, body);
+            String descriptionString = "hello, this is new description " ;
+            RequestBody description = RequestBody.create(okhttp3.MultipartBody.FORM, descriptionString);
+            RequestBody nidReq = RequestBody.create(okhttp3.MultipartBody.FORM, nid);
+            RequestBody ntypeReq = RequestBody.create(okhttp3.MultipartBody.FORM, ntype);
+            RequestBody uidReq = RequestBody.create(okhttp3.MultipartBody.FORM, uid);
+            uploadPhotoPresenter.upload(description, nidReq,ntypeReq,uidReq, body);
+
         } catch (Exception e) {
             e.printStackTrace();
             e.printStackTrace();
@@ -251,6 +252,7 @@ public class PhotoCropFragment extends Fragment  implements UploadPhotoContract.
         }
 
     }
+
     public void setPhotoEditActivityDelegate(PhotoEditActivityDelegate photoEditActivityDelegate) {
         this.photoEditActivityDelegate = photoEditActivityDelegate;
     }
@@ -259,7 +261,11 @@ public class PhotoCropFragment extends Fragment  implements UploadPhotoContract.
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         imageToCrop = (Bitmap) getArguments().getParcelable("IMAGE_TO_CROP");
-        photoPath =  getArguments().getString("path");
+        nid = getArguments().getString("nid");
+        uid = getArguments().getString("uid");
+        ntype = getArguments().getString("ntype");
+
+        photoPath = getArguments().getString("path");
         if (imageToCrop == null) {
             String photoPath = getArguments().getString("photoPath");
             Uri photoUri = getArguments().getParcelable("photoUri");

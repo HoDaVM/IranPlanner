@@ -20,6 +20,18 @@ public class ResultImage implements Serializable {
     @SerializedName("img_url")
     @Expose
     private String imgUrl;
+
+    public String getImgUrlThumbnail() {
+        return imgUrlThumbnail;
+    }
+
+    public void setImgUrlThumbnail(String imgUrlThumbnail) {
+        this.imgUrlThumbnail = imgUrlThumbnail;
+    }
+
+    @SerializedName("img_url_thumbnail")
+    @Expose
+    private String imgUrlThumbnail;
     @SerializedName("img_source")
     @Expose
     private String imgSource;

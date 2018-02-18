@@ -1,49 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center"
+    android:layout_marginTop="5dp"
     android:orientation="vertical"
-    android:padding="@dimen/padding_short">
+    android:padding="5dp"
+    android:background="@drawable/grid_row">
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/imgGrid"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop" />
-
-        <!--    <ImageView
-                android:id="@+id/imageview_favorite"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="bottom|right"
-                android:src="@drawable/emam2" />-->
-
-    </FrameLayout>
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
 
     <TextView
-        android:id="@+id/txtName"
-        android:layout_width="wrap_content"
+        android:id="@+id/text"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:paddingTop="4dp"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        tools:text="Are You My Mother" />
-
-    <TextView
-        android:id="@+id/textview_book_author"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:textSize="12sp"
-        tools:text="Dr. Seuss" />
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:textSize="12sp" />
 
 </LinearLayout>

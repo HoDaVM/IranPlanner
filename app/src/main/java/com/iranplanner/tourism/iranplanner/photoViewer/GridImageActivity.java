@@ -35,20 +35,16 @@ public class GridImageActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         overlayView = new ImageOverlayView(GridImageActivity.this);
         resultImages = (List<ResultImage>) extras.getSerializable("ResultImagesList");
-        ImageGridAdapter adapter = new ImageGridAdapter(GridImageActivity.this, resultImages);
-        grid = (GridView) findViewById(R.id.gridView);
-        grid.setAdapter(adapter);
-        list = new String[]{resultImages.get(0).getImgUrl().toString(),
-                resultImages.get(1).getImgUrl().toString(),
-                resultImages.get(2).getImgUrl().toString()
-        };
+
+        List<String> thumnail = new ArrayList<>();
         customImages = new ArrayList<>();
-
-
         for (ResultImage resultImage : resultImages) {
             customImages.add(new CustomImage(resultImage.getImgUrl().toString(), resultImage.getImgTitle().toString()));
-
+            thumnail.add(resultImage.getImgUrlThumbnail().toString());
         }
+        ImageGridAdapter adapter = new ImageGridAdapter(GridImageActivity.this,R.layout.grid_items, thumnail);
+        grid = (GridView) findViewById(R.id.gridView);
+        grid.setAdapter(adapter);
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

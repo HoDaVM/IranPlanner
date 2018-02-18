@@ -350,8 +350,8 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         collapsingToolbarLayout.setExpandedTitleTypeface(tf);
 
 
-        txtPhotos.setText(" 9 عکس");
-aboutCityBtn1.setVisibility(View.VISIBLE);
+        txtPhotos.setText("  ؟ عکس");
+        aboutCityBtn1.setVisibility(View.VISIBLE);
         aboutCityBtn1.setText(resulAttraction.getProvinceTitle() + " - " + resulAttraction.getCityTitle());
         if (resulAttraction.getAttractionEstimatedTime() != null) {
             int totalMinute = Integer.parseInt(resulAttraction.getAttractionEstimatedTime());
@@ -389,16 +389,9 @@ aboutCityBtn1.setVisibility(View.VISIBLE);
 
             @Override
             public void onClick(View v) {
-                int startPosition = 0;
-
-                commentPresenter.getImages("images");
-//                new ImageViewer.Builder(getApplicationContext(), list)
-//                        .setStartPosition(startPosition)
-//                        .show();
-
+                commentPresenter.getImages("images", resulAttraction.getAttractionId(), "attraction");
             }
         });
-        PhotoUtils photoUtils;
 
         builder = DaggerAtractionDetailComponent.builder()
                 .netComponent(((App) getApplicationContext()).getNetComponent())
@@ -601,6 +594,7 @@ aboutCityBtn1.setVisibility(View.VISIBLE);
 
     @Override
     public void showProgress() {
+
         progressBar = Util.showProgressDialog(getApplicationContext(), "", attractionDetailActivity.this);
     }
 
@@ -611,9 +605,11 @@ aboutCityBtn1.setVisibility(View.VISIBLE);
 
     @Override
     public void showMoreImages(ResultImageList resultImageList) {
-        Intent intent = new Intent(attractionDetailActivity.this, GridImageActivity.class);
-        intent.putExtra("ResultImagesList", (Serializable) resultImageList.getResultImages());
-        startActivity(intent);
+        if (resultImageList.getResultImages().size() > 0 ) {
+            Intent intent = new Intent(attractionDetailActivity.this, GridImageActivity.class);
+            intent.putExtra("ResultImagesList", (Serializable) resultImageList.getResultImages());
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -974,9 +970,12 @@ aboutCityBtn1.setVisibility(View.VISIBLE);
             }
             if (bm != null) {
                 final PhotoCropFragment photoCropFragment = new PhotoCropFragment(this);
-                Bundle bundle1 = new Bundle();
-                bundle1.putParcelable("IMAGE_TO_CROP", bm);
-                photoCropFragment.setArguments(bundle1);
+                Bundle bundleImage = new Bundle();
+                bundleImage.putParcelable("IMAGE_TO_CROP", bm);
+                bundleImage.putString("nid",resulAttraction.getAttractionId());
+                bundleImage.putString("uid",Util.getUseRIdFromShareprefrence(getApplicationContext()));
+                bundleImage.putString("ntype","attraction");
+                photoCropFragment.setArguments(bundleImage);
                 loadFragment(this, photoCropFragment, R.id.pe_container, true, 0, 0);
             }
         }

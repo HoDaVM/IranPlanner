@@ -87,12 +87,12 @@ public class CustomGridAdapter extends BaseAdapter {
         if (convertView == null) {
             grid = new View(mContext);
             grid = inflater.inflate(R.layout.grid_items, null);
-            TextView textView = (TextView) grid.findViewById(R.id.txtName);
-            ImageView imageView = (ImageView) grid.findViewById(R.id.imgGrid);
-            if (fromOpen.equals("Souvenirs")) {
-                textView.setText(resultSouvenirs.get(position).getSouvenirName());
-            }
-            imageing(imageView,position);
+//            TextView textView = (TextView) grid.findViewById(R.id.txtName);
+//            ImageView imageView = (ImageView) grid.findViewById(R.id.imgGrid);
+//            if (fromOpen.equals("Souvenirs")) {
+//                textView.setText(resultSouvenirs.get(position).getSouvenirName());
+//            }
+//            imageing(imageView,position);
 //            imageView.setImageResource(imageView,position);
         } else {
             grid = (View) convertView;

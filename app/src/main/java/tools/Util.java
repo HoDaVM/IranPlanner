@@ -364,13 +364,17 @@ public class Util {
     ProgressDialog progressDialog;
 
     public static final ProgressDialog showProgressDialog(Context context, /*ProgressDialog progressDialog,*/String message, Activity activity) {
-        ProgressDialog progressDialog = new ProgressDialog(activity);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage(message);
-        progressDialog.show();
-        progressDialog.setCancelable(false);
-        progressDialog.setCanceledOnTouchOutside(false);
-        return progressDialog;
+
+            ProgressDialog progressDialog = new ProgressDialog(activity);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage(message);
+            progressDialog.show();
+            progressDialog.setCancelable(false);
+            progressDialog.setCanceledOnTouchOutside(false);  return progressDialog;
+
+
+
+
     }
 
     public static void dismissProgress(ProgressDialog progressDialog) {

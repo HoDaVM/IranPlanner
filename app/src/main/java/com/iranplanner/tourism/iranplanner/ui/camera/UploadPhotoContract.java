@@ -1,16 +1,7 @@
 package com.iranplanner.tourism.iranplanner.ui.camera;
 
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.iranplanner.tourism.iranplanner.ui.presenter.Presenter;
 
-import entity.InterestResult;
-import entity.ResultCommentList;
-import entity.ResultParamUser;
-import entity.ResultWidgetFull;
-import entity.SendParamUser;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
@@ -34,5 +25,5 @@ public abstract class UploadPhotoContract extends Presenter<UploadPhotoContract.
 
 
 
-    public abstract void upload( RequestBody description, MultipartBody.Part file);
+    public abstract void upload( RequestBody description,RequestBody nid, RequestBody ntype, RequestBody uid, MultipartBody.Part file);
 }

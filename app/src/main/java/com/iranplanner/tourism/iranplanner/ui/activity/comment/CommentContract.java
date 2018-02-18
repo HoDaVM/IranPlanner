@@ -56,5 +56,5 @@ public abstract class CommentContract extends Presenter<CommentContract.View> {
 
     public abstract void getRate(String action, SendParamUser request, String cid, String andId);
 
-    public abstract void getImages(String action);
+    public abstract void getImages(String action, String nid, String ntype);
 }
