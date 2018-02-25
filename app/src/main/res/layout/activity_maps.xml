@@ -11,6 +11,12 @@
     tools:context=".ui.activity.MapsActivity"
 
     />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/greyTransparent"
+        android:visibility="invisible"
+        android:id="@+id/viewTransparent"/>
 
 </RelativeLayout>
 

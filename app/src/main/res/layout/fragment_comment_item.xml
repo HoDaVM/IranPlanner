@@ -4,34 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:orientation="vertical"
     android:layout_margin="3dp"
-    >
-
+    android:orientation="vertical">
 
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:orientation="vertical"
         android:background="@color/greyLight"
-        >
+        android:clickable="true"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/replyUserLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:drawable/editbox_background_normal"
-            android:foreground="?android:attr/selectableItemBackground"
-            >
+            android:foreground="?android:attr/selectableItemBackground">
 
+<!--
             <RelativeLayout
                 android:id="@+id/commentUserLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/commentMainLayout"
-                >
+                android:layout_alignEnd="@+id/commentMainLayout">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/commentSenderPic"
@@ -39,7 +35,7 @@
                     android:layout_height="40dp"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:src="@drawable/ic_google"
+                    android:src="@drawable/ic_media_play"
                     app:civ_border_color="#CCCC"
                     app:civ_border_width="1dp" />
 
@@ -55,18 +51,19 @@
 
 
                     android:textSize="12sp" />
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/greyLight"
-                    android:layout_below="@+id/commentSenderPic"></RelativeLayout>
+                    android:layout_below="@+id/commentSenderPic"
+                    android:background="@color/greyLight"></RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
                     android:layout_toEndOf="@id/commentSenderPic"
                     android:layout_toStartOf="@id/commentSentTime"
                     android:gravity="end">
@@ -78,8 +75,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="end"
-                        android:maxLines="1"
-                        />
+                        android:maxLines="1" />
 
                     <TextView
                         android:id="@+id/email_sender"
@@ -92,28 +88,97 @@
                         android:maxLines="1"
                         android:text="@string/vahidimehr_gmail_com"
                         android:textSize="12sp"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
                 </RelativeLayout>
 
 
             </RelativeLayout>
+-->
+            <RelativeLayout
+                android:id="@+id/commentUserLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/commentMainLayout">
 
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/commentSenderPic"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:src="@drawable/avatar"
+                    app:civ_border_color="#CCCC"
+                    app:civ_border_width="1dp" />
+
+                <TextView
+                    android:id="@+id/commentSentTime"
+                    style="@style/SmallText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="start"
+                    android:maxLines="1"
+
+
+                    android:textSize="12sp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/commentSenderPic"
+                    android:background="@color/greyLight"></RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_toEndOf="@id/commentSenderPic"
+                    android:layout_toStartOf="@id/commentSentTime"
+                    >
+
+                    <TextView
+
+                        android:id="@+id/commentSenderName"
+                        style="@style/StandardTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:maxLines="1"
+                        android:text="hoda" />
+
+                    <TextView
+                        android:id="@+id/email_sender"
+                        style="@style/SmallText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignEnd="@id/commentSenderName"
+                        android:layout_below="@id/commentSenderName"
+                        android:maxLines="1"
+                        android:text="@string/vahidimehr_gmail_com"
+                        android:textSize="12sp"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
+
+            </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/commentMainLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/commentUserLayout"
-              >
+                android:layout_below="@+id/commentUserLayout">
 
                 <TextView
                     android:id="@+id/commentText"
                     style="@style/StandardText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_short"
                     android:layout_marginEnd="@dimen/margin_short"
+                    android:layout_marginStart="@dimen/margin_short"
                     android:layout_marginTop="@dimen/margin_short"
                     android:textColor="#000" />
 
@@ -130,21 +195,21 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
+                        android:background="@drawable/button_corner_blue_stroke"
                         android:gravity="center"
                         android:padding="@dimen/margin_short"
-                        android:textColor="@color/main_blue"
-android:text="پاسخ"
-                        android:background="@drawable/button_corner_blue_stroke"
-                        />
+                        android:text="@string/replay"
+                        android:textColor="@color/main_blue" />
 
                     <ImageButton
+                        android:id="@+id/imageButton"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_alignParentStart="true"
-                        android:background="@mipmap/ic_comment_like"
-                        android:id="@+id/imageButton"
                         android:layout_centerVertical="true"
-                        android:contentDescription="TODO" />
+                        android:background="@mipmap/ic_comment_like"
+                        android:contentDescription="TODO"
+                        android:visibility="gone"/>
 
                     <TextView
                         android:id="@+id/textView"
@@ -153,10 +218,11 @@ android:text="پاسخ"
                         android:layout_height="wrap_content"
                         android:layout_alignBaseline="@+id/replyBtn"
                         android:layout_alignBottom="@+id/replyBtn"
+                        android:layout_centerVertical="true"
                         android:layout_toEndOf="@+id/imageButton"
                         android:text="@string/_12"
                         android:textSize="9sp"
-                        android:layout_centerVertical="true"/>
+                        android:visibility="invisible"/>
 
                 </RelativeLayout>
             </RelativeLayout>
@@ -169,15 +235,13 @@ android:text="پاسخ"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:orientation="vertical"
-          />
+            android:orientation="vertical" />
 
         <ViewSwitcher
             android:id="@+id/viewSwitcher"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-      />
+            android:layout_gravity="end" />
 
     </LinearLayout>
 

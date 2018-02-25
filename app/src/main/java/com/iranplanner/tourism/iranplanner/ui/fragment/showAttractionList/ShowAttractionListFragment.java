@@ -164,10 +164,12 @@ public class ShowAttractionListFragment extends StandardFragment implements Data
 
         Intent intent = new Intent(getContext(), MapFullActivity.class);
         ItineraryLodgingCity i = new ItineraryLodgingCity();
+
 //        i.setCityPositionLat(itineraryActionList.get(position).getAttractionPositionLat());
         if (resulAttraction != null && resulAttraction.getAttractionPositionLat() != null && resulAttraction.getAttractionPositionLon() != null) {
             i.setCityPositionLat(resulAttraction.getAttractionPositionLat());
             i.setCityPositionLon(resulAttraction.getAttractionPositionLon());
+
         }
 
 //        i.setCityPositionLat(resultItineraryAttractionDays.get(0).getResultAttractionList().get(position).getResulAttraction().getAttractionPositionLat());
@@ -176,6 +178,7 @@ public class ShowAttractionListFragment extends StandardFragment implements Data
         List<ItineraryLodgingCity> lodgingCities = new ArrayList<ItineraryLodgingCity>();
         lodgingCities.add(i);
         intent.putExtra("lodgingCities", (Serializable) lodgingCities);
+        intent.putExtra("isRoad", true);
         startActivity(intent);
 
 

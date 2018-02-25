@@ -7,9 +7,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Typeface;
+import android.media.ExifInterface;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -44,15 +53,22 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.di.model.App;
+import com.iranplanner.tourism.iranplanner.photoViewer.GridImageActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.MapFullActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.OnCutImageListener;
+import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.AttractionListMorePresenter;
+import com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails.attractionDetailActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentListActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentPresenter;
 import com.iranplanner.tourism.iranplanner.ui.activity.showRoom.ShowRoomActivity;
+import com.iranplanner.tourism.iranplanner.ui.camera.PhotoCropFragment;
+import com.iranplanner.tourism.iranplanner.ui.camera.PhotoUtils;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -95,8 +111,9 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * Created by h.vahidimehr on 28/02/2017.
  */
 
-public class ReservationHotelDetailActivity extends AppCompatActivity implements OnMapReadyCallback, CommentContract.View,
-        View.OnClickListener, AttractionListMorePresenter.View, HotelDetailContract.View {
+public class ReservationHotelDetailActivity extends StandardActivity implements OnMapReadyCallback, CommentContract.View,
+        View.OnClickListener, AttractionListMorePresenter.View, HotelDetailContract.View, PhotoUtils.OnImageUriSelect, OnCutImageListener {
+    private Uri mImageUri;
 
     private GoogleMap mMap;
     //    ResultItineraryAttraction attraction;
@@ -125,33 +142,38 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
     RelativeLayout starHolder;
     int LikeValue;
     DaggerHotelDetailComponent.Builder builder;
+    LinearLayout cameraHolder;
     @Inject
     CommentPresenter commentPresenter;
     @Inject
     HotelDetailPresenter hotelDetailPresenter;
     RelativeLayout ratingPeopleHolder;
     RatingBar ratingBar;
-    TextView txtRateType,txtPhotos;
+    TextView txtRateType, txtPhotos;
 
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
+    @Override
+    protected int getLayoutId() {
+        return R.layout.raiting_layout;
+    }
+
     private void findView() {
 
         Log.e("this tag", ReservationHotelDetailActivity.class.getSimpleName());
 
-//        setContentView(R.layout.activity_reservation_hotel_detail);
 
 
         setContentView(R.layout.fragment_reservation);
-        starHolder =  findViewById(R.id.starShowHolder);
-        imgStar1 =  findViewById(R.id.imgStarH1);
-        imgStar2 =  findViewById(R.id.imgStarH2);
-        imgStar3 =  findViewById(R.id.imgStarH3);
-        imgStar4 =  findViewById(R.id.imgStarH4);
-        imgStar5 =  findViewById(R.id.imgStarH5);
+        starHolder = findViewById(R.id.starShowHolder);
+        imgStar1 = findViewById(R.id.imgStarH1);
+        imgStar2 = findViewById(R.id.imgStarH2);
+        imgStar3 = findViewById(R.id.imgStarH3);
+        imgStar4 = findViewById(R.id.imgStarH4);
+        imgStar5 = findViewById(R.id.imgStarH5);
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         contentFullDescription = (CTouchyWebView) findViewById(R.id.contentFullDescription);
@@ -163,8 +185,8 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
         TypeDurationHolder = (RelativeLayout) findViewById(R.id.TypeDurationHolder);
         txtHotelType = (TextView) findViewById(R.id.txtHotelType);
         txtAddress = (TextView) findViewById(R.id.txtAddress);
-        attractionName = (TextView) findViewById(R.id.attractionName);
-        attractionPlace = (TextView) findViewById(R.id.attractionPlace);
+//        attractionName = (TextView) findViewById(R.id.attractionName);
+//        attractionPlace = (TextView) findViewById(R.id.attractionPlace);
         textTimeDuration = (TextView) findViewById(R.id.textTimeDuration);
         textEntranceFee = (TextView) findViewById(R.id.textEntranceFee);
         attractionType = (TextView) findViewById(R.id.attractionType);
@@ -173,37 +195,39 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
         roomReservationBtn = (Button) findViewById(R.id.roomReservationBtn);
         holderDate = (RelativeLayout) findViewById(R.id.holderDate);
 
-        rateHolder = (LinearLayout) findViewById(R.id.rateHolder);
-        doneHolder = (LinearLayout) findViewById(R.id.doneHolder);
-        nowVisitedHolder = (LinearLayout) findViewById(R.id.nowVisitedHolder);
-        beftorVisitedHolder = (LinearLayout) findViewById(R.id.beftorVisitedHolder);
-        dislikeHolder = (LinearLayout) findViewById(R.id.dislikeHolder);
-        okHolder = (LinearLayout) findViewById(R.id.okHolder);
+//        rateHolder = (LinearLayout) findViewById(R.id.rateHolder);
+//        doneHolder = (LinearLayout) findViewById(R.id.doneHolder);
+//        nowVisitedHolder = (LinearLayout) findViewById(R.id.nowVisitedHolder);
+//        beftorVisitedHolder = (LinearLayout) findViewById(R.id.beftorVisitedHolder);
+//        dislikeHolder = (LinearLayout) findViewById(R.id.dislikeHolder);
+//        okHolder = (LinearLayout) findViewById(R.id.okHolder);
         likeHolder = (LinearLayout) findViewById(R.id.likeHolder);
-        bookmarkHolder = (LinearLayout) findViewById(R.id.bookmarkHolder);
+//        bookmarkHolder = (LinearLayout) findViewById(R.id.bookmarkHolder);
         ratingHolder = (RelativeLayout) findViewById(R.id.ratingHolder);
         GroupHolder = (RelativeLayout) findViewById(R.id.GroupHolder);
-        interestingLayout = (RelativeLayout) findViewById(R.id.interestingLayout);
-        VisitedLayout = (RelativeLayout) findViewById(R.id.VisitedLayout);
+//        interestingLayout = (RelativeLayout) findViewById(R.id.interestingLayout);
+//        VisitedLayout = (RelativeLayout) findViewById(R.id.VisitedLayout);
         LikeLayout = (RelativeLayout) findViewById(R.id.LikeLayout);
         changeDateHolder = (RelativeLayout) findViewById(R.id.changeDateHolder);
         txtOk = (TextView) findViewById(R.id.txtOk);
         MoreInoText = (TextView) findViewById(R.id.MoreInoText);
-        bookmarkImg = (ImageView) findViewById(R.id.bookmarkImg);
-        doneImg = (ImageView) findViewById(R.id.doneImg);
-        dislikeImg = (ImageView) findViewById(R.id.dislikeImg);
+//        bookmarkImg = (ImageView) findViewById(R.id.bookmarkImg);
+//        doneImg = (ImageView) findViewById(R.id.doneImg);
+//        dislikeImg = (ImageView) findViewById(R.id.dislikeImg);
         okImg = (ImageView) findViewById(R.id.commentImg);
         likeImg = (ImageView) findViewById(R.id.likeImg);
-        rateImg = (ImageView) findViewById(R.id.rateImg);
-        beftorVisitedImg = (ImageView) findViewById(R.id.beftorVisitedImg);
-        nowVisitedImg = (ImageView) findViewById(R.id.nowVisitedImg);
-        wishImg = (ImageView) findViewById(R.id.wishImg);
+//        rateImg = (ImageView) findViewById(R.id.rateImg);
+//        beftorVisitedImg = (ImageView) findViewById(R.id.beftorVisitedImg);
+//        nowVisitedImg = (ImageView) findViewById(R.id.nowVisitedImg);
+//        wishImg = (ImageView) findViewById(R.id.wishImg);
         triangleShowAttraction = (ImageView) findViewById(R.id.triangleShowAttraction);
         commentHolder = findViewById(R.id.commentHolder);
         ratingPeopleHolder = findViewById(R.id.ratingPeopleHolder);
         ratingBar = findViewById(R.id.ratingBar);
         txtRateType = findViewById(R.id.txtRateType);
         txtPhotos = findViewById(R.id.txtPhotos);
+        cameraHolder = findViewById(R.id.cameraHolder);
+        cameraHolder.setOnClickListener(this);
 //        setupTablayout();
     }
 
@@ -268,6 +292,7 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
         return myData.substring(0, position) + "...";
     }
 
+    //todo use broadcast for after get reservation hotel  open my reservation on setting
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -278,9 +303,14 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("KILL");
-        registerReceiver(receiver, filter);
+        try {
+            IntentFilter filter = new IntentFilter();
+            filter.addAction("KILL");
+            registerReceiver(receiver, filter);
+        } catch (Exception e) {
+
+        }
+
     }
 
     @Override
@@ -370,37 +400,20 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
         findView();
         overrideFont();
         getExtras();
-
+        if (savedInstanceState != null) {
+            mImageUri = (Uri) savedInstanceState.getParcelable("IMAGE_URI");
+        }
         txtHotelName.setText(resultLodgingHotelDetail.getLodgingName());
         txtHotelType.setText("نوع مرکز اقامتی: " + resultLodgingHotelDetail.getLodgingTypeTitle());
         txtAddress.setText(resultLodgingHotelDetail.getLodgingAddress());
         roomReservationBtn.setOnClickListener(this);
         setStar();
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        TextView aboutCityBtn1 =  findViewById(R.id.aboutCityBtn1);
-////        aboutCityBtn1.setText("اینجااااااااااا");
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setTitle("هتل");
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-//        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse);
-//
-//        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/IRANSansMobile.ttf");
-//
-//        collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.expandedappbar);
-//        collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.collapsedappbar);
-//        collapsingToolbarLayout.setCollapsedTitleTypeface(tf);
-//        collapsingToolbarLayout.setExpandedTitleTypeface(tf);
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(resultLodgingHotelDetail.getLodgingName());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setCustomView(R.layout.abs_layout);
-
 
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse);
@@ -413,7 +426,6 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
         collapsingToolbarLayout.setExpandedTitleTypeface(tf);
 
 
-        txtPhotos.setText(" 9 عکس");
         if (resultLodgingHotelDetail.getRate().getRateFinalAvg() != null) {
             ratingBar.setRating(Float.valueOf(resultLodgingHotelDetail.getRate().getRateFinalAvg()));
             txtRateType.setText("تا کنون " + Util.persianNumbers(resultLodgingHotelDetail.getRate().getRateFinalCount()) + "نفر به اینجا امتیاز داده اند ");
@@ -424,6 +436,7 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
         commentHolder.setOnClickListener(this);
         likeHolder.setOnClickListener(this);
         ratingPeopleHolder.setOnClickListener(this);
+        img.setOnClickListener(this);
 
 
         DaggerHotelDetailComponent.builder()
@@ -437,6 +450,13 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mImageUri != null) {
+            outState.putParcelable("IMAGE_URI", mImageUri);
+        }
+    }
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -484,11 +504,73 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
                 List<ItineraryLodgingCity> lodgingCities = new ArrayList<ItineraryLodgingCity>();
                 lodgingCities.add(i);
                 intent.putExtra("lodgingCities", (Serializable) lodgingCities);
+                intent.putExtra("isRoad", true);
                 startActivity(intent);
             }
         });
     }
 
+    private static final int REQUEST_CAMERA = 0;
+    private static final int SELECT_FILE = 14;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            Bitmap bm = null;
+            if (requestCode == REQUEST_CAMERA) {
+                bm = commentPresenter.grabImage(ReservationHotelDetailActivity.this);
+            } else if (requestCode == SELECT_FILE) {
+                Uri selectedImageUri = data.getData();
+
+                String[] projection = {MediaStore.MediaColumns.DATA};
+                CursorLoader cursorLoader = new CursorLoader(ReservationHotelDetailActivity.this, selectedImageUri, projection, null, null,
+                        null);
+                Cursor cursor = cursorLoader.loadInBackground();
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+                cursor.moveToFirst();
+
+                String selectedImagePath = cursor.getString(column_index);
+
+                bm = BitmapFactory.decodeFile(selectedImagePath/*, options*/);
+
+                int orientation = 0;
+                Matrix matrix = new Matrix();
+                try {
+                    ExifInterface ei = new ExifInterface(selectedImagePath);
+                    int exif = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                    switch (exif) {
+                        case ExifInterface.ORIENTATION_ROTATE_90:
+                            orientation = 90;
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_180:
+                            orientation = 180;
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_270:
+                            orientation = 270;
+                            break;
+                    }
+                    matrix.preRotate(orientation);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                //Rotate image bitmap to correct orientation.
+                bm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
+
+            }
+            if (bm != null) {
+                final PhotoCropFragment photoCropFragment = new PhotoCropFragment();
+                Bundle bundleImage = new Bundle();
+                bundleImage.putParcelable("IMAGE_TO_CROP", bm);
+                bundleImage.putString("nid", resultLodgingHotelDetail.getLodgingId());
+                bundleImage.putString("uid", Util.getUseRIdFromShareprefrence(getApplicationContext()));
+                bundleImage.putString("ntype", "Lodging");
+                bundleImage.putSerializable("OnCutImageListener", this);
+                photoCropFragment.setArguments(bundleImage);
+                loadFragment(this, photoCropFragment, R.id.pe_container, true, 0, 0);
+            }
+        }
+    }
 
     @Override
     public void onClick(View v) {
@@ -539,6 +621,27 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
 
             case R.id.commentHolder:
                 commentPresenter.getCommentList("pagecomments", resultLodgingHotelDetail.getLodgingId(), "lodging", "0");
+                break;
+            case R.id.cameraHolder:
+                App.getInstance().prepareDirectories();
+
+                if (Build.VERSION.SDK_INT < 23) {
+                    commentPresenter.selectImage(ReservationHotelDetailActivity.this);
+
+                } else {
+                    if (App.checkGroupPermissions(App.STORAGE_PERMISSIONS)) {
+                        commentPresenter.selectImage(ReservationHotelDetailActivity.this);
+                    } else {
+                        requestPermissions(App.STORAGE_PERMISSIONS, 5);
+                    }
+                }
+
+                break;
+            case R.id.img:
+
+                commentPresenter.getImages("images", resultLodgingHotelDetail.getLodgingId(), "lodging");
+
+
                 break;
 
             case R.id.roomReservationBtn:
@@ -743,7 +846,18 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
 
     @Override
     public void showMoreImages(ResultImageList resultImageList) {
+        if (resultImageList.getResultImages().size() > 0) {
+            Intent intent = new Intent(ReservationHotelDetailActivity.this, GridImageActivity.class);
+            intent.putExtra("ResultImagesList", (Serializable) resultImageList.getResultImages());
+            startActivity(intent);
+        } else {
+            Toast.makeText(getApplicationContext(), "عکسی برای نمایش وجود ندارد", Toast.LENGTH_SHORT).show();
+        }
+    }
 
+    @Override
+    public void setImageUri(Uri uri) {
+        mImageUri = uri;
     }
 
     @Override
@@ -815,6 +929,16 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
 //        }
     }
 
+    @Override
+    public void onSelectImage(Uri uri) {
+        mImageUri = uri;
+    }
+
+    @Override
+    public void onCropImage(Bitmap bitmap) {
+        img.setImageBitmap(bitmap);
+    }
+
     public class CustomDialogAlert extends Dialog implements
             View.OnClickListener {
 
@@ -844,7 +968,8 @@ public class ReservationHotelDetailActivity extends AppCompatActivity implements
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 //            requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.raiting_layout);
+//            setContentView(R.layout.raiting_layout);
+
             txtNo = findViewById(R.id.txtNo);
             txtOk = findViewById(R.id.txtOk);
             txtRateName1 = findViewById(R.id.txtRateName1);

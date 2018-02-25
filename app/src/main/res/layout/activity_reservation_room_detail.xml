@@ -41,7 +41,8 @@
                     android:paddingEnd="@dimen/margin_xshort"
                     android:paddingStart="@dimen/margin_xshort"
                     android:text="تخفیف تا 33%"
-                    android:translationZ="2dp" />
+                    android:translationZ="2dp"
+                    android:visibility="gone"/>
 
                 <ImageView
                     android:id="@+id/imgHotelList"
@@ -237,7 +238,7 @@
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
                         android:scaleType="centerCrop"
-                        android:src="@mipmap/ic_person" />
+                        android:src="@mipmap/ic_profile_grey" />
 
                 </RelativeLayout>
 
@@ -325,7 +326,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/priceTitle"
@@ -363,7 +365,8 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="end">
+                    android:gravity="end"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/txtNumberChoose"

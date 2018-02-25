@@ -56,7 +56,7 @@ public class NotificationUtils {
 
 
         // notification icon
-        final int icon = R.mipmap.ic_launcher;
+        final int icon = R.mipmap.ic_logo_foreground;
 
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         final PendingIntent resultPendingIntent =
@@ -107,7 +107,7 @@ try {
             .setStyle(inboxStyle)
             .setWhen(System.currentTimeMillis())
 //                .setWhen(getTimeMilliSec(timeStamp))
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.mipmap.ic_logo_foreground)
             .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
             .setContentText(message)
             .build();
@@ -135,7 +135,7 @@ try {
                   .setStyle(bigPictureStyle)
                   .setWhen(System.currentTimeMillis())
 //                .setWhen(getTimeMilliSec(timeStamp))
-                  .setSmallIcon(R.mipmap.ic_launcher)
+                  .setSmallIcon(R.mipmap.ic_logo_foreground)
                   .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
                   .setContentText(message)
                   .build();

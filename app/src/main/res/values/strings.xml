@@ -118,7 +118,7 @@
     <string name="home_title_hotel_cat">دسته بندی اقامتگاه ها</string>
     <string name="hotel">هتل</string>
     <string name="more_event">رویدادهای بیشتر</string>
-    <string name="events">رویدادها</string>
+    <string name="events">وقایع جالب</string>
     <string name="attraction">جاذبه گردشگری</string>
     <string name="eco_hotel">بوم گردی</string>
     <string name="traditional_hotel">مهمانسرا</string>
@@ -134,7 +134,7 @@
     <string name="local_food">غذاهای محلی</string>
     <string name="souvenir">سوغاتی</string>
     <string name="near_city">شهرهای مجاور</string>
-    <string name="provineList">استانهای ایران</string>
+    <string name="provineList">کدام استان؟</string>
     <string name="flight">پرواز</string>
     <string name="accomodation">اقامت</string>
     <string name="where_to_go">کجابریم؟</string>
@@ -198,6 +198,7 @@
     <string name="tutorialEventText">جشنواره ها و رویدادهای یه شهر رو از اینجا ببین</string>
     <string name="_12">12 نفر پسندیدند</string>
     <string name="vahidimehr_gmail_com">vahidimehr@gmail.com</string>
+    <string name="replay">پاسخ</string>
 
 
 </resources>

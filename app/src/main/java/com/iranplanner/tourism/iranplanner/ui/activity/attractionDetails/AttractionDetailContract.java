@@ -1,24 +1,14 @@
 package com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails;
 
+
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.iranplanner.tourism.iranplanner.ui.presenter.Presenter;
-
-import entity.InterestResult;
-import entity.ResultCommentList;
 import entity.ResultParamUser;
-import entity.ResultRatePost;
-import entity.ResultWidgetFull;
-import entity.SendParamUser;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.http.Multipart;
-import retrofit2.http.POST;
-import retrofit2.http.Part;
-import rx.Observable;
+
 
 
 /**

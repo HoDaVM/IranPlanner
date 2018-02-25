@@ -4,6 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <FrameLayout
+        android:id="@+id/pe_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationZ="3dp"></FrameLayout>
+
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/containerHomeFragment"
@@ -12,54 +18,8 @@
         android:background="?android:attr/colorBackground"
         android:clickable="true">
 
-      <!--  <android.support.design.widget.AppBarLayout
-            android:id="@+id/app_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            app:elevation="6dp">
+        <include layout="@layout/image_appbar" />
 
-            <android.support.design.widget.CollapsingToolbarLayout
-                android:id="@+id/collapse"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:contentScrim="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                   >
-
-                    <ImageView
-                        android:id="@+id/img"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/home_event_height"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:fitsSystemWindows="true"
-                        android:scaleType="centerCrop"
-                        app:layout_collapseMode="parallax" />
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/bottomShadow"
-                        android:background="@drawable/dark_shadow"
-                        android:layout_alignParentBottom="true"
-                        ></LinearLayout>
-                </RelativeLayout>
-
-
-
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="@color/transparent"
-                    app:layout_collapseMode="pin"
-                    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
-            </android.support.design.widget.CollapsingToolbarLayout>
-
-        </android.support.design.widget.AppBarLayout>-->
-<include layout="@layout/image_appbar"/>
         <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
@@ -79,11 +39,11 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/padding_standard"
-        android:layout_marginLeft="@dimen/padding_standard"
-        android:layout_marginRight="@dimen/padding_standard"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/margin_xshort"
+        android:layout_marginBottom="17dp"
         android:background="@drawable/button_corner_greend"
-        android:text="رزرو و مشاهده نوع اتاق های هتل"
+        android:text="مشاهده نوع اتاق های هتل"
         android:textColor="@color/white_" />
 
 </RelativeLayout>

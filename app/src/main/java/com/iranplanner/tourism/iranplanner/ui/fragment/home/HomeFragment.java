@@ -714,7 +714,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
         toolbarTitleSetName(resultHomes.get(0).getHomeInfo().getTitle(), resultHomes.get(0).getHomeInfo().getId());
         setNamePicture(resultHomes.get(0).getHomeInfo(), resultHomes.get(0).getHomeImages());
         if (resultHomes.get(0).getHomeLodging().size() != 0) {
-            hotelsTypeHolder.setVisibility(View.VISIBLE);
+            hotelsTypeHolder.setVisibility(View.GONE);
             viewPagerBestHolder.setVisibility(View.VISIBLE);
             setViewPagerLodging(resultHomes.get(0).getHomeLodging());
         } else {
@@ -723,7 +723,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
 
         }
         if (resultHomes.get(0).getHomeAttraction().size() != 0) {
-            attracttionTypeHolder.setVisibility(View.VISIBLE);
+            attracttionTypeHolder.setVisibility(View.GONE);
             bestAttractionHolder.setVisibility(View.VISIBLE);
             setViewPagerAttraction(resultHomes.get(0).getHomeAttraction());
         } else {
@@ -1013,6 +1013,11 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
 
             setContentView(R.layout.dialog_home_search_location);
             AutoCompleteTextView autoTextWhere = (AutoCompleteTextView) findViewById(R.id.autoTextWhere);
+            TextView titleSearchHome =
+                    findViewById(R.id.titleSearchHome);
+            if (type.equals("homeHotel")) {
+                titleSearchHome.setText("نام شهر");
+            }
 //            listd = (ListView) findViewById(R.id.listd);
             no = (TextView) findViewById(R.id.txtNo);
             no.setOnClickListener(this);

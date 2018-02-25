@@ -72,26 +72,27 @@
 
         <LinearLayout
             android:id="@+id/drawhholder"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:translationZ="1dp">
+            android:translationZ="1dp"
+            android:padding="@dimen/margin_xshort">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:id="@+id/drawPolygon"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 android:layout_weight="1"
                 android:background="@drawable/button_corner"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:layout_marginTop="@dimen/margin_short"
                 android:padding="@dimen/margin_xshort"
-                android:layout_margin="@dimen/margin_xshort"
-                android:id="@+id/drawPolygon"
+
                >
 
 
-                <Button
+                <ImageView
                     android:id="@+id/btnSelectPolygon"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
@@ -111,18 +112,19 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/button_corner_blue"
                 android:orientation="horizontal"
-                android:layout_marginTop="@dimen/margin_short"
                 android:padding="@dimen/margin_xshort"
                 android:id="@+id/btnFilter"
-                android:layout_margin="@dimen/margin_xshort">
+                android:gravity="center"
+
+                >
 
 
-                <Button
+                <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_centerHorizontal="true"
@@ -142,17 +144,22 @@
 
         </LinearLayout>
 
-        <include layout="@layout/activity_maps" />
         <ImageView
             android:id="@+id/imgMyLocation"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/drawhholder"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="10dp"
             android:scaleType="fitXY"
             android:src="@mipmap/ic_near_me_round"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="@dimen/margin_standard"
-            android:layout_margin="@dimen/margin_short"/>
+            android:background="@mipmap/ic_filter_foreground"            android:translationZ="3dp"/>
+
+        <include layout="@layout/activity_maps" />
+
     </RelativeLayout>
+
     <!--cityHolder-->
     <RelativeLayout
         android:id="@+id/hotelHolder"

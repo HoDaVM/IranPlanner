@@ -13,6 +13,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.iranplanner.tourism.iranplanner.R;
 
@@ -46,12 +47,14 @@ public class MapDirection {
     LocationRequest mLocationRequest;
     ResultItinerary itineraryData;
     List<ItineraryLodgingCity> lodgingCities;
+    boolean isRoad;
 
-    public MapDirection(GoogleMap mMap, Context context, List<ItineraryLodgingCity> lodgingCities, ArrayList<LatLng> MarkerPoints) {
+    public MapDirection(GoogleMap mMap, Context context, List<ItineraryLodgingCity> lodgingCities, ArrayList<LatLng> MarkerPoints,boolean isRoad) {
         this.mMap = mMap;
         this.context = context;
         this.lodgingCities = lodgingCities;
         this.MarkerPoints = MarkerPoints;
+        this.isRoad=isRoad;
         mMap.clear();
     }
 
@@ -79,7 +82,7 @@ public class MapDirection {
         LatLng origin;
         LatLng dest;
 
-        if (MarkerPoints.size() >= 2) {
+        if (MarkerPoints.size() >= 2 && isRoad) {
             for (int j = 0; j < MarkerPoints.size() - 1; j++) {
                 origin = MarkerPoints.get(j);
                 dest = MarkerPoints.get(j + 1);
@@ -99,6 +102,11 @@ public class MapDirection {
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(3));
             }
 
+        }
+        else {
+            Polyline line = mMap.addPolyline(new PolylineOptions()
+                    .add(new LatLng(MarkerPoints.get(0).latitude, MarkerPoints.get(0).longitude), new LatLng(MarkerPoints.get(1).latitude, MarkerPoints.get(1).longitude))
+                    .width(5));
         }
         return markers;
     }

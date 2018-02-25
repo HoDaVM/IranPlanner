@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cell_content_view_citys"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background"
+    tools:context=".ui.fragment.SearchCityCityFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/teal500"
+            android:paddingLeft="@dimen/padding_standard"
+            android:paddingRight="@dimen/padding_standard">
+
+            <TextView
+                android:id="@+id/itinerary_name_city"
+                style="@style/StandardText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/itinerartMoreShare_city"
+                android:maxLines="1"
+                android:text="جستجوی تک مقصدی"
+                android:textColor="#fdfdfb" />
+
+            <ImageView
+                android:id="@+id/itinerartMoreShare_city"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp"
+                android:src="@mipmap/ic_city_gardi" />
+
+
+        </RelativeLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_short"
+            android:layout_marginTop="@dimen/margin_short"
+            android:paddingLeft="@dimen/padding_24"
+            android:paddingRight="@dimen/padding_24">
+
+            <AutoCompleteTextView
+                android:id="@+id/fromCity"
+                style="@style/StandardText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/padding_big"
+                android:gravity="right"
+                android:hint="کدام شهر؟"
+                android:imeOptions="actionDone"
+                android:inputType="text" />
+        </android.support.design.widget.TextInputLayout>
+
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/searchOk_city"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_24"
+            android:background="@drawable/button_corner_pink_stroke"
+            android:text="جستجو"
+            android:textColor="@color/teal500" />
+
+    </LinearLayout>
+
+</FrameLayout>

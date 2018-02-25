@@ -183,7 +183,7 @@
             android:id="@+id/viewPagerEventsHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/SelectHolder"
+            android:layout_below="@+id/itineraryHomeHolder"
             android:orientation="vertical"
             android:paddingBottom="@dimen/padding_standard"
             android:paddingLeft="@dimen/padding_standard"
@@ -260,7 +260,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/viewPagerEventsHolder"
-            android:padding="@dimen/padding_standard">
+            android:padding="@dimen/padding_standard"
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/txtHotelTypeTitles"
@@ -444,7 +445,8 @@
             android:id="@+id/attracttionTypeHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/viewPagerBestHolder"
+            android:layout_below="@+id/SelectHolder"
+
             android:padding="@dimen/padding_standard"
             android:visibility="visible">
 
@@ -680,7 +682,8 @@
             android:id="@+id/localFoodHomeHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/itineraryHomeHolder"
+            android:layout_below="@+id/viewPagerBestHolder"
+
             android:padding="@dimen/padding_standard"
             android:visibility="visible">
 

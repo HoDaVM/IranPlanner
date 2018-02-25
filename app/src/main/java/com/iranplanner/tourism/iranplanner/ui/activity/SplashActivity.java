@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -57,7 +58,7 @@ import server.Config;
 import tools.CustomMessage;
 import tools.Util;
 
-public class SplashActivity extends StandardActivity implements MainSearchPresenter.View,HomeContract.View, ReservationContract.View, AttractionListMorePresenter.View, ReservationHotelListPresenter.View {
+public class SplashActivity extends AppCompatActivity implements MainSearchPresenter.View,HomeContract.View, ReservationContract.View, AttractionListMorePresenter.View, ReservationHotelListPresenter.View {
     Thread splashTread;
     @Inject
     HomePresenter homePresenter;
@@ -83,10 +84,10 @@ public class SplashActivity extends StandardActivity implements MainSearchPresen
         init();
     }
 
-    @Override
-    protected int getLayoutId() {
-        return R.layout.activity_splash;
-    }
+//    @Override
+//    protected int getLayoutId() {
+//        return R.layout.activity_splash;
+//    }
 
     private boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -275,7 +276,6 @@ public class SplashActivity extends StandardActivity implements MainSearchPresen
     @Override
     public void showError(String message) {
         FirebaseCrash.report(new Exception("App Name :  non-fatal error"));
-        Log.e(TAG, String.valueOf(message));
 //        SplashActivity.this.finish();
     }
 

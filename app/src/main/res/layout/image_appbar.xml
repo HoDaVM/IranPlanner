@@ -45,10 +45,27 @@
                 android:id="@+id/hotelNameHolder"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:background="@drawable/dark_shadow"
                 android:padding="@dimen/margin_short">
 
+                <TextView
+                    android:id="@+id/txtPhotos"
+                    style="@style/StandardTextGrey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="@dimen/margin_standard"
+                    android:layout_marginStart="@dimen/margin_standard"
+                    android:background="@drawable/button_corner_blue_stroke_darktransparent"
+                    android:gravity="bottom"
+                    android:padding="5dp"
+
+
+                    android:text="عکس های بیشتر"
+                    android:textColor="@color/white_" />
 
                 <TextView
                     android:id="@+id/aboutCityBtn1"
@@ -63,85 +80,71 @@
                     android:padding="5dp"
                     android:text="his"
                     android:textColor="@color/white_"
-                    android:visibility="gone"
-                    />
-                <TextView
-                    android:id="@+id/txtPhotos"
-                    style="@style/StandardTextGrey"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginEnd="@dimen/margin_standard"
-                    android:layout_marginStart="@dimen/margin_standard"
-                    android:gravity="bottom"
-                    android:padding="5dp"
-                    android:text="عکس"
-                    android:textColor="@color/white_"
-                    android:background="@drawable/button_corner_blue_stroke_darktransparent"
-                   />
+                    android:visibility="gone" />
+
 
                 <RelativeLayout
                     android:id="@+id/starShowHolder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="@dimen/padding_24"
-                    android:layout_marginRight="@dimen/padding_24"
-                    android:padding="@dimen/margin_xshort"                    >
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="@dimen/margin_standard"
+                    android:layout_marginStart="@dimen/margin_standard"
+                    android:padding="@dimen/margin_xshort">
 
 
+                    <ImageView
+                        android:id="@+id/imgStarH1"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginLeft="@dimen/margin_xshort"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/ic_stars"
+                        android:visibility="invisible" />
 
-                        <ImageView
-                            android:id="@+id/imgStarH1"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_marginLeft="@dimen/margin_xshort"
-                            android:scaleType="centerCrop"
-                            android:src="@mipmap/ic_stars"
-                            android:visibility="invisible"
-                            android:layout_alignParentStart="true"/>
+                    <ImageView
+                        android:id="@+id/imgStarH2"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginLeft="@dimen/margin_xshort"
+                        android:layout_toLeftOf="@+id/imgStarH1"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/ic_stars"
+                        android:visibility="invisible" />
 
-                        <ImageView
-                            android:id="@+id/imgStarH2"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_marginLeft="@dimen/margin_xshort"
-                            android:layout_toLeftOf="@+id/imgStarH1"
-                            android:scaleType="centerCrop"
-                            android:src="@mipmap/ic_stars"
-                            android:visibility="invisible"/>
+                    <ImageView
+                        android:id="@+id/imgStarH3"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginLeft="@dimen/margin_xshort"
+                        android:layout_toLeftOf="@+id/imgStarH2"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/ic_stars"
+                        android:visibility="invisible" />
 
-                        <ImageView
-                            android:id="@+id/imgStarH3"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_marginLeft="@dimen/margin_xshort"
-                            android:layout_toLeftOf="@+id/imgStarH2"
-                            android:scaleType="centerCrop"
-                            android:src="@mipmap/ic_stars"
-                            android:visibility="invisible"/>
+                    <ImageView
+                        android:id="@+id/imgStarH4"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginLeft="@dimen/margin_xshort"
+                        android:layout_toLeftOf="@+id/imgStarH3"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/ic_stars"
+                        android:visibility="invisible" />
 
-                        <ImageView
-                            android:id="@+id/imgStarH4"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_marginLeft="@dimen/margin_xshort"
-                            android:layout_toLeftOf="@+id/imgStarH3"
-                            android:scaleType="centerCrop"
-                            android:src="@mipmap/ic_stars"
-                            android:visibility="invisible"/>
+                    <ImageView
+                        android:id="@+id/imgStarH5"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_toLeftOf="@+id/imgStarH4"
 
-                        <ImageView
-                            android:id="@+id/imgStarH5"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_toLeftOf="@+id/imgStarH4"
-
-                            android:scaleType="centerCrop"
-                            android:src="@mipmap/ic_stars"
-                            android:visibility="invisible"/>
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/ic_stars"
+                        android:visibility="invisible" />
 
                 </RelativeLayout>
 

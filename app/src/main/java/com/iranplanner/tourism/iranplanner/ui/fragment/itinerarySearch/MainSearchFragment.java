@@ -1,7 +1,9 @@
 package com.iranplanner.tourism.iranplanner.ui.fragment.itinerarySearch;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.ContentResolver;
@@ -17,7 +19,6 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +30,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,21 +70,20 @@ public class MainSearchFragment extends StandardFragment implements MainSearchCo
             city_name,
             itinerary_name,
             itinerary_name_attraction;
-    FoldingCell fcProvince, folding_cell_City_City, folding_cell_city, folding_cell_attraction;
+    FoldingCell /*fcProvince, *//*folding_cell_City_City,*/ folding_cell_city,folding_cell_City_City/*, folding_cell_attraction*/;
     List<Province> provinces;
     String provinceName;
     String provinceId = null;
-    AutoCompleteTextView textProvience;
     ProgressDialog progressDialog;
-    Button searchOk_provience;
     List<Province> tempProvince;
     List<City> tempCity1, tempCity2, tempcity;
-    AutoCompleteTextView fromCity_city, endCity_city, fromCity, fromCity_attraction, endAttraction;
+    AutoCompleteTextView fromCity_city, endCity_city, fromCity/* fromCity_attraction,*/ /*endAttraction*/;
     List<City> cities;
-    Button searchOk_city_city, searchOk_city, searchOk_attraction;
+    Button searchOk_city_city, searchOk_city/* searchOk_attraction*/;
     String cityCityFrom, cityEnd, cityFrom, cityFromAttraction;
     boolean checkfragment = false;
-    LinearLayout city_city_layout, city_layout, province_layout, events_layout;
+    LinearLayout city_city_layout, city_layout, /*province_layout, */
+            events_layout;
     private final static String TAG_FRAGMENT = "TAG_FRAGMENT";
     ItineraryListFragment itineraryListFragment;
     List<Attraction> attractions;
@@ -92,9 +92,11 @@ public class MainSearchFragment extends StandardFragment implements MainSearchCo
     String attractionEnd;
     Button mmActivity;
     FrameLayout cell_title_view_theme, cell_title_view_events;
-    public static MainSearchFragment newInstance( OnVisibleShowCaseViewListener onVisibleShowCaseViewListener) {
+    FrameLayout cell_title_view_city_city;
+
+    public static MainSearchFragment newInstance(OnVisibleShowCaseViewListener onVisibleShowCaseViewListener) {
         MainSearchFragment fragment = new MainSearchFragment();
-        fragment.onVisibleShowCaseViewListener=onVisibleShowCaseViewListener;
+        fragment.onVisibleShowCaseViewListener = onVisibleShowCaseViewListener;
         return fragment;
     }
 
@@ -106,46 +108,23 @@ public class MainSearchFragment extends StandardFragment implements MainSearchCo
         View view = inflater.inflate(R.layout.search_main_fragment, container, false);
         city_city_layout = (LinearLayout) view.findViewById(R.id.city_city_layout);
         city_layout = (LinearLayout) view.findViewById(R.id.city_layout);
-        province_layout = (LinearLayout) view.findViewById(R.id.province_layout);
 
         txtitinerary_name_city_city = view.findViewById(R.id.txtitinerary_name_city_city);
         city_name = view.findViewById(R.id.city_name);
-        itinerary_name = view.findViewById(R.id.itinerary_name);
-        itinerary_name_attraction = view.findViewById(R.id.itinerary_name_attraction);
-//        events_layout = (LinearLayout) view.findViewById(R.id.events_layout);
-//        cell_title_view_events = (FrameLayout) view.findViewById(R.id.cell_title_view_events);
-//        cell_title_view_theme = (FrameLayout) view.findViewById(R.id.cell_title_view_theme);
-        //province
-        textProvience = (AutoCompleteTextView) view.findViewById(R.id.textProvience);
-        searchOk_provience = (Button) view.findViewById(R.id.searchOk_provience);
-        tempProvince = autoCompleteProvince(textProvience);
-        fcProvince = (FoldingCell) view.findViewById(R.id.folding_cell_province);
-        // -------------attach click listener to folding cell
-        fcProvince.setOnClickListener(this);
-        searchOk_provience.setOnClickListener(this);
-        //attraction
-        folding_cell_attraction = (FoldingCell) view.findViewById(R.id.folding_cell_attraction);
-        fromCity_attraction = (AutoCompleteTextView) view.findViewById(R.id.fromCity_attraction);
-        endAttraction = (AutoCompleteTextView) view.findViewById(R.id.endAttraction);
-        searchOk_attraction = (Button) view.findViewById(R.id.searchOk_attraction);
-        tempAttractionCity = autoCompleteCity(fromCity_attraction);
-        tempAttraction = autoCompleteAttraction(endAttraction);
-        folding_cell_attraction.setOnClickListener(this);
-        searchOk_attraction.setOnClickListener(this);
-        // city_city
+//        itinerary_name = view.findViewById(R.id.itinerary_name);
+
         fromCity_city = (AutoCompleteTextView) view.findViewById(R.id.fromCity_city);
         endCity_city = (AutoCompleteTextView) view.findViewById(R.id.endCity_city);
         searchOk_city_city = (Button) view.findViewById(R.id.searchOk_city_city);
+        cell_title_view_city_city = view.findViewById(R.id.cell_title_view_city_city);
         fromCity_city.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         tempCity1 = autoCompleteCity(fromCity_city);
         tempCity2 = autoCompleteCity(endCity_city);
         folding_cell_City_City = (FoldingCell) view.findViewById(R.id.folding_cell_City_City);
         // -------------attach click listener to folding cell
-        folding_cell_City_City.setOnClickListener(this);
+        cell_title_view_city_city.setOnClickListener(this);
         searchOk_city_city.setOnClickListener(this);
 
-
-        //city
         fromCity = (AutoCompleteTextView) view.findViewById(R.id.fromCity);
         searchOk_city = (Button) view.findViewById(R.id.searchOk_city);
         tempcity = autoCompleteCity(fromCity);
@@ -154,8 +133,8 @@ public class MainSearchFragment extends StandardFragment implements MainSearchCo
         // -------------attach click listener to folding cell
         folding_cell_city.setOnClickListener(this);
         searchOk_city.setOnClickListener(this);
-//        cell_title_view_events.setOnClickListener(this);
-//        cell_title_view_theme.setOnClickListener(this);
+        folding_cell_City_City.setOnClickListener(this);
+
         return view;
     }
 
@@ -203,41 +182,23 @@ public class MainSearchFragment extends StandardFragment implements MainSearchCo
                 .build().injectionMainSearchFragment(this);
 
         switch (v.getId()) {
-//            case R.id.findMyLocation:
-//                Intent intentMapActivity =new Intent(getContext(), MoreItemItineraryActivity.class);
-//                startActivity(intentMapActivity);
-//                LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-//                LocationListener locationListener = new LocationListinerGps(getContext());
-//
-//                if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-//                    buildAlertMessageNoGps();
-//                }
-//                if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//
-//                }
-//                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
-//                break;
-            case R.id.folding_cell_province:
-                fcProvince.toggle(false);
-                folding_cell_City_City.fold(false);
-                folding_cell_attraction.fold(false);
-                folding_cell_city.fold(false);
-                break;
 
+            case R.id.cell_title_view_city_city:
+                folding_cell_City_City.toggle(false);
+                folding_cell_city.fold(false);
+//                CustomDialogSearchItinerary customDialogSearchItinerary = new CustomDialogSearchItinerary(getActivity(), R.layout.dialog_main_search_itinerary_2);
+//                customDialogSearchItinerary.show();
+//                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+//                lp.copyFrom(customDialogSearchItinerary.getWindow().getAttributes());
+//                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+//                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//                customDialogSearchItinerary.show();
+//                customDialogSearchItinerary.getWindow().setAttributes(lp);
+//                customDialogSearchItinerary.getWindow().getAttributes().windowAnimations = R.style.PauseDialogAnimation;
+                break;
             case R.id.folding_cell_City_City:
                 folding_cell_City_City.toggle(false);
-                fcProvince.fold(false);
-                folding_cell_attraction.fold(false);
                 folding_cell_city.fold(false);
-                break;
-
-            case R.id.folding_cell_attraction:
-                folding_cell_attraction.toggle(false);
-                fcProvince.fold(false);
-                folding_cell_City_City.fold(false);
-                folding_cell_city.fold(false);
-                break;
-
             case R.id.searchOk_attraction:
                 hideKeyBoard();
                 showAttraction();
@@ -250,9 +211,7 @@ public class MainSearchFragment extends StandardFragment implements MainSearchCo
 
             case R.id.folding_cell_city:
                 folding_cell_city.toggle(false);
-                fcProvince.fold(false);
                 folding_cell_City_City.fold(false);
-                folding_cell_attraction.fold(false);
                 break;
 
             case R.id.searchOk_city_city:
@@ -617,9 +576,9 @@ public class MainSearchFragment extends StandardFragment implements MainSearchCo
 
     //---------------------------
     private void showAttraction() {
-        folding_cell_attraction.fold(false);
-        cityFromAttraction = returnCityId(fromCity_attraction, tempAttractionCity);
-        attractionEnd = returnAttractionId(endAttraction, tempAttraction);
+//        folding_cell_attraction.fold(false);
+//        cityFromAttraction = returnCityId(fromCity_attraction, tempAttractionCity);
+//        attractionEnd = returnAttractionId(endAttraction, tempAttraction);
         if (cityFromAttraction != null && attractionEnd != null) {
             String offset = "0";
             mainPresenter.loadItineraryFromAttraction("searchattractioncity", "fa", cityFromAttraction, "10", offset, attractionEnd, Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
@@ -645,7 +604,7 @@ public class MainSearchFragment extends StandardFragment implements MainSearchCo
     }
 
     private void showCityCity() {
-        folding_cell_City_City.fold(false);
+//        folding_cell_City_City.fold(false);
 
         cityCityFrom = returnCityId(fromCity_city, tempCity1);
         cityEnd = returnCityId(endCity_city, tempCity2);
@@ -665,8 +624,8 @@ public class MainSearchFragment extends StandardFragment implements MainSearchCo
     }
 
     private void showProvience() {
-        fcProvince.fold(false);
-        provinceName = returnProvinceId(textProvience, tempProvince);
+//        fcProvince.fold(false);
+//        provinceName = returnProvinceId(textProvience, tempProvince);
         if (provinceName != null) {
 //                    getItinerary(provinceName, "0");
             String offset = "0";
@@ -704,5 +663,64 @@ public class MainSearchFragment extends StandardFragment implements MainSearchCo
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setOnVisibleShowCaseViewListener();
+    }
+
+    //------------------------
+    public class CustomDialogSearchItinerary extends Dialog implements
+            View.OnClickListener {
+
+        public Activity c;
+        public Dialog d;
+        public TextView no;
+        ListView listd;
+        String type;
+        int layout;
+
+        public CustomDialogSearchItinerary(Activity a, int layout) {
+            super(a);
+            this.c = a;
+            this.layout = layout;
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+            setContentView(layout);
+
+            AutoCompleteTextView fromCity_city = (AutoCompleteTextView)findViewById(R.id.fromCity_city);
+            AutoCompleteTextView endCity_city = (AutoCompleteTextView) findViewById(R.id.endCity_city);
+            Button searchOk_city_city = (Button) findViewById(R.id.searchOk_city_city);
+            tempCity1 = autoCompleteCity(fromCity_city);
+            tempCity2 = autoCompleteCity(endCity_city);
+
+
+            searchOk_city_city.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    hideKeyBoard();
+                    showCityCity();
+                }
+            });
+////            listd = (ListView) findViewById(R.id.listd);
+//            no = (TextView) findViewById(R.id.txtNo);
+//            no.setOnClickListener(this);
+//            /*tempCityProvince =*/
+////            autoCompleteProvince(autoTextWhere, type);
+
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+//                case R.id.txtNo:
+//                    dismiss();
+//                    break;
+                default:
+                    break;
+            }
+            dismiss();
+        }
     }
 }

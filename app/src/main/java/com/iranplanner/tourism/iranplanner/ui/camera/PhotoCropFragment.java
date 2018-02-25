@@ -49,11 +49,8 @@ public class PhotoCropFragment extends Fragment implements UploadPhotoContract.V
     String nid, uid, ntype;
     @Inject
     UploadPhotoPresenter uploadPhotoPresenter;
-    //    DaggerAtractionDetailComponent.Builder builder;
     DaggerUploadPhotoComponent.Builder builder;
-    public PhotoCropFragment(OnCutImageListener onCutImageListener) {
-        this.onCutImageListener=onCutImageListener;
-    }
+
 
     public PhotoCropFragment() {
     }
@@ -266,6 +263,7 @@ public class PhotoCropFragment extends Fragment implements UploadPhotoContract.V
         ntype = getArguments().getString("ntype");
 
         photoPath = getArguments().getString("path");
+        onCutImageListener = (OnCutImageListener) getArguments().getSerializable("OnCutImageListener");
         if (imageToCrop == null) {
             String photoPath = getArguments().getString("photoPath");
             Uri photoUri = getArguments().getParcelable("photoUri");

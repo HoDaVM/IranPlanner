@@ -9,7 +9,7 @@
         android:id="@+id/GroupHolder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ratingHolder">
+     >
 
         <!--mapholder-->
         <RelativeLayout
@@ -57,6 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/comment_rate"
             android:background="@color/white_"
+            android:layout_alignParentStart="true"
             android:padding="@dimen/padding_short">
 
 
@@ -100,22 +101,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/titleBody"
-                android:gravity="right">
+                >
 
                 <com.coinpany.core.android.widget.CTouchyWebView
                     android:id="@+id/contentFullDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-
-                    android:layout_below="@+id/imageTypeAttraction"
                     android:textAppearance="@style/StandardTextGrey" />
             </RelativeLayout>
 
             <TextView
                 android:id="@+id/MoreInoText"
                 style="@style/StandardText"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/webBody"
                 android:layout_marginEnd="@dimen/margin_standard"

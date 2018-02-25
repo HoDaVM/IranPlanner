@@ -26,8 +26,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import com.iranplanner.tourism.iranplanner.R;
-import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,7 @@ public class MapFullActivity extends StandardActivity implements OnMapReadyCallb
     ResultItinerary itineraryData;
     List<Marker> markers;
     List<ItineraryLodgingCity> lodgingCities;
-
+    boolean isRoad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +58,7 @@ public class MapFullActivity extends StandardActivity implements OnMapReadyCallb
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         lodgingCities = (List<ItineraryLodgingCity>) bundle.getSerializable("lodgingCities");
+        isRoad = bundle.getBoolean("isRoad");
 //        setContentView(R.layout.activity_map_full);
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -81,8 +82,7 @@ public class MapFullActivity extends StandardActivity implements OnMapReadyCallb
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        try
-        {
+        try {
             if (hasFocus == true) {
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
                 for (Marker marker : markers) {
@@ -95,8 +95,7 @@ public class MapFullActivity extends StandardActivity implements OnMapReadyCallb
                 CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
                 mMap.animateCamera(cu);
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -119,18 +118,19 @@ public class MapFullActivity extends StandardActivity implements OnMapReadyCallb
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
-        prepareMarkers();
+            prepareMarkers();
 
     }
 
     private void prepareMarkers() {
+        try {
         if (MarkerPoints.size() > 1) {
             MarkerPoints.clear();
             mMap.clear();
         }
-        if (lodgingCities != null) {
+        if (lodgingCities != null ) {
 
-            MapDirection mapDirection = new MapDirection(mMap, getApplicationContext(), lodgingCities, MarkerPoints);
+            MapDirection mapDirection = new MapDirection(mMap, getApplicationContext(), lodgingCities, MarkerPoints,isRoad);
             // Already two locations
             markers = mapDirection.readytoDirect();
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -140,8 +140,17 @@ public class MapFullActivity extends StandardActivity implements OnMapReadyCallb
                 }
             });
 
+        }/*else if(!isRoad){
+            markers = mapDirection.readytoDirect();
+            Polyline line = mMap.addPolyline(new PolylineOptions()
+                    .add(new LatLng(Float.valueOf(lodgingCities.get(0).getCityPositionLat()),Float.valueOf(lodgingCities.get(0).getCityPositionLon())),new LatLng(Float.valueOf(lodgingCities.get(1).getCityPositionLat()),Float.valueOf(lodgingCities.get(1).getCityPositionLon())))
+                    .width(8).color((getApplicationContext().getResources().getColor(R.color.pink))));
+
+        }*/
+        onWindowFocusChanged(true);}
+        catch (Exception e){
+
         }
-        onWindowFocusChanged(true);
     }
 
     protected synchronized void buildGoogleApiClient() {

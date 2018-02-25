@@ -177,7 +177,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
         mainTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 1) {
+            /*    if (tab.getPosition() == 1) {
 //                    Crashlytics.getInstance().crash(); // Force a crash
                     if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_SETTINGFRAGMENT, "false", false, getApplicationContext()))) {
                         mainTabLayout.setVisibility(View.INVISIBLE);
@@ -193,7 +193,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
                             }
                         }
                     }, 250);
-                } else if (tab.getPosition() == 3) {
+                } else */if (tab.getPosition() == 3) {
                     if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_PANDAFRAGMENT, "false", false, getApplicationContext()))) {
                         mainTabLayout.setVisibility(View.INVISIBLE);
                     }
@@ -400,8 +400,8 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
     private void setShowCase(final List<View> views) {
         Button customButton = (Button) this.getLayoutInflater().inflate(R.layout.showcase_custom_button, null);
         CustomShowcaseView showcaseDrawer = new CustomShowcaseView(getResources());
-        float width = getResources().getDimension(R.dimen.custom_showcase);
-        float height = getResources().getDimension(R.dimen.custom_showcase);
+        float width = getResources().getDimension(R.dimen.custom_showcase_moreItem_width);
+        float height = getResources().getDimension(R.dimen.custom_showcase_moreItem_height_home);
         showcaseDrawer.customShowcaseSize(width, height);
 
         showcaseView = new ShowcaseView.Builder(this)
@@ -481,8 +481,8 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
     private void setShowCaseSetting(View view) {
         Button customButton = (Button) this.getLayoutInflater().inflate(R.layout.showcase_custom_button, null);
         CustomShowcaseView showcaseDrawer = new CustomShowcaseView(getResources());
-        float width = getResources().getDimension(R.dimen.custom_showcase);
-        float height = getResources().getDimension(R.dimen.custom_showcase);
+        float width = getResources().getDimension(R.dimen.custom_showcase_moreItem_width);
+        float height = getResources().getDimension(R.dimen.custom_showcase_moreItem_height);
         showcaseDrawer.customShowcaseSize(width, height);
 
         showcaseView = new ShowcaseView.Builder(this)
@@ -507,8 +507,8 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
     private void setShowCasePanda(final List<View> views) {
         Button customButtonPanda = (Button) this.getLayoutInflater().inflate(R.layout.showcase_custom_button, null);
         CustomShowcaseView showcaseDrawer = new CustomShowcaseView(getResources());
-        float width = getResources().getDimension(R.dimen.custom_showcase);
-        float height = getResources().getDimension(R.dimen.custom_showcase);
+        float width = getResources().getDimension(R.dimen.custom_showcase_moreItem_width);
+        float height = getResources().getDimension(R.dimen.custom_showcase_moreItem_height);
         showcaseDrawer.customShowcaseSize(width, height);
 
         showcaseViewPanda = new ShowcaseView.Builder(this)
@@ -600,23 +600,23 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
                         break;
                     }
 
-                    case 1: {
-                        showcaseView.setShowcase(new ViewTarget(views.get(2)), true);
-                        showcaseView.setContentTitle(getString(R.string.tutorialItineraryProvinceTitle));
-                        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
-                        showcaseView.setContentText(getResources().getString(R.string.tutorialItineraryProvinceText));
-                        break;
-                    }
+//                    case 1: {
+//                        showcaseView.setShowcase(new ViewTarget(views.get(2)), true);
+//                        showcaseView.setContentTitle(getString(R.string.tutorialItineraryProvinceTitle));
+//                        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+//                        showcaseView.setContentText(getResources().getString(R.string.tutorialItineraryProvinceText));
+//                        break;
+//                    }
 
-                    case 2: {
-                        showcaseView.setShowcase(new ViewTarget(views.get(3)), true);
-                        showcaseView.setContentTitle(getString(R.string.tutorialItineraryAttractionTitle));
-                        showcaseView.setContentText(getString(R.string.tutorialItineraryAttractionText));
-                        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
-                        showcaseView.setButtonText("بستن");
-                        break;
-                    }
-                    case 3: {
+//                    case 2: {
+//                        showcaseView.setShowcase(new ViewTarget(views.get(3)), true);
+//                        showcaseView.setContentTitle(getString(R.string.tutorialItineraryAttractionTitle));
+//                        showcaseView.setContentText(getString(R.string.tutorialItineraryAttractionText));
+//                        showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+//                        showcaseView.setButtonText("بستن");
+//                        break;
+//                    }
+                    case 1: {
                         showcaseView.setTarget(Target.NONE);
                         showcaseView.setContentTitle("");
                         showcaseView.hide();

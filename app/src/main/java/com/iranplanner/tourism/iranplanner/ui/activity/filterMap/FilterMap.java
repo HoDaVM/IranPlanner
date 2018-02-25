@@ -208,7 +208,7 @@ public class FilterMap extends AppCompatActivity implements OnMapReadyCallback,
         markers = new ArrayList<>();
         int i = 0;
         for (LatLng latLng : points) {
-            Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerNames.get(i)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_point_pink)));
+            Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerNames.get(i)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker)));
             markers.add(marker);
             i++;
         }

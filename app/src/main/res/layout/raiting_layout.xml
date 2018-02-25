@@ -2,14 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_alignParentStart="true"
+    android:layout_gravity="start"
+    >
 
     <RelativeLayout
         android:id="@+id/ratingPeopleHolder1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/borderLayout"
-        android:paddingTop="@dimen/margin_short">
+        android:paddingTop="@dimen/margin_short"
+        >
 
         <TextView
             android:id="@+id/txtRateName1"
@@ -17,7 +21,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="نظر شما چیه"
             android:translationZ="1dp" />
 
         <RatingBar
@@ -49,7 +52,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="نظر شما چیه"
             android:translationZ="1dp" />
 
         <RatingBar
@@ -81,7 +83,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="نظر شما چیه"
             android:translationZ="1dp" />
 
         <RatingBar
@@ -113,7 +114,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="نظر شما چیه"
             android:translationZ="1dp" />
 
         <RatingBar
@@ -137,8 +137,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="2">
+        android:weightSum="2"
+        android:gravity="start">
 
+
+        <TextView
+            android:id="@+id/txtOk"
+            style="@style/StandardTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center"
+            android:padding="@dimen/padding_standard"
+            android:text="ثبت" />
+        <com.coinpany.core.android.widget.CDivider
+            android:layout_width="1dp"
+            android:layout_height="match_parent" />
         <TextView
             android:id="@+id/txtNo"
             style="@style/StandardTitle"
@@ -153,22 +170,6 @@
             android:text="بیخیال"
             />
 
-        <com.coinpany.core.android.widget.CDivider
-            android:layout_width="1dp"
-            android:layout_height="match_parent" />
-
-        <TextView
-            android:id="@+id/txtOk"
-            style="@style/StandardTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center"
-            android:padding="@dimen/padding_standard"
-            android:text="ثبت" />
     </LinearLayout>
 
 </LinearLayout>

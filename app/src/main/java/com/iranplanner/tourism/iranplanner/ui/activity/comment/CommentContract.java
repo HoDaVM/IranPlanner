@@ -1,6 +1,8 @@
 package com.iranplanner.tourism.iranplanner.ui.activity.comment;
 
 
+import android.net.Uri;
+
 import com.iranplanner.tourism.iranplanner.ui.presenter.Presenter;
 
 import entity.CommentSend;
@@ -38,6 +40,7 @@ public abstract class CommentContract extends Presenter<CommentContract.View> {
         void dismissProgress();
 
         void showMoreImages(ResultImageList resultImageList);
+        void setImageUri(Uri uri);
     }
 
     public abstract void getCommentList(

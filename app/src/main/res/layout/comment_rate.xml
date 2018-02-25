@@ -3,12 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/white_">
+    android:background="@color/white_"
+    android:layout_alignParentEnd="true">
 
     <RelativeLayout
         android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"        >
 
         <RelativeLayout
             android:id="@+id/LikeLayout"
@@ -18,7 +19,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="3">
+                android:weightSum="3"
+                android:orientation="horizontal"
+                android:layoutDirection="locale"
+                android:padding="4dp">
 
                 <LinearLayout
                     android:id="@+id/cameraHolder"
@@ -35,7 +39,18 @@
                         android:layout_height="45dp"
                         android:padding="@dimen/margin_xxshort"
                         android:scaleType="centerCrop"
-                        android:src="@mipmap/ic_photo_camera" />
+                        android:src="@mipmap/ic_add_photo"
+
+                       />
+                    <ImageView
+                        android:id="@+id/mapImg"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:padding="@dimen/margin_xxshort"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/ic_find_on_map_foreground"
+                        android:visibility="gone"
+                       />
 
                     <TextView
                         android:id="@+id/addTxt"
@@ -50,10 +65,10 @@
                         android:visibility="gone"/>
 
                 </LinearLayout>
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/greySemilight" />
+                <!--<View-->
+                    <!--android:layout_width="1dp"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:background="@color/greySemilight" />-->
                 <LinearLayout
                     android:id="@+id/commentHolder"
                     android:layout_width="wrap_content"
@@ -69,7 +84,7 @@
                         android:layout_height="45dp"
                         android:padding="@dimen/margin_xxshort"
                         android:scaleType="centerCrop"
-                        android:src="@mipmap/ic_cancel_red" />
+                        android:src="@mipmap/ic_comment_logo" />
 
                     <TextView
                         android:id="@+id/commentTxt"
@@ -85,10 +100,10 @@
 
 
                 </LinearLayout>
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/greySemilight" />
+                <!--<View-->
+                    <!--android:layout_width="1dp"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:background="@color/greySemilight" />-->
                 <LinearLayout
                     android:id="@+id/likeHolder"
                     android:layout_width="wrap_content"
@@ -124,7 +139,7 @@
         <RelativeLayout
             android:id="@+id/borderLayout"
             android:layout_width="match_parent"
-            android:layout_height="5dp"
+            android:layout_height="1dp"
             android:layout_below="@+id/LikeLayout"
             android:background="@color/greyLight"></RelativeLayout>
         <RelativeLayout
@@ -163,7 +178,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ratingBar"
                 android:layout_centerHorizontal="true"
-                android:text="تا الان سه نفر به اینجا امتیاز دادند"
+                android:text="امتیاز بده"
                 android:textColor="@color/dark_blue"
                 android:translationZ="1dp"
                 android:layout_marginBottom="@dimen/margin_xshort"/>

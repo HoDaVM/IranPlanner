@@ -2,6 +2,7 @@ package com.iranplanner.tourism.iranplanner.ui.activity.comment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -29,6 +30,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import entity.CommentReply;
 import entity.ResultComment;
+import tools.Util;
 
 /**
  * Created by Hoda on 10/01/2017.
@@ -43,14 +45,14 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     String cParent;
 
 
-    public CommentListAdapter(Activity a, DataTransferInterface dtInterface, List<ResultComment> resultComments, Context context, int rowLayout,String cParent) {
+    public CommentListAdapter(Activity a, DataTransferInterface dtInterface, List<ResultComment> resultComments, Context context, int rowLayout, String cParent) {
         this.resultComments = resultComments;
         this.context = context;
         this.rowLayout = rowLayout;
         Activity activity = a;
         this.dtInterface = dtInterface;
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-       this. cParent=cParent;
+        this.cParent = cParent;
     }
 
 
@@ -62,10 +64,11 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
     @Override
     public void onBindViewHolder(final CommentListAdapter.ViewHolder viewHolder, int i) {
+                    Typeface tf = Typeface.createFromAsset(context.getAssets(),
+                    "fonts/IRANSansMobile.ttf");
         viewHolder.commentText.setText(resultComments.get(i).getCommentBody());
         viewHolder.commentSenderName.setText(resultComments.get(i).getUserFname());
-        viewHolder.commentSentTime.setText(Utils.timeElapsedFromDate(getDate(resultComments.get(i).getCommentDate())) + " پیش");
-
+        viewHolder.commentSentTime.setText(Utils.timeElapsedFromDate(getDate(resultComments.get(i).getCommentDate())));
         if (resultComments.get(i).getUserPhoto() != null) {
             String url = resultComments.get(i).getUserPhoto();
             Glide.with(context)
@@ -96,7 +99,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
 
         if (resultComments.get(i).getCommentReply().size() > 0) {
-            viewHolder.replyBtn.setText(Utils.persianNumbers(String.format("%d پاسخ", resultComments.get(i).getCommentReply().size())));
+            viewHolder.replyBtn.setText(Util.persianNumbers(Utils.persianNumbers(String.format("%d پاسخ", resultComments.get(i).getCommentReply().size()))));
             viewHolder.replyUserMainLayout.setVisibility(View.VISIBLE);
 
             viewHolder.replyUserMainLayout.removeAllViews();
@@ -110,11 +113,12 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
                 TextView repSenderName = (TextView) repLayout.findViewById(R.id.replySenderName);
                 TextView repSentTime = (TextView) repLayout.findViewById(R.id.commentSentTime);
                 TextView replyText = (TextView) repLayout.findViewById(R.id.replyText);
-
+                replyText.setTypeface(tf);
+                repSenderName.setTypeface(tf);
 //                Media pic = reply.User.getProfilePic();
 //                mediaController.loadImage(repProPic, pic, R.drawable.samplepic_2);
                 repSenderName.setText(commentReply.getUserFname());
-                repSentTime.setText(Utils.persianNumbers(Utils.timeElapsedFromDate(getDate(commentReply.getCommentDate()))));
+                repSentTime.setText(Util.persianNumbers(Utils.persianNumbers(Utils.timeElapsedFromDate(getDate(commentReply.getCommentDate())))));
                 replyText.setText(commentReply.getCommentBody());
 
 
@@ -122,14 +126,13 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
             }
 
 
-
-        }else {
+        } else {
             viewHolder.replyUserMainLayout.setVisibility(View.GONE);
             viewHolder.replyBtn.setText("پاسخ");
         }
-        if(cParent!=null && !cParent.equals("") || resultComments.get(i).getComment_service().equals("foursquare")) {
+        if (cParent != null && !cParent.equals("") || resultComments.get(i).getComment_service().equals("foursquare")) {
             viewHolder.replyBtn.setVisibility(View.GONE);
-        }else {
+        } else {
 
         }
     }
@@ -177,7 +180,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
             commentSenderPic = (ImageView) itemView.findViewById(R.id.commentSenderPic);
             commentMainLayout = itemView.findViewById(R.id.commentMainLayout);
             replyUserMainLayout = (ViewGroup) itemView.findViewById(R.id.replyUserMainLayout);
-            replyBtn =  itemView.findViewById(R.id.replyBtn);
+            replyBtn = itemView.findViewById(R.id.replyBtn);
         }
     }
 

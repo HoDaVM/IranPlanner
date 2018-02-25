@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -180,9 +181,11 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     private AutoCompleteTextView search, searchRange;
     PandaMapList PandaMapList;
     private ImageView imgMyLocation;
-    Button btnSelectPolygon;
+    ImageView btnSelectPolygon;
     LinearLayout drawPolygon;
     TextView txtDraw;
+    View viewTransparent;
+    private TextInputLayout searchHolder;
 
     public static MapPandaFragment newInstance(OnVisibleShowCaseViewListener onVisibleShowCaseViewListener) {
         MapPandaFragment fragment = new MapPandaFragment();
@@ -192,7 +195,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     List<Marker> markerShow;
     String chooseHotel, chooseAttraction, chooseEvent;
-    boolean setDraw = true;
+    boolean setDraw;
     SnapHelper snapHelper;
     List<entity.CityProvince> CityProvince;
     private boolean onItemclick = false;
@@ -216,17 +219,22 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-                    View centerView = snapHelper.findSnapView(horizontalLayoutManagaer);
-                    int positions = horizontalLayoutManagaer.getPosition(centerView);
-                    if (markerNames.size() > 0 && mMap!=null) {
-                        markerShow.get(positions).showInfoWindow();
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(positions)));
-                        CameraUpdate zoom = CameraUpdateFactory.zoomTo(12);
-                        mMap.animateCamera(zoom);
+                try {
+                    if (newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                        View centerView = snapHelper.findSnapView(horizontalLayoutManagaer);
+                        int positions = horizontalLayoutManagaer.getPosition(centerView);
+                        if (markerNames.size() > 0 && mMap != null) {
+                            markerShow.get(positions).showInfoWindow();
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(positions)));
+                            CameraUpdate zoom = CameraUpdateFactory.zoomTo(12);
+                            mMap.animateCamera(zoom);
+                        }
+
                     }
+                } catch (Exception e) {
 
                 }
+
             }
         });
 
@@ -310,19 +318,15 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         recyclerView = rootView.findViewById(R.id.reservationListRecyclerView);
         btnFilter = rootView.findViewById(R.id.btnFilter);
         search = rootView.findViewById(R.id.search);
+        searchHolder = rootView.findViewById(R.id.searchHolder);
         searchRange = rootView.findViewById(R.id.searchRange);
+        viewTransparent = rootView.findViewById(R.id.viewTransparent);
         search.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         imgMyLocation = rootView.findViewById(R.id.imgMyLocation);
+        btnSelectPolygon = rootView.findViewById(R.id.btnSelectPolygon);
         imgMyLocation.setOnClickListener(this);
         search.addTextChangedListener(this);
-        autoCompleteProvince(searchRange, null);
-        chooseAttraction = "1";
-        chooseHotel = "1";
-        chooseEvent = "1";
-
-
         btnFilter.setOnClickListener(this);
-        btnSelectPolygon = rootView.findViewById(R.id.btnSelectPolygon);
         drawPolygon = rootView.findViewById(R.id.drawPolygon);
         txtDraw = rootView.findViewById(R.id.txtDraw);
         btnSelectPolygon.setOnClickListener(this);
@@ -330,10 +334,20 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         mapFragment.getMapAsync(this);
         mapFragment.setOnDragListener(this);
         ButterKnife.bind(this, rootView);
-
+        initialize();
         return rootView;
 
     }
+
+    private void initialize() {
+        btnSelectPolygon.setBackground(getResources().getDrawable(R.mipmap.ic_drawing_map_round));
+        txtDraw.setText("ترسیم محدوده");
+        chooseAttraction = "1";
+        chooseHotel = "1";
+        chooseEvent = "1";
+        autoCompleteProvince(searchRange, null);
+    }
+
 
     private void buildAlertMessageNoGps(final int position) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -390,6 +404,19 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         });
     }
 
+    private void disableSearch(boolean show) {
+        if (show) {
+            searchHolder.setVisibility(View.VISIBLE);
+            isClickedDrawable = !show;
+            btnSelectPolygon.setBackground(getResources().getDrawable(R.mipmap.ic_drawing_map_round));
+            txtDraw.setText("ترسیم محدوده");
+        } else {
+            searchHolder.setVisibility(View.GONE);
+            isClickedDrawable = !show;
+            setDrawable(false);
+        }
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -417,9 +444,10 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     @Override
     public void onMapReady(GoogleMap googleMap) {
         if (googleMap != null) {
+
             mMap = googleMap;
 //        mMap.getUiSettings().setScrollGesturesEnabled(false);
-            setDrawable(setDraw);
+//            setDrawable(setDraw);
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Iran, 10.0f));
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
@@ -450,16 +478,19 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         mGoogleApiClient.connect();
     }
 
+    boolean isClickedDrawable = false;
+
     private void setDrawable(boolean drawable) {
+
         if (mMap != null) {
-
-
             if (drawable) {
                 mMap.getUiSettings().setScrollGesturesEnabled(drawable);
                 setDraw = false;
-                btnSelectPolygon.setBackground(getResources().getDrawable(R.mipmap.ic_drawing_map_round));
-                txtDraw.setText("ترسیم محدوده");
+//                btnSelectPolygon.setBackground(getResources().getDrawable(R.mipmap.ic_drawing_map_round));
+//                txtDraw.setText("ترسیم محدوده");
+
             } else {
+
                 mMap.getUiSettings().setScrollGesturesEnabled(drawable);
                 setDraw = true;
                 clearPolyLine();
@@ -502,20 +533,21 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     }
 
     private void drawPolylineOnMap() {
-        if(mMap!=null){
-        PolygonOptions polygonOptions = new PolygonOptions();
-        polygonOptions.addAll(PolylinePoints);
-        polygonOptions.strokeWidth(8);
-        polygonOptions.strokeColor(R.color.main_blue);
-        polygonOptions.fillColor(ContextCompat.getColor(getContext(), R.color.map));
-        if (PolylinePoints.size() > 0) {
-            polygon = mMap.addPolygon(polygonOptions);
-            PandaMapList = new PandaMapList(polygon.getPoints());
-        }}
+        if (mMap != null) {
+            PolygonOptions polygonOptions = new PolygonOptions();
+            polygonOptions.addAll(PolylinePoints);
+            polygonOptions.strokeWidth(8);
+            polygonOptions.strokeColor(R.color.main_blue);
+            polygonOptions.fillColor(ContextCompat.getColor(getContext(), R.color.map));
+            if (PolylinePoints.size() > 0) {
+                polygon = mMap.addPolygon(polygonOptions);
+                PandaMapList = new PandaMapList(polygon.getPoints());
+            }
+        }
     }
 
     private void getResultDraw() {
-        if(mMap!=null) {
+        if (mMap != null) {
             VisibleRegion visibleRegion = mMap.getProjection().getVisibleRegion();
             LatLng farLeft = visibleRegion.farLeft;
             LatLng nearRight = visibleRegion.nearRight;
@@ -533,7 +565,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
 //        specify latitude and longitude of both source and destination Polyline
 
-        if (PolylinePoints.size() > 1 && mMap!=null) {
+        if (PolylinePoints.size() > 1 && mMap != null) {
             polyline = mMap.addPolyline(new PolylineOptions().add(PolylinePoints.get(source), PolylinePoints.get(destination)).width(8));
             source++;
             destination++;
@@ -551,8 +583,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
                 markerOptions.title(markerNames.get(index));
                 markerOptions.icon(BitmapDescriptorFactory.fromBitmap(setMarkerIcon(index)));
 
-                markerOptions.anchor(0.5f,0.5f);
-
+                markerOptions.anchor(0.5f, 0.5f);
 
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
@@ -562,24 +593,26 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
             }
         }
     }
-    public Bitmap resizeMapIcons(String iconName, int width, int height){
-        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", getPackageName()));
+
+    public Bitmap resizeMapIcons(String iconName, int width, int height) {
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier(iconName, "drawable", getPackageName()));
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
         return resizedBitmap;
     }
+
     private Bitmap setMarkerIcon(int index) {
 
         int height = 70;
         int width = 70;
-        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.mipmap.ic_marker);
+        BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.mipmap.ic_marker);
         if (markerType.get(index).equals("attraction")) {
-             bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.attraction);
+            bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.attraction);
         } else if (markerType.get(index).equals("lodging")) {
-            bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.hotel);
+            bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.hotel);
         } else if (markerType.get(index).equals("city")) {
-            bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.city);
+            bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.city);
         }
-        Bitmap b=bitmapdraw.getBitmap();
+        Bitmap b = bitmapdraw.getBitmap();
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
         return smallMarker;
     }
@@ -647,6 +680,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
                         Is_MAP_Moveable = false; // to detect map is movable
                         source = 0;
                         destination = 1;
+                        setDraw = false;
                         draw_final_polygon();
                     }
                     break;
@@ -923,17 +957,18 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
                 openFilterDialog();
                 break;
 
-            case R.id.btnSelectPolygon:
-                search.setText("");
-                setDrawable(setDraw);
-                cleanMapAndRecyclerView();
-                break;
+//            case R.id.btnSelectPolygon:
+//                search.setText("");
+//                setDrawable(setDraw);
+//                cleanMapAndRecyclerView();
+//                break;
             case R.id.drawPolygon:
                 search.setText("");
-                setDrawable(setDraw);
+//                setDraw = true;
+                disableSearch(isClickedDrawable);
+//                setDrawable(setDraw);
                 cleanMapAndRecyclerView();
                 break;
-
             default:
                 break;
         }

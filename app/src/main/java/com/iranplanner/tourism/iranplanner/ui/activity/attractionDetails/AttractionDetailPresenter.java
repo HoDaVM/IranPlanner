@@ -311,7 +311,7 @@ public class AttractionDetailPresenter extends AttractionDetailContract {
                                     rectLine.add(routelist.get(i));
                                 }
                                 // Adding route on the map
-                                MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher));
+                                MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_logo_foreground));
                                 mView.showDirectionOnMap(rectLine);
 
                             }

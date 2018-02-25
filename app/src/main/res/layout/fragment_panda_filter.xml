@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="اعمال فیلتر"
-        android:background="@color/dark_red"
+        android:background="@drawable/button_corner_blue"
         android:layout_alignParentEnd="true"
         android:id="@+id/okFilter"
         android:padding="@dimen/margin_xshort"

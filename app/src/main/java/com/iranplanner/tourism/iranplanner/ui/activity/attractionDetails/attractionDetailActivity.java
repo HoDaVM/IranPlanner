@@ -164,12 +164,12 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     ImageView img;
     @BindView(R.id.commentHolder)
     LinearLayout commentHolder;
-   @BindView(R.id.likeHolder)
+    @BindView(R.id.likeHolder)
     LinearLayout likeHolder;
     @BindView(R.id.MoreInoText)
     TextView MoreInoText;
     @BindView(R.id.commentImg)
-    ImageView okImg;
+    ImageView commentImg;
     @BindView(R.id.likeImg)
     ImageView likeImg;
     @BindView(R.id.ratingBar)
@@ -350,7 +350,6 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         collapsingToolbarLayout.setExpandedTitleTypeface(tf);
 
 
-        txtPhotos.setText("  ؟ عکس");
         aboutCityBtn1.setVisibility(View.VISIBLE);
         aboutCityBtn1.setText(resulAttraction.getProvinceTitle() + " - " + resulAttraction.getCityTitle());
         if (resulAttraction.getAttractionEstimatedTime() != null) {
@@ -377,7 +376,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
 
         likeImg.setOnClickListener(this);
-        okImg.setOnClickListener(this);
+        commentImg.setOnClickListener(this);
 
         commentHolder.setOnClickListener(this);
         ratingPeopleHolder.setOnClickListener(this);
@@ -406,18 +405,11 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                 App.getInstance().prepareDirectories();
 
                 if (Build.VERSION.SDK_INT < 23) {
-                    selectImage();
-//                    new PhotoUtils(attractionDetailActivity.this, new PhotoUtils.OnImageUriSelect() {
-//                        @Override
-//                        public void onSelectImage(Uri uri) {
-//                            mImageUri=uri;
-//                        }
-//                    });
+                    commentPresenter.selectImage(attractionDetailActivity.this);
 
                 } else {
                     if (App.checkGroupPermissions(App.STORAGE_PERMISSIONS)) {
-                        selectImage();
-
+                        commentPresenter.selectImage(attractionDetailActivity.this);
                     } else {
                         requestPermissions(App.STORAGE_PERMISSIONS, 5);
                     }
@@ -428,10 +420,6 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
         ((AdView) findViewById(R.id.banner_ad_view)).setAdListener(mAdListener);
     }
-
-    Intent CamIntent;
-
-    public static final int RequestPermissionCode = 1;
 
 
     @Override
@@ -487,6 +475,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                     lodgingCities.add(i);
                     intent.putExtra("lodgingCities", (Serializable) lodgingCities);
                     intent.putExtra("resulAttraction", (Serializable) resulAttraction);
+                    intent.putExtra("isRoad", true);
                     startActivity(intent);
                 }
             });
@@ -507,6 +496,10 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.commentHolder:
+                builder.build().inject(this);
+                commentPresenter.getCommentList("pagecomments", resulAttraction.getAttractionId(), "attraction", "0");
+                break;
+            case R.id.commentImg:
                 builder.build().inject(this);
                 commentPresenter.getCommentList("pagecomments", resulAttraction.getAttractionId(), "attraction", "0");
                 break;
@@ -542,7 +535,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
             case R.id.ratingPeopleHolder:
                 //todo
                 SendParamUser ss = new SendParamUser(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "attraction", resulAttraction.getAttractionId());
-                commentPresenter.getRate("rate", ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                commentPresenter.getRate("rateinfo", ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                 break;
 
 
@@ -605,10 +598,12 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
     @Override
     public void showMoreImages(ResultImageList resultImageList) {
-        if (resultImageList.getResultImages().size() > 0 ) {
+        if (resultImageList.getResultImages().size() > 0) {
             Intent intent = new Intent(attractionDetailActivity.this, GridImageActivity.class);
             intent.putExtra("ResultImagesList", (Serializable) resultImageList.getResultImages());
             startActivity(intent);
+        }else {
+            Toast.makeText(getApplicationContext(),"عکسی برای نمایش وجود ندارد",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -622,6 +617,11 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     public void setRateUser(ResultParamUser resultParamUser) {
         CustomDialogAlert customDialogAlert = new CustomDialogAlert(this, resultParamUser);
         customDialogAlert.show();
+    }
+
+    @Override
+    public void setImageUri(Uri uri) {
+        mImageUri = uri;
     }
 
     @Override
@@ -775,33 +775,6 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         }
     }
 
-    //----------------------
-
-    private void dispatchTakePictureIntent() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File photo = null;
-
-        try {
-            photo = Util.createImageFiles();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (photo != null) {
-            if (Build.VERSION.SDK_INT > 21) {
-                CamIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                mImageUri = FileProvider.getUriForFile(attractionDetailActivity.this, BuildConfig.APPLICATION_ID + ".provider", photo);
-                CamIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
-                startActivityForResult(CamIntent, REQUEST_CAMERA);
-            } else {
-                mImageUri = Uri.fromFile(photo);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
-                //start camera intent
-                startActivityForResult(intent, REQUEST_CAMERA);
-            }
-        }
-
-    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -818,108 +791,14 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         if (requestCode == 5) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED /*&& grantResults[1] == PackageManager.PERMISSION_GRANTED*/) {
                 App.getInstance().prepareDirectories();
-//                new PhotoUtils(attractionDetailActivity.this, new PhotoUtils.OnImageUriSelect() {
-//                    @Override
-//                    public void onSelectImage(Uri uri) {
-//                        mImageUri=uri;
-//                    }
-//                }).selectImage();
-                selectImage();
-
+                commentPresenter.selectImage(attractionDetailActivity.this);
                 return;
             }
         }
     }
 
 
-    public Bitmap grabImage() {
-        ContentResolver cr = getContentResolver();
-        Bitmap bitmap = null;
-        int tryCount = 0;
-        try {
-            while ((bitmap = MediaStore.Images.Media.getBitmap(cr, mImageUri)) == null) {
-                Thread.sleep(10);
-                tryCount++;
-                if (tryCount > 500) {
-                    return null;
-                }
-            }
-
-            bitmap = MediaStore.Images.Media.getBitmap(cr, mImageUri);
-            int orientation = 0;
-            Matrix matrix = new Matrix();
-            try {
-                ExifInterface ei = new ExifInterface(mImageUri.getPath());
-                int exif = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-                switch (exif) {
-                    case ExifInterface.ORIENTATION_ROTATE_90:
-                        orientation = 90;
-                        break;
-                    case ExifInterface.ORIENTATION_ROTATE_180:
-                        orientation = 180;
-                        break;
-                    case ExifInterface.ORIENTATION_ROTATE_270:
-                        orientation = 270;
-                        break;
-                }
-                matrix.preRotate(orientation);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            //Rotate image bitmap to correct orientation.
-            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-
-            int width = bitmap.getWidth();
-            int height = bitmap.getHeight();
-            double ratio = (double) width / (double) height;
-
-
-//        if ((width > height) && (width > MAX_IMAGE_TO_CROP_PIXEL)) {
-//            width = MAX_IMAGE_TO_CROP_PIXEL;
-//            height = (int) ((double) MAX_IMAGE_TO_CROP_PIXEL / ratio);
-//        } else if (height > MAX_IMAGE_TO_CROP_PIXEL) {
-//            height = MAX_IMAGE_TO_CROP_PIXEL;
-//            width = (int) ((double) MAX_IMAGE_TO_CROP_PIXEL * ratio);
-//        }
-            bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return bitmap;
-    }
-
     private static final int SELECT_FILE = 14;
-
-    private void selectImage() {
-        final CharSequence[] items = {"از دوربین", "از گالری", "انصراف"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(attractionDetailActivity.this);
-        builder.setTitle("انتخاب عکس");
-
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                if (items[item].equals("از دوربین")) {
-                    dispatchTakePictureIntent();
-                } else if (items[item].equals("از گالری")) {
-                    if (App.checkGroupPermissions(App.STORAGE_PERMISSIONS)) {
-                        Intent intent = new Intent(
-                                Intent.ACTION_PICK,
-                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        intent.setType("image/*");
-                        startActivityForResult(
-                                Intent.createChooser(intent, "انتخاب عکس"),
-                                SELECT_FILE);
-                    } else {
-                        App.createPermissionDialog(attractionDetailActivity.this, getString(R.string.app_name), "permission");
-                    }
-                } else if (items[item].equals("انصراف")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
 
 
     @Override
@@ -929,7 +808,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         if (resultCode == Activity.RESULT_OK) {
             Bitmap bm = null;
             if (requestCode == REQUEST_CAMERA) {
-                bm = grabImage();
+                bm = commentPresenter.grabImage(attractionDetailActivity.this);
             } else if (requestCode == SELECT_FILE) {
                 Uri selectedImageUri = data.getData();
 
@@ -969,12 +848,13 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
             }
             if (bm != null) {
-                final PhotoCropFragment photoCropFragment = new PhotoCropFragment(this);
+                final PhotoCropFragment photoCropFragment = new PhotoCropFragment();
                 Bundle bundleImage = new Bundle();
                 bundleImage.putParcelable("IMAGE_TO_CROP", bm);
-                bundleImage.putString("nid",resulAttraction.getAttractionId());
-                bundleImage.putString("uid",Util.getUseRIdFromShareprefrence(getApplicationContext()));
-                bundleImage.putString("ntype","attraction");
+                bundleImage.putString("nid", resulAttraction.getAttractionId());
+                bundleImage.putString("uid", Util.getUseRIdFromShareprefrence(getApplicationContext()));
+                bundleImage.putString("ntype", "attraction");
+                bundleImage.putSerializable("OnCutImageListener", this);
                 photoCropFragment.setArguments(bundleImage);
                 loadFragment(this, photoCropFragment, R.id.pe_container, true, 0, 0);
             }
