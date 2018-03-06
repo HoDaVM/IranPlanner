@@ -5,12 +5,14 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -59,6 +61,7 @@ import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.Rese
 import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListPresenter;
 import com.iranplanner.tourism.iranplanner.ui.fragment.FirstItem;
 import com.iranplanner.tourism.iranplanner.ui.fragment.OnVisibleShowCaseViewListener;
+import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogPresenter;
 import com.iranplanner.tourism.iranplanner.ui.fragment.itineraryList.ItineraryListFragment;
 import com.iranplanner.tourism.iranplanner.ui.fragment.itinerarySearch.MainSearchPresenter;
 import com.iranplanner.tourism.iranplanner.ui.navigationDrawer.AboutUsActivity;
@@ -80,6 +83,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import entity.CityProvince;
 import entity.GetHomeResult;
+import entity.HomeAndBlog;
 import entity.HomeAttraction;
 import entity.HomeCountryProvince;
 import entity.HomeEvent;
@@ -92,6 +96,8 @@ import entity.HomeNeighborCity;
 import entity.HomeSouvenir;
 import entity.ResulAttraction;
 import entity.ResultAttractionList;
+import entity.ResultBlogFull;
+import entity.ResultBlogList;
 import entity.ResultCommentList;
 import entity.ResultEvent;
 import entity.ResultEvents;
@@ -372,7 +378,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
 
                     break;
                 case R.id.navRecommendTv:
-                    NavigationFunctionsHelper.getInstance(getActivity()).sendShareIntent();
+                    NavigationFunctionsHelper.getInstance(getActivity(),"\u200F«ایران پلنر» را دانلود کنید: \n http://iranplanner.com/app","IranPlanner","IranPlanner").sendShareIntent();
                     break;
                 case R.id.navTutorialTv:
                     startActivity(new Intent(getActivity(), TutorialActivity.class));
@@ -968,6 +974,11 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
             intent.putExtra("duration", "");
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void showHomeAndBlog(HomeAndBlog homeAndBlog) {
+
     }
 
 //    @Override

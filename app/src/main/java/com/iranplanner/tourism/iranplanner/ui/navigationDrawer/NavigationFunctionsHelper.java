@@ -10,25 +10,30 @@ import android.content.Intent;
 public class NavigationFunctionsHelper {
 
     private Activity context;
+    private String body;
+    private String subject;
+    private String title;
     private static NavigationFunctionsHelper instance = null;
 
-    private NavigationFunctionsHelper(Activity context) {
+    private NavigationFunctionsHelper(Activity context, String body,String subject,String title) {
         this.context = context;
+        this.body=body;
+        this.subject=subject;
     }
 
-    public static NavigationFunctionsHelper getInstance(Activity context) {
+    public static NavigationFunctionsHelper getInstance(Activity context,String body,String subject,String title) {
         if (instance == null)
-            instance = new NavigationFunctionsHelper(context);
+            instance = new NavigationFunctionsHelper(context,body,subject,title);
         return instance;
     }
 
     public void sendShareIntent() {
-        String shareBody = "\u200F«ایران پلنر» را در بازار اندروید ببین: \n http://cafebazaar.ir/app/?id=com.iranplanner.tourism.iranplanner&ref=share";
+//        String shareBody = "\u200F«ایران پلنر» را دانلود کنید: \n http://iranplanner.com/app";
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Iranplanner");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-        context.startActivity(Intent.createChooser(sharingIntent, "iranplanner"));
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
+        context.startActivity(Intent.createChooser(sharingIntent, title));
     }
 
     public void showAboutUsDialog() {

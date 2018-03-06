@@ -86,28 +86,6 @@ public class CommentPresenter extends CommentContract {
                         mView.dismissProgress();
                     }
                 });
-//        retrofit.create(ItineraryPresenter.AttractionService.class)
-//                .getItineraryCommentList(action, nid, ntype, offset).subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .unsubscribeOn(Schedulers.io())
-//                .subscribe(new Observer<ResultCommentList>() {
-//
-//                    @Override
-//                    public void onCompleted() {
-//                        mView.showComplete();
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        mView.showError(e.getMessage());
-//                    }
-//
-//                    @Override
-//                    public void onNext(ResultCommentList resultCommentList) {
-//                        mView.showComments(resultCommentList);
-//                        Log.e("fds","fsfs");
-//                    }
-//                });
 
     }
 
@@ -346,14 +324,14 @@ public class CommentPresenter extends CommentContract {
             } else {
 
 
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
-            //start camera intent
-            mView.setImageUri(mImageUri);
-            activity.startActivityForResult(intent, REQUEST_CAMERA);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+                //start camera intent
+                mView.setImageUri(mImageUri);
+                activity.startActivityForResult(intent, REQUEST_CAMERA);
+            }
         }
-    }
 
-}
+    }
 
 
     public Bitmap grabImage(Activity activity) {
@@ -433,52 +411,52 @@ public class CommentPresenter extends CommentContract {
 
     }
 
-public interface CommentService {
-    @GET("api-data.php")
-    Observable<ResultCommentList> getItineraryCommentList(
-            @Query("action") String action,
-            @Query("nid") String nId,
-            @Query("ntype") String nType,
-            @Query("offset") String offset);
+    public interface CommentService {
+        @GET("api-data.php")
+        Observable<ResultCommentList> getItineraryCommentList(
+                @Query("action") String action,
+                @Query("nid") String nId,
+                @Query("ntype") String nType,
+                @Query("offset") String offset);
 
-    @POST("api-data.php?action=comment")
-    Observable<ResultCommentList> callInsertComment(@Body CommentSend request, @Query("cid") String cid, @Query("andId") String andId);
+        @POST("api-data.php?action=comment")
+        Observable<ResultCommentList> callInsertComment(@Body CommentSend request, @Query("cid") String cid, @Query("andId") String andId);
 
 
-    //-------------------------------
-    @GET("api-data.php")
-    Observable<ResultWidgetFull> getWidgetResult(@Query("action") String action,
-                                                 @Query("id") String id,
-                                                 @Query("uid") String uid,
-                                                 @Query("ntype") String ntype,
-                                                 @Query("cid") String cid,
-                                                 @Query("andId") String andId);
+        //-------------------------------
+        @GET("api-data.php")
+        Observable<ResultWidgetFull> getWidgetResult(@Query("action") String action,
+                                                     @Query("id") String id,
+                                                     @Query("uid") String uid,
+                                                     @Query("ntype") String ntype,
+                                                     @Query("cid") String cid,
+                                                     @Query("andId") String andId);
 
-    @GET("api-data.php")
-    Observable<InterestResult> getInterest(
-            @Query("action") String action,
-            @Query("uid") String uid,
-            @Query("cid") String cid,
-            @Query("ntype") String ntype,
-            @Query("nid") String nid,
-            @Query("gtype") String gtype,
-            @Query("gvalue") String gvalue,
-            @Query("andId") String andId);
+        @GET("api-data.php")
+        Observable<InterestResult> getInterest(
+                @Query("action") String action,
+                @Query("uid") String uid,
+                @Query("cid") String cid,
+                @Query("ntype") String ntype,
+                @Query("nid") String nid,
+                @Query("gtype") String gtype,
+                @Query("gvalue") String gvalue,
+                @Query("andId") String andId);
 
-    //        https://api.parsdid.com/iranplanner/app/api-data.php?action=images
-    @GET("api-data.php")
-    Observable<ResultImageList> getImages(
-            @Query("action") String action,
-            @Query("nid") String nid,
-            @Query("ntype") String ntype);
+        //        https://api.parsdid.com/iranplanner/app/api-data.php?action=images
+        @GET("api-data.php")
+        Observable<ResultImageList> getImages(
+                @Query("action") String action,
+                @Query("nid") String nid,
+                @Query("ntype") String ntype);
 
-    //----------------
-    @POST("api-data.php")
-    Observable<ResultParamUser> rateSend(@Query("action") String action, @Body SendParamUser request, @Query("cid") String cid, @Query("andId") String andId);
+        //----------------
+        @POST("api-data.php")
+        Observable<ResultParamUser> rateSend(@Query("action") String action, @Body SendParamUser request, @Query("cid") String cid, @Query("andId") String andId);
 
-    //        https://api.parsdid.com/iranplanner/app/api-data.php?action=rateinfo
-    @POST("api-data.php")
-    Observable<ResultParamUser> getRate(@Query("action") String action, @Body SendParamUser request, @Query("cid") String cid, @Query("andId") String andId);
+        //        https://api.parsdid.com/iranplanner/app/api-data.php?action=rateinfo
+        @POST("api-data.php")
+        Observable<ResultParamUser> getRate(@Query("action") String action, @Body SendParamUser request, @Query("cid") String cid, @Query("andId") String andId);
 
-}
+    }
 }

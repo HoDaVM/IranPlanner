@@ -1,19 +1,31 @@
 package com.iranplanner.tourism.iranplanner.ui.fragment.home;
 
 
+import android.util.Log;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogPresenter;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import entity.GetHomeResult;
+import entity.HomeAndBlog;
+import entity.ResultBlogList;
 import entity.ResultEvents;
 import entity.ResultItineraryList;
 import entity.ShowAttractionListMore;
-import entity.ShowAttractionMoreList;
 import retrofit2.Retrofit;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import rx.Observable;
 import rx.Observer;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 /**
@@ -58,12 +70,12 @@ public class HomePresenter extends HomeContract {
                 .getHomeResult(action, type, value, token, androidId).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
+
                 .subscribe(new Observer<GetHomeResult>() {
 
                     @Override
                     public void onCompleted() {
                         mView.showComplete();
-
                     }
 
                     @Override
@@ -81,39 +93,12 @@ public class HomePresenter extends HomeContract {
                 });
     }
 
-//    @Override
-//    public void getAttractionMore(String action, String lang, String value, String placetype, String offset, String cid, String androidId, String attractionType) {
-//        mView.showProgress();
-//        retrofit.create(HomeService.class)
-//                .getAttractionMore( action,  lang,  value,  placetype,  offset,  cid,  androidId,  attractionType).subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .unsubscribeOn(Schedulers.io())
-//                .subscribe(new Observer<ShowAttractionListMore>() {
-//
-//                    @Override
-//                    public void onCompleted() {
-//                        mView.showComplete();
-//                        mView.dismissProgress();
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        mView.showError(e.getMessage());
-//                        mView.dismissProgress();
-//                    }
-//
-//                    @Override
-//                    public void onNext(ShowAttractionListMore showAttractionList) {
-//                        mView.ShowAttractionLists(showAttractionList);
-//                    }
-//                });
-//    }
 
     @Override
     public void getEventMore(String action, String lang, String id, String type, String cid, String androidId) {
         mView.showProgress();
         retrofit.create(HomeService.class)
-                .getEventMore( action,  lang,  id,  type,  cid,  androidId).subscribeOn(Schedulers.io())
+                .getEventMore(action, lang, id, type, cid, androidId).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(new Observer<ResultEvents>() {
@@ -140,8 +125,10 @@ public class HomePresenter extends HomeContract {
     @Override
     public void getEventDetail(String action, String lang, String id, String cid, String androidId) {
         mView.showProgress();
+        HomeService backendApi = retrofit.create(HomeService.class);
+        List<Observable<?>> requests = new ArrayList<>();
         retrofit.create(HomeService.class)
-                .getEventDetail( action,  lang,  id,  cid,  androidId).subscribeOn(Schedulers.io())
+                .getEventDetail(action, lang, id, cid, androidId).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(new Observer<ResultEvents>() {
@@ -169,7 +156,7 @@ public class HomePresenter extends HomeContract {
     public void getItineraryDetail(String action, String id, String lang, String cid, String androidId) {
         mView.showProgress();
         retrofit.create(HomeService.class)
-                .getItineraryDetail( action,   id,lang,   cid,  androidId).subscribeOn(Schedulers.io())
+                .getItineraryDetail(action, id, lang, cid, androidId).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(new Observer<ResultItineraryList>() {
@@ -194,6 +181,44 @@ public class HomePresenter extends HomeContract {
     }
 
 
+    public void getHomeAndBlog(String actionHome, String type, String value, String token, String androidId, String actionBlog) {
+        Observable<GetHomeResult> homeObs = retrofit
+                .create(HomeService.class)
+                .getHomeResult(actionHome, type, value, token, androidId).subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
+
+        Observable<ResultBlogList> blogObs = retrofit
+                .create(BlogPresenter.BlogService.class).getBlogList(actionBlog,"0", token, androidId)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
+
+        Observable<HomeAndBlog> combined = Observable.zip(homeObs, blogObs, new Func2<GetHomeResult, ResultBlogList, HomeAndBlog>() {
+            @Override
+            public HomeAndBlog call(GetHomeResult jsonObject, ResultBlogList jsonElements) {
+                return new HomeAndBlog(jsonObject, jsonElements);
+            }
+        });
+
+        combined.subscribe(new Subscriber<HomeAndBlog>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e("HomeAndBlog", "error");
+            }
+
+            @Override
+            public void onNext(HomeAndBlog homeAndBlog) {
+                Log.e("HomeAndBlog", "success");
+                mView.showHomeAndBlog(homeAndBlog);
+            }
+        });
+    }
+
     //    action=home&type=city&value=309
     public interface HomeService {
         @GET("api-home.php")
@@ -216,8 +241,9 @@ public class HomePresenter extends HomeContract {
                 @Query("cid") String cid,
                 @Query("andId") String androidId,
                 @Query("type") String attractionType
-                );
-//        https://api.parsdid.com/iranplanner/app/api-event.php?action=list&lang=fa&id=342&type=city
+        );
+
+        //        https://api.parsdid.com/iranplanner/app/api-event.php?action=list&lang=fa&id=342&type=city
         @GET("api-event.php")
         Observable<ResultEvents> getEventMore(
                 @Query("action") String action,
@@ -225,16 +251,18 @@ public class HomePresenter extends HomeContract {
                 @Query("id") String id,
                 @Query("type") String type,
                 @Query("cid") String cid,
-                @Query("andId") String androidId        );
-//        https://api.parsdid.com/iranplanner/app/api-event.php?action=full&lang=fa&id=37750
+                @Query("andId") String androidId);
+
+        //        https://api.parsdid.com/iranplanner/app/api-event.php?action=full&lang=fa&id=37750
         @GET("api-event.php")
         Observable<ResultEvents> getEventDetail(
                 @Query("action") String action,
                 @Query("lang") String lang,
                 @Query("id") String id,
                 @Query("cid") String cid,
-                @Query("andId") String androidId        );
-//        https://api.parsdid.com/iranplanner/app/api-itinerary.php?action=full&id=28439&lang=fa
+                @Query("andId") String androidId);
+
+        //        https://api.parsdid.com/iranplanner/app/api-itinerary.php?action=full&id=28439&lang=fa
         @GET("api-itinerary.php")
         Observable<ResultItineraryList> getItineraryDetail(
                 @Query("action") String action,
@@ -242,5 +270,9 @@ public class HomePresenter extends HomeContract {
                 @Query("lang") String lang,
                 @Query("cid") String cid,
                 @Query("andId") String androidId);
+
+
     }
+
+
 }

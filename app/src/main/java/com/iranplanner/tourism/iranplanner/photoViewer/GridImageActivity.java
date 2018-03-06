@@ -39,6 +39,9 @@ public class GridImageActivity extends AppCompatActivity {
         List<String> thumnail = new ArrayList<>();
         customImages = new ArrayList<>();
         for (ResultImage resultImage : resultImages) {
+            if( resultImage.getImgTitle()==null){
+                resultImage.setImgTitle("");
+            }
             customImages.add(new CustomImage(resultImage.getImgUrl().toString(), resultImage.getImgTitle().toString()));
             thumnail.add(resultImage.getImgUrlThumbnail().toString());
         }

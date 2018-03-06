@@ -26,6 +26,7 @@ import butterknife.ButterKnife;
 
 import entity.GetHomeResult;
 import entity.RegisterReqSend;
+import entity.ResultBlogList;
 import entity.ResultRegister;
 import entity.ResultUserRegister;
 import tools.Util;
@@ -56,6 +57,7 @@ public class RegisterActivity extends StandardActivity implements RegisterContra
     GetHomeResult HomeResult;
     @Inject
     RegisterPresenter registerPresenter;
+    private ResultBlogList resultBlogList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,7 @@ public class RegisterActivity extends StandardActivity implements RegisterContra
         setContentView(R.layout.register);
         Bundle extras = getIntent().getExtras();
         HomeResult = (GetHomeResult) extras.getSerializable("HomeResult");
+        resultBlogList = (ResultBlogList) extras.getSerializable("ResultBlogList");
 
         //Load Background Image
         Glide.with(this).load(R.drawable.splash_bg_blur).centerCrop().override(600, 400).into((ImageView) findViewById(R.id.registerBgIv));
@@ -95,6 +98,8 @@ public class RegisterActivity extends StandardActivity implements RegisterContra
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.putExtra("HomeResult", HomeResult);
             intent.putExtra("viewpager_position", 0);
+            intent.putExtra("ResultBlogList",resultBlogList );
+
             startActivity(intent);
             finish();
 

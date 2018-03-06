@@ -7,6 +7,7 @@ import com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails.Attract
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelReservationListOfCity.ReservationContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListModule;
+import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogContract;
 import com.iranplanner.tourism.iranplanner.ui.fragment.itinerarySearch.MainSearchContract;
 import com.iranplanner.tourism.iranplanner.ui.fragment.itinerarySearch.MainSearchPresenter;
 

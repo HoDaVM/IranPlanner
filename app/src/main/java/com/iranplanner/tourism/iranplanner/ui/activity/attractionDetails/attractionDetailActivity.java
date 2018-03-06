@@ -94,11 +94,13 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import entity.GetHomeResult;
 import entity.InterestResult;
 import entity.ItineraryLodgingCity;
 import entity.RateParam;
 import entity.ResulAttraction;
 import entity.ResultAttractionList;
+import entity.ResultBlogList;
 import entity.ResultComment;
 import entity.ResultCommentList;
 import entity.ResultImageList;
@@ -219,41 +221,6 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
     }
 
-    private void overrideFont() {
-        // for Override font
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/IRANSansMobile.ttf")
-                .setFontAttrId(R.attr.fontPath)
-                .build()
-        );
-    }
-
-    private void setImageHolder() {
-        if (resulAttraction.getAttractionImgUrl() != null) {
-            String url = resulAttraction.getAttractionImgUrl();
-            Glide.with(getApplicationContext())
-                    .load(url)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .listener(new RequestListener<String, GlideDrawable>() {
-
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            //// TODO: 22/01/2017  get defeult picture
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            return false;
-                        }
-                    })
-                    .into(img);
-
-        } else {
-            Glide.clear(img);
-            img.setImageDrawable(null);
-        }
-    }
 
     private void setAttractionTypeImage() {
         if (resulAttraction.getAttractionItineraryTypeId() != null) {
@@ -307,7 +274,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     }
 
     private void setNearAttraction(List<ResultAttractionList> resultAttractions) {
-        NearAttractionAdapter attractionHomeAdapter = new NearAttractionAdapter(resultAttractions, getApplicationContext());
+        NearAttractionAdapter attractionHomeAdapter = new NearAttractionAdapter(resultAttractions, getApplicationContext(), null, null);
         LinearLayoutManager horizontalLayoutManagaer
                 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerBestAttraction.setLayoutManager(horizontalLayoutManagaer);
@@ -316,7 +283,6 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
             @Override
             public void onItemClick(View view, int position) {
                 attractionListMorePresenter.getAttractionDetailNear("full", resultAttractionList.get(position).getResulAttraction().getAttractionId(), "fa", "0", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
-
             }
         }));
 
@@ -330,7 +296,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         }
 
         findView();
-        overrideFont();
+        Util.overrideFont();
         getExtra();
         setNearAttraction(resultAttractionList);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -357,7 +323,9 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
             Util.convertMinuteToHour(totalMinute, textTimeDuration);
         }
 
-        setImageHolder();
+        if (resulAttraction.getAttractionImgUrl() != null) {
+            Util.setImageView(resulAttraction.getAttractionImgUrl(), getApplicationContext(), img, null);
+        }
         myData = resulAttraction.getAttractionBody();
         if (myData != null) {
             setWebViewContent(getShowMoreString(myData));
@@ -602,8 +570,8 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
             Intent intent = new Intent(attractionDetailActivity.this, GridImageActivity.class);
             intent.putExtra("ResultImagesList", (Serializable) resultImageList.getResultImages());
             startActivity(intent);
-        }else {
-            Toast.makeText(getApplicationContext(),"عکسی برای نمایش وجود ندارد",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "عکسی برای نمایش وجود ندارد", Toast.LENGTH_SHORT).show();
         }
     }
 

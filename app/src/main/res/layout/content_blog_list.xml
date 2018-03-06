@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_xxshort">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_view_itinerary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_xxshort"
+                android:padding="@dimen/margin_short">
+
+                <RelativeLayout
+                    android:id="@+id/holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <RelativeLayout
+                        android:id="@+id/imageTextAttractionHolder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true">
+
+                        <RelativeLayout
+                            android:id="@+id/imageTextAttractionHolder1"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/home_photo_height"
+                            android:layout_alignParentStart="true">
+
+                            <ProgressBar
+                                android:id="@+id/imageLoading"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_centerInParent="true"
+                                android:translationZ="1dp" />
+
+                            <ImageView
+                                android:id="@+id/imgBlog"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="@dimen/margin_xshort" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/relativeLayout4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_below="@+id/imageTextAttractionHolder1"
+                            android:layout_marginStart="@dimen/margin_short"
+                            android:layout_marginTop="@dimen/margin_xshort"
+                            android:gravity="start">
+
+                            <RelativeLayout
+                                android:id="@+id/relativeLayoutHolder"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentTop="true">
+
+                                <TextView
+                                    android:id="@+id/txtTitle"
+                                    style="@style/StandardTitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_marginBottom="@dimen/margin_short"
+                                    android:layout_marginLeft="@dimen/margin_standard"
+                                    android:layout_marginRight="@dimen/margin_standard"
+                                    android:text="تیتر" />
+
+                                <RelativeLayout
+                                    android:id="@+id/descriptionHolder"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/txtTitle"
+                                    android:paddingBottom="@dimen/margin_xshort">
+
+                                    <!--<TextView-->
+                                        <!--android:id="@+id/txtDescriptions"-->
+                                        <!--style="@style/SmallText"-->
+                                        <!--android:layout_width="match_parent"-->
+                                        <!--android:layout_height="wrap_content"-->
+                                        <!--android:layout_centerVertical="true"-->
+                                        <!--android:layout_toEndOf="@+id/imageCityName"-->
+                                        <!--android:maxLines="2"-->
+                                        <!--android:text="des" />-->
+                                    <com.coinpany.core.android.widget.CTouchyWebView
+                                        android:id="@+id/txtDescription"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:textAppearance="@style/StandardTextGrey"
+                                        android:layout_toEndOf="@+id/imageCityName"/>
+
+                                    <ImageView
+                                        android:id="@+id/imageCityName"
+                                        android:layout_width="25dp"
+                                        android:layout_height="25dp"
+                                        android:layout_alignParentStart="true"
+                                        android:layout_alignTop="@+id/txtDescription"
+                                        android:layout_marginLeft="5dp"
+                                        android:layout_marginRight="5dp"
+                                        android:scaleType="centerCrop"
+                                        android:src="@mipmap/ic_magazine_foreground" />
+
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/categoryHolder"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/descriptionHolder"
+                                    >
+
+                                    <TextView
+                                        android:id="@+id/txtCat"
+                                        style="@style/SmallText"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:layout_toEndOf="@+id/imageCat"
+                                        android:maxLines="1"
+                                        android:text="catdddddddddddddddd"
+                                        android:background="@drawable/button_corner_blue_stroke"
+                                        android:padding="@dimen/margin_short"
+                                        android:visibility="gone"
+                                        />
+
+                                    <ImageView
+                                        android:id="@+id/imageCat"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_alignParentStart="true"
+                                        android:layout_alignParentTop="true"
+                                        android:layout_marginLeft="5dp"
+                                        android:layout_marginRight="5dp"
+                                        android:scaleType="centerCrop"
+                                        android:src="@mipmap/ic_checked_blue"
+                                        android:visibility="gone"/>
+
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/dateHolder"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/categoryHolder"
+                                    android:paddingBottom="@dimen/margin_xshort">
+
+                                    <TextView
+                                        android:id="@+id/textDate"
+                                        style="@style/SmallText"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:layout_toEndOf="@+id/imgDate"
+                                        android:maxLines="1"
+                                        android:text="dacccccccccccte"
+                                        android:textSize="11sp"
+                                        android:textColor="@color/main_blue"
+                                        android:paddingStart="@dimen/margin_short"
+                                       />
+
+                                    <ImageView
+                                        android:id="@+id/imgDate"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_alignParentStart="true"
+                                        android:layout_alignParentTop="true"
+                                        android:layout_marginLeft="5dp"
+                                        android:layout_marginRight="5dp"
+                                        android:scaleType="centerCrop"
+                                        android:src="@mipmap/ic_duration_time_grey"
+                                        android:visibility="invisible"/>
+
+                                </RelativeLayout>
+                            </RelativeLayout>
+
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

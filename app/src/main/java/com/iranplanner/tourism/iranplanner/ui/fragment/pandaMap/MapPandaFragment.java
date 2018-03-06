@@ -107,6 +107,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import entity.GetHomeResult;
+import entity.HomeAndBlog;
 import entity.PandaMapList;
 
 import entity.ResulAttraction;
@@ -186,13 +187,13 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     TextView txtDraw;
     View viewTransparent;
     private TextInputLayout searchHolder;
-
+    List<String> titleArray;
     public static MapPandaFragment newInstance(OnVisibleShowCaseViewListener onVisibleShowCaseViewListener) {
         MapPandaFragment fragment = new MapPandaFragment();
         fragment.onVisibleShowCaseViewListener = onVisibleShowCaseViewListener;
         return fragment;
     }
-
+    ArrayAdapter<String> adapterResultSearch;
     List<Marker> markerShow;
     String chooseHotel, chooseAttraction, chooseEvent;
     boolean setDraw;
@@ -267,6 +268,12 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     private void cleanSearchText() {
         search.setText("");
+        try {
+            titleArray.clear();
+            adapterResultSearch.notifyDataSetChanged();
+        }catch (Exception e){
+
+        }
     }
 
     private void cleanMapAndRecyclerView() {
@@ -346,6 +353,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         chooseHotel = "1";
         chooseEvent = "1";
         autoCompleteProvince(searchRange, null);
+
     }
 
 
@@ -381,8 +389,8 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
         ReadJsonCityProvince readJsonProvince = new ReadJsonCityProvince();
         CityProvince = readJsonProvince.getListOfCityProvience(getContext());
-        MyFilterableAdapterCityProvince adapter = new MyFilterableAdapterCityProvince(getContext(), android.R.layout.simple_list_item_1, CityProvince);
-        textProvience.setAdapter(adapter);
+        MyFilterableAdapterCityProvince adapterCityProvince = new MyFilterableAdapterCityProvince(getContext(), android.R.layout.simple_list_item_1, CityProvince);
+        textProvience.setAdapter(adapterCityProvince);
         textProvience.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -788,6 +796,11 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     }
 
     @Override
+    public void showHomeAndBlog(HomeAndBlog homeAndBlog) {
+
+    }
+
+    @Override
     public void showAttractionDetail(ShowAtractionDetailMore showAttractionFull) {
         onItemclick = false;
         ResulAttraction resulAttraction = showAttractionFull.getResultAttractionFull().getResulAttraction();
@@ -864,14 +877,14 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     @Override
     public void showPandaSearch(ResultPandaMaps resultPandaMapSearch) {
         List<ResultPandaMap> re = resultPandaMapSearch.getResultPandaMap();
-        List<String> titleArray = new ArrayList<>();
+         titleArray = new ArrayList<>();
         for (ResultPandaMap resultPandaMap : re) {
             titleArray.add(resultPandaMap.getPoint().getTitle());
         }
-        ArrayAdapter<String> adapteo = new ArrayAdapter<String>(getContext(),
+         adapterResultSearch = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_dropdown_item_1line, titleArray.toArray(new String[0]));
-        search.setAdapter(adapteo);
-        adapteo.notifyDataSetChanged();
+        search.setAdapter(adapterResultSearch);
+        adapterResultSearch.notifyDataSetChanged();
     }
 
 
@@ -891,9 +904,14 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
         clearPolyLine();
         String lastValue = "";
         String newValue = s.getFilters().toString();
+
+
+
+
         if (!newValue.equals(lastValue) && s.length() >= 2) {
             getResultDraw();
         }
+
 
     }
 

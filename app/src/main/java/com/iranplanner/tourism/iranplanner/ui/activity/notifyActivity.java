@@ -39,7 +39,7 @@ public class notifyActivity extends AppCompatActivity {
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-
+                android.os.Debug.waitForDebugger();
                 // checking for type intent filter
                 if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
                     // gcm successfully registered

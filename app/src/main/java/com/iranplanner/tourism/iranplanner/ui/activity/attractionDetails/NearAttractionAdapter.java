@@ -7,12 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.iranplanner.tourism.iranplanner.R;
 
 import java.util.List;
 
+import entity.PostBlog;
+import entity.PostNode;
 import entity.ResultAttractionList;
 import tools.Util;
 
@@ -25,47 +28,89 @@ public class NearAttractionAdapter extends RecyclerView.Adapter<NearAttractionAd
 
     private Context context;
     private List<ResultAttractionList> resultAttractionList;
+    private List<PostNode> postNodes;
+    List<PostBlog> blogNodes;
 
-    public NearAttractionAdapter(List<ResultAttractionList> resultAttractionList, Context context) {
+    public NearAttractionAdapter(List<ResultAttractionList> resultAttractionList, Context context, List<PostNode> postNodes, List<PostBlog> blogNodes) {
         this.resultAttractionList = resultAttractionList;
         this.context = context;
+        this.postNodes = postNodes;
+        this.blogNodes = blogNodes;
     }
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_home_souvenir_localfood, parent, false);
+        View view;
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_home_souvenir_localfood, parent, false);
+        if (blogNodes != null) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_attractions_home, parent, false);
+        }
         return new Holder(view);
     }
 
     @Override
     public void onBindViewHolder(final Holder holder, final int listPosition) {
-        TextView textViewName = holder.textViewName;
-        TextView txtDistance = holder.txtDistance;
-        ImageView imageView = holder.imageViewIcon;
-        txtDistance.setVisibility(View.VISIBLE);
-        textViewName.setText(resultAttractionList.get(listPosition).getResulAttraction().getAttractionTitle());
-        txtDistance.setText(Util.persianNumbers(distanceConvert(resultAttractionList.get(listPosition).getResulAttraction().getAttractionDistance())));
+        // use content_attraction_home layout
+        if (blogNodes != null) {
+            TextView textViewName = holder.txtView;
+            ImageView image = holder.image;
+            ProgressBar imageLoading = holder.imageLoading;
+            textViewName.setLines(2);
+            textViewName.setText(blogNodes.get(listPosition).getTitle());
+            if (blogNodes.get(listPosition).getImgUrl() != null)
+                Util.setImageView(String.valueOf(blogNodes.get(listPosition).getImgUrl()), context, image, imageLoading);
+        }
 
-        if (resultAttractionList.get(listPosition).getResulAttraction().getAttractionImgUrl() != null)
-            Util.setImageView(String.valueOf(resultAttractionList.get(listPosition).getResulAttraction().getAttractionImgUrl()), context, imageView, null);
+//use content_home_souvenir_localfood
+        else {
+            TextView textViewName = holder.textViewName;
+            TextView txtDistance = holder.txtDistance;
+            ImageView imageView = holder.imageViewIcon;
+            txtDistance.setVisibility(View.VISIBLE);
+            if (postNodes != null) {
+                textViewName.setText(postNodes.get(listPosition).getTitle());
+                txtDistance.setText(postNodes.get(listPosition).getSubTitle());
+
+                if (postNodes.get(listPosition).getImgUrl() != null)
+                    Util.setImageView(String.valueOf(postNodes.get(listPosition).getImgUrl()), context, imageView, null);
+            } else if (resultAttractionList != null) {
+                textViewName.setText(resultAttractionList.get(listPosition).getResulAttraction().getAttractionTitle());
+                txtDistance.setText(Util.persianNumbers(distanceConvert(resultAttractionList.get(listPosition).getResulAttraction().getAttractionDistance())));
+
+                if (resultAttractionList.get(listPosition).getResulAttraction().getAttractionImgUrl() != null)
+                    Util.setImageView(String.valueOf(resultAttractionList.get(listPosition).getResulAttraction().getAttractionImgUrl()), context, imageView, null);
+            }
+        }
+
+
     }
 
     @Override
     public int getItemCount() {
-        return resultAttractionList.size();
+        if (postNodes != null) {
+            return postNodes.size();
+        } else if (resultAttractionList != null) {
+            return resultAttractionList.size();
+        } else {
+            return blogNodes.size();
+        }
     }
 
     public static class Holder extends RecyclerView.ViewHolder {
 
         TextView textViewName;
-        TextView txtDistance;
-        ImageView imageViewIcon;
+        TextView txtDistance, txtView;
+        ImageView imageViewIcon, image;
+        ProgressBar imageLoading;
 
         public Holder(View itemView) {
             super(itemView);
             this.textViewName = (TextView) itemView.findViewById(R.id.txtView);
             this.txtDistance = (TextView) itemView.findViewById(R.id.txtDistance);
             this.imageViewIcon = (ImageView) itemView.findViewById(R.id.image);
+            this.txtView = itemView.findViewById(R.id.txtView);
+            this.image = itemView.findViewById(R.id.image);
+            this.imageLoading = itemView.findViewById(R.id.imageLoading);
         }
     }
 

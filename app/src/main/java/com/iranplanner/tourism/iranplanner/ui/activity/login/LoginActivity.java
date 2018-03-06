@@ -38,6 +38,7 @@ import entity.GetHomeResult;
 import entity.GoogleLoginReqSend;
 import entity.LoginReqSend;
 import entity.LoginResult;
+import entity.ResultBlogList;
 import entity.ResultUserLogin;
 import tools.Util;
 
@@ -53,6 +54,7 @@ public class LoginActivity extends StandardActivity implements GoogleApiClient.C
     private int counter = 0;
     private boolean block = false;
     private GetHomeResult HomeResult;
+    private ResultBlogList resultBlogList;
 
     //Google SignIn Constants
     private static final String TAG = "GoogleActivity";
@@ -71,6 +73,7 @@ public class LoginActivity extends StandardActivity implements GoogleApiClient.C
 
         Bundle extras = getIntent().getExtras();
         HomeResult = (GetHomeResult) extras.getSerializable("HomeResult");
+        resultBlogList = (ResultBlogList) extras.getSerializable("ResultBlogList");
 
         ButterKnife.bind(this);
         if (Util.getUseRIdFromShareprefrence(getApplicationContext()) == null || Util.getUseRIdFromShareprefrence(getApplicationContext()) == "") {
@@ -165,12 +168,14 @@ public class LoginActivity extends StandardActivity implements GoogleApiClient.C
                 public void onClick(View v) {
                     Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
                     intent.putExtra("HomeResult", HomeResult);
+                    intent.putExtra("ResultBlogList",resultBlogList );
                     startActivity(intent);
                 }
             });
         } else {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("HomeResult", HomeResult);
+            intent.putExtra("ResultBlogList",resultBlogList );
             finish();
             startActivity(intent);
         }
@@ -241,6 +246,7 @@ public class LoginActivity extends StandardActivity implements GoogleApiClient.C
         tvLoginCommand.setVisibility(View.GONE);
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("HomeResult", HomeResult);
+        intent.putExtra("ResultBlogList",resultBlogList );
         startActivity(intent);
         finish();
     }

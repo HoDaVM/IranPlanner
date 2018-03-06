@@ -46,6 +46,7 @@ public class NotificationUtils {
     }
 
     public void showNotificationMessage(String title, String message, String timeStamp, Intent intent) {
+//   1
         showNotificationMessage(title, message, timeStamp, intent, null);
     }
 
@@ -56,16 +57,12 @@ public class NotificationUtils {
 
 
         // notification icon
-        final int icon = R.mipmap.ic_logo_foreground;
+        final int icon = R.mipmap.ic_logo_notification_foreground;
 
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        final PendingIntent resultPendingIntent =
-                PendingIntent.getActivity(
-                        mContext,
-                        0,
-                        intent,
-                        PendingIntent.FLAG_CANCEL_CURRENT
-                );
+
+        final PendingIntent resultPendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
 
         final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                 mContext);
@@ -78,7 +75,7 @@ public class NotificationUtils {
             if (imageUrl != null && imageUrl.length() > 4 && Patterns.WEB_URL.matcher(imageUrl).matches()) {
 
                 Bitmap bitmap = getBitmapFromURL(imageUrl);
-
+//6
                 if (bitmap != null) {
                     showBigNotification(bitmap, mBuilder, icon, title, message, timeStamp, resultPendingIntent, alarmSound);
                 } else {
@@ -93,58 +90,59 @@ public class NotificationUtils {
 
 
     private void showSmallNotification(NotificationCompat.Builder mBuilder, int icon, String title, String message, String timeStamp, PendingIntent resultPendingIntent, Uri alarmSound) {
-try {
-    NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+        try {
+            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
-    inboxStyle.addLine(message);
+            inboxStyle.addLine(message);
 
-    Notification notification;
-    notification = mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
-            .setAutoCancel(true)
-            .setContentTitle(title)
-            .setContentIntent(resultPendingIntent)
-            .setSound(alarmSound)
-            .setStyle(inboxStyle)
-            .setWhen(System.currentTimeMillis())
+            Notification notification;
+            notification = mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
+                    .setAutoCancel(true)
+                    .setContentTitle(title)
+                    .setContentIntent(resultPendingIntent)
+//2
+        .setSound(alarmSound)
+                    .setStyle(inboxStyle)
+                    .setWhen(System.currentTimeMillis())
 //                .setWhen(getTimeMilliSec(timeStamp))
-            .setSmallIcon(R.mipmap.ic_logo_foreground)
-            .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
-            .setContentText(message)
-            .build();
+                    .setSmallIcon(R.mipmap.ic_logo_notification_foreground)
+                    .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
+                    .setContentText(message)
+                    .build();
+            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(Config.NOTIFICATION_ID, notification);
+        } catch (Exception e) {
 
-    NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-    notificationManager.notify(Config.NOTIFICATION_ID, notification);
-}catch (Exception e){
-
-}
+        }
 
     }
 
     private void showBigNotification(Bitmap bitmap, NotificationCompat.Builder mBuilder, int icon, String title, String message, String timeStamp, PendingIntent resultPendingIntent, Uri alarmSound) {
-      try {
-          NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
-          bigPictureStyle.setBigContentTitle(title);
-          bigPictureStyle.setSummaryText(Html.fromHtml(message).toString());
-          bigPictureStyle.bigPicture(bitmap);
-          Notification notification;
-          notification = mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
-                  .setAutoCancel(true)
-                  .setContentTitle(title)
-                  .setContentIntent(resultPendingIntent)
-                  .setSound(alarmSound)
-                  .setStyle(bigPictureStyle)
-                  .setWhen(System.currentTimeMillis())
+//    7
+  try {
+            NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
+            bigPictureStyle.setBigContentTitle(title);
+            bigPictureStyle.setSummaryText(Html.fromHtml(message).toString());
+            bigPictureStyle.bigPicture(bitmap);
+            Notification notification;
+            notification = mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
+                    .setAutoCancel(true)
+                    .setContentTitle(title)
+                    .setContentIntent(resultPendingIntent)
+                    .setSound(alarmSound)
+                    .setStyle(bigPictureStyle)
+                    .setWhen(System.currentTimeMillis())
 //                .setWhen(getTimeMilliSec(timeStamp))
-                  .setSmallIcon(R.mipmap.ic_logo_foreground)
-                  .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
-                  .setContentText(message)
-                  .build();
+                    .setSmallIcon(R.mipmap.ic_logo_foreground)
+                    .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
+                    .setContentText(message)
+                    .build();
 
-          NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-          notificationManager.notify(Config.NOTIFICATION_ID_BIG_IMAGE, notification);
-      }catch (Exception e){
+            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(Config.NOTIFICATION_ID_BIG_IMAGE, notification);
+        } catch (Exception e) {
 
-      }
+        }
 
     }
 
@@ -212,7 +210,7 @@ try {
         try {
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancelAll();
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 

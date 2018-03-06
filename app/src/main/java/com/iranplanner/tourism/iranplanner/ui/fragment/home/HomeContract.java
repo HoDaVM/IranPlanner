@@ -3,6 +3,7 @@ package com.iranplanner.tourism.iranplanner.ui.fragment.home;
 import com.iranplanner.tourism.iranplanner.ui.presenter.Presenter;
 
 import entity.GetHomeResult;
+import entity.HomeAndBlog;
 import entity.ResultEvents;
 import entity.ResultItineraryList;
 
@@ -30,6 +31,8 @@ public abstract class HomeContract extends Presenter<HomeContract.View> {
         void dismissProgress();
 
         void ShowItineryDetail(ResultItineraryList resultItineraryList);
+
+        void showHomeAndBlog(HomeAndBlog homeAndBlog);
     }
 
 

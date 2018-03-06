@@ -50,6 +50,14 @@
                         android:scaleType="centerCrop"
                         android:src="@mipmap/ic_find_on_map_foreground"
                         android:visibility="gone"
+                       /> <ImageView
+                        android:id="@+id/shareImg"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:padding="@dimen/margin_xxshort"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/ic_share_foreground"
+                        android:visibility="gone"
                        />
 
                     <TextView

@@ -1,0 +1,138 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/Holder"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layoutDirection="rtl"
+    tools:context=".ui.fragment.showAttractionList.ShowAttractionListFragment">
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/blogListRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/view"
+        android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/main_blue"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+    </android.support.v7.widget.Toolbar>
+
+    <!--Date Information Layout-->
+
+    <LinearLayout
+        android:id="@+id/selectHoldetTop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <RelativeLayout
+            android:id="@+id/TypeAttractionHolder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:translationZ="1dp">
+
+            <RelativeLayout
+                android:id="@+id/holderDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_short">
+
+                <TextView
+                    android:id="@+id/txtDateCheckIn"
+                    style="@style/StandardTextGrey"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/margin_short"
+                    android:layout_toLeftOf="@+id/imageTypeHote"
+                    android:text="تاریخ" />
+
+                <ImageView
+                    android:id="@+id/imageTypeHote"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/calendar" />
+
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/greySemilight" />
+
+        <RelativeLayout
+            android:id="@+id/TypeDurationHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:translationZ="1dp">
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/selectHoldetTop"
+        android:background="@color/greySemilight"
+        android:id="@+id/view" />
+
+
+    <!--This is the Shade View-->
+
+
+
+    <!--This Section is Used for the Bottom Panel -->
+    <LinearLayout
+        android:id="@+id/bottomPanelView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/buttonBottom"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:layoutDirection="rtl"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/filterToggleView"
+            android:layout_width="100dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/button_corner_blue"
+            android:clickable="true"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_folded_paper"
+                android:tint="@color/blue"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="فیلتر"
+                android:textColor="@color/white_"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+    <!--End of Bottom Panel Section-->
+
+
+</RelativeLayout>

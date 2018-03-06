@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.TextPaint;
 import android.util.Log;
@@ -40,12 +41,21 @@ import com.iranplanner.tourism.iranplanner.di.model.ForceUpdateChecker;
 import com.iranplanner.tourism.iranplanner.showcaseview.CustomShowcaseView;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
 import com.iranplanner.tourism.iranplanner.ui.fragment.OnVisibleShowCaseViewListener;
+import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogContract;
+import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogModule;
+import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogPresenter;
+import com.iranplanner.tourism.iranplanner.ui.fragment.blog.DaggerBlogComponent;
+import com.iranplanner.tourism.iranplanner.ui.fragment.home.HomeFragment;
 import com.iranplanner.tourism.iranplanner.ui.tutorial.TutorialActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import entity.GetHomeResult;
+import entity.ResultBlogList;
+import entity.ResultPostList;
 import server.Config;
 import tools.Constants;
 import tools.Util;
@@ -54,6 +64,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends StandardActivity implements ForceUpdateChecker.OnUpdateNeededListener, OnVisibleShowCaseViewListener {
     GetHomeResult homeResult;
+    private ResultBlogList resultBlogList;
+    List<ResultPostList> resultPostList;
     CustomShowcaseView customShowcaseView;
     private int counter = 0;
     ShowcaseView showcaseView, showcaseViewPanda;
@@ -63,7 +75,8 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
     private NonSwipeableViewPager viewPager;
     private TabPagerAdapter pagerAdapter;
     TabLayout mainTabLayout;
-
+    @Inject
+    BlogPresenter blogPresenter;
     //runtime permission field vars
     private static final int ACCESS_FINE_LOCATION_PERMISSION_CONSTANT = 100;
     private static final int REQUEST_PERMISSION_SETTING = 101;
@@ -149,12 +162,36 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
         }
     }
 
+    @Override
+    public void onNewIntent(Intent newIntent) {
+        this.setIntent(newIntent);
+
+        // Now getIntent() returns the updated Intent
+        String isNextWeek = getIntent().getStringExtra("tests");
+
+        String ntype = getIntent().getStringExtra("ntype");
+        String id = getIntent().getStringExtra("id");
+        if (ntype.equals("attraction")) {
+            viewPager.setCurrentItem(0, true);
+//            Fragment fragment = (Fragment) pagerAdapter.instantiateItem(viewPager, 0);
+
+
+        }
+        else if(ntype.equals("blog")){
+            viewPager.setCurrentItem(4, true);
+        }
+
+    }
+
     private void init() {
 
         Bundle extras = getIntent().getExtras();
         homeResult = (GetHomeResult) extras.getSerializable("HomeResult");
+        resultBlogList = (ResultBlogList) extras.getSerializable("ResultBlogList");
+        resultPostList = resultBlogList.getResultPostList();
+
         viewPager = (NonSwipeableViewPager) findViewById(R.id.main_view_pager);
-        pagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), this, homeResult, this);
+        pagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), this, homeResult, resultPostList, this);
         if (viewPager != null)
             viewPager.setAdapter(pagerAdapter);
 
@@ -171,7 +208,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
         }
 
         ForceUpdateChecker.with(this).onUpdateNeeded(this).check();
-        viewPager.setOffscreenPageLimit(4);
+        viewPager.setOffscreenPageLimit(5);
 
         permissionStatus = getSharedPreferences("permissionStatus", MODE_PRIVATE);
         mainTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -193,7 +230,8 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
                             }
                         }
                     }, 250);
-                } else */if (tab.getPosition() == 3) {
+                } else */
+                if (tab.getPosition() == 3) {
                     if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_PANDAFRAGMENT, "false", false, getApplicationContext()))) {
                         mainTabLayout.setVisibility(View.INVISIBLE);
                     }
@@ -566,6 +604,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
+
     private void setShowCaseItinerary(final List<View> views) {
         Button customButton = (Button) this.getLayoutInflater().inflate(R.layout.showcase_custom_button, null);
         CustomShowcaseView showcaseDrawer = new CustomShowcaseView(getResources());

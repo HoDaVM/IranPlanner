@@ -49,6 +49,7 @@ import entity.ResultItinerary;
 import entity.ResultItineraryAttraction;
 import entity.ResultLodging;
 import entity.ResultParamUser;
+import entity.ResultPostFull;
 import entity.ResultWidgetFull;
 import tools.Util;
 
@@ -72,6 +73,7 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
     RecyclerView recyclerView;
     ResulAttraction attractionData;
     ResultLodging lodgingData;
+    ResultPostFull resultPostFull;
     String fromWhere;
     DaggerCommentComponent.Builder builder;
     @Inject
@@ -122,16 +124,23 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
                 nextOffset = (String) extras.getSerializable("nextOffset");
                 commentTitle.setText(lodgingData.getLodgingName());
             }
+        } else if (fromWhere.equals("Blog")) {
+            resultPostFull = (ResultPostFull) extras.getSerializable("resultPostFull");
+
+            if (resultPostFull != null) {
+                nextOffset = (String) extras.getSerializable("nextOffset");
+                commentTitle.setText(resultPostFull.getPostTitle());
+            }
         }
         cParent = "";
         cParent = extras.getString("cParent");
-            adapter = new CommentListAdapter(CommentListActivity.this, this, resultComments, getApplicationContext(), R.layout.fragment_comment_item, cParent);
-            recyclerView.setAdapter(adapter);
-            mLayoutManager = new LinearLayoutManager(getApplicationContext());
-            recyclerView.setLayoutManager(mLayoutManager);
-            if (nextOffset != null && Integer.valueOf(nextOffset) > 1) {
-                recyclerView.smoothScrollToPosition(Integer.valueOf(nextOffset) - 1);
-            }
+        adapter = new CommentListAdapter(CommentListActivity.this, this, resultComments, getApplicationContext(), R.layout.fragment_comment_item, cParent);
+        recyclerView.setAdapter(adapter);
+        mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        if (nextOffset != null && Integer.valueOf(nextOffset) > 1) {
+            recyclerView.smoothScrollToPosition(Integer.valueOf(nextOffset) - 1);
+        }
         recyclerView.addOnItemTouchListener(new RecyclerItemOnClickListener(getApplicationContext(), new RecyclerItemOnClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, final int position) {
@@ -156,8 +165,10 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
 
                         } else if (fromWhere.equals("Attraction")) {
                             intent.putExtra("attractionData", (Serializable) attractionData);
-                        }else if (fromWhere.equals("Lodging")) {
+                        } else if (fromWhere.equals("Lodging")) {
                             intent.putExtra("lodgingData", (Serializable) lodgingData);
+                        } else if (fromWhere.equals("Blog")) {
+                            intent.putExtra("resultPostFull", (Serializable) resultPostFull);
                         }
 
                         startActivityForResult(intent, STATIC_INTEGER_VALUE_COMMENT);
@@ -188,8 +199,10 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
                                                              commentPresenter.getCommentList("pagecomments", itineraryData.getItineraryId(), "itinerary", nextOffset);
                                                          } else if (fromWhere.equals("Attraction")) {
                                                              commentPresenter.getCommentList("pagecomments", attractionData.getAttractionId(), "attraction", nextOffset);
-                                                         }else if (fromWhere.equals("Lodging")) {
-                                                             commentPresenter.getCommentList("pagecomments", attractionData.getAttractionId(), "lodging", nextOffset);
+                                                         } else if (fromWhere.equals("Lodging")) {
+                                                             commentPresenter.getCommentList("pagecomments", lodgingData.getLodgingId(), "lodging", nextOffset);
+                                                         } else if (fromWhere.equals("Blog")) {
+                                                             commentPresenter.getCommentList("pagecomments", resultPostFull.getPostId(), "blog", nextOffset);
                                                          }
 
 //                                                         }
@@ -244,8 +257,10 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
                                                           commentPresenter.callInsertComment(new CommentSend(userId, "1", "itinerary", itineraryData.getItineraryId(), "comment", String.valueOf(txtAddComment.getText()), cParent, ""), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                                                       } else if (fromWhere.equals("Attraction")) {
                                                           commentPresenter.callInsertComment(new CommentSend(userId, "1", "attraction", attractionData.getAttractionId(), "comment", String.valueOf(txtAddComment.getText()), cParent, ""), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
-                                                      }else if (fromWhere.equals("Lodging")) {
+                                                      } else if (fromWhere.equals("Lodging")) {
                                                           commentPresenter.callInsertComment(new CommentSend(userId, "1", "lodging", lodgingData.getLodgingId(), "comment", String.valueOf(txtAddComment.getText()), cParent, ""), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                                                      } else if (fromWhere.equals("Blog")) {
+                                                          commentPresenter.callInsertComment(new CommentSend(userId, "1", "blog", resultPostFull.getPostId(), "comment", String.valueOf(txtAddComment.getText()), cParent, ""), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                                                       }
                                                       txtAddComment.setText("");
                                                   } else if (userId.isEmpty()) {

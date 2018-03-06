@@ -68,7 +68,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.mainActivity.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".ui.activity.reqestHotelStatus.HotelReservationStatusActivity"
             android:screenOrientation="portrait" />
@@ -143,6 +145,9 @@
         <activity
             android:name=".ui.activity.ActivityReservationRegisterRoom"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.fragment.blog.BlogDetailActivity"
+            android:screenOrientation="portrait" />
         <!-- Firebase Notifications -->
         <service android:name="server.MyFirebaseMessagingService">
             <intent-filter>
@@ -188,18 +193,18 @@
         <meta-data
             android:name="AdadBannersEnabledOnStart"
             android:value="true" />
-       <!-- <meta-data
+        <meta-data
             android:name="AdadTestMode"
-            android:value="true" />-->
+            android:value="false" />
         <meta-data
             android:name="AdadShowRemoveAds"
             android:value="true" />
         <meta-data
             android:name="AdadLogging"
             android:value="true" />
-        <!--<meta-data-->
-            <!--android:name="AdadLoggingLevel"-->
-            <!--android:value="debug" />-->
+        <meta-data
+            android:name="AdadLoggingLevel"
+            android:value="debug" />
 
     </application>
 

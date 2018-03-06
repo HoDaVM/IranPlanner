@@ -12,38 +12,48 @@ import android.widget.TextView;
 
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.ui.fragment.OnVisibleShowCaseViewListener;
+import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogFragment;
 import com.iranplanner.tourism.iranplanner.ui.fragment.pandaMap.MapPandaFragment;
 import com.iranplanner.tourism.iranplanner.ui.fragment.home.HomeFragment;
 import com.iranplanner.tourism.iranplanner.ui.fragment.itinerarySearch.MainSearchFragment;
 import com.iranplanner.tourism.iranplanner.standard.StandardFragment;
 import com.iranplanner.tourism.iranplanner.ui.fragment.myaccount.SettingFragment;
 
+import java.util.List;
+
 import entity.GetHomeResult;
+import entity.ResultBlogList;
+import entity.ResultPostList;
 
 /**
  * Created by Hoda on 10/01/2017.
  */
 public class TabPagerAdapter extends FragmentPagerAdapter {
     private Context context;
-    public final int PAGE_COUNT = 4;
+    public final int PAGE_COUNT = 5;
     GetHomeResult homeResult;
+    List<ResultPostList> resultPostList;
     OnVisibleShowCaseViewListener onVisibleShowCaseViewListener;
     private int[] mTabsIcons = {
             R.mipmap.ic_home,
             R.mipmap.ic_profile_grey,
             R.mipmap.ic_barnamesafar,
-            R.mipmap.ic_map_safar
+            R.mipmap.ic_map_safar,
+            R.mipmap.ic_magazine_foreground
+
 
     };
     private StandardFragment currentTab;
     //    StandardFragment
-    private final String[] mTabsTitle = {"خانه","پروفایل","برنامه سفر","نقشه"};
+    private final String[] mTabsTitle = {"خانه","پروفایل","سفرساز","نقشه","مجله"};
 
-    public TabPagerAdapter(FragmentManager fm, Context context, GetHomeResult homeResult,OnVisibleShowCaseViewListener onVisibleShowCaseViewListener) {
+    public TabPagerAdapter(FragmentManager fm, Context context, GetHomeResult homeResult, List<ResultPostList> resultPostList,
+                           OnVisibleShowCaseViewListener onVisibleShowCaseViewListener) {
         super(fm);
         this.context = context;
         this.homeResult = homeResult;
         this.onVisibleShowCaseViewListener=onVisibleShowCaseViewListener;
+        this.resultPostList=resultPostList;
     }
 
     public View getTabView(int position) {
@@ -80,6 +90,9 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
                 return currentTab;
             case 3:
                 currentTab = MapPandaFragment.newInstance(onVisibleShowCaseViewListener);
+                return currentTab;
+            case 4:
+                currentTab = BlogFragment.newInstance(onVisibleShowCaseViewListener, resultPostList);
                 return currentTab;
         }
         return null;

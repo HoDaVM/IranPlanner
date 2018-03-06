@@ -64,38 +64,14 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
     @Override
     public void onBindViewHolder(final CommentListAdapter.ViewHolder viewHolder, int i) {
-                    Typeface tf = Typeface.createFromAsset(context.getAssets(),
-                    "fonts/IRANSansMobile.ttf");
+        Typeface tf = Typeface.createFromAsset(context.getAssets(),
+                "fonts/IRANSansMobile.ttf");
         viewHolder.commentText.setText(resultComments.get(i).getCommentBody());
         viewHolder.commentSenderName.setText(resultComments.get(i).getUserFname());
-        viewHolder.commentSentTime.setText(Utils.timeElapsedFromDate(getDate(resultComments.get(i).getCommentDate())));
+        viewHolder.commentSentTime.setText(Util.persianNumbers(Utils.timeElapsedFromDate(getDate(resultComments.get(i).getCommentDate()))));
         if (resultComments.get(i).getUserPhoto() != null) {
-            String url = resultComments.get(i).getUserPhoto();
-            Glide.with(context)
-                    .load(url)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .listener(new RequestListener<String, GlideDrawable>() {
-
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            //// TODO: 22/01/2017  get defeult picture
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            return false;
-                        }
-                    })
-                    .into(viewHolder.commentSenderPic);
-
-        } else {
-            Glide.clear(viewHolder.commentSenderPic);
-            viewHolder.commentSenderPic.setImageDrawable(null);
+            Util.setImageView(resultComments.get(i).getUserPhoto(), context, viewHolder.commentSenderPic, null);
         }
-
-//        viewHolder.replyBtn.setVisibility(item.commentConfig.isReplyEnable() ? View.VISIBLE : View.GONE);
-//        mediaController.loadImage(holder1.commentSenderPic, item.User.ProfilePic, R.drawable.samplepic_2);
 
 
         if (resultComments.get(i).getCommentReply().size() > 0) {

@@ -27,13 +27,12 @@
                 android:singleLine="true"
                 android:text="تنظیم سایز تصویر "
                 android:textColor="#FFF"
-                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <ImageButton
                 android:id="@+id/doneBtn"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 style="@style/CSelectableItemBackground"
@@ -44,8 +43,8 @@
 
             <ImageButton
                 android:id="@+id/cancelBtn"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 style="@style/CSelectableItemBackground"

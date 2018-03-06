@@ -30,6 +30,10 @@ import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.Attract
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelReservationListOfCity.ReservationContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.login.LoginActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListPresenter;
+import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogContract;
+import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogModule;
+import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogPresenter;
+import com.iranplanner.tourism.iranplanner.ui.fragment.blog.DaggerBlogComponent;
 import com.iranplanner.tourism.iranplanner.ui.fragment.home.DaggerHomeComponent;
 import com.iranplanner.tourism.iranplanner.ui.fragment.home.HomeContract;
 import com.iranplanner.tourism.iranplanner.ui.fragment.home.HomeModule;
@@ -39,6 +43,8 @@ import com.iranplanner.tourism.iranplanner.ui.fragment.itinerarySearch.MainSearc
 import javax.inject.Inject;
 
 import entity.GetHomeResult;
+import entity.HomeAndBlog;
+import entity.ResultBlogList;
 import entity.ResultCommentList;
 import entity.ResultEvent;
 import entity.ResultEvents;
@@ -58,7 +64,8 @@ import server.Config;
 import tools.CustomMessage;
 import tools.Util;
 
-public class SplashActivity extends AppCompatActivity implements MainSearchPresenter.View,HomeContract.View, ReservationContract.View, AttractionListMorePresenter.View, ReservationHotelListPresenter.View {
+public class SplashActivity extends AppCompatActivity implements MainSearchPresenter.View, HomeContract.View, ReservationContract.View,
+        AttractionListMorePresenter.View, ReservationHotelListPresenter.View {
     Thread splashTread;
     @Inject
     HomePresenter homePresenter;
@@ -156,21 +163,17 @@ public class SplashActivity extends AppCompatActivity implements MainSearchPrese
     }
 
     private void getHomeResult(String destination, String selectId) {
-
-        DaggerHomeComponent.builder().netComponent(((App) getApplicationContext().getApplicationContext()).getNetComponent())
-                .homeModule(new HomeModule(this, this, this, this,this))
-                .build().inject(this);
+        DaggerHomeComponent.builder().netComponent(((App) getApplicationContext()).getNetComponent()).homeModule(new HomeModule(this, this, this, this, this)).build().inject(this);
         String cid = Util.getTokenFromSharedPreferences(getApplicationContext());
         String andId = Util.getAndroidIdFromSharedPreferences(getApplicationContext());
-        homePresenter.getHome("home", destination, selectId, cid, andId);
+        homePresenter.getHomeAndBlog("home", destination, selectId, cid, andId, "list");
     }
 
+    GetHomeResult homeResult;
+
     @Override
-    public void ShowHomeResult(final GetHomeResult GetHomeResult) {
-        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        intent.putExtra("HomeResult", GetHomeResult);
-        startActivity(intent);
+    public void ShowHomeResult(final GetHomeResult homeResult) {
+        this.homeResult = homeResult;
     }
 
     public class UpdateReceiver extends BroadcastReceiver {
@@ -241,7 +244,7 @@ public class SplashActivity extends AppCompatActivity implements MainSearchPrese
 
     }
 
-    private void updateCId(){
+    private void updateCId() {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
@@ -325,6 +328,15 @@ public class SplashActivity extends AppCompatActivity implements MainSearchPrese
 
     }
 
+    @Override
+    public void showHomeAndBlog(HomeAndBlog homeAndBlog) {
+        this.homeResult = homeAndBlog.getHomeResult();
+        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.putExtra("HomeResult", homeResult);
+        intent.putExtra("ResultBlogList", homeAndBlog.getBlogList());
+        startActivity(intent);
+    }
 
 
     @Override

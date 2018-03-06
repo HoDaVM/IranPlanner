@@ -62,13 +62,21 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import server.Config;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
  * Created by Hoda on 10/01/2017.
  */
 public class Util {
 
-
+    public static void overrideFont() {
+        // for Override font
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/IRANSansMobile.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
+    }
     public static File createImageFiles() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
