@@ -85,11 +85,11 @@ public class ReseveDateListAdapter extends RecyclerView.Adapter<ReseveDateListAd
     @Override
     public void onBindViewHolder(final ReseveDateListAdapter.ViewHolder viewHolder, int i) {
 
-        viewHolder.txtDurationLodgingCity.setText(String.valueOf(duration.get(i) ));
-        viewHolder.txtDurationDateLodgingCity.setText(String.valueOf( " شب از تاریخ " + Utils.getShortSimpleDate(stayNights.get(i))));
+        viewHolder.txtDurationLodgingCity.setText(String.valueOf(duration.get(i)));
+        viewHolder.txtDurationDateLodgingCity.setText(String.valueOf(" شب از تاریخ " + Utils.getShortSimpleDate(stayNights.get(i))));
         viewHolder.txtProvinceName.setText(listCitys.get(i).getCityProvinceName());
         viewHolder.txtCityName.setText(listCitys.get(i).getCityTitle());
-        viewHolder.lodgingCityName.setText(listCitys.get(i).getCityTitle());
+        viewHolder.lodgingCityName.setText("مراکز اقامتی در "+listCitys.get(i).getCityTitle());
 
         if (urls != null) {
             String url = urls.get(i);
@@ -113,8 +113,7 @@ public class ReseveDateListAdapter extends RecyclerView.Adapter<ReseveDateListAd
                             return false;
                         }
                     })
-                    .into(viewHolder.imgItineraryListMore)
-            ;
+                    .into(viewHolder.imgItineraryListMore);
         } else {
             Glide.clear(viewHolder.imgItineraryListMore);
             viewHolder.imgItineraryListMore.setImageDrawable(null);
@@ -133,7 +132,7 @@ public class ReseveDateListAdapter extends RecyclerView.Adapter<ReseveDateListAd
 
         private ImageView imgItineraryListMore;
         private ImageView ReservationBtn;
-        private TextView txtDurationLodgingCity, txtProvinceName, txtCityName, lodgingCityName,txtDurationDateLodgingCity;
+        private TextView txtDurationLodgingCity, txtProvinceName, txtCityName, lodgingCityName, txtDurationDateLodgingCity;
         private ProgressBar imageLoading;
 
 

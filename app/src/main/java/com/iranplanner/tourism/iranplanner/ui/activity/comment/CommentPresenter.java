@@ -21,9 +21,12 @@ import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails.AttractionDetailPresenter;
 import com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails.attractionDetailActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.login.LoginActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.login.OnLoginFinishListener;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.inject.Inject;
 
@@ -48,7 +51,7 @@ import tools.Util;
 /**
  * Created by Hoda on 11-May-16.
  */
-public class CommentPresenter extends CommentContract {
+public class CommentPresenter extends CommentContract implements Serializable {
 
     public Retrofit retrofit;
     View mView;

@@ -1,5 +1,8 @@
 package com.iranplanner.tourism.iranplanner.ui.activity.login;
 
+import android.app.Activity;
+
+import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentPresenter;
 import com.iranplanner.tourism.iranplanner.ui.presenter.Presenter;
 
 import entity.LoginReqSend;
@@ -32,6 +35,7 @@ public abstract class LoginContract extends Presenter<LoginContract.View> {
 
     public abstract void getLoginPostResul(LoginReqSend request, String cid,
                                            String androidId);
-    public abstract void getGoogleLoginPostResult(GoogleLoginReqSend GoogleLoginReqSend, String cid,
+    public abstract void getGoogleLoginPostResult(Activity activity,
+                                                  OnLoginFinishListener onLoginFinishListener, GoogleLoginReqSend GoogleLoginReqSend, String cid,
                                                   String androidId);
 }

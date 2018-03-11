@@ -1,16 +1,9 @@
 package com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails;
 
-import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.app.Service;
-import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -22,24 +15,18 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.CursorLoader;
-import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,11 +35,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.coinpany.core.android.widget.CTouchyWebView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -63,7 +45,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.iranplanner.tourism.iranplanner.BuildConfig;
 import com.iranplanner.tourism.iranplanner.photoViewer.GridImageActivity;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.RecyclerItemOnClickListener;
@@ -72,6 +53,9 @@ import com.iranplanner.tourism.iranplanner.ui.activity.MapFullActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.OnCutImageListener;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentPresenter;
+import com.iranplanner.tourism.iranplanner.ui.activity.login.LoginActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.login.LoginPresenter;
+import com.iranplanner.tourism.iranplanner.ui.activity.login.OnLoginFinishListener;
 import com.iranplanner.tourism.iranplanner.ui.camera.GetPhoto;
 import com.iranplanner.tourism.iranplanner.ui.camera.PhotoCropFragment;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
@@ -79,13 +63,9 @@ import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.Attract
 import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.AttractionListMorePresenter;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentListActivity;
 import com.iranplanner.tourism.iranplanner.ui.camera.PhotoUtils;
-import com.nineoldandroids.animation.AnimatorSet;
-import com.nineoldandroids.animation.ObjectAnimator;
 
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,13 +74,11 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import entity.GetHomeResult;
 import entity.InterestResult;
 import entity.ItineraryLodgingCity;
 import entity.RateParam;
 import entity.ResulAttraction;
 import entity.ResultAttractionList;
-import entity.ResultBlogList;
 import entity.ResultComment;
 import entity.ResultCommentList;
 import entity.ResultImageList;
@@ -115,7 +93,6 @@ import ir.adad.client.AdView;
 import ir.adad.client.Adad;
 import tools.Constants;
 import tools.Util;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static android.graphics.BitmapFactory.decodeFile;
@@ -128,7 +105,8 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     @Inject
     AttractionListMorePresenter attractionListMorePresenter;
     @Inject
-    CommentPresenter commentPresenter;
+//    static
+            CommentPresenter commentPresenter;
 
     private GoogleMap mMap;
     ResulAttraction resulAttraction;
@@ -237,19 +215,8 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     }
 
     private void setWebViewContent(String myData) {
-        contentFullDescription.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return true;
-            }
-        });
-        contentFullDescription.setLongClickable(false);
-        contentFullDescription.setHapticFeedbackEnabled(false);
+        Util.setWebViewJastify(contentFullDescription, myData);
 
-        String pish = "<html><head><style type=\"text/css\">@font-face {color:#737373;font-family: MyFont;src: url(\"file:///android_asset/fonts/IRANSansMobile.ttf\")}body {font-family: MyFont;font-size: small;text-align: justify;direction:rtl}</style></head><body>";
-        String pas = "</body></html>";
-        String myHtmlString = pish + myData + pas;
-        contentFullDescription.loadDataWithBaseURL(null, myHtmlString, "text/html", "UTF-8", null);
     }
 
     private String getShowMoreString(String myData) {
@@ -328,7 +295,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         }
         myData = resulAttraction.getAttractionBody();
         if (myData != null) {
-            setWebViewContent(getShowMoreString(myData));
+            Util.setWebViewJastify(contentFullDescription, myData);
         }
 
         if (resulAttraction.getAttractionPrice() == null) {
@@ -364,27 +331,15 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                 .netComponent(((App) getApplicationContext()).getNetComponent())
                 .attractionDetailModule(new AttractionDetailModule(this, this, this));
         builder.build().inject(this);
-        commentPresenter.getWidgetResult("nodeuser", resulAttraction.getAttractionId(), Util.getUseRIdFromShareprefrence(getApplicationContext()), "attraction", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+        rotateImage = "likeImg";
+        if (!Util.getUseRIdFromShareprefrence(getApplicationContext()).equals("")) {
+            commentPresenter.getWidgetResult("nodeuser", resulAttraction.getAttractionId(), Util.getUseRIdFromShareprefrence(getApplicationContext()), "attraction", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+        }
+
+
         getPhoto = new GetPhoto(getApplicationContext(), this);
+        cameraHolder.setOnClickListener(this);
 
-        cameraHolder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                App.getInstance().prepareDirectories();
-
-                if (Build.VERSION.SDK_INT < 23) {
-                    commentPresenter.selectImage(attractionDetailActivity.this);
-
-                } else {
-                    if (App.checkGroupPermissions(App.STORAGE_PERMISSIONS)) {
-                        commentPresenter.selectImage(attractionDetailActivity.this);
-                    } else {
-                        requestPermissions(App.STORAGE_PERMISSIONS, 5);
-                    }
-                }
-
-            }
-        });
 
         ((AdView) findViewById(R.id.banner_ad_view)).setAdListener(mAdListener);
     }
@@ -465,20 +420,24 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         switch (v.getId()) {
             case R.id.commentHolder:
                 builder.build().inject(this);
-                commentPresenter.getCommentList("pagecomments", resulAttraction.getAttractionId(), "attraction", "0");
+                if (Util.isLogin(getApplicationContext(), this)) {
+                    commentPresenter.getCommentList("pagecomments", resulAttraction.getAttractionId(), "attraction", "0");
+                }
                 break;
             case R.id.commentImg:
                 builder.build().inject(this);
-                commentPresenter.getCommentList("pagecomments", resulAttraction.getAttractionId(), "attraction", "0");
+                if (Util.isLogin(getApplicationContext(), this)) {
+                    commentPresenter.getCommentList("pagecomments", resulAttraction.getAttractionId(), "attraction", "0");
+                }
                 break;
             case R.id.MoreInoText:
                 if (showMore) {
-                    setWebViewContent(myData);
+                    Util.setWebViewJastify(contentFullDescription, myData);
                     MoreInoText.setText("مطلب کوتاه");
                     showMore = false;
                 } else {
                     if (resulAttraction.getAttractionBody() != null) {
-                        setWebViewContent(getShowMoreString(myData));
+                        Util.setWebViewJastify(contentFullDescription, myData);
                         MoreInoText.setText("بیشتر بخوانید");
                         showMore = true;
                     }
@@ -487,23 +446,49 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                 break;
 
             case R.id.likeImg:
-                rotateImage = "likeImg";
-                if (LikeValue == 1) {
-                    OnClickedIntrestedWidget("like", Constants.intrestDefault, likeImg);
-                    likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
+                if (Util.isLogin(getApplicationContext(), this)) {
+                    rotateImage = "likeImg";
+                    if (LikeValue == 1) {
+                        OnClickedIntrestedWidget("like", Constants.intrestDefault, likeImg);
+                        likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
 
 
-                } else {
-                    OnClickedIntrestedWidget("like", Constants.likeImg, likeImg);
-                    likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
+                    } else {
+                        OnClickedIntrestedWidget("like", Constants.likeImg, likeImg);
+                        likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
 
+                    }
+                }
+
+                break;
+
+            case R.id.cameraHolder:
+
+
+                if (Util.isLogin(getApplicationContext(), this)) {
+                    App.getInstance().prepareDirectories();
+
+                    if (Build.VERSION.SDK_INT < 23) {
+                        commentPresenter.selectImage(attractionDetailActivity.this);
+
+                    } else {
+                        if (App.checkGroupPermissions(App.STORAGE_PERMISSIONS)) {
+                            commentPresenter.selectImage(attractionDetailActivity.this);
+                        } else {
+                            requestPermissions(App.STORAGE_PERMISSIONS, 5);
+                        }
+                    }
                 }
                 break;
 
+
             case R.id.ratingPeopleHolder:
                 //todo
-                SendParamUser ss = new SendParamUser(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "attraction", resulAttraction.getAttractionId());
-                commentPresenter.getRate("rateinfo", ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+
+                if (Util.isLogin(getApplicationContext(), this)) {
+                    SendParamUser ss = new SendParamUser(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "attraction", resulAttraction.getAttractionId());
+                    commentPresenter.getRate("rateinfo", ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                }
                 break;
 
 
@@ -511,13 +496,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     }
 
     private void OnClickedIntrestedWidget(String gType, String gValue, ImageView imageView) {
-        if (!Util.getUseRIdFromShareprefrence(getApplicationContext()).isEmpty()) {
-            commentPresenter.getInterest("widget", Util.getUseRIdFromShareprefrence(getApplicationContext()), "1", "attraction", resulAttraction.getAttractionId(), gType, gValue, Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
-
-        } else {
-            Log.e("user is not login", "error");
-            Toast.makeText(getApplicationContext(), "شما به حساب کاربری خود وارد نشده اید", Toast.LENGTH_LONG).show();
-        }
+        commentPresenter.getInterest("widget", Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "attraction", resulAttraction.getAttractionId(), gType, gValue, Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
     }
 
 
@@ -556,7 +535,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     @Override
     public void showProgress() {
 
-        progressBar = Util.showProgressDialog(getApplicationContext(), "", attractionDetailActivity.this);
+        progressBar = Util.showProgressDialog(getApplicationContext(), "لطفا منتظر بمانید", attractionDetailActivity.this);
     }
 
     @Override

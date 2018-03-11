@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingLeft="@dimen/padding_short"
-    android:paddingRight="@dimen/padding_short">
+    android:paddingRight="@dimen/padding_short"
+    android:layout_gravity="start">
 
     <TextView
         style="@style/StandardTitle"
@@ -41,25 +42,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="2">
+        android:weightSum="2"
+        >
 
-        <TextView
-            android:id="@+id/txtNo"
-            style="@style/StandardTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center"
-            android:padding="@dimen/padding_standard"
-            android:text="کنسل"
-        />
-
-        <com.coinpany.core.android.widget.CDivider
-            android:layout_width="1dp"
-            android:layout_height="match_parent" />
 
         <TextView
             android:id="@+id/txtOk"
@@ -73,7 +58,24 @@
             android:gravity="center"
             android:padding="@dimen/padding_standard"
             android:text="دسترسی به اینترنت"
-          />
+            />
+        <com.coinpany.core.android.widget.CDivider
+            android:layout_width="1dp"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/txtNo"
+            style="@style/StandardTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center"
+            android:padding="@dimen/padding_standard"
+            android:text="کنسل"
+            />
     </LinearLayout>
 
 

@@ -59,17 +59,17 @@ import tools.Util;
 /**
  * Created by Hoda on 10/01/2017.
  */
-public class SettingFragment extends StandardFragment implements View.OnClickListener, SettingContract.View ,HotelReservationStatusContract.View  {
+public class SettingFragment extends StandardFragment implements View.OnClickListener, SettingContract.View, HotelReservationStatusContract.View {
 
     TextView txtProfileName, btnEditProfile, txtHotelReservationStatus;
-    RelativeLayout LayoutShowProfileHolder, exitFromAccount,HotelReservationStatusHolder;
+    RelativeLayout LayoutShowProfileHolder, exitFromAccount, HotelReservationStatusHolder;
     @Inject
     SettingPresenter settingPresenter;
     private String tagFrom;
     ProgressDialog progressDialog;
-    String cid;
-    String andId;
-    String uid;
+//    String cid;
+//    String andId;
+//    String uid;
     View view;
     @Inject
     HotelReservationStatusListPresenter hotelReservationStatusListPresenter;
@@ -77,19 +77,24 @@ public class SettingFragment extends StandardFragment implements View.OnClickLis
     OnVisibleShowCaseViewListener onVisibleShowCaseViewListener;
     public static SettingFragment newInstance(OnVisibleShowCaseViewListener onVisibleShowCaseViewListener) {
         SettingFragment fragment = new SettingFragment();
-        fragment.onVisibleShowCaseViewListener=onVisibleShowCaseViewListener;
+        fragment.onVisibleShowCaseViewListener = onVisibleShowCaseViewListener;
         return fragment;
     }
 
     private void getSharedpreferences() {
-        cid = Util.getTokenFromSharedPreferences(getContext());
-        andId = Util.getAndroidIdFromSharedPreferences(getContext());
-        uid = Util.getUseRIdFromShareprefrence(getContext());
+//        cid = Util.getTokenFromSharedPreferences(getContext());
+//        andId = Util.getAndroidIdFromSharedPreferences(getContext());
+//        uid = Util.getUseRIdFromShareprefrence(getContext());
     }
 
     private void requestGetUser() {
+        if (Util.getUseRIdFromShareprefrence(getContext()) != null && !Util.getUseRIdFromShareprefrence(getContext()).equals("") && Util.getTokenFromSharedPreferences(getContext()) != null && !Util.getTokenFromSharedPreferences(getContext()).equals("") && Util.getAndroidIdFromSharedPreferences(getContext()) != null && !Util.getAndroidIdFromSharedPreferences(getContext()).equals("")) {
+            settingPresenter.getUserInfoPostResult(new GetInfoReqSend(Util.getUseRIdFromShareprefrence(getContext())), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
 
-        settingPresenter.getUserInfoPostResult(new GetInfoReqSend(uid), cid, andId);
+        } else {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -116,7 +121,7 @@ public class SettingFragment extends StandardFragment implements View.OnClickLis
         setLoginName();
         getSharedpreferences();
         DaggerSettingComponent.builder().netComponent(((App) getActivity().getApplicationContext()).getNetComponent())
-                .settingModule(new SettingModule(this,this))
+                .settingModule(new SettingModule(this, this))
                 .build().inject(this);
 //        boolean responseBoolean = Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_SETTINGFRAGMENT, "false", false,getContext()));
 //
@@ -129,7 +134,6 @@ public class SettingFragment extends StandardFragment implements View.OnClickLis
     }
 
 
-
     private void setLoginName() {
         if (!Util.getUseRIdFromShareprefrence(getContext()).equals("")) {
             txtProfileName.setText(Util.getUserNameFromShareprefrence(getContext()) + " خوش آمدید");
@@ -138,7 +142,7 @@ public class SettingFragment extends StandardFragment implements View.OnClickLis
 
     private void getRerReservation() {
         showProgress();
-        hotelReservationStatusListPresenter.getResultReservationReqStatus("req_user_count_bundle", uid, "fa", cid, andId);
+        hotelReservationStatusListPresenter.getResultReservationReqStatus("req_user_count_bundle", Util.getUseRIdFromShareprefrence(getContext()), "fa", Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
     }
 
     public void onClick(View v) {
@@ -164,11 +168,11 @@ public class SettingFragment extends StandardFragment implements View.OnClickLis
                 getRerReservation();
                 break;
             case R.id.TutorialHolder: {
-                Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_HOMEfRAGMENT, String.valueOf(false), false,getContext());
-                Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_SETTINGFRAGMENT, String.valueOf(false), false,getContext());
-                Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_PANDAFRAGMENT, String.valueOf(false), false,getContext());
-                Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_MOREITEMITINERARY, String.valueOf(false), false,getContext());
-                Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_SEARCHINERARY, String.valueOf(false), false,getContext());
+                Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_HOMEfRAGMENT, String.valueOf(false), false, getContext());
+                Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_SETTINGFRAGMENT, String.valueOf(false), false, getContext());
+                Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_PANDAFRAGMENT, String.valueOf(false), false, getContext());
+                Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_MOREITEMITINERARY, String.valueOf(false), false, getContext());
+                Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_SEARCHINERARY, String.valueOf(false), false, getContext());
                 final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 View dialogView = inflater.inflate(R.layout.custom_alert, null);
@@ -203,7 +207,6 @@ public class SettingFragment extends StandardFragment implements View.OnClickLis
 
         }
     }
-
 
 
     private void clearSharedprefrence() {
@@ -267,20 +270,18 @@ public class SettingFragment extends StandardFragment implements View.OnClickLis
         List<ResultReqCount> resultReqCountList = resultReservationReqStatus.getResultReqCountBundle().getResultReqCount();
         List<ResultReqBundle> resultReqBundleList = resultReservationReqStatus.getResultReqCountBundle().getResultReqBundle();
 //        initRequestStatusRecyclerView(view, resultReqCountList);
-        Intent intent=new Intent(getActivity(), HotelReservationStatusActivity.class);
+        Intent intent = new Intent(getActivity(), HotelReservationStatusActivity.class);
         intent.putExtra("resultReqCountList", (Serializable) resultReqCountList);
         intent.putExtra("resultReqBundleList", (Serializable) resultReqBundleList);
         startActivity(intent);
     }
 
 
-
-
     public void setOnVisibleShowCaseViewListener() {
-        if(onVisibleShowCaseViewListener!=null) {
+        if (onVisibleShowCaseViewListener != null) {
             List<View> views = new ArrayList<>();
             views.add(txtHotelReservationStatus);
-            onVisibleShowCaseViewListener.onVisibleShowCase("settingFragment",views);
+            onVisibleShowCaseViewListener.onVisibleShowCase("settingFragment", views);
         }
     }
 

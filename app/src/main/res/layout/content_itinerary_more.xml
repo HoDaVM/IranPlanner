@@ -51,7 +51,8 @@
                 android:background="@drawable/rectangle"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="@dimen/margin_xshort">
+                android:padding="@dimen/margin_xshort"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/txtOk"

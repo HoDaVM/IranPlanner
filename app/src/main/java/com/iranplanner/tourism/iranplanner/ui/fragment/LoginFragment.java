@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +31,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.iranplanner.tourism.iranplanner.R;
+import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.login.DaggerLoginComponent;
 import com.iranplanner.tourism.iranplanner.ui.activity.login.LoginModule;
 import com.iranplanner.tourism.iranplanner.di.model.App;
@@ -41,9 +43,14 @@ import com.iranplanner.tourism.iranplanner.ui.activity.login.LoginContract;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import entity.InterestResult;
 import entity.LoginReqSend;
 import entity.LoginResult;
+import entity.ResultCommentList;
+import entity.ResultImageList;
+import entity.ResultParamUser;
 import entity.ResultUserLogin;
+import entity.ResultWidgetFull;
 import server.Config;
 import tools.Util;
 
@@ -381,7 +388,7 @@ public class LoginFragment extends StandardFragment implements GoogleApiClient.C
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
 
-            setSaveDataInShareprefrence(acct.getEmail(),acct.getDisplayName(),acct.getFamilyName(),"");
+            setSaveDataInShareprefrence(acct.getEmail(), acct.getDisplayName(), acct.getFamilyName(), "");
 //            mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
 //            updateUI(true);
         } else {

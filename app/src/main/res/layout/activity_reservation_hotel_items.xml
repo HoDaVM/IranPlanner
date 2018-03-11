@@ -9,6 +9,193 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical">-->
+
+
+            <!--<android.support.v7.widget.CardView-->
+                <!--android:id="@+id/card_view_itinerary"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="@dimen/margin_short"-->
+                <!--app:cardCornerRadius="10dp"-->
+                <!--app:cardUseCompatPadding="true">-->
+
+                <!--<RelativeLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:padding="@dimen/padding_short">-->
+
+                    <!--<RelativeLayout-->
+                        <!--android:id="@+id/imageHolder"-->
+                        <!--android:layout_width="100dp"-->
+                        <!--android:layout_height="100dp"-->
+                        <!--android:layout_alignParentRight="true">-->
+
+                        <!--<ProgressBar-->
+                            <!--android:id="@+id/imageLoading"-->
+                            <!--android:layout_width="50dp"-->
+                            <!--android:layout_height="50dp"-->
+                            <!--android:layout_centerInParent="true"-->
+                            <!--android:translationZ="1dp" />-->
+
+                        <!--<ImageView-->
+                            <!--android:id="@+id/imgItineraryListMore"-->
+                            <!--android:layout_width="95dp"-->
+                            <!--android:layout_height="95dp"-->
+                            <!--android:layout_alignParentLeft="true"-->
+                            <!--android:layout_alignParentStart="true"-->
+                            <!--android:layout_alignParentTop="true"-->
+                            <!--android:scaleType="centerCrop" />-->
+
+                    <!--</RelativeLayout>-->
+
+                    <!--<RelativeLayout-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_alignParentLeft="true"-->
+                        <!--android:layout_marginRight="@dimen/margin_short"-->
+                        <!--android:layout_toLeftOf="@+id/imageHolder"-->
+                        <!--android:gravity="right">-->
+
+                        <!--<LinearLayout-->
+                            <!--android:id="@+id/cityNameHolder"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_alignParentRight="true"-->
+                            <!--android:orientation="horizontal"-->
+                            <!--android:paddingBottom="@dimen/margin_short">-->
+
+
+                            <!--<TextView-->
+                                <!--android:id="@+id/lodgingCityName"-->
+                                <!--style="@style/StandardTextGrey"-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:layout_marginRight="@dimen/margin_xshort"-->
+                                <!--android:maxLines="1"-->
+                                <!--android:text="اقامت در شیراز" />-->
+
+                            <!--<ImageView-->
+                                <!--android:id="@+id/imageCityName"-->
+                                <!--android:layout_width="15dp"-->
+                                <!--android:layout_height="15dp"-->
+                                <!--android:scaleType="centerCrop"-->
+                                <!--android:src="@mipmap/ic_hotel" />-->
+
+
+                        <!--</LinearLayout>-->
+
+
+                        <!--<RelativeLayout-->
+                            <!--android:id="@+id/infoReserveHolder"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_below="@+id/cityNameHolder"-->
+                            <!--android:layout_marginBottom="@dimen/margin_short"-->
+                            <!--android:visibility="gone">-->
+
+                            <!--<ImageView-->
+                                <!--android:id="@+id/infoDuration"-->
+                                <!--android:layout_width="match_parent"-->
+                                <!--android:layout_height="30dp"-->
+                                <!--android:background="@drawable/rectangle" -->
+                                <!--/>-->
+                            <!--<TextView-->
+                                <!--android:id="@+id/txtDurationDateLodgingCity"-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:layout_toLeftOf="@+id/txtDurationLodgingCity"-->
+                                <!--android:layout_centerVertical="true"-->
+                                <!--android:text="در تاریخ"-->
+                                <!--style="@style/StandardTextGrey"-->
+                                <!--android:maxLines="1"-->
+                                <!--/>-->
+                            <!--<TextView-->
+                                <!--android:id="@+id/txtDurationLodgingCity"-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:layout_toLeftOf="@+id/txtDurationLodgingCityText"-->
+                                <!--android:layout_centerVertical="true"-->
+                                <!--android:text="یک"-->
+                                <!--style="@style/StandardTextGrey"/>-->
+                            <!--<TextView-->
+                                <!--android:id="@+id/txtDurationLodgingCityText"-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:layout_alignParentRight="true"-->
+                                <!--android:layout_centerVertical="true"-->
+                                <!--android:layout_marginRight="@dimen/margin_short"-->
+                                <!--android:text="به مدت "-->
+                                <!--style="@style/StandardTextGrey"/>-->
+                        <!--</RelativeLayout>-->
+
+                        <!--<RelativeLayout-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_below="@+id/infoReserveHolder">-->
+
+                            <!--<ImageView-->
+                                <!--android:id="@+id/ReservationBtn"-->
+                                <!--android:layout_width="match_parent"-->
+                                <!--android:layout_height="30dp"-->
+                                <!--android:background="@drawable/button_corner_greend" />-->
+
+                            <!--<TextView-->
+                                <!--style="@style/StandardText"-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:layout_centerInParent="true"-->
+                                <!--android:text="مشاهده مرکز اقامتی"-->
+                                <!--android:textColor="@color/white_">-->
+                            <!--</TextView>-->
+                        <!--</RelativeLayout>-->
+                    <!--</RelativeLayout>-->
+
+                    <!--<LinearLayout-->
+                        <!--android:id="@+id/cityNameHolder1"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_alignParentRight="true"-->
+                        <!--android:layout_alignRight="@+id/imageHolder"-->
+                        <!--android:layout_below="@+id/imageHolder"-->
+                        <!--android:orientation="horizontal"-->
+                        <!--android:visibility="gone">-->
+
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/txtCityName"-->
+                            <!--style="@style/SmallText"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:text="شیراز"-->
+                            <!--android:textColor="@color/blue" />-->
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/txtProvinceName"-->
+                            <!--style="@style/SmallText"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:text="فارس"-->
+                            <!--android:textColor="@color/blue" />-->
+
+                        <!--<ImageView-->
+                            <!--android:id="@+id/imageCityName1"-->
+                            <!--android:layout_width="15dp"-->
+                            <!--android:layout_height="15dp"-->
+                            <!--android:scaleType="centerCrop"-->
+                            <!--android:src="@mipmap/ic_circle_blue" />-->
+                    <!--</LinearLayout>-->
+
+                <!--</RelativeLayout>-->
+
+            <!--</android.support.v7.widget.CardView>-->
+
+
+        <!--</LinearLayout>-->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -19,7 +206,7 @@
                 android:id="@+id/card_view_itinerary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_short"
+                android:layout_marginTop="@dimen/margin_xshort"
                 app:cardCornerRadius="10dp"
                 app:cardUseCompatPadding="true">
 
@@ -28,36 +215,11 @@
                     android:layout_height="match_parent"
                     android:padding="@dimen/padding_short">
 
-                    <RelativeLayout
-                        android:id="@+id/imageHolder"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_alignParentRight="true">
 
-                        <ProgressBar
-                            android:id="@+id/imageLoading"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_centerInParent="true"
-                            android:translationZ="1dp" />
-
-                        <ImageView
-                            android:id="@+id/imgItineraryListMore"
-                            android:layout_width="95dp"
-                            android:layout_height="95dp"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentStart="true"
-                            android:layout_alignParentTop="true"
-                            android:scaleType="centerCrop" />
-
-                    </RelativeLayout>
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_marginRight="@dimen/margin_short"
-                        android:layout_toLeftOf="@+id/imageHolder"
                         android:gravity="right">
 
                         <LinearLayout
@@ -71,7 +233,7 @@
 
                             <TextView
                                 android:id="@+id/lodgingCityName"
-                                style="@style/StandardTextGrey"
+                                style="@style/StandardTitle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="@dimen/margin_xshort"
@@ -83,24 +245,47 @@
                                 android:layout_width="15dp"
                                 android:layout_height="15dp"
                                 android:scaleType="centerCrop"
-                                android:src="@mipmap/ic_hotel" />
+                                android:src="@mipmap/ic_hotel"
+                                android:visibility="gone"/>
 
 
                         </LinearLayout>
 
+                        <RelativeLayout
+                            android:id="@+id/imageHolder"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/home_photo_height"
+                            android:layout_alignParentRight="true"
+                            android:layout_below="@+id/cityNameHolder">
 
+                            <ProgressBar
+                                android:id="@+id/imageLoading"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_centerInParent="true"
+                                android:translationZ="1dp" />
+
+                            <ImageView
+                                android:id="@+id/imgItineraryListMore"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop" />
+
+                        </RelativeLayout>
                         <RelativeLayout
                             android:id="@+id/infoReserveHolder"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/cityNameHolder"
-                            android:layout_marginBottom="@dimen/margin_short">
+                            android:layout_marginBottom="@dimen/margin_short"
+                            android:visibility="gone">
 
                             <ImageView
                                 android:id="@+id/infoDuration"
                                 android:layout_width="match_parent"
                                 android:layout_height="30dp"
-                                android:background="@drawable/rectangle" />
+                                android:background="@drawable/rectangle"
+                                />
                             <TextView
                                 android:id="@+id/txtDurationDateLodgingCity"
                                 android:layout_width="wrap_content"
@@ -133,12 +318,14 @@
                         <RelativeLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/infoReserveHolder">
+                            android:layout_below="@+id/imageHolder"
+                            android:layout_marginTop="@dimen/margin_short"
+                           >
 
                             <ImageView
                                 android:id="@+id/ReservationBtn"
                                 android:layout_width="match_parent"
-                                android:layout_height="30dp"
+                                android:layout_height="@dimen/padding_large"
                                 android:background="@drawable/button_corner_greend" />
 
                             <TextView
@@ -156,9 +343,6 @@
                         android:id="@+id/cityNameHolder1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignRight="@+id/imageHolder"
-                        android:layout_below="@+id/imageHolder"
                         android:orientation="horizontal"
                         android:visibility="gone">
 
@@ -193,7 +377,5 @@
 
 
         </LinearLayout>
-
-
     </ScrollView>
 </LinearLayout>

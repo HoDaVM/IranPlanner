@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_alignParentStart="true"
     android:layout_gravity="start"
     >
 
@@ -140,7 +139,6 @@
         android:weightSum="2"
         android:gravity="start">
 
-
         <TextView
             android:id="@+id/txtOk"
             style="@style/StandardTitle"
@@ -167,8 +165,7 @@
             android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:padding="@dimen/padding_standard"
-            android:text="بیخیال"
-            />
+            android:text="بیخیال"            />
 
     </LinearLayout>
 

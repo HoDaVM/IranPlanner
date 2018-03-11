@@ -82,6 +82,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
     private static final int REQUEST_PERMISSION_SETTING = 101;
     private boolean sentToSettings = false;
     private SharedPreferences permissionStatus;
+    Typeface tf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +96,9 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
         Log.e("TOKEN", FirebaseInstanceId.getInstance().getToken() + ".");
 
         FirebaseMessaging.getInstance().subscribeToTopic(TOPIC_MAIN);
+        tf = Typeface.createFromAsset(getAssets(), "fonts/IRANSansMobile.ttf");
 
-        initTutorial();
+//        initTutorial();
 
 
     }
@@ -165,31 +167,26 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
     @Override
     public void onNewIntent(Intent newIntent) {
         this.setIntent(newIntent);
-
+//notification
         // Now getIntent() returns the updated Intent
-        String isNextWeek = getIntent().getStringExtra("tests");
-
-        String ntype = getIntent().getStringExtra("ntype");
-        String id = getIntent().getStringExtra("id");
-        if (ntype.equals("attraction")) {
-            viewPager.setCurrentItem(0, true);
-//            Fragment fragment = (Fragment) pagerAdapter.instantiateItem(viewPager, 0);
-
+        try {
+            String ntype = getIntent().getStringExtra("ntype");
+            String id = getIntent().getStringExtra("id");
+            if (ntype.equals("attraction")) {
+                viewPager.setCurrentItem(0, true);
+            }
+        } catch (Exception e) {
 
         }
-        else if(ntype.equals("blog")){
-            viewPager.setCurrentItem(4, true);
-        }
+
 
     }
 
     private void init() {
-
         Bundle extras = getIntent().getExtras();
         homeResult = (GetHomeResult) extras.getSerializable("HomeResult");
         resultBlogList = (ResultBlogList) extras.getSerializable("ResultBlogList");
         resultPostList = resultBlogList.getResultPostList();
-
         viewPager = (NonSwipeableViewPager) findViewById(R.id.main_view_pager);
         pagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), this, homeResult, resultPostList, this);
         if (viewPager != null)
@@ -466,6 +463,8 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
                         showcaseView.setContentText(getString(R.string.tutorialHotelext));
                         showcaseView.setContentTitle(getString(R.string.tutorialHotelTitle));
                         showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+                        showcaseView.setStyle(R.style.MyShowcaseView);
+                        showcaseView.setButtonText("بعدی");
                         break;
                     }
 
@@ -474,6 +473,8 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
                         showcaseView.setContentTitle(getString(R.string.tutorialItineraryText));
                         showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
                         showcaseView.setContentText(getResources().getString(R.string.tutorialItinerary));
+                        showcaseView.setStyle(R.style.MyShowcaseView);
+                        showcaseView.setButtonText("بعدی");
                         break;
                     }
 
@@ -483,6 +484,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
                         showcaseView.setContentText(getString(R.string.tutorialAttractionText));
                         showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
                         showcaseView.setButtonText("بعدی");
+                        showcaseView.setStyle(R.style.MyShowcaseView);
                         break;
                     }
                     case 3: {
@@ -636,6 +638,7 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
                         showcaseView.setContentText(getString(R.string.tutorialItineraryCityText));
                         showcaseView.setContentTitle(getString(R.string.tutorialItineraryCityTitle));
                         showcaseView.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
+                        showcaseView.setButtonText("بستن");
                         break;
                     }
 

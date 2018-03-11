@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.coinpany.core.android.widget.CTouchyWebView;
 import com.coinpany.core.android.widget.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -49,7 +50,8 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
     private ResultEvent resultEvent;
 
     private TextView
-            tvEventStatus, tvEventName, tvEventCity, tvEventSubTitle, tvEventHoldingDate, tvEventVisitationHour, tvEventAddress, tvEventAbout;
+            tvEventStatus, tvEventName, tvEventCity, tvEventSubTitle, tvEventHoldingDate, tvEventVisitationHour, tvEventAddress;
+    CTouchyWebView tvEventAbout;
     private ImageView banner;
 
     private long holdingDateTimestamp, endDateTimestamp;
@@ -96,7 +98,7 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
         tvEventHoldingDate = (TextView) findViewById(R.id.eventHoldingDateTv);
         tvEventVisitationHour = (TextView) findViewById(R.id.eventVisitationHourTv);
         tvEventAddress = (TextView) findViewById(R.id.eventAddressTv);
-        tvEventAbout = (TextView) findViewById(R.id.eventAboutTv);
+        tvEventAbout =  findViewById(R.id.eventAboutTv);
 
         banner = (ImageView) findViewById(R.id.expandedImage);
         Glide.with(this).load(resultEvent.getEventInfo().getImgUrl()).into(banner);
@@ -120,8 +122,7 @@ public class EventActivity extends AppCompatActivity implements OnMapReadyCallba
         tvEventVisitationHour.setText(resultEvent.getEventInfo().getEventDateDuration());
 
         tvEventAddress.setText(address);
-        tvEventAbout.setText(Html.fromHtml(resultEvent.getEventInfo().getEventBody()));
-
+        Util.setWebViewJastify(tvEventAbout, resultEvent.getEventInfo().getEventBody());
         setEventStatus();
     }
 

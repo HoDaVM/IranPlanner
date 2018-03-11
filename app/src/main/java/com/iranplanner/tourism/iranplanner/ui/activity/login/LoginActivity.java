@@ -1,7 +1,9 @@
 package com.iranplanner.tourism.iranplanner.ui.activity.login;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -21,33 +23,44 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails.attractionDetailActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentContract;
+import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentPresenter;
 import com.iranplanner.tourism.iranplanner.ui.activity.forgetPassword.ForgetPasswordActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.mainActivity.MainActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.register.RegisterActivity;
+
+import java.io.Serializable;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import entity.GetHomeResult;
 import entity.GoogleLoginReqSend;
+import entity.InterestResult;
 import entity.LoginReqSend;
 import entity.LoginResult;
 import entity.ResultBlogList;
+import entity.ResultCommentList;
+import entity.ResultImageList;
+import entity.ResultParamUser;
 import entity.ResultUserLogin;
+import entity.ResultWidgetFull;
 import tools.Util;
 
 /**
  * Created by h.vahidimehr on 04/02/2017.
  */
 
-public class LoginActivity extends StandardActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LoginContract.View, View.OnClickListener {
-
+public class LoginActivity extends StandardActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        LoginContract.View, View.OnClickListener {
     private EditText etMail, etPassword;
     private TextView tvLogin, tvSignUp, tvLoginCommand;
     private ProgressDialog progressDialog;
@@ -62,18 +75,25 @@ public class LoginActivity extends StandardActivity implements GoogleApiClient.C
 
     private FirebaseAuth mAuth;
     private GoogleApiClient mGoogleApiClient;
-
     @Inject
     LoginPresenter loginPresenter;
+
+
+    OnLoginFinishListener onLoginFinishListener;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
+        /*setOnLoginDoneListener()*/
+        ;
         Bundle extras = getIntent().getExtras();
-        HomeResult = (GetHomeResult) extras.getSerializable("HomeResult");
-        resultBlogList = (ResultBlogList) extras.getSerializable("ResultBlogList");
+
+        onLoginFinishListener = (OnLoginFinishListener) extras.getSerializable("login");
+
+//        HomeResult = (GetHomeResult) extras.getSerializable("HomeResult");
+//        resultBlogList = (ResultBlogList) extras.getSerializable("ResultBlogList");
 
         ButterKnife.bind(this);
         if (Util.getUseRIdFromShareprefrence(getApplicationContext()) == null || Util.getUseRIdFromShareprefrence(getApplicationContext()) == "") {
@@ -103,7 +123,11 @@ public class LoginActivity extends StandardActivity implements GoogleApiClient.C
 
             mAuth = FirebaseAuth.getInstance();
 
-            findViewById(R.id.btnSignInGoogle).setOnClickListener(this);
+            SignInButton btnSignInGoogle= findViewById(R.id.btnSignInGoogle);
+            btnSignInGoogle  .setOnClickListener(this);
+            TextView textView = (TextView) btnSignInGoogle.getChildAt(0);
+            textView.setText("ورود با حساب گوگل");
+
             findViewById(R.id.txtForgetPassword).setOnClickListener(this);
 
             etMail.addTextChangedListener(new TextWatcher() {
@@ -167,17 +191,11 @@ public class LoginActivity extends StandardActivity implements GoogleApiClient.C
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
-                    intent.putExtra("HomeResult", HomeResult);
-                    intent.putExtra("ResultBlogList",resultBlogList );
+//                    intent.putExtra("HomeResult", HomeResult);
+//                    intent.putExtra("ResultBlogList",resultBlogList );
                     startActivity(intent);
                 }
             });
-        } else {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("HomeResult", HomeResult);
-            intent.putExtra("ResultBlogList",resultBlogList );
-            finish();
-            startActivity(intent);
         }
 
     }
@@ -232,7 +250,7 @@ public class LoginActivity extends StandardActivity implements GoogleApiClient.C
         DaggerLoginComponent.builder().netComponent(((App) getApplicationContext().getApplicationContext()).getNetComponent())
                 .loginModule(new LoginModule(this))
                 .build().inject(this);
-        loginPresenter.getGoogleLoginPostResult(googleLoginReqSend, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+        loginPresenter.getGoogleLoginPostResult(this, onLoginFinishListener, googleLoginReqSend, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
     }
 
     @Override
@@ -244,10 +262,13 @@ public class LoginActivity extends StandardActivity implements GoogleApiClient.C
     private void setSaveDataInSharedPreference(String email, String name, String lName, String userId) {
         Util.saveDataINShareprefrence(getApplicationContext(), email, name, lName, userId);
         tvLoginCommand.setVisibility(View.GONE);
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("HomeResult", HomeResult);
-        intent.putExtra("ResultBlogList",resultBlogList );
-        startActivity(intent);
+
+
+//        Intent intent = new Intent(this, MainActivity.class);
+//        intent.putExtra("HomeResult", HomeResult);
+//        intent.putExtra("ResultBlogList", resultBlogList);
+//        startActivity(intent);
+
         finish();
     }
 

@@ -1,8 +1,10 @@
 package com.iranplanner.tourism.iranplanner.ui.activity.comment;
 
 
+import android.app.Activity;
 import android.net.Uri;
 
+import com.iranplanner.tourism.iranplanner.ui.activity.login.OnLoginFinishListener;
 import com.iranplanner.tourism.iranplanner.ui.presenter.Presenter;
 
 import entity.CommentSend;
@@ -57,7 +59,7 @@ public abstract class CommentContract extends Presenter<CommentContract.View> {
 
     public abstract void rateSend(String action, SendParamUser request, String cid, String andId);
 
-    public abstract void getRate(String action, SendParamUser request, String cid, String andId);
+    public abstract void getRate( String action, SendParamUser request, String cid, String andId);
 
     public abstract void getImages(String action, String nid, String ntype);
 }

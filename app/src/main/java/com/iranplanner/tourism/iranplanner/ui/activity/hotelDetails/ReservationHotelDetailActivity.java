@@ -166,7 +166,6 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
         Log.e("this tag", ReservationHotelDetailActivity.class.getSimpleName());
 
 
-
         setContentView(R.layout.fragment_reservation);
         starHolder = findViewById(R.id.starShowHolder);
         imgStar1 = findViewById(R.id.imgStarH1);
@@ -602,40 +601,34 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
 
 
             case R.id.ratingPeopleHolder:
-                SendParamUser ss = new SendParamUser(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "lodging", resultLodgingHotelDetail.getLodgingId());
-                commentPresenter.getRate("rateinfo", ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                if (Util.isLogin(getApplicationContext(), this)) {
+                    SendParamUser ss = new SendParamUser(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "lodging", resultLodgingHotelDetail.getLodgingId());
+                    commentPresenter.getRate("rateinfo", ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                }
                 break;
-
-//            case R.id.likeImg:
-//                rotateImage = "likeImg";
-//                if (LikeValue == 1) {
-//                    OnClickedIntrestedWidget("like", Constants.intrestDefault, likeImg);
-//                    likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
-//
-//
-//                } else {
-//                    OnClickedIntrestedWidget("like", Constants.likeImg, likeImg);
-//                    likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
-//
-//                }
 
             case R.id.commentHolder:
-                commentPresenter.getCommentList("pagecomments", resultLodgingHotelDetail.getLodgingId(), "lodging", "0");
-                break;
-            case R.id.cameraHolder:
-                App.getInstance().prepareDirectories();
-
-                if (Build.VERSION.SDK_INT < 23) {
-                    commentPresenter.selectImage(ReservationHotelDetailActivity.this);
-
-                } else {
-                    if (App.checkGroupPermissions(App.STORAGE_PERMISSIONS)) {
-                        commentPresenter.selectImage(ReservationHotelDetailActivity.this);
-                    } else {
-                        requestPermissions(App.STORAGE_PERMISSIONS, 5);
-                    }
+                if (Util.isLogin(getApplicationContext(), this)) {
+                    commentPresenter.getCommentList("pagecomments", resultLodgingHotelDetail.getLodgingId(), "lodging", "0");
                 }
 
+                break;
+            case R.id.cameraHolder:
+                if (Util.isLogin(getApplicationContext(), this)) {
+
+                    App.getInstance().prepareDirectories();
+
+                    if (Build.VERSION.SDK_INT < 23) {
+                        commentPresenter.selectImage(ReservationHotelDetailActivity.this);
+
+                    } else {
+                        if (App.checkGroupPermissions(App.STORAGE_PERMISSIONS)) {
+                            commentPresenter.selectImage(ReservationHotelDetailActivity.this);
+                        } else {
+                            requestPermissions(App.STORAGE_PERMISSIONS, 5);
+                        }
+                    }
+                }
                 break;
             case R.id.img:
 
@@ -649,15 +642,16 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
                 hotelDetailPresenter.getResultLodgingRoomList("room", String.valueOf(resultLodgingHotelDetail.getLodgingId()), "", "");
                 break;
             case R.id.likeHolder:
-                if (LikeValue == 1) {
-                    OnClickedIntrestedWidget("like", Constants.intrestDefault, likeImg);
-                    likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
+                if (Util.isLogin(getApplicationContext(), this)) {
 
+                    if (LikeValue == 1) {
+                        OnClickedIntrestedWidget("like", Constants.intrestDefault, likeImg);
+                        likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
 
-                } else {
-                    OnClickedIntrestedWidget("like", Constants.likeImg, likeImg);
-                    likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
-
+                    } else {
+                        OnClickedIntrestedWidget("like", Constants.likeImg, likeImg);
+                        likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
+                    }
                 }
                 break;
         }
@@ -862,7 +856,7 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
 
     @Override
     public void setLodgingRoomList(ResultLodgingRoomList resultLodgingRoomList) {
-        if (resultLodgingRoomList != null) {
+        if (resultLodgingRoomList != null && resultLodgingRoomList.getResultRoom().size()>0) {
             List<ResultRoom> ResultRooms = resultLodgingRoomList.getResultRoom();
             Intent intent = new Intent(getApplicationContext(), ShowRoomActivity.class);
             intent.putExtra("ResultRooms", (Serializable) ResultRooms);
@@ -871,6 +865,9 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
             intent.putExtra("durationTravel", durationTravel);
             intent.putExtra("hotelName", resultLodgingHotelDetail.getLodgingName());
             startActivity(intent);
+        }
+        else {
+            Toast.makeText(getApplicationContext(),"اتاق ناموجود",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -968,7 +965,7 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 //            requestWindowFeature(Window.FEATURE_NO_TITLE);
-//            setContentView(R.layout.raiting_layout);
+            setContentView(R.layout.raiting_layout);
 
             txtNo = findViewById(R.id.txtNo);
             txtOk = findViewById(R.id.txtOk);

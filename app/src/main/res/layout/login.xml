@@ -118,7 +118,8 @@
                     android:id="@+id/btnSignInGoogle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="@dimen/padding_standard" />
+                    android:layout_marginBottom="@dimen/padding_standard"
+                    />
 
                 <TextView
                     android:id="@+id/link_signup"

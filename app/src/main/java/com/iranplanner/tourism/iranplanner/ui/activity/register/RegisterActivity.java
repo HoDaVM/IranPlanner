@@ -63,9 +63,9 @@ public class RegisterActivity extends StandardActivity implements RegisterContra
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
-        Bundle extras = getIntent().getExtras();
-        HomeResult = (GetHomeResult) extras.getSerializable("HomeResult");
-        resultBlogList = (ResultBlogList) extras.getSerializable("ResultBlogList");
+//        Bundle extras = getIntent().getExtras();
+//        HomeResult = (GetHomeResult) extras.getSerializable("HomeResult");
+//        resultBlogList = (ResultBlogList) extras.getSerializable("ResultBlogList");
 
         //Load Background Image
         Glide.with(this).load(R.drawable.splash_bg_blur).centerCrop().override(600, 400).into((ImageView) findViewById(R.id.registerBgIv));
@@ -95,12 +95,12 @@ public class RegisterActivity extends StandardActivity implements RegisterContra
             Toast.makeText(getApplicationContext(), "حساب کاربری با موفقیت انجام شد", Toast.LENGTH_LONG).show();
             Util.saveDataINShareprefrence(getApplicationContext(), etMail.getText().toString(), "کاربر", "", result.getUserUid().toString());
 
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.putExtra("HomeResult", HomeResult);
-            intent.putExtra("viewpager_position", 0);
-            intent.putExtra("ResultBlogList",resultBlogList );
-
-            startActivity(intent);
+//            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//            intent.putExtra("HomeResult", HomeResult);
+//            intent.putExtra("viewpager_position", 0);
+//            intent.putExtra("ResultBlogList",resultBlogList );
+//
+//            startActivity(intent);
             finish();
 
         } else if (result.getStatus().equals("Duplicate Phone"))

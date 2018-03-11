@@ -45,7 +45,7 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
     };
     private StandardFragment currentTab;
     //    StandardFragment
-    private final String[] mTabsTitle = {"خانه","پروفایل","سفرساز","نقشه","مجله"};
+    private final String[] mTabsTitle = {"خانه","پروفایل","سفریاب","نقشه","مجله"};
 
     public TabPagerAdapter(FragmentManager fm, Context context, GetHomeResult homeResult, List<ResultPostList> resultPostList,
                            OnVisibleShowCaseViewListener onVisibleShowCaseViewListener) {

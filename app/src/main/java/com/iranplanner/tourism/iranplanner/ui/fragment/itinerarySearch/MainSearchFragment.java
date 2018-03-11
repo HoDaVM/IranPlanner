@@ -583,8 +583,8 @@ public class MainSearchFragment extends StandardFragment implements MainSearchCo
             String offset = "0";
             mainPresenter.loadItineraryFromAttraction("searchattractioncity", "fa", cityFromAttraction, "10", offset, attractionEnd, Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
 //            showProgressDialog();
-        } else {
-            Toast.makeText(getActivity(), "نام شهر یا جاذبه ثبت نشده است", Toast.LENGTH_SHORT).show();
+//        } else {
+//            Toast.makeText(getActivity(), "نام شهر یا جاذبه ثبت نشده است", Toast.LENGTH_SHORT).show();
         }
         Log.d("search ok clicked", "true");
     }

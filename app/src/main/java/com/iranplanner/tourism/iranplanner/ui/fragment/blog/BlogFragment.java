@@ -106,12 +106,15 @@ public class BlogFragment extends StandardFragment implements View.OnClickListen
 //        ((StandardActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
         toolbar.setTitle("مجله ایران پلنر");
         mLayoutManager = new LinearLayoutManager(getContext());
-        blogListAdapter = new BlogListAdapter(getActivity(), resultPostList, getActivity().getApplicationContext());
+        if(resultPostList!=null && resultPostList.size()>0){
+            blogListAdapter = new BlogListAdapter(getActivity(), resultPostList, getActivity().getApplicationContext());
+            blogListRecyclerView.setAdapter(blogListAdapter);
+        }
         filterToggleView.setOnClickListener(this);
         getSharedpreferences();
         blogListRecyclerView.setLayoutManager(mLayoutManager);
 
-        blogListRecyclerView.setAdapter(blogListAdapter);
+
         blogListRecyclerView.addOnItemTouchListener(new RecyclerItemOnClickListener(getContext(), new RecyclerItemOnClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, final int position) {

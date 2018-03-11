@@ -73,11 +73,14 @@ import com.iranplanner.tourism.iranplanner.ui.activity.hotelReservationListOfCit
 import com.iranplanner.tourism.iranplanner.ui.activity.showAttraction.ShowAttractionActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentListActivity;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import entity.InterestResult;
 import entity.ItineraryLodgingCity;
 import entity.ItineraryPercentage;
@@ -301,7 +304,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         builder.build().inject(this);
         itineraryPresenter.getWidgetResult("nodeuser", itineraryData.getItineraryId(), Util.getUseRIdFromShareprefrence(getApplicationContext()), "itinerary", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
         if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_MOREITEMITINERARY, "false", false, getApplicationContext()))) {
-            setShowCase();
+//            setShowCase();
         }
     }
 
@@ -328,9 +331,11 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
 
 
             case R.id.commentHolder:
-                showProgressDialog();
-                builder.build().inject(this);
-                commentPresenter.getCommentList("pagecomments", itineraryId, "itinerary", "0");
+                if (Util.isLogin(getApplicationContext(), this)) {
+                    showProgressDialog();
+                    builder.build().inject(this);
+                    commentPresenter.getCommentList("pagecomments", itineraryId, "itinerary", "0");
+                }
                 break;
 
             case R.id.showReservation:
@@ -365,24 +370,27 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
 
                 break;
             case R.id.ratingPeopleHolder:
-                //todo
-                DaggerItineraryComponent.builder()
-                        .netComponent(((App) getApplicationContext()).getNetComponent())
-                        .itineraryModule(new ItineraryModule(this, this))
-                        .build().inject(this);
-                SendParamUser ss = new SendParamUser(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "itinerary", itineraryId);
-                commentPresenter.getRate("rateinfo", ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                if (Util.isLogin(getApplicationContext(), this)) {
+                    //todo
+                    DaggerItineraryComponent.builder()
+                            .netComponent(((App) getApplicationContext()).getNetComponent())
+                            .itineraryModule(new ItineraryModule(this, this))
+                            .build().inject(this);
+                    SendParamUser ss = new SendParamUser(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "itinerary", itineraryId);
+                    commentPresenter.getRate("rateinfo", ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                }
                 break;
             case R.id.likeHolder:
+                if (Util.isLogin(getApplicationContext(), this)) {
+                    if (LikeValue == 1) {
+                        OnClickedIntrestedWidget("like", Constants.intrestDefault, likeImg);
+                        likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
 
-                if (LikeValue == 1) {
-                    OnClickedIntrestedWidget("like", Constants.intrestDefault, likeImg);
-                    likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
 
-
-                } else {
-                    OnClickedIntrestedWidget("like", Constants.likeImg, likeImg);
-                    likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
+                    } else {
+                        OnClickedIntrestedWidget("like", Constants.likeImg, likeImg);
+                        likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
+                    }
                 }
                 break;
             case R.id.mapImg:

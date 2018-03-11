@@ -118,7 +118,7 @@
     <string name="home_title_hotel_cat">دسته بندی اقامتگاه ها</string>
     <string name="hotel">هتل</string>
     <string name="more_event">رویدادهای بیشتر</string>
-    <string name="events">وقایع جالب</string>
+    <string name="events">اتفاق باحال</string>
     <string name="attraction">جاذبه گردشگری</string>
     <string name="eco_hotel">بوم گردی</string>
     <string name="traditional_hotel">مهمانسرا</string>
@@ -167,10 +167,10 @@
     <string name="demo_min_label"></string>
     <string name="demo_max_label"></string>
     <string name="tutorialNext">بعدی</string>
-    <string name="tutorialHotelext">اسم شهر مقصدت رو جستجو کن تا بتونی بهترین هتل رو برای اقامتت رزرو کنی!</string>
+    <string name="tutorialHotelext">اسم شهر مقصدت رو جستجو کن تا بتونی هتل مناسب رو بر اساس نظرات دیگران انتخاب کنی!</string>
     <string name="tutorialHotelTitle">جستجوی اقامتگاه</string>
     <string name="tutorialItinerary">با جستجوی شهر مقصدت، میتونی با کمک راهنمای شهرگردی یه تجربه خاص و متفاوت از سفرت داشته باشی!</string>
-    <string name="tutorialItineraryText">جستجوی برنامه ریزی سفر</string>
+    <string name="tutorialItineraryText">سفریاب</string>
     <string name="tutorialAttractionTitle">جستجوی مکان های دیدنی در هر شهر یا استان</string>
     <string name="tutorialAttractionText">با وارد کردن نام شهر یا استان مورد نظر  لیست مکان های دیدنی انجا را مشاهده کنید.</string>
     <string name="tutorialWhereToText">قصد کردی بری سفر و احتیاج داری مقصدت رو بیشتر بشناسی؟ اسم شهر یا استان مقصدت رو در اینجا جستجو کن تا همه اطلاعات لازم برای سفر رو بدست بیاری.</string>

@@ -28,7 +28,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:orientation="vertical"
-                android:paddingBottom="@dimen/padding_short">
+                android:paddingBottom="@dimen/padding_short"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/sortName"
@@ -52,21 +53,24 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="true"
-                        android:text="بیشترین تخفیف" />
+                        android:text="بیشترین تخفیف"
+                        android:visibility="gone"/>
 
                     <RadioButton
                         android:id="@+id/filterSortMinPriceRb"
                         style="@style/StandardText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="کمترین قیمت" />
+                        android:text="کمترین قیمت"
+                        android:visibility="gone"/>
 
                     <RadioButton
                         android:id="@+id/filterSortMostPriceRb"
                         style="@style/StandardText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="بیشترین قیمت" />
+                        android:text="بیشترین قیمت"
+                        android:visibility="gone"/>
 
                     <RadioButton
                         android:id="@+id/filterSortRateMostRb"
@@ -93,7 +97,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:cardCornerRadius="10dp"
-            app:cardUseCompatPadding="true">
+            app:cardUseCompatPadding="true"
+            android:visibility="gone">
 
             <RelativeLayout
                 android:layout_width="wrap_content"

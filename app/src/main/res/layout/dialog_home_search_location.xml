@@ -15,9 +15,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="نام شهر یا استان"
-            android:layout_alignParentStart="true"
             style="@style/StandardTitle"
             android:id="@+id/titleSearchHome"
+            android:layout_alignParentRight="true"
             />
         <android.support.design.widget.TextInputLayout
             android:id="@+id/edittxtSearchHome"

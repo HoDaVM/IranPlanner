@@ -8,8 +8,6 @@
         android:background="@drawable/material_showcase_button_bg"
         android:textSize="16sp"
         android:textAllCaps="true"
-
-
         android:textColor="@android:color/white"
         >
 

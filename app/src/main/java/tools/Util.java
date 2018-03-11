@@ -3,10 +3,12 @@ package tools;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -18,6 +20,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
@@ -40,14 +43,19 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.coinpany.core.android.widget.CTouchyWebView;
 import com.coinpany.core.android.widget.Utils;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.di.model.App;
+import com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails.attractionDetailActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.login.LoginActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.login.OnLoginFinishListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -58,6 +66,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
 
+import entity.SendParamUser;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -69,6 +78,99 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
  */
 public class Util {
 
+    public static  void setWebViewJastify(CTouchyWebView contentFullDescription , String myData) {
+
+        contentFullDescription.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+            public boolean onLongClick(View v) {
+                return true;
+            }
+        });
+        contentFullDescription.setLongClickable(false);
+        contentFullDescription.setHapticFeedbackEnabled(false);
+        String pish = "<html><head><style type=\"text/css\">@font-face {color:#737373;font-family: MyFont;src: url(\"file:///android_asset/fonts/IRANSansMobile.ttf\")}body {font-family: MyFont;font-size: small;text-align: justify;direction:rtl}</style></head><body>";
+        String pas = "</body></html>";
+        String myHtmlString = pish + myData + pas;
+
+        contentFullDescription.loadDataWithBaseURL(null,myHtmlString, "text/html", "UTF-8", null);
+
+    }
+    public static class CustomDialogLogin extends Dialog implements
+            View.OnClickListener {
+
+        public Activity activity;
+        public Dialog d;
+
+        public TextView txtNo, txtOk,
+                alertDescription, txtAlertTitle;
+
+
+        public CustomDialogLogin(Activity a) {
+            super(a);
+            // TODO Auto-generated constructor stub
+            this.activity = a;
+
+        }
+
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+//            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.custom_alert);
+            txtNo = findViewById(R.id.txtNo);
+            txtOk = findViewById(R.id.txtOk);
+            alertDescription = findViewById(R.id.alertDescription);
+            txtAlertTitle = findViewById(R.id.txtAlertTitle);
+            txtOk.setText("بزن بریم");
+            txtNo.setText("بیخیال");
+            alertDescription.setText("اگه قبلا پروفایل داشتی که وارد شو! اگه نداری یکی بساز! یا راحت تر با حساب گوگل وارد شو");
+            txtAlertTitle.setText("به حساب کاربری وارد نشدی!");
+
+
+            txtNo.setOnClickListener(this);
+            txtOk.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.txtNo:
+                    dismiss();
+                    break;
+                case R.id.txtOk:
+                    openLogin(activity);
+                    break;
+            }
+            dismiss();
+        }
+    }
+
+    private static class OnLoginIMp implements OnLoginFinishListener, Serializable {
+        @Override
+        public void OnLoginDon(String activityName, Activity activity) {
+            Log.e("dd", "dd");
+
+        }
+    }
+
+    private static void openLogin(Activity activity) {
+        Intent intent = new Intent(activity, LoginActivity.class);
+        intent.putExtra("login", new OnLoginIMp());
+        activity.startActivity(intent);
+    }
+
+    public static boolean isLogin(Context context, Activity activity) {
+//        if(getUseRIdFromShareprefrence(context)!=null && !getUseRIdFromShareprefrence(context).equals("") && getAndroidIdFromSharedPreferences(context)!=null && !getAndroidIdFromSharedPreferences(context).equals("") ){
+        if (getUseRIdFromShareprefrence(context) != null && !getUseRIdFromShareprefrence(context).equals("")) {
+            return true;
+        } else {
+            CustomDialogLogin customDialogLogin = new CustomDialogLogin(activity);
+            customDialogLogin.show();
+            return false;
+        }
+    }
+
     public static void overrideFont() {
         // for Override font
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
@@ -77,6 +179,7 @@ public class Util {
                 .build()
         );
     }
+
     public static File createImageFiles() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
@@ -101,6 +204,7 @@ public class Util {
         }
         return isTablet;
     }
+
     public static boolean isExternalStorageDocument(Uri uri) {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
@@ -187,10 +291,12 @@ public class Util {
         }
         return null;
     }
+
     static {
         density = App.getInstance().getResources().getDisplayMetrics().density;
         checkDisplaySize();
     }
+
     public static void checkDisplaySize() {
         try {
             WindowManager manager = (WindowManager) App.getInstance().getSystemService(Context.WINDOW_SERVICE);
@@ -207,11 +313,13 @@ public class Util {
         } catch (Exception e) {
         }
     }
+
     public static int dp(float value) {
 
 
         return (int) Math.ceil(density * value);
     }
+
     public static boolean isNetworkAvailable(Context context) {
 //            ConnectivityManager connectivityManager
 //                    = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -331,12 +439,12 @@ public class Util {
         editor.commit();
     }
 
-   //--------------------
+    //--------------------
 
     public static final String PREFS_NAME = "IRAN_PLANNER_CONFIG";
 
     public static SharedPreferences getSharedPreferences(Context context) {
-        return context.getSharedPreferences(PREFS_NAME,0);
+        return context.getSharedPreferences(PREFS_NAME, 0);
     }
 
     public static void clearSharedPreferences(Context context) {
@@ -347,8 +455,8 @@ public class Util {
         editor.commit();
     }
 
-    public static void saveInPreferences(String key, String value, boolean secure,Context context) {
-        SharedPreferences settings =getSharedPreferences(context);
+    public static void saveInPreferences(String key, String value, boolean secure, Context context) {
+        SharedPreferences settings = getSharedPreferences(context);
         SharedPreferences.Editor editor;
         editor = settings.edit(); //2
         editor.remove(key);
@@ -356,7 +464,7 @@ public class Util {
         editor.commit(); //4
     }
 
-    public static String getFromPreferences(String key, String defaultValue, boolean secure,Context context) {
+    public static String getFromPreferences(String key, String defaultValue, boolean secure, Context context) {
         SharedPreferences settings = getSharedPreferences(context);
         String value = settings.getString(key, defaultValue);
         return secure && value != null ? value : value;
@@ -374,14 +482,13 @@ public class Util {
 
     public static final ProgressDialog showProgressDialog(Context context, /*ProgressDialog progressDialog,*/String message, Activity activity) {
 
-            ProgressDialog progressDialog = new ProgressDialog(activity);
-            progressDialog.setIndeterminate(true);
-            progressDialog.setMessage(message);
-            progressDialog.show();
-            progressDialog.setCancelable(false);
-            progressDialog.setCanceledOnTouchOutside(false);  return progressDialog;
-
-
+        ProgressDialog progressDialog = new ProgressDialog(activity);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage(message);
+        progressDialog.show();
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        return progressDialog;
 
 
     }

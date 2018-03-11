@@ -72,8 +72,14 @@ public class BlogListAdapter extends RecyclerView.Adapter<BlogListAdapter.ViewHo
 
         String pish = "<html><head><style type=\"text/css\">@font-face {color:#737373;font-family: MyFont;src: url(\"file:///android_asset/fonts/IRANSansMobile.ttf\")}body {font-family: MyFont;font-size: small;text-align: justify;direction:rtl}</style></head><body>";
         String pas = "</body></html>";
-        String myHtmlString = pish +getShowMoreString( resultPostList.get(i).getPostDescription()) + pas;
-        viewHolder.txtDescription.loadDataWithBaseURL(null, myHtmlString, "text/html", "UTF-8", null);
+        try
+        {
+            String myHtmlString = pish +getShowMoreString( resultPostList.get(i).getPostDescription()) + pas;
+            viewHolder.txtDescription.loadDataWithBaseURL(null, myHtmlString, "text/html", "UTF-8", null);
+
+        }catch (Exception e){
+
+        }
 
     }
 
@@ -88,7 +94,10 @@ public class BlogListAdapter extends RecyclerView.Adapter<BlogListAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return resultPostList.size();
+
+            return resultPostList.size();
+
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder /*implements View.OnClickListener */ {

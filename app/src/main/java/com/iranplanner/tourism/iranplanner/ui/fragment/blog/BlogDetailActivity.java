@@ -121,7 +121,9 @@ public class BlogDetailActivity extends StandardActivity implements View.OnClick
                 .build().inject(this);
         Util.overrideFont();
         getExtra();
-        commentPresenter.getWidgetResult("nodeuser", resultPostFull.getPostId(), Util.getUseRIdFromShareprefrence(getApplicationContext()), "blog", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+        if (!Util.getUseRIdFromShareprefrence(getApplicationContext()).equals("")) {
+            commentPresenter.getWidgetResult("nodeuser", resultPostFull.getPostId(), Util.getUseRIdFromShareprefrence(getApplicationContext()), "blog", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+        }
         addImg.setVisibility(View.GONE);
         shareImg.setVisibility(View.VISIBLE);
         setNearAttraction(resultPostFull.getPostNode());
@@ -254,13 +256,19 @@ public class BlogDetailActivity extends StandardActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.commentHolder:
+                if (Util.isLogin(getApplicationContext(), this)) {
+
+                }
                 commentPresenter.getCommentList("pagecomments", resultPostFull.getPostId(), "blog", "0");
+
                 break;
             case R.id.commentImg:
-                commentPresenter.getCommentList("pagecomments", resultPostFull.getPostId(), "blog", "0");
+                if (Util.isLogin(getApplicationContext(), this)) {
+                    commentPresenter.getCommentList("pagecomments", resultPostFull.getPostId(), "blog", "0");
+                }
                 break;
             case R.id.cameraHolder:
-                NavigationFunctionsHelper.getInstance(this,"\u200F \n " + resultPostFull.getPostUrl(),resultPostFull.getPostImgUrl(),resultPostFull.getPostTitle()).sendShareIntent();
+                NavigationFunctionsHelper.getInstance(this, "\u200F \n " + resultPostFull.getPostUrl(), resultPostFull.getPostImgUrl(), resultPostFull.getPostTitle()).sendShareIntent();
                 break;
             case R.id.img:
                 if (resultPostFull.getResultImages().size() > 0) {
@@ -273,15 +281,17 @@ public class BlogDetailActivity extends StandardActivity implements View.OnClick
                 break;
 
             case R.id.likeImg:
-                rotateImage = "likeImg";
-                if (LikeValue == 1) {
-                    OnClickedIntrestedWidget("like", Constants.intrestDefault, likeImg);
-                    likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
+                if (Util.isLogin(getApplicationContext(), this)) {
+                    rotateImage = "likeImg";
+                    if (LikeValue == 1) {
+                        OnClickedIntrestedWidget("like", Constants.intrestDefault, likeImg);
+                        likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_off));
 
 
-                } else {
-                    OnClickedIntrestedWidget("like", Constants.likeImg, likeImg);
-                    likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
+                    } else {
+                        OnClickedIntrestedWidget("like", Constants.likeImg, likeImg);
+                        likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
+                    }
                 }
                 break;
 
@@ -291,13 +301,8 @@ public class BlogDetailActivity extends StandardActivity implements View.OnClick
     }
 
     private void OnClickedIntrestedWidget(String gType, String gValue, ImageView imageView) {
-        if (!Util.getUseRIdFromShareprefrence(getApplicationContext()).isEmpty()) {
-            commentPresenter.getInterest("widget", Util.getUseRIdFromShareprefrence(getApplicationContext()), "1", "blog", resultPostFull.getPostId(), gType, gValue, Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+        commentPresenter.getInterest("widget", Util.getUseRIdFromShareprefrence(getApplicationContext()), "1", "blog", resultPostFull.getPostId(), gType, gValue, Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
 
-        } else {
-            Log.e("user is not login", "error");
-            Toast.makeText(getApplicationContext(), "شما به حساب کاربری خود وارد نشده اید", Toast.LENGTH_LONG).show();
-        }
     }
 
     private void getExtra() {

@@ -29,6 +29,7 @@ import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.AttractionListMorePresenter;
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelReservationListOfCity.ReservationContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.login.LoginActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.mainActivity.MainActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListPresenter;
 import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogContract;
 import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogModule;
@@ -221,6 +222,7 @@ public class SplashActivity extends AppCompatActivity implements MainSearchPrese
     protected void onStop() {
         super.onStop();
         unregisterReceiver(receiver);
+        finish();
 
     }
 
@@ -331,10 +333,15 @@ public class SplashActivity extends AppCompatActivity implements MainSearchPrese
     @Override
     public void showHomeAndBlog(HomeAndBlog homeAndBlog) {
         this.homeResult = homeAndBlog.getHomeResult();
-        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//        intent.putExtra("HomeResult", homeResult);
+//        intent.putExtra("ResultBlogList", homeAndBlog.getBlogList());
+//        startActivity(intent);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("HomeResult", homeResult);
-        intent.putExtra("ResultBlogList", homeAndBlog.getBlogList());
+        intent.putExtra("ResultBlogList", homeAndBlog.getBlogList() );
+        finish();
         startActivity(intent);
     }
 

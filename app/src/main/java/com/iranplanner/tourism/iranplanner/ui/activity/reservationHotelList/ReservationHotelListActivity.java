@@ -110,6 +110,7 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
         }
         setupToolbar();
 
+
         holderDate.setOnClickListener(this);
         typeDurationHolder.setOnClickListener(this);
 
@@ -276,8 +277,12 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        if (!TextUtils.isEmpty(cityName))
+        if (!TextUtils.isEmpty(cityName)){
             getSupportActionBar().setTitle("هتل های " + cityName);
+        }else {
+            getSupportActionBar().setTitle("هتل های " + resultLodgings.get(0).getLodgingCityName());
+        }
+
     }
 
     @Override

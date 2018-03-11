@@ -712,6 +712,15 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
             txtCityrTitle.setText("شهرهای مجاور");
         }
         b = true;
+        if(!getHomeResult.getResultHome().get(0).getHomeInfo().getId().equals("311")){
+            txtWhereGo.setText(getHomeResult.getResultHome().get(0).getHomeInfo().getTitle());
+            toolbarTitle.setText(getHomeResult.getResultHome().get(0).getHomeInfo().getTitle());
+
+        }else {
+            txtWhereGo.setText("کجای ایران بگردیم؟");
+            toolbarTitle.setText("کجای ایران بگردیم؟");
+        }
+
 
         selectId = getHomeResult.getResultHome().get(0).getHomeInfo().getId();
         SelectedType = getHomeResult.getResultHome().get(0).getHomeInfo().getType();

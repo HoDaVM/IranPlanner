@@ -1,6 +1,10 @@
 package com.iranplanner.tourism.iranplanner.ui.activity.login;
 
 
+import android.app.Activity;
+
+import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentPresenter;
+
 import javax.inject.Inject;
 
 import entity.GoogleLoginReqSend;
@@ -109,8 +113,8 @@ public class LoginPresenter extends LoginContract {
     }
 
     @Override
-    public void getGoogleLoginPostResult(GoogleLoginReqSend GoogleLoginReqSend, String cid, String androidId) {
-
+    public void getGoogleLoginPostResult( final Activity activity, OnLoginFinishListener onLoginFinishListener, GoogleLoginReqSend GoogleLoginReqSend, String cid, String androidId) {
+        this.onLoginFinishListener = onLoginFinishListener;
         mView.showProgress();
         retrofit.create(LoginService.class).getGoogleLoginPostResult(GoogleLoginReqSend, cid, androidId)
                 .subscribeOn(Schedulers.io())
@@ -133,8 +137,19 @@ public class LoginPresenter extends LoginContract {
                     @Override
                     public void onNext(LoginResult loginResult) {
                         mView.showLoginResult(loginResult);
+                        setOnFinishViewListener(activity);
                     }
                 });
+
+
+    }
+
+    OnLoginFinishListener onLoginFinishListener;
+
+    public void setOnFinishViewListener(Activity activity) {
+        if (onLoginFinishListener != null) {
+            onLoginFinishListener.OnLoginDon("login",activity);
+        }
     }
 
     public interface LoginService {
