@@ -32,6 +32,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -378,7 +379,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
 
                     break;
                 case R.id.navRecommendTv:
-                    NavigationFunctionsHelper.getInstance(getActivity(),"\u200F«ایران پلنر» را دانلود کنید: \n http://iranplanner.com/app","IranPlanner","IranPlanner").sendShareIntent();
+                    NavigationFunctionsHelper.getInstance(getActivity(), "\u200F«ایران پلنر» را دانلود کنید: \n http://iranplanner.com/app", "IranPlanner", "IranPlanner").sendShareIntent();
                     break;
                 case R.id.navTutorialTv:
                     startActivity(new Intent(getActivity(), TutorialActivity.class));
@@ -712,11 +713,11 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
             txtCityrTitle.setText("شهرهای مجاور");
         }
         b = true;
-        if(!getHomeResult.getResultHome().get(0).getHomeInfo().getId().equals("311")){
+        if (!getHomeResult.getResultHome().get(0).getHomeInfo().getId().equals("311")) {
             txtWhereGo.setText(getHomeResult.getResultHome().get(0).getHomeInfo().getTitle());
             toolbarTitle.setText(getHomeResult.getResultHome().get(0).getHomeInfo().getTitle());
 
-        }else {
+        } else {
             txtWhereGo.setText("کجای ایران بگردیم؟");
             toolbarTitle.setText("کجای ایران بگردیم؟");
         }
@@ -1033,8 +1034,8 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
 
             setContentView(R.layout.dialog_home_search_location);
             AutoCompleteTextView autoTextWhere = (AutoCompleteTextView) findViewById(R.id.autoTextWhere);
-            TextView titleSearchHome =
-                    findViewById(R.id.titleSearchHome);
+            Button iranBtn = findViewById(R.id.iranBtn);
+            TextView titleSearchHome = findViewById(R.id.titleSearchHome);
             if (type.equals("homeHotel")) {
                 titleSearchHome.setText("نام شهر");
             }
@@ -1043,6 +1044,15 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
             no.setOnClickListener(this);
             /*tempCityProvince =*/
             autoCompleteProvince(autoTextWhere, type);
+            iranBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SelectedType = "country";
+                    selectId = "311";
+                    homePresenter.getHome("home", SelectedType, selectId, Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
+                    dismiss();
+                }
+            });
 
 
         }

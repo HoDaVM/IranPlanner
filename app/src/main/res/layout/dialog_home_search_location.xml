@@ -37,6 +37,17 @@
                 android:imeOptions="actionNext"
                 android:inputType="text" />
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/edittxtSearchHome"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/button_corner_blue_stroke"
+                android:text="حالت پیش فرض"
+                android:id="@+id/iranBtn"
+                android:layout_marginTop="@dimen/padding_large"
+                style="@style/StandardTitle"/>
+
         </android.support.design.widget.TextInputLayout>
 
         <!--<TextView

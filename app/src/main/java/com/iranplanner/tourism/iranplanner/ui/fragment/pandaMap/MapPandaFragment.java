@@ -519,8 +519,8 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
                         String s[] = marker.getTitle().split("-");
                         if (resultLodging.getPoint().getTitle().equals(s[s.length - 1])) {
                             showMarkers(markerPoints, markerType);
-                            mMap.addMarker(new MarkerOptions().position(markerPoints.get(c))
-                                    .title(markerNames.get(c))/*.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_blue_pin))*/);
+//                            mMap.addMarker(new MarkerOptions().position(markerPoints.get(c))
+//                                    .title(markerNames.get(c))/*.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_blue_pin))*/);
                             mMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(c)));
                             Log.e("marker", marker.getTitle());
                             markerPosition = c;
@@ -610,15 +610,17 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     private Bitmap setMarkerIcon(int index) {
 
-        int height = 70;
-        int width = 70;
+        int height = 110;
+        int width = 110;
         BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.mipmap.ic_marker);
         if (markerType.get(index).equals("attraction")) {
-            bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.attraction);
+            bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.mipmap.ic_attraction_pin_foreground);
         } else if (markerType.get(index).equals("lodging")) {
-            bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.hotel);
+            bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.mipmap.ic_hotel_pin_foreground);
         } else if (markerType.get(index).equals("city")) {
-            bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.city);
+            bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.mipmap.ic_marker);
+        }else if (markerType.get(index).equals("event")) {
+            bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.mipmap.ic_event_pin_foreground);
         }
         Bitmap b = bitmapdraw.getBitmap();
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
