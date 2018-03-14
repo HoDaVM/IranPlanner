@@ -7,6 +7,7 @@ import com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails.Attract
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelReservationListOfCity.ReservationContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListModule;
+import com.iranplanner.tourism.iranplanner.ui.activity.restaurant.RestaurantContract;
 import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogContract;
 import com.iranplanner.tourism.iranplanner.ui.fragment.itinerarySearch.MainSearchContract;
 import com.iranplanner.tourism.iranplanner.ui.fragment.itinerarySearch.MainSearchPresenter;
@@ -24,14 +25,18 @@ public class HomeModule {
     private final AttractionListMoreContract.View mViewAttractionListMoreContract;
     private final ReservationHotelListContract.View mViewReservationHotelListContract;
     private final MainSearchContract.View mViewMainScreenContractView;
+    private final RestaurantContract.View mViewRestaurantContractView;
 
 
-    public HomeModule(HomeContract.View mView,ReservationContract.View mViewReservation,AttractionListMoreContract.View mViewAttractionListMoreContract,ReservationHotelListContract.View mViewReservationHotelListContract,MainSearchContract.View mViewMainScreenContractView) {
+    public HomeModule(HomeContract.View mView,ReservationContract.View mViewReservation,AttractionListMoreContract.View mViewAttractionListMoreContract,
+                      ReservationHotelListContract.View mViewReservationHotelListContract,MainSearchContract.View mViewMainScreenContractView
+    ,RestaurantContract.View mViewRestaurantContractView) {
         this.mView = mView;
         this.mViewReservation=mViewReservation;
         this.mViewAttractionListMoreContract=mViewAttractionListMoreContract;
         this.mViewReservationHotelListContract=mViewReservationHotelListContract;
         this.mViewMainScreenContractView=mViewMainScreenContractView;
+        this.mViewRestaurantContractView=mViewRestaurantContractView;
     }
 
     @CustomScope
@@ -58,5 +63,10 @@ public class HomeModule {
     @Provides
     MainSearchContract.View providesMainScreenContractView() {
         return mViewMainScreenContractView;
+    }
+    @CustomScope
+    @Provides
+    RestaurantContract.View restaurantContractView() {
+        return mViewRestaurantContractView;
     }
 }

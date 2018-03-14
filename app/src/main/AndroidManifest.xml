@@ -101,6 +101,12 @@
             android:name=".ui.activity.register.RegisterActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.activity.restaurant.RestaurantDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.restaurant.RestaurantListActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.fragment.itineraryList.ItineraryListFragment"
             android:screenOrientation="portrait" />
         <activity

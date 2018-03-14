@@ -23,6 +23,17 @@ public class ResultHome implements Serializable {
     @SerializedName("home_lodging_type")
     @Expose
     private List<HomeLodgingType> homeLodgingType = null;
+    @SerializedName("home_restaurant")
+    @Expose
+    private List<HomeRestaurant> homeRestaurant;
+
+    public List<HomeRestaurant> getHomeRestaurant() {
+        return homeRestaurant;
+    }
+
+    public void setHomeRestaurant(List<HomeRestaurant> homeRestaurant) {
+        this.homeRestaurant = homeRestaurant;
+    }
     @SerializedName("home_attraction")
     @Expose
     private List<HomeAttraction> homeAttraction = null;
@@ -37,7 +48,7 @@ public class ResultHome implements Serializable {
     private List<HomeLocalfood> homeLocalfood = null;
     @SerializedName("home_airport")
     @Expose
-    private List<Object> homeAirport = null;
+    private List<HomeAirport> homeAirport = null;
     @SerializedName("home_neighbor_city")
     @Expose
     private List<HomeNeighborCity> homeNeighborCity = null;
@@ -132,11 +143,11 @@ public class ResultHome implements Serializable {
         this.homeLocalfood = homeLocalfood;
     }
 
-    public List<Object> getHomeAirport() {
+    public List<HomeAirport> getHomeAirport() {
         return homeAirport;
     }
 
-    public void setHomeAirport(List<Object> homeAirport) {
+    public void setHomeAirport(List<HomeAirport> homeAirport) {
         this.homeAirport = homeAirport;
     }
 

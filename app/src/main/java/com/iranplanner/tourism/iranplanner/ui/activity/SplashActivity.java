@@ -31,6 +31,7 @@ import com.iranplanner.tourism.iranplanner.ui.activity.hotelReservationListOfCit
 import com.iranplanner.tourism.iranplanner.ui.activity.login.LoginActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.mainActivity.MainActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListPresenter;
+import com.iranplanner.tourism.iranplanner.ui.activity.restaurant.RestaurantContract;
 import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogContract;
 import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogModule;
 import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogPresenter;
@@ -45,6 +46,7 @@ import javax.inject.Inject;
 
 import entity.GetHomeResult;
 import entity.HomeAndBlog;
+import entity.RestaurantList;
 import entity.ResultBlogList;
 import entity.ResultCommentList;
 import entity.ResultEvent;
@@ -52,6 +54,7 @@ import entity.ResultEvents;
 import entity.ResultItineraryList;
 import entity.ResultLodgingHotel;
 import entity.ResultLodgingList;
+import entity.ResultRestaurantFull;
 import entity.ShowAtractionDetailMore;
 import entity.ShowAttractionListMore;
 import entity.ShowAttractionMoreList;
@@ -66,7 +69,7 @@ import tools.CustomMessage;
 import tools.Util;
 
 public class SplashActivity extends AppCompatActivity implements MainSearchPresenter.View, HomeContract.View, ReservationContract.View,
-        AttractionListMorePresenter.View, ReservationHotelListPresenter.View {
+        AttractionListMorePresenter.View, ReservationHotelListPresenter.View,RestaurantContract.View {
     Thread splashTread;
     @Inject
     HomePresenter homePresenter;
@@ -164,7 +167,7 @@ public class SplashActivity extends AppCompatActivity implements MainSearchPrese
     }
 
     private void getHomeResult(String destination, String selectId) {
-        DaggerHomeComponent.builder().netComponent(((App) getApplicationContext()).getNetComponent()).homeModule(new HomeModule(this, this, this, this, this)).build().inject(this);
+        DaggerHomeComponent.builder().netComponent(((App) getApplicationContext()).getNetComponent()).homeModule(new HomeModule(this, this, this, this, this,this)).build().inject(this);
         String cid = Util.getTokenFromSharedPreferences(getApplicationContext());
         String andId = Util.getAndroidIdFromSharedPreferences(getApplicationContext());
         homePresenter.getHomeAndBlog("home", destination, selectId, cid, andId, "list");
@@ -322,6 +325,16 @@ public class SplashActivity extends AppCompatActivity implements MainSearchPrese
 
     @Override
     public void dismissProgress() {
+
+    }
+
+    @Override
+    public void setRestaurantFull(ResultRestaurantFull resultRestaurantFull) {
+
+    }
+
+    @Override
+    public void setRestaurantList(RestaurantList restaurantList) {
 
     }
 

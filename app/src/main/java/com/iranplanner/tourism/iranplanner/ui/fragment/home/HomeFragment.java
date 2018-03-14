@@ -60,6 +60,10 @@ import com.iranplanner.tourism.iranplanner.ui.activity.mainActivity.MainActivity
 import com.iranplanner.tourism.iranplanner.ui.activity.moreItemItinerary.MoreItemItineraryActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListPresenter;
+import com.iranplanner.tourism.iranplanner.ui.activity.restaurant.RestaurantContract;
+import com.iranplanner.tourism.iranplanner.ui.activity.restaurant.RestaurantDetailActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.restaurant.RestaurantListActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.restaurant.RestaurantPresenter;
 import com.iranplanner.tourism.iranplanner.ui.fragment.FirstItem;
 import com.iranplanner.tourism.iranplanner.ui.fragment.OnVisibleShowCaseViewListener;
 import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogPresenter;
@@ -94,7 +98,9 @@ import entity.HomeItinerary;
 import entity.HomeLocalfood;
 import entity.HomeLodging;
 import entity.HomeNeighborCity;
+import entity.HomeRestaurant;
 import entity.HomeSouvenir;
+import entity.RestaurantList;
 import entity.ResulAttraction;
 import entity.ResultAttractionList;
 import entity.ResultBlogFull;
@@ -108,6 +114,7 @@ import entity.ResultItineraryList;
 import entity.ResultLodging;
 import entity.ResultLodgingHotel;
 import entity.ResultLodgingList;
+import entity.ResultRestaurantFull;
 import entity.ShowAtractionDetailMore;
 import entity.ShowAttractionListMore;
 import me.relex.circleindicator.CircleIndicator;
@@ -121,7 +128,7 @@ import tools.Util;
 public class HomeFragment extends StandardFragment implements DataTransferInterface, View.OnClickListener,
         AppBarLayout.OnOffsetChangedListener, NestedScrollView.OnScrollChangeListener,
         HomeContract.View, ReservationContract.View, AttractionListMorePresenter.View, ReservationHotelListPresenter.View
-        , MainSearchPresenter.View {
+        , MainSearchPresenter.View, RestaurantContract.View {
 
     public static final String TAG_HOMEFRAGMENT = "homefragmnet";
 
@@ -140,6 +147,8 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
     ReservationHotelListPresenter reservationHotelListPresenter;
     @Inject
     MainSearchPresenter mainSearchPresenter;
+    @Inject
+    RestaurantPresenter restaurantPresenter;
     //    protected TextView toolbarTitle;
     List<HomeNeighborCity> homeNeighborCity;
     int width;
@@ -197,6 +206,8 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
     RecyclerView recyclerBestHotel;
     @BindView(R.id.recyclerBestAttraction)
     RecyclerView recyclerBestAttraction;
+    @BindView(R.id.recyclerBestRestaurant)
+    RecyclerView recyclerBestRestaurant;
     @BindView(R.id.recyclerItinerary)
     RecyclerView recyclerItinerary;
     @BindView(R.id.recyclerSouvenir)
@@ -217,6 +228,8 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
     RelativeLayout attracttionTypeHolder;
     @BindView(R.id.bestAttractionHolder)
     RelativeLayout bestAttractionHolder;
+    @BindView(R.id.bestRestaurantHolder)
+    RelativeLayout bestRestaurantHolder;
     @BindView(R.id.itineraryHomeHolder)
     RelativeLayout itineraryHomeHolder;
     @BindView(R.id.localFoodHomeHolder)
@@ -255,6 +268,8 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
     ImageView homeNavAttraction;
     @BindView(R.id.txtCityrTitle)
     TextView txtCityrTitle;
+    @BindView(R.id.txtMoreTitleBestRestaurant)
+    TextView txtMoreTitleBestRestaurant;
     @BindView(R.id.provinceHomeHolder)
     RelativeLayout provinceHomeHolder;
     OnVisibleShowCaseViewListener onVisibleShowCaseViewListener;
@@ -300,6 +315,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
         overlapImageItineraryHolder.setOnClickListener(this);
 
         tvEventShowAll.setOnClickListener(this);
+        txtMoreTitleBestRestaurant.setOnClickListener(this);
 
         //home nav views
         rootView.findViewById(R.id.homeNavAttraction).setOnClickListener(this);
@@ -309,7 +325,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
 
         mNavigationDrawerItemTitles = getResources().getStringArray(R.array.navigation_items);
         DaggerHomeComponent.builder().netComponent(((App) getContext().getApplicationContext()).getNetComponent())
-                .homeModule(new HomeModule(this, this, this, this, this))
+                .homeModule(new HomeModule(this, this, this, this, this, this))
                 .build().inject(this);
         setupToolbar();
         getfeatureHolderHight();
@@ -416,9 +432,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
             frameLayout.setVisibility(View.INVISIBLE);
 
         } else {
-//            homePresenter.getAttractionMore("search", "fa", selectId, SelectedType, "0", Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()), type);
             attractionListMorePresenter.getAttractionMore("search", "fa", selectId, SelectedType, "0", Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()), type);
-
         }
     }
 
@@ -472,6 +486,11 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
                 break;
             case R.id.txtMoreTitleHotel:
                 getHotelResults(SelectedType, selectId, "");
+                break;
+            case R.id.txtMoreTitleBestRestaurant:
+                //        https://api.parsdid.com/iranplanner/app/api-restaurant.php?action=list
+
+                restaurantPresenter.getRestaurantList("list",selectId,SelectedType,"20","0",Util.getTokenFromSharedPreferences(getContext()),Util.getAndroidIdFromSharedPreferences(getContext()));
                 break;
             case R.id.TypeHotelHolder:
                 if (SelectedType != null && /*SelectedType.equals("city") && */selectId != null && !selectId.equals("311")) {
@@ -748,6 +767,14 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
         }
 
 
+        if (resultHomes.get(0).getHomeRestaurant() != null && resultHomes.get(0).getHomeRestaurant().size() != 0) {
+            bestRestaurantHolder.setVisibility(View.VISIBLE);
+            setViewPagerRestaurant(resultHomes.get(0).getHomeRestaurant());
+        } else {
+            bestRestaurantHolder.setVisibility(View.GONE);
+        }
+
+
         if (resultHomes.get(0).getHomeCountryProvince().size() != 0) {
             setListProvince(resultHomes.get(0).getHomeCountryProvince());
         } else {
@@ -933,6 +960,21 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
         }));
     }
 
+
+    private void setViewPagerRestaurant(final List<HomeRestaurant> homeRestaurant) {
+        RestaurantHomeAdapter restaurantHomeAdapter = new RestaurantHomeAdapter(homeRestaurant, getContext());
+        LinearLayoutManager horizontalLayoutManagaer
+                = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerBestRestaurant.setLayoutManager(horizontalLayoutManagaer);
+        recyclerBestRestaurant.setAdapter(restaurantHomeAdapter);
+        recyclerBestRestaurant.addOnItemTouchListener(new RecyclerItemOnClickListener(getContext(), new RecyclerItemOnClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, final int position) {
+                restaurantPresenter.getRestaurantFull("full", homeRestaurant.get(0).getRestaurantId(), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
+            }
+        }));
+    }
+
     private void setSouvenir(List<HomeSouvenir> homeSouvenir) {
         souvenirHomeAdapter attractionHomeAdapter = new souvenirHomeAdapter(homeSouvenir, getContext());
         LinearLayoutManager horizontalLayoutManagaer
@@ -977,6 +1019,26 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
     }
 
     @Override
+    public void setRestaurantFull(ResultRestaurantFull resultRestaurantFull) {
+        if (resultRestaurantFull.getResultRestaurant() != null) {
+            Intent intent = new Intent(getActivity(), RestaurantDetailActivity.class);
+            intent.putExtra("resultRestaurantFull", resultRestaurantFull);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void setRestaurantList(RestaurantList restaurantList) {
+        if (restaurantList.getResultRestaurantList().size() > 0) {
+            Intent intent = new Intent(getActivity(), RestaurantListActivity.class);
+            intent.putExtra("restaurantList", (Serializable) restaurantList.getResultRestaurantList());
+            intent.putExtra("nextOffset", restaurantList.getStatistics().getOffsetNext());
+            intent.putExtra("selectedType", SelectedType);
+            startActivity(intent);
+        }
+    }
+
+    @Override
     public void ShowItineryDetail(ResultItineraryList resultItineraryList) {
         if (resultItineraryList.getResultItinerary().size() > 0) {
             Intent intent = new Intent(getActivity(), MoreItemItineraryActivity.class);
@@ -991,10 +1053,6 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
 
     }
 
-//    @Override
-//    public void ShowAttractionLists(ShowAttractionMoreList showAttractionList) {
-//
-//    }
 
     @Override
     public void showAttractionDetail(ShowAtractionDetailMore showAttractionFull) {
@@ -1053,8 +1111,6 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
                     dismiss();
                 }
             });
-
-
         }
 
         @Override
@@ -1122,11 +1178,9 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
     }
 
     private void getHomeResult(String destination, String selectId) {
-
         String cid = Util.getTokenFromSharedPreferences(getContext());
         String andId = Util.getAndroidIdFromSharedPreferences(getContext());
         homePresenter.getHome("home", destination, selectId, cid, andId);
-
     }
 
     private void toolbarTitleSetName(String name, String homeInfoId) {

@@ -340,7 +340,10 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         getPhoto = new GetPhoto(getApplicationContext(), this);
         cameraHolder.setOnClickListener(this);
 
-
+        if (resulAttraction.getRate().getRateFinalAvg() != null) {
+            ratingBar.setRating(Float.valueOf(resulAttraction.getRate().getRateFinalAvg()));
+            txtRateType.setText("تا کنون " + Util.persianNumbers(resulAttraction.getRate().getRateFinalCount()) + "نفر به اینجا امتیاز داده اند ");
+        }
         ((AdView) findViewById(R.id.banner_ad_view)).setAdListener(mAdListener);
     }
 
@@ -646,7 +649,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     }
 
 
-    public class CustomDialogAlert extends Dialog implements
+       public class CustomDialogAlert extends Dialog implements
             View.OnClickListener {
 
         public Activity c;

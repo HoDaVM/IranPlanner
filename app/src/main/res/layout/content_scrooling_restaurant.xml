@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/comment_rate"
+        layout="@layout/comment_rate"
+     />
+
+
+
+
+    <RelativeLayout
+        android:id="@+id/moreFacility"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/comment_rate"
+        android:background="@color/greyLight"
+        android:padding="@dimen/padding_24"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="مشاهده لیست امکانات رستوران"
+            android:textColor="@color/main_blue" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/supplierAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/moreFacility"
+        android:padding="@dimen/padding_short"
+        android:paddingBottom="@dimen/margin_short"
+        android:layout_alignParentStart="true"
+        >
+
+        <TextView
+            android:id="@+id/txtAddressTitle"
+            style="@style/StandardTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="آدرس" />
+
+        <TextView
+        android:id="@+id/txtAddress"
+        style="@style/SmallText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/txtAddressCity"
+        android:paddingTop="@dimen/padding_short"
+        android:text="ادرس " />
+        <TextView
+            android:id="@+id/txtAddressCity"
+            style="@style/SmallText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/txtAddressTitle"
+            android:paddingTop="@dimen/padding_short"
+            android:text="ادرس " />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/mapHolder"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_below="@+id/supplierAddress"
+        android:background="@color/greyLight"
+        android:focusableInTouchMode="true">
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:focusableInTouchMode="true"
+            tools:context="com.iranplanner.tourism.iranplanner.ui.activity.moreItemItinerary.MoreItemItineraryActivity" />
+    </RelativeLayout>
+
+</RelativeLayout>

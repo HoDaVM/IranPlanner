@@ -6,13 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.iranplanner.tourism.iranplanner.R;
 
 import java.util.List;
 
-import entity.HomeLocalfood;
+import entity.HomeAttraction;
+import entity.HomeRestaurant;
 import tools.Util;
 
 
@@ -20,9 +22,9 @@ import tools.Util;
  * Created by HoDA on 7/22/2017.
  */
 
-public class LocalFoodHomeAdapter extends RecyclerView.Adapter<LocalFoodHomeAdapter.MyViewHolder> {
+public class RestaurantHomeAdapter extends  RecyclerView.Adapter<RestaurantHomeAdapter.MyViewHolder> {
 
-    List<HomeLocalfood> homeLocalfood;
+    List<HomeRestaurant> homeRestaurants;
     Context context;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -38,8 +40,8 @@ public class LocalFoodHomeAdapter extends RecyclerView.Adapter<LocalFoodHomeAdap
         }
     }
 
-    public LocalFoodHomeAdapter(List<HomeLocalfood> homeLocalfood, Context context) {
-        this.homeLocalfood = homeLocalfood;
+    public RestaurantHomeAdapter( List<HomeRestaurant> homeRestaurants, Context context) {
+        this.homeRestaurants = homeRestaurants;
         this.context = context;
     }
 
@@ -54,17 +56,17 @@ public class LocalFoodHomeAdapter extends RecyclerView.Adapter<LocalFoodHomeAdap
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int listPosition) {
+
         TextView textViewName = holder.textViewName;
         ImageView imageView = holder.imageViewIcon;
-        textViewName.setText(homeLocalfood.get(listPosition).getLocalfoodTitle());
-        if (homeLocalfood.get(listPosition).getImgUrl() != null) {
-            Util.setImageView(String.valueOf(homeLocalfood.get(listPosition).getImgUrl()), context, imageView,null);
+        textViewName.setText(homeRestaurants.get(listPosition).getRestaurantTitle());
+        if (homeRestaurants.get(listPosition).getImgUrl() != null) {
+            Util.setImageView(homeRestaurants.get(listPosition).getImgUrl(), context, imageView,null);
         }
     }
 
     @Override
     public int getItemCount() {
-        return homeLocalfood.size();
-    }
-}
+        return homeRestaurants.size();
+    }}
 

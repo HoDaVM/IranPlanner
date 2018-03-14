@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.iranplanner.tourism.iranplanner.R;
@@ -52,7 +51,7 @@ public class ShowAttractionListFragment extends StandardFragment implements Data
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_show_attraction_list, container, false);
         Bundle bundle = getArguments();
-        attractionRecyclerView = (RecyclerView) view.findViewById(R.id.attractionListRecyclerView);
+        attractionRecyclerView = (RecyclerView) view.findViewById(R.id.listRecyclerView);
         arrowLeft = (ImageView) view.findViewById(R.id.arrowLeft);
         arrowRight = (ImageView) view.findViewById(R.id.arrowRight);
         TextView textDayNumber = (TextView) view.findViewById(R.id.textDayNumber);

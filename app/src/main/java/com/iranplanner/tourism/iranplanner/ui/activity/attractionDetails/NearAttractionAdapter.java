@@ -2,7 +2,6 @@ package com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +40,7 @@ public class NearAttractionAdapter extends RecyclerView.Adapter<NearAttractionAd
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_home_souvenir_localfood, parent, false);
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_home_small, parent, false);
         if (blogNodes != null) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_attractions_home, parent, false);
         }
@@ -61,7 +60,7 @@ public class NearAttractionAdapter extends RecyclerView.Adapter<NearAttractionAd
                 Util.setImageView(String.valueOf(blogNodes.get(listPosition).getImgUrl()), context, image, imageLoading);
         }
 
-//use content_home_souvenir_localfood
+//use content_home_small
         else {
             TextView textViewName = holder.textViewName;
             TextView txtDistance = holder.txtDistance;

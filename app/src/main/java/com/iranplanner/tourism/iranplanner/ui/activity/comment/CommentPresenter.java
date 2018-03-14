@@ -215,10 +215,7 @@ public class CommentPresenter extends CommentContract implements Serializable {
 
                     @Override
                     public void onCompleted() {
-//                        mView.showComplete();
-                        Log.e("direction path", "complete");
                         mView.dismissProgress();
-
                     }
 
                     @Override

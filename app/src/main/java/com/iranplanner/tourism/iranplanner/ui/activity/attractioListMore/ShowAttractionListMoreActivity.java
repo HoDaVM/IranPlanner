@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,7 +35,6 @@ import entity.ResultAttractionList;
 import entity.ResultCommentList;
 import entity.ShowAtractionDetailMore;
 import entity.ShowAttractionListMore;
-import entity.ShowAttractionMoreList;
 import tools.Util;
 
 
@@ -51,7 +49,7 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
     String nextOffset, cityid, citytype;
     Toolbar toolbar;
     private boolean loading = true;
-    @BindView(R.id.attractionListRecyclerView)
+    @BindView(R.id.listRecyclerView)
     RecyclerView attractionRecyclerView;
 
     private ProgressDialog progressDialog;
@@ -82,6 +80,7 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
         onBackPressed();
         return true;
     }
+
     private void setUpRecyclerView() {
         attractionRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -113,7 +112,7 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
                     pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
                     if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                         loading = false;
-                        attractionListMorePresenter.getAttractionMore("search", "fa", cityid, citytype, nextOffset, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()),"");
+                        attractionListMorePresenter.getAttractionMore("search", "fa", cityid, citytype, nextOffset, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()), "");
                     }
                 }
             }
@@ -121,6 +120,7 @@ public class ShowAttractionListMoreActivity extends StandardActivity implements 
         });
 
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

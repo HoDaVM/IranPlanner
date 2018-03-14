@@ -47,7 +47,7 @@ public class souvenirHomeAdapter extends RecyclerView.Adapter<souvenirHomeAdapte
     public MyViewHolder onCreateViewHolder(ViewGroup parent,
                                            int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.content_home_souvenir_localfood, parent, false);
+                .inflate(R.layout.content_home_small, parent, false);
         MyViewHolder myViewHolder = new MyViewHolder(view);
         return myViewHolder;
     }
@@ -59,7 +59,7 @@ public class souvenirHomeAdapter extends RecyclerView.Adapter<souvenirHomeAdapte
         textViewName.setText(homeSouvenirs.get(listPosition).getSouvenirsTitle());
         if (homeSouvenirs.get(listPosition).getImgUrl() != null) {
             Util.setImageView(String.valueOf(homeSouvenirs.get(listPosition).getImgUrl()), context, imageView,null);
-        }
+    }
     }
 
     @Override

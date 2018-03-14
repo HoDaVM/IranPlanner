@@ -45,7 +45,7 @@ public class showNeiborCityHomeAdapter extends RecyclerView.Adapter<showNeiborCi
 
     @Override
     public showNeiborCityHomeAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = inflater.from(viewGroup.getContext()).inflate(R.layout.content_home_souvenir_localfood, viewGroup, false);
+        View view = inflater.from(viewGroup.getContext()).inflate(R.layout.content_home_small, viewGroup, false);
         return new ViewHolder(view);
     }
 

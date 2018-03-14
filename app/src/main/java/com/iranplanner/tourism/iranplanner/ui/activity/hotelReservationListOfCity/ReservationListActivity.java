@@ -180,6 +180,11 @@ public class ReservationListActivity extends StandardActivity implements DataTra
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
     public void showProgress() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);

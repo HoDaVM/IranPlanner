@@ -50,6 +50,7 @@ import entity.ResultItineraryAttraction;
 import entity.ResultLodging;
 import entity.ResultParamUser;
 import entity.ResultPostFull;
+import entity.ResultRestaurantFull;
 import entity.ResultWidgetFull;
 import tools.Util;
 
@@ -80,6 +81,7 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
     CommentPresenter commentPresenter;
     private String cParent;
     int STATIC_INTEGER_VALUE_COMMENT = 103;
+    ResultRestaurantFull restaurantData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +133,13 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
                 nextOffset = (String) extras.getSerializable("nextOffset");
                 commentTitle.setText(resultPostFull.getPostTitle());
             }
+        } else if (fromWhere.equals("restaurant")) {
+            restaurantData = (ResultRestaurantFull) extras.getSerializable("restaurantData");
+
+            if (resultPostFull != null) {
+                nextOffset = (String) extras.getSerializable("nextOffset");
+                commentTitle.setText(resultPostFull.getPostTitle());
+            }
         }
         cParent = "";
         cParent = extras.getString("cParent");
@@ -169,6 +178,8 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
                             intent.putExtra("lodgingData", (Serializable) lodgingData);
                         } else if (fromWhere.equals("Blog")) {
                             intent.putExtra("resultPostFull", (Serializable) resultPostFull);
+                        } else if (fromWhere.equals("restaurant")) {
+                            intent.putExtra("restaurantData", (Serializable) restaurantData);
                         }
 
                         startActivityForResult(intent, STATIC_INTEGER_VALUE_COMMENT);
@@ -203,6 +214,8 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
                                                              commentPresenter.getCommentList("pagecomments", lodgingData.getLodgingId(), "lodging", nextOffset);
                                                          } else if (fromWhere.equals("Blog")) {
                                                              commentPresenter.getCommentList("pagecomments", resultPostFull.getPostId(), "blog", nextOffset);
+                                                         } else if (fromWhere.equals("restaurant")) {
+                                                             commentPresenter.getCommentList("pagecomments", resultPostFull.getPostId(), "restaurant", nextOffset);
                                                          }
 
 //                                                         }
@@ -261,6 +274,8 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
                                                           commentPresenter.callInsertComment(new CommentSend(userId, "1", "lodging", lodgingData.getLodgingId(), "comment", String.valueOf(txtAddComment.getText()), cParent, ""), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                                                       } else if (fromWhere.equals("Blog")) {
                                                           commentPresenter.callInsertComment(new CommentSend(userId, "1", "blog", resultPostFull.getPostId(), "comment", String.valueOf(txtAddComment.getText()), cParent, ""), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                                                      } else if (fromWhere.equals("restaurant")) {
+                                                          commentPresenter.callInsertComment(new CommentSend(userId, "1", "restaurant", restaurantData.getResultRestaurant().getRestaurantId(), "comment", String.valueOf(txtAddComment.getText()), cParent, ""), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                                                       }
                                                       txtAddComment.setText("");
                                                   } else if (userId.isEmpty()) {

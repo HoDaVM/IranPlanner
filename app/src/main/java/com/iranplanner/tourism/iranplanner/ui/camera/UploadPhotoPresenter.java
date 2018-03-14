@@ -107,7 +107,7 @@ public class UploadPhotoPresenter extends UploadPhotoContract {
 
                     @Override
                     public void onNext(ResponseBody resultParamUser) {
-                        Log.e("Ddd","dfds");
+                        Log.e("upload","upload image");
                     }
                 });
     }
