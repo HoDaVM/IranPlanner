@@ -40,29 +40,41 @@ import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.di.model.ForceUpdateChecker;
 import com.iranplanner.tourism.iranplanner.showcaseview.CustomShowcaseView;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.AttractionListMoreContract;
+import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentContract;
 import com.iranplanner.tourism.iranplanner.ui.fragment.OnVisibleShowCaseViewListener;
 import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogContract;
+import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogDetailActivity;
 import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogModule;
 import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogPresenter;
 import com.iranplanner.tourism.iranplanner.ui.fragment.blog.DaggerBlogComponent;
 import com.iranplanner.tourism.iranplanner.ui.fragment.home.HomeFragment;
 import com.iranplanner.tourism.iranplanner.ui.tutorial.TutorialActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import entity.GetHomeResult;
+import entity.InterestResult;
+import entity.ResultBlogFull;
 import entity.ResultBlogList;
+import entity.ResultCommentList;
+import entity.ResultImageList;
+import entity.ResultParamUser;
 import entity.ResultPostList;
+import entity.ResultWidgetFull;
+import entity.ShowAtractionDetailMore;
+import entity.ShowAttractionListMore;
 import server.Config;
 import tools.Constants;
 import tools.Util;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class MainActivity extends StandardActivity implements ForceUpdateChecker.OnUpdateNeededListener, OnVisibleShowCaseViewListener {
+public class MainActivity extends StandardActivity implements ForceUpdateChecker.OnUpdateNeededListener, OnVisibleShowCaseViewListener, BlogPresenter.View, AttractionListMoreContract.View, CommentContract.View {
     GetHomeResult homeResult;
     private ResultBlogList resultBlogList;
     List<ResultPostList> resultPostList;
@@ -174,6 +186,14 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
             String id = getIntent().getStringExtra("id");
             if (ntype.equals("attraction")) {
                 viewPager.setCurrentItem(0, true);
+            }
+            else if (ntype.equals("blog")) {
+//                viewPager.setCurrentItem(0, true);
+                DaggerBlogComponent.builder().netComponent(((App) getApplicationContext()).getNetComponent())
+                        .blogModule(new BlogModule(this, this, this))
+                        .build().inject(this);
+                blogPresenter.getBlogFull("full", id, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+
             }
         } catch (Exception e) {
 
@@ -679,5 +699,94 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
         showcaseView.setContentText(getString(R.string.tutorialItineraryIranText));
         showcaseView.setContentTitle(getString(R.string.tutorialItineraryIranTitle));
         showcaseView.forceTextPosition(ShowcaseView.BELOW_SHOWCASE);
+    }
+
+    @Override
+    public void showComments(ResultCommentList resultCommentList) {
+
+    }
+
+    @Override
+    public void sendCommentMessage(ResultCommentList resultCommentList) {
+
+    }
+
+    @Override
+    public void showError(String message) {
+
+    }
+
+    @Override
+    public void commentResult(String message) {
+
+    }
+
+    @Override
+    public void showComplete() {
+
+    }
+
+    @Override
+    public void setIntrestedWidget(InterestResult interestResult) {
+
+    }
+
+    @Override
+    public void setLoadWidget(ResultWidgetFull resultWidgetFull) {
+
+    }
+
+    @Override
+    public void setRate(ResultParamUser resultParamUser) {
+
+    }
+
+    @Override
+    public void setRateUser(ResultParamUser resultParamUser) {
+
+    }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void dismissProgress() {
+
+    }
+
+    @Override
+    public void showMoreImages(ResultImageList resultImageList) {
+
+    }
+
+    @Override
+    public void setImageUri(Uri uri) {
+
+    }
+
+    @Override
+    public void showAttractionDetail(ShowAtractionDetailMore showAttractionFull) {
+
+    }
+
+    @Override
+    public void ShowAttractionLists(ShowAttractionListMore getAttractionList) {
+
+    }
+
+    @Override
+    public void showBlogList(ResultBlogList resultBlogList) {
+
+    }
+
+    @Override
+    public void showBlogFull(ResultBlogFull resultBlogFull) {
+        if (resultBlogFull.getResultPostFull() != null) {
+            Intent intent = new Intent(MainActivity.this, BlogDetailActivity.class);
+            intent.putExtra("ResultPostFull", (Serializable) resultBlogFull.getResultPostFull());
+            startActivity(intent);
+        }
     }
 }

@@ -99,9 +99,8 @@ public class NotificationUtils {
             notification = mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
                     .setAutoCancel(true)
                     .setContentTitle(title)
-                    .setContentIntent(resultPendingIntent)
-//2
-        .setSound(alarmSound)
+                    .setContentIntent(resultPendingIntent)//2
+                    .setSound(alarmSound)
                     .setStyle(inboxStyle)
                     .setWhen(System.currentTimeMillis())
 //                .setWhen(getTimeMilliSec(timeStamp))
@@ -119,7 +118,7 @@ public class NotificationUtils {
 
     private void showBigNotification(Bitmap bitmap, NotificationCompat.Builder mBuilder, int icon, String title, String message, String timeStamp, PendingIntent resultPendingIntent, Uri alarmSound) {
 //    7
-  try {
+        try {
             NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
             bigPictureStyle.setBigContentTitle(title);
             bigPictureStyle.setSummaryText(Html.fromHtml(message).toString());

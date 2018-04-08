@@ -30,6 +30,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.e(TAG, "Hoda: " + remoteMessage.getFrom());
+        //waiting for debugger service
         android.os.Debug.waitForDebugger();
         android.os.Debug.isDebuggerConnected();
         if (remoteMessage == null)
