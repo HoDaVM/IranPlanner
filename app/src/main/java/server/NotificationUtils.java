@@ -132,7 +132,7 @@ public class NotificationUtils {
                     .setStyle(bigPictureStyle)
                     .setWhen(System.currentTimeMillis())
 //                .setWhen(getTimeMilliSec(timeStamp))
-                    .setSmallIcon(R.mipmap.ic_logo_foreground)
+                    .setSmallIcon(R.mipmap.ic_logo_notification_foreground)
                     .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
                     .setContentText(message)
                     .build();

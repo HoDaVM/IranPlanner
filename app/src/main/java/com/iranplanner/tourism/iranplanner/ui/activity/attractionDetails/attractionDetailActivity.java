@@ -53,9 +53,6 @@ import com.iranplanner.tourism.iranplanner.ui.activity.MapFullActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.OnCutImageListener;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentPresenter;
-import com.iranplanner.tourism.iranplanner.ui.activity.login.LoginActivity;
-import com.iranplanner.tourism.iranplanner.ui.activity.login.LoginPresenter;
-import com.iranplanner.tourism.iranplanner.ui.activity.login.OnLoginFinishListener;
 import com.iranplanner.tourism.iranplanner.ui.camera.GetPhoto;
 import com.iranplanner.tourism.iranplanner.ui.camera.PhotoCropFragment;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
@@ -559,8 +556,10 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
     @Override
     public void setRate(ResultParamUser resultParamUser) {
-        ratingBar.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalAvg()));
-        txtRateType.setText("تا کنون " + Util.persianNumbers(resultParamUser.getResultRatePost().getRateFinalCount() + "نفر به اینجا امتیاز داده اند "));
+        if (resultParamUser.getResultRatePost().getRateFinalAvg() != null) {
+            ratingBar.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalAvg()));
+            txtRateType.setText("تا کنون " + Util.persianNumbers(resultParamUser.getResultRatePost().getRateFinalCount() + "نفر به اینجا امتیاز داده اند "));
+        }
     }
 
     @Override

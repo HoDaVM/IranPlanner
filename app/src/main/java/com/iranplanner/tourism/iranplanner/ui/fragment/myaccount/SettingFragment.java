@@ -92,8 +92,10 @@ public class SettingFragment extends StandardFragment implements View.OnClickLis
             settingPresenter.getUserInfoPostResult(new GetInfoReqSend(Util.getUseRIdFromShareprefrence(getContext())), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
 
         } else {
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            startActivity(intent);
+
+            Util.CustomDialogLogin customDialogLogin = new Util.CustomDialogLogin(getActivity());
+            customDialogLogin.show();
+
         }
     }
 

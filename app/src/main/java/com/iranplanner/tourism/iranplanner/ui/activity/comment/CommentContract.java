@@ -4,7 +4,6 @@ package com.iranplanner.tourism.iranplanner.ui.activity.comment;
 import android.app.Activity;
 import android.net.Uri;
 
-import com.iranplanner.tourism.iranplanner.ui.activity.login.OnLoginFinishListener;
 import com.iranplanner.tourism.iranplanner.ui.presenter.Presenter;
 
 import entity.CommentSend;

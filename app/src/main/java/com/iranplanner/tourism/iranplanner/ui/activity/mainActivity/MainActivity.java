@@ -2,9 +2,11 @@ package com.iranplanner.tourism.iranplanner.ui.activity.mainActivity;
 
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -17,6 +19,7 @@ import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextPaint;
 import android.util.Log;
@@ -69,6 +72,7 @@ import entity.ResultWidgetFull;
 import entity.ShowAtractionDetailMore;
 import entity.ShowAttractionListMore;
 import server.Config;
+import server.NotificationUtils;
 import tools.Constants;
 import tools.Util;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -95,6 +99,14 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
     private boolean sentToSettings = false;
     private SharedPreferences permissionStatus;
     Typeface tf;
+    boolean isFromNOtification = true;
+    String idNotification, nTypeNotification;
+
+    //
+
+
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,9 +122,67 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
         FirebaseMessaging.getInstance().subscribeToTopic(TOPIC_MAIN);
         tf = Typeface.createFromAsset(getAssets(), "fonts/IRANSansMobile.ttf");
 
-//        initTutorial();
+        DaggerBlogComponent.builder().netComponent(((App) getApplicationContext()).getNetComponent())
+                .blogModule(new BlogModule(this, this, this))
+                .build().inject(this);
+        showNotification();
+        displayFirebaseRegId();
+
+    }
+
+    private void showNotification() {
+        // show and open app  notification when app is killed
+        if (nTypeNotification != null) {
+            blogPresenter.getBlogFull("full", idNotification, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+        }
 
 
+        // show and open notification when app is open
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+//                android.os.Debug.waitForDebugger();
+//                android.os.Debug.isDebuggerConnected();
+                // checking for type intent filter
+                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
+                    // gcm successfully registered
+                    // now subscribe to `global` topic to receive app wide notifications
+                    FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
+                    displayFirebaseRegId();
+
+                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
+                    // new push notification is received
+                    String idNotification = intent.getStringExtra("id");
+                    blogPresenter.getBlogFull("full", idNotification, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                }
+            }
+        };
+    }
+
+    private void displayFirebaseRegId() {
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF, 0);
+        String regId = pref.getString("regid", null);
+        Log.e(TAG, "Firebase reg id: " + regId);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // register GCM registration complete receiver
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.REGISTRATION_COMPLETE));
+        // register new push message receiver
+        // by doing this, the activity will be notified each time a new message arrives
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.PUSH_NOTIFICATION));
+        // clear the notification area when the app is opened
+        NotificationUtils.clearNotifications(getApplicationContext());
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        super.onPause();
     }
 
     private void checkPermission() {
@@ -179,21 +249,15 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
     @Override
     public void onNewIntent(Intent newIntent) {
         this.setIntent(newIntent);
-//notification
+//notification when app run in background
         // Now getIntent() returns the updated Intent
         try {
-            String ntype = getIntent().getStringExtra("ntype");
-            String id = getIntent().getStringExtra("id");
-            if (ntype.equals("attraction")) {
+            nTypeNotification = getIntent().getStringExtra("nTypeNotification");
+            idNotification = getIntent().getStringExtra("idNotification");
+            if (nTypeNotification.equals("attraction")) {
                 viewPager.setCurrentItem(0, true);
-            }
-            else if (ntype.equals("blog")) {
-//                viewPager.setCurrentItem(0, true);
-                DaggerBlogComponent.builder().netComponent(((App) getApplicationContext()).getNetComponent())
-                        .blogModule(new BlogModule(this, this, this))
-                        .build().inject(this);
-                blogPresenter.getBlogFull("full", id, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
-
+            } else if (nTypeNotification.equals("blog")) {
+                blogPresenter.getBlogFull("full", idNotification, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
             }
         } catch (Exception e) {
 
@@ -202,10 +266,22 @@ public class MainActivity extends StandardActivity implements ForceUpdateChecker
 
     }
 
-    private void init() {
+
+    private void getExtras() {
         Bundle extras = getIntent().getExtras();
         homeResult = (GetHomeResult) extras.getSerializable("HomeResult");
         resultBlogList = (ResultBlogList) extras.getSerializable("ResultBlogList");
+        try {
+            nTypeNotification = extras.getString("nTypeNotification");
+            idNotification = extras.getString("idNotification");
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void init() {
+
+        getExtras();
         resultPostList = resultBlogList.getResultPostList();
         viewPager = (NonSwipeableViewPager) findViewById(R.id.main_view_pager);
         pagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), this, homeResult, resultPostList, this);

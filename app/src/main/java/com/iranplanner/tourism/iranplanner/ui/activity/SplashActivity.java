@@ -69,7 +69,7 @@ import tools.CustomMessage;
 import tools.Util;
 
 public class SplashActivity extends AppCompatActivity implements MainSearchPresenter.View, HomeContract.View, ReservationContract.View,
-        AttractionListMorePresenter.View, ReservationHotelListPresenter.View,RestaurantContract.View {
+        AttractionListMorePresenter.View, ReservationHotelListPresenter.View, RestaurantContract.View {
     Thread splashTread;
     @Inject
     HomePresenter homePresenter;
@@ -81,6 +81,7 @@ public class SplashActivity extends AppCompatActivity implements MainSearchPrese
     private UpdateReceiver receiver = new UpdateReceiver();
 
     private CustomMessage customMessage;
+    String idNotification, nTypeNotification;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,14 +92,22 @@ public class SplashActivity extends AppCompatActivity implements MainSearchPrese
 
         //Load Background Image
         Glide.with(this).load(R.drawable.splash_bg_blur).centerCrop().override(600, 400).into((ImageView) findViewById(R.id.splashBgIv));
-
         init();
+        // get notification information and open app
+        if (getIntent().getExtras() != null) {
+            for (String key : getIntent().getExtras().keySet()) {
+                Object value = getIntent().getExtras().get(key);
+                if (key.equals("id")) {
+                    idNotification = String.valueOf(value);
+                } else if (key.equals("ntype")) {
+                    nTypeNotification = String.valueOf(value);
+                }
+            }
+        }
+
     }
 
-//    @Override
-//    protected int getLayoutId() {
-//        return R.layout.activity_splash;
-//    }
+
 
     private boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -167,7 +176,7 @@ public class SplashActivity extends AppCompatActivity implements MainSearchPrese
     }
 
     private void getHomeResult(String destination, String selectId) {
-        DaggerHomeComponent.builder().netComponent(((App) getApplicationContext()).getNetComponent()).homeModule(new HomeModule(this, this, this, this, this,this)).build().inject(this);
+        DaggerHomeComponent.builder().netComponent(((App) getApplicationContext()).getNetComponent()).homeModule(new HomeModule(this, this, this, this, this, this)).build().inject(this);
         String cid = Util.getTokenFromSharedPreferences(getApplicationContext());
         String andId = Util.getAndroidIdFromSharedPreferences(getApplicationContext());
         homePresenter.getHomeAndBlog("home", destination, selectId, cid, andId, "list");
@@ -346,14 +355,13 @@ public class SplashActivity extends AppCompatActivity implements MainSearchPrese
     @Override
     public void showHomeAndBlog(HomeAndBlog homeAndBlog) {
         this.homeResult = homeAndBlog.getHomeResult();
-//        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-//        intent.putExtra("HomeResult", homeResult);
-//        intent.putExtra("ResultBlogList", homeAndBlog.getBlogList());
-//        startActivity(intent);
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("HomeResult", homeResult);
-        intent.putExtra("ResultBlogList", homeAndBlog.getBlogList() );
+        intent.putExtra("ResultBlogList", homeAndBlog.getBlogList());
+        if (nTypeNotification != null && idNotification != null) {
+            intent.putExtra("nTypeNotification", nTypeNotification);
+            intent.putExtra("idNotification", idNotification);
+        }
         finish();
         startActivity(intent);
     }

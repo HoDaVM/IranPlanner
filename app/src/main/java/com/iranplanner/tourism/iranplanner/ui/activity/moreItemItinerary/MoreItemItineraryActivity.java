@@ -241,10 +241,15 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
 
 
         txtPhotos.setVisibility(View.GONE);
-        if (itineraryData.getRate().getRateFinalAvg() != null) {
-            ratingBar.setRating(Float.valueOf(itineraryData.getRate().getRateFinalAvg()));
-            txtRateType.setText("تا کنون " + Util.persianNumbers(itineraryData.getRate().getRateFinalCount()) + "نفر به اینجا امتیاز داده اند ");
+        try{
+            if (itineraryData.getRate().getRateFinalAvg() != null) {
+                ratingBar.setRating(Float.valueOf(itineraryData.getRate().getRateFinalAvg()));
+                txtRateType.setText("تا کنون " + Util.persianNumbers(itineraryData.getRate().getRateFinalCount()) + "نفر به اینجا امتیاز داده اند ");
+            }
+        }catch (Exception e){
+
         }
+
         setTypeOfTravel();
         myData = itineraryData.getItineraryBody();
         setWebViewContent(getShowMoreString(myData));
@@ -701,8 +706,15 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
 
     @Override
     public void setRate(ResultParamUser resultParamUser) {
-        ratingBar.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalAvg()));
-        txtRateType.setText("تا کنون " + Util.persianNumbers(resultParamUser.getResultRatePost().getRateFinalCount() + "نفر به اینجا امتیاز داده اند "));
+        try {
+            if (resultParamUser.getResultRatePost().getRateFinalAvg()!= null) {
+                ratingBar.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalAvg()));
+                txtRateType.setText("تا کنون " + Util.persianNumbers(resultParamUser.getResultRatePost().getRateFinalCount() + "نفر به اینجا امتیاز داده اند "));
+            }
+        }catch (Exception e){
+
+        }
+
 
     }
 

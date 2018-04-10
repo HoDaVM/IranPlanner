@@ -31,8 +31,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.e(TAG, "Hoda: " + remoteMessage.getFrom());
         //waiting for debugger service
-        android.os.Debug.waitForDebugger();
-        android.os.Debug.isDebuggerConnected();
+//        android.os.Debug.waitForDebugger();
+//        android.os.Debug.isDebuggerConnected();
         if (remoteMessage == null)
             return;
 
@@ -85,8 +85,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     // todo data message need to change according to data type we gonna use
     private void handleDataMessage(JSONObject data) {
-        android.os.Debug.waitForDebugger();
-        android.os.Debug.waitForDebugger();
+//        android.os.Debug.waitForDebugger();
+//        android.os.Debug.waitForDebugger();
         android.os.Debug.isDebuggerConnected();
         try {
 //            JSONObject data = json.getJSONObject("data");
@@ -101,22 +101,39 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //            JSONObject payload = data.getJSONObject("payload");
 
 
-//            if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
-//                // app is in foreground, broadcast the push message
-//                Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
-//                pushNotification.putExtra("message", message);
-//                LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
-//
-//                // play notification sound
-//                NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
-//                notificationUtils.playNotificationSound();
-//            } else {
-                // app is in background, show the notification in notification tray
+            if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
+                // app is in foreground, broadcast the push message
+
+                Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
+
+                pushNotification.putExtra("nTypeNotification",ntype);
+                pushNotification.putExtra("title",title);
+                pushNotification.putExtra("message",message);
+                pushNotification.putExtra("image",imageUrl);
+                pushNotification.putExtra("idNotification",id);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
+
+                // play notification sound
+                NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
+                notificationUtils.playNotificationSound();
+//                showNotificationMessage(getApplicationContext(), title, message, timestamp, pushNotification);
+                if (TextUtils.isEmpty(imageUrl)) {
+                    showNotificationMessage(getApplicationContext(), title, message, timestamp, pushNotification);
+                } else {
+                    // image is present, show notification with image
+                    showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, pushNotification, imageUrl);
+                }
+
+            } else {
+//                 app is in background, show the notification in notification tray
                 Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
                 Bundle bd = new Bundle();
-                bd.putString("tests", "123");
-                bd.putString("ntype",ntype);
-                bd.putString("id",id);
+
+                bd.putString("nTypeNotification",ntype);
+                bd.putString("title",title);
+                bd.putString("message",message);
+                bd.putString("image",imageUrl);
+                bd.putString("idNotification",id);
                 resultIntent.putExtras(bd);
                 // check for image attachment
                 if (TextUtils.isEmpty(imageUrl)) {
@@ -124,7 +141,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 } else {
                     // image is present, show notification with image
                     showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, resultIntent, imageUrl);
-//                }
+                }
 //                }
             }
         } catch (Exception e) {

@@ -215,7 +215,6 @@ public class FilterMapAttraction extends AppCompatActivity implements OnMapReady
         getExtras();
 
 
-
         setUpRecyclerView();
         btnSelectPolygon.setOnClickListener(this);
 
@@ -236,10 +235,11 @@ public class FilterMapAttraction extends AppCompatActivity implements OnMapReady
         final LinearLayoutManager horizontalLayoutManagaer
                 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(horizontalLayoutManagaer);
-        adapter = new AttractionsMoreListAdapter(this, this, attractionsList, getApplicationContext(), R.layout.content_attraction_list);
+        if (attractionsList != null && attractionsList.size() > 0) {
+            adapter = new AttractionsMoreListAdapter(this, this, attractionsList, getApplicationContext(), R.layout.content_attraction_list);
+            recyclerView.setAdapter(adapter);
+        }
 
-//        adapter = new ReseveHotelListAdapter(FilterMapAttraction.this, this, resultLodgings, getApplicationContext(), R.layout.fragment_itinerary_item);
-        recyclerView.setAdapter(adapter);
         final SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
 
@@ -383,7 +383,7 @@ public class FilterMapAttraction extends AppCompatActivity implements OnMapReady
 
     @Override
     public void ShowAttractionLists(ShowAttractionListMore getAttractionList) {
-        Log.e("fd","Fd");
+        Log.e("fd", "Fd");
 
     }
 

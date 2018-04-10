@@ -19,10 +19,7 @@ import android.util.Log;
 import com.iranplanner.tourism.iranplanner.BuildConfig;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.di.model.App;
-import com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails.AttractionDetailPresenter;
-import com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails.attractionDetailActivity;
-import com.iranplanner.tourism.iranplanner.ui.activity.login.LoginActivity;
-import com.iranplanner.tourism.iranplanner.ui.activity.login.OnLoginFinishListener;
+
 
 import java.io.File;
 import java.io.IOException;

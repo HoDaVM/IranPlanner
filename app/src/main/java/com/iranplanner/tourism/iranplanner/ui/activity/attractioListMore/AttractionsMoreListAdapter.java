@@ -49,23 +49,31 @@ public class AttractionsMoreListAdapter extends RecyclerView.Adapter<Attractions
 
     @Override
     public void onBindViewHolder(AttractionsMoreListAdapter.ViewHolder viewHolder, int i) {
+        try {
+            viewHolder.attraction_name.setText(attractions.get(i).getResulAttraction().getAttractionTitle());
+            viewHolder.textCityName.setText(attractions.get(i).getResulAttraction().getCityTitle() + " , " + attractions.get(i).getResulAttraction().getProvinceTitle());
+            viewHolder.textType.setText(attractions.get(i).getResulAttraction().getAttractionItineraryTypeTitle());
+            viewHolder.supplierLayoutBtn.setVisibility(View.GONE);
 
-        viewHolder.attraction_name.setText(attractions.get(i).getResulAttraction().getAttractionTitle());
-        viewHolder.textCityName.setText(attractions.get(i).getResulAttraction().getCityTitle() + " , " + attractions.get(i).getResulAttraction().getProvinceTitle());
-        viewHolder.textType.setText(attractions.get(i).getResulAttraction().getAttractionItineraryTypeTitle());
-        viewHolder.supplierLayoutBtn.setVisibility(View.GONE);
+            int totalMinute = Integer.parseInt(attractions.get(i).getResulAttraction().getAttractionEstimatedTime());
+            Util.convertMinuteToHour(totalMinute, viewHolder.textTimeDuration);
 
-        int totalMinute = Integer.parseInt(attractions.get(i).getResulAttraction().getAttractionEstimatedTime());
-        Util.convertMinuteToHour(totalMinute, viewHolder.textTimeDuration);
+            if (attractions.get(i).getResulAttraction().getAttractionImgUrl() != null) {
+                Util.setImageView(attractions.get(i).getResulAttraction().getAttractionImgUrl(), context, viewHolder.ImageAttraction, viewHolder.imageLoading);
+            }
+        } catch (Exception e) {
 
-        if (attractions.get(i).getResulAttraction().getAttractionImgUrl() != null) {
-            Util.setImageView(attractions.get(i).getResulAttraction().getAttractionImgUrl(),context,viewHolder.ImageAttraction,viewHolder.imageLoading);
         }
+
     }
 
     @Override
     public int getItemCount() {
-        return attractions.size();
+        try {
+            return attractions.size();
+        }catch (Exception e){
+            return 0;
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder /*implements View.OnClickListener */ {

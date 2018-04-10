@@ -26,7 +26,7 @@ public class MyFirebaseInstanceIDService  extends FirebaseInstanceIdService {
     public void onTokenRefresh() {
         super.onTokenRefresh();
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        android.os.Debug.waitForDebugger();
+//        android.os.Debug.waitForDebugger();
         // Saving reg id to shared preferences
         @SuppressLint("HardwareIds") String androidId = Settings.Secure.getString(getApplicationContext().getContentResolver(),
                 Settings.Secure.ANDROID_ID);

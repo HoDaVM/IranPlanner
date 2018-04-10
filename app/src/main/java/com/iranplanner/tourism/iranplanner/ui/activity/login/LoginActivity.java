@@ -87,10 +87,13 @@ public class LoginActivity extends StandardActivity implements GoogleApiClient.C
         super.onCreate(savedInstanceState);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         /*setOnLoginDoneListener()*/
-        ;
-        Bundle extras = getIntent().getExtras();
 
-        onLoginFinishListener = (OnLoginFinishListener) extras.getSerializable("login");
+        Bundle extras = getIntent().getExtras();
+        try {
+            onLoginFinishListener = (OnLoginFinishListener) extras.getSerializable("login");
+        } catch (Exception e) {
+
+        }
 
 //        HomeResult = (GetHomeResult) extras.getSerializable("HomeResult");
 //        resultBlogList = (ResultBlogList) extras.getSerializable("ResultBlogList");
@@ -123,8 +126,8 @@ public class LoginActivity extends StandardActivity implements GoogleApiClient.C
 
             mAuth = FirebaseAuth.getInstance();
 
-            SignInButton btnSignInGoogle= findViewById(R.id.btnSignInGoogle);
-            btnSignInGoogle  .setOnClickListener(this);
+            SignInButton btnSignInGoogle = findViewById(R.id.btnSignInGoogle);
+            btnSignInGoogle.setOnClickListener(this);
             TextView textView = (TextView) btnSignInGoogle.getChildAt(0);
             textView.setText("ورود با حساب گوگل");
 

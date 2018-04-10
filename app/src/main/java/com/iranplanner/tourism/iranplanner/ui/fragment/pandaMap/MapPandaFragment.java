@@ -277,31 +277,33 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     }
 
     private void cleanMapAndRecyclerView() {
-        markerPoints.clear();
-        markerNames.clear();
-        markerType.clear();
-        markerId.clear();
-        markerShow.clear();
-        isResultForDraw = false;
+        try {
+            markerPoints.clear();
+            markerNames.clear();
+            markerType.clear();
+            markerId.clear();
+            markerShow.clear();
+            isResultForDraw = false;
 
 
 //        PolylinePoints.clear();
 
-        snapHelper = null;
-        try {
-            resultPandaMapList.clear();
-            adapter.notifyDataSetChanged();
+            snapHelper = null;
+            try {
+                resultPandaMapList.clear();
+                adapter.notifyDataSetChanged();
 
-        } catch (Exception e) {
+            } catch (Exception e) {
+
+            }
+            try {
+                mMap.clear();
+            } catch (Exception e) {
+
+            }
+        }catch ( Exception e){
 
         }
-        try {
-            mMap.clear();
-        } catch (Exception e) {
-
-        }
-
-
     }
 
     private void clearPolyLine() {
@@ -902,18 +904,17 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     @Override
     public void afterTextChanged(Editable s) {
-        cleanMapAndRecyclerView();
-        clearPolyLine();
-        String lastValue = "";
-        String newValue = s.getFilters().toString();
+        try {
+            cleanMapAndRecyclerView();
+            clearPolyLine();
+            String lastValue = "";
+            String newValue = s.getFilters().toString();
+            if (!newValue.equals(lastValue) && s.length() >= 2) {
+                getResultDraw();
+            }
+        }catch (Exception e){
 
-
-
-
-        if (!newValue.equals(lastValue) && s.length() >= 2) {
-            getResultDraw();
         }
-
 
     }
 
