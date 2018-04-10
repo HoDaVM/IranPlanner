@@ -45,6 +45,9 @@ import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentListActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentPresenter;
 import com.iranplanner.tourism.iranplanner.ui.camera.PhotoCropFragment;
+
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.List;
 import javax.inject.Inject;
@@ -60,6 +63,8 @@ import entity.ResultParamUser;
 import entity.ResultRestaurantFull;
 import entity.ResultWidgetFull;
 import entity.SendParamUser;
+import ir.adad.client.AdListener;
+import ir.adad.client.AdView;
 import tools.Constants;
 import tools.Util;
 
@@ -102,7 +107,32 @@ public class RestaurantDetailActivity extends StandardActivity implements Restau
     TextView txtRateType;
     private ProgressDialog progressDialog;
     SupportMapFragment mapFragment;
+    private AdListener mAdListener = new AdListener() {
 
+        @Override
+        public void onAdLoaded() {
+//            Toast.makeText(getApplicationContext(), "Banner Ad loaded", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onAdFailedToLoad() {
+//            Toast.makeText(getApplicationContext(), "Banner ad failed to load", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onMessageReceive(JSONObject message) {
+
+//            Toast.makeText(getApplicationContext(), "Banner ", Toast.LENGTH_SHORT).show();
+
+        }
+
+        @Override
+        public void onRemoveAdsRequested() {
+//            Toast.makeText(getApplicationContext(), "User requested to remove Banner ads from app", Toast.LENGTH_SHORT).show();
+            //Move your user to shopping center of your app
+        }
+
+    };
     @Override
     protected int getLayoutId() {
         return R.layout.activity_restaurant;
@@ -134,6 +164,8 @@ public class RestaurantDetailActivity extends StandardActivity implements Restau
         likeHolder.setOnClickListener(this);
         ratingPeopleHolder.setOnClickListener(this);
         img.setOnClickListener(this);
+        ((AdView) findViewById(R.id.banner_ad_view)).setAdListener(mAdListener);
+
     }
 
     @Override

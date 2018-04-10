@@ -24,6 +24,7 @@ import com.iranplanner.tourism.iranplanner.di.model.App;
 
 import java.util.Locale;
 
+import ir.adad.client.Adad;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -39,6 +40,7 @@ public abstract class StandardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Adad.initialize(getApplicationContext());
         setContentView(getLayoutId());
         FirebaseCrash.logcat(Log.ERROR, "firebaseCrash", "NPE caught");
         FirebaseCrash.report(new Exception("opss"));

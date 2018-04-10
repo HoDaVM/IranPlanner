@@ -68,6 +68,8 @@ import com.iranplanner.tourism.iranplanner.ui.camera.PhotoUtils;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -92,6 +94,8 @@ import entity.ResultWidgetFull;
 import entity.SendParamUser;
 import entity.ShowAtractionDetailMore;
 import entity.ShowAttractionListMore;
+import ir.adad.client.AdListener;
+import ir.adad.client.AdView;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -150,6 +154,32 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
     RelativeLayout ratingPeopleHolder;
     RatingBar ratingBar;
     TextView txtRateType, txtPhotos;
+    private AdListener mAdListener = new AdListener() {
+
+        @Override
+        public void onAdLoaded() {
+//            Toast.makeText(getApplicationContext(), "Banner Ad loaded", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onAdFailedToLoad() {
+//            Toast.makeText(getApplicationContext(), "Banner ad failed to load", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onMessageReceive(JSONObject message) {
+
+//            Toast.makeText(getApplicationContext(), "Banner ", Toast.LENGTH_SHORT).show();
+
+        }
+
+        @Override
+        public void onRemoveAdsRequested() {
+//            Toast.makeText(getApplicationContext(), "User requested to remove Banner ads from app", Toast.LENGTH_SHORT).show();
+            //Move your user to shopping center of your app
+        }
+
+    };
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -445,6 +475,7 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
         setImageHolder();
         commentPresenter.getWidgetResult("nodeuser", resultLodgingHotelDetail.getLodgingId(), Util.getUseRIdFromShareprefrence(getApplicationContext()), "lodging", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
         mapFragment.getMapAsync(this);
+        ((AdView) findViewById(R.id.banner_ad_view)).setAdListener(mAdListener);
 
 
     }

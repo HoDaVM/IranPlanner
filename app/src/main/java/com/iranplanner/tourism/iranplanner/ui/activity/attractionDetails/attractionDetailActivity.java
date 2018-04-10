@@ -633,7 +633,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
     @Override
     protected int getLayoutId() {
-        Adad.initialize(getApplicationContext());
+
         return R.layout.activity_attraction_details;
     }
 

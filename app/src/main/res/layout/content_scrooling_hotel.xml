@@ -352,6 +352,16 @@
             android:layout_below="@+id/txtAddressTitle"
             android:paddingTop="@dimen/padding_short"
             android:text="ادرس " />
+
+
+            <ir.adad.client.Banner
+                android:id="@+id/banner_ad_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:layout_below="@+id/txtAddress"/>
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -372,6 +382,7 @@
             android:layout_alignParentTop="true"
             android:focusableInTouchMode="true"
             tools:context="com.iranplanner.tourism.iranplanner.ui.activity.moreItemItinerary.MoreItemItineraryActivity" />
+
     </RelativeLayout>
 
 </RelativeLayout>

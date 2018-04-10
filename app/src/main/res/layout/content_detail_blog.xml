@@ -199,7 +199,8 @@
             android:layout_below="@+id/supplierAddress"
             android:padding="@dimen/padding_standard"
             android:visibility="visible"
-            android:background="@color/white_"            >
+            android:background="@color/white_"
+            android:layout_marginBottom="60dp">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerBlogRelated"

@@ -34,6 +34,8 @@ import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentListActivi
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentPresenter;
 import com.iranplanner.tourism.iranplanner.ui.navigationDrawer.NavigationFunctionsHelper;
 
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -57,6 +59,8 @@ import entity.ResultWidget;
 import entity.ResultWidgetFull;
 import entity.ShowAtractionDetailMore;
 import entity.ShowAttractionListMore;
+import ir.adad.client.AdListener;
+import ir.adad.client.AdView;
 import tools.Constants;
 import tools.Util;
 
@@ -110,7 +114,32 @@ public class BlogDetailActivity extends StandardActivity implements View.OnClick
     String rotateImage;
     int LikeValue;
     List<ResultWidget> resultWidget;
+    private AdListener mAdListener = new AdListener() {
 
+        @Override
+        public void onAdLoaded() {
+//            Toast.makeText(getApplicationContext(), "Banner Ad loaded", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onAdFailedToLoad() {
+//            Toast.makeText(getApplicationContext(), "Banner ad failed to load", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onMessageReceive(JSONObject message) {
+
+//            Toast.makeText(getApplicationContext(), "Banner ", Toast.LENGTH_SHORT).show();
+
+        }
+
+        @Override
+        public void onRemoveAdsRequested() {
+//            Toast.makeText(getApplicationContext(), "User requested to remove Banner ads from app", Toast.LENGTH_SHORT).show();
+            //Move your user to shopping center of your app
+        }
+
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,6 +194,7 @@ public class BlogDetailActivity extends StandardActivity implements View.OnClick
         likeImg.setOnClickListener(this);
         img.setOnClickListener(this);
         cameraHolder.setOnClickListener(this);
+        ((AdView) findViewById(R.id.banner_ad_view)).setAdListener(mAdListener);
 
 
 //
