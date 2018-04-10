@@ -117,7 +117,9 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
 
     @Override
     public int getItemCount() {
+        if(ResultRoom.size()>0)
         return ResultRoom.size();
+        else return 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
