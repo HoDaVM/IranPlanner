@@ -171,12 +171,13 @@
         </service>
         <!-- ./Firebase Notifications -->
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="99164a3830139c22424702ada3eeee9501d88ab9" />
+        <!--<meta-data-->
+            <!--android:name="io.fabric.ApiKey"-->
+            <!--android:value="99164a3830139c22424702ada3eeee9501d88ab9" />-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+        <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
 
         <activity
             android:name=".ui.activity.ScrollingActivity1"
