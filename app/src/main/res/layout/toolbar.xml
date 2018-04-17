@@ -18,11 +18,47 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/toolbar_search1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="@dimen/margin_standard"
+            android:clickable="true"
+            android:src="@mipmap/ic_magnifier_foreground" />
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_toEndOf="@+id/toolbarToggle"-->
+            <!--android:background="@color/white_"-->
+            <!--android:id="@+id/searchHolder">-->
+
+            <!--<ImageView-->
+                <!--android:id="@+id/toolbar_search"-->
+                <!--android:layout_width="25dp"-->
+                <!--android:layout_height="25dp"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:layout_centerInParent="true"-->
+                <!--android:layout_marginEnd="@dimen/margin_standard"-->
+                <!--android:clickable="true"-->
+                <!--android:src="@mipmap/ic_magnifier_blue_foreground" />-->
+
+            <!--<TextView-->
+                <!--style="@style/StandardTitle"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:layout_toStartOf="@+id/toolbar_search"-->
+                <!--android:text="جستجو"-->
+                <!--android:padding="@dimen/margin_short"/>-->
+        <!--</RelativeLayout>-->
 
         <ImageView
             android:id="@+id/toolbarToggle"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentStart="true"
             android:layout_centerInParent="true"
             android:layout_marginStart="@dimen/margin_standard"
@@ -33,9 +69,8 @@
             android:id="@+id/toolbarBack"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerInParent="true"
-            android:layout_marginStart="@dimen/margin_standard"
+            android:layout_alignStart="@+id/toolbarToggle"
+            android:layout_centerVertical="true"
             android:clickable="true"
             android:src="@drawable/ic_arrow_back_black_24dp"
             android:tint="@color/white_" />
@@ -45,16 +80,16 @@
             bc there is no use for Search in this part
         -->
 
-        <ImageView
-            android:id="@+id/toolbarToggleLeft"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true"
-            android:layout_marginEnd="@dimen/margin_standard"
-            android:clickable="true"
-            android:src="@mipmap/ic_search"
-            android:visibility="gone" />
+        <!--<ImageView-->
+        <!--android:id="@+id/toolbar_search"-->
+        <!--android:layout_width="25dp"-->
+        <!--android:layout_height="25dp"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:layout_marginEnd="@dimen/margin_standard"-->
+        <!--android:clickable="true"-->
+        <!--android:src="@mipmap/ic_magnifier_foreground"-->
+        <!--/>-->
 
         <LinearLayout
             android:id="@+id/toolbarTitleParent"

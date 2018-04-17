@@ -17,6 +17,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -98,6 +99,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.inject.Inject;
 
@@ -558,15 +561,31 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     private void getResultDraw() {
         if (mMap != null) {
-            VisibleRegion visibleRegion = mMap.getProjection().getVisibleRegion();
-            LatLng farLeft = visibleRegion.farLeft;
-            LatLng nearRight = visibleRegion.nearRight;
-            String searchText = search.getText().toString();
-            if (PolylinePoints.size() > 0) {
-                mapPandaPresenter.getDrawResult(PandaMapList, searchText, chooseAttraction, chooseHotel, chooseEvent, farLeft.toString(), nearRight.toString(), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
-            } else {
-                mapPandaPresenter.getDrawResult(searchText, chooseAttraction, chooseHotel, chooseEvent, farLeft.toString(), nearRight.toString(), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
-            }
+            getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    zoomLevel = String.valueOf(mMap.getCameraPosition().zoom);
+
+                    VisibleRegion visibleRegion = mMap.getProjection().getVisibleRegion();
+                    LatLng farLeft = visibleRegion.farLeft;
+                    LatLng nearRight = visibleRegion.nearRight;
+                    String searchText = search.getText().toString();
+                    if (PolylinePoints.size() > 0) {
+                        mapPandaPresenter.getDrawResult(PandaMapList, searchText, chooseAttraction, chooseHotel, chooseEvent, farLeft.toString(), nearRight.toString(), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()), zoomLevel);
+                    } else {
+                        mapPandaPresenter.getDrawResult(searchText, chooseAttraction, chooseHotel, chooseEvent, farLeft.toString(), nearRight.toString(), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()), zoomLevel);
+                    }
+                }
+            });
+
+//            VisibleRegion visibleRegion = mMap.getProjection().getVisibleRegion();
+//            LatLng farLeft = visibleRegion.farLeft;
+//            LatLng nearRight = visibleRegion.nearRight;
+//            String searchText = search.getText().toString();
+//            if (PolylinePoints.size() > 0) {
+//                mapPandaPresenter.getDrawResult(PandaMapList, searchText, chooseAttraction, chooseHotel, chooseEvent, farLeft.toString(), nearRight.toString(), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
+//            } else {
+//                mapPandaPresenter.getDrawResult(searchText, chooseAttraction, chooseHotel, chooseEvent, farLeft.toString(), nearRight.toString(), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
+//            }
         }
     }
 
@@ -621,7 +640,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
             bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.mipmap.ic_hotel_pin_foreground);
         } else if (markerType.get(index).equals("city")) {
             bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.mipmap.ic_marker);
-        }else if (markerType.get(index).equals("event")) {
+        } else if (markerType.get(index).equals("event")) {
             bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.mipmap.ic_event_pin_foreground);
         }
         Bitmap b = bitmapdraw.getBitmap();
@@ -631,7 +650,7 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
 
     @Override
     public void onDrag(MotionEvent motionEvent) {
-
+        zoomLevel = String.valueOf(mMap.getMaxZoomLevel());
         if (mMap != null && setDraw && !isResultForDraw) {
             Log.d("ON_DRAG", String.format("ME: %s", motionEvent));
             Log.d("ON_DRAG", String.format("ME: %s", motionEvent));
@@ -881,40 +900,82 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     @Override
     public void showPandaSearch(ResultPandaMaps resultPandaMapSearch) {
         List<ResultPandaMap> re = resultPandaMapSearch.getResultPandaMap();
-         titleArray = new ArrayList<>();
+        titleArray = new ArrayList<>();
         for (ResultPandaMap resultPandaMap : re) {
             titleArray.add(resultPandaMap.getPoint().getTitle());
         }
-         adapterResultSearch = new ArrayAdapter<String>(getContext(),
+        adapterResultSearch = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_dropdown_item_1line, titleArray.toArray(new String[0]));
         search.setAdapter(adapterResultSearch);
         adapterResultSearch.notifyDataSetChanged();
     }
 
 
+    long delay = 1000; // 1 seconds after user stops typing
+    long last_text_edit = 0;
+    Handler handler = new Handler();
+
+    private Runnable input_finish_checker = new Runnable() {
+        public void run() {
+            if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
+                // TODO: do what you need here
+                try {
+                    cleanMapAndRecyclerView();
+                    clearPolyLine();
+//                    String newValue = editableText.getFilters().toString();
+                    if (/*!newValue.equals(lastValue) &&*/ editableText.length() >= 2) {
+                        getResultDraw();
+                    }
+                } catch (Exception e) {
+
+                }
+            }
+        }
+    };
+
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
     }
 
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+    @Override
+
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        handler.removeCallbacks(input_finish_checker);
     }
+
+    String editableText;
 
     @Override
     public void afterTextChanged(Editable s) {
         try {
             cleanMapAndRecyclerView();
             clearPolyLine();
-            String lastValue = "";
-            String newValue = s.getFilters().toString();
-            if (!newValue.equals(lastValue) && s.length() >= 2) {
-                getResultDraw();
-            }
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
+        editableText = s.toString();
+        if (s.length() > 0) {
+            last_text_edit = System.currentTimeMillis();
+            handler.postDelayed(input_finish_checker, delay);
+        } else {
+
+        }
+
+//        try {
+//            cleanMapAndRecyclerView();
+//            clearPolyLine();
+//            String lastValue = "";
+//            String newValue = s.getFilters().toString();
+//            if (!newValue.equals(lastValue) && s.length() >= 2) {
+//
+//
+//                        getResultDraw();
+//
+//        }} catch (Exception e) {
+//
+//        }
 
     }
 
@@ -933,6 +994,8 @@ public class MapPandaFragment extends StandardFragment implements OnMapReadyCall
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+    String zoomLevel;
 
     @Override
     public void onLocationChanged(Location location) {

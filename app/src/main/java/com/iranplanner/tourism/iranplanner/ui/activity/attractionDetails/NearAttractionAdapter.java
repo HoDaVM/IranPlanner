@@ -86,12 +86,12 @@ public class NearAttractionAdapter extends RecyclerView.Adapter<NearAttractionAd
 
     @Override
     public int getItemCount() {
-        if (postNodes != null) {
+        if (postNodes != null && blogNodes.size() > 0) {
             return postNodes.size();
-        } else if (resultAttractionList != null) {
+        } else if (resultAttractionList != null && resultAttractionList.size() > 0) {
             return resultAttractionList.size();
         } else {
-            return blogNodes.size();
+            return 0;
         }
     }
 

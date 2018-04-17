@@ -55,8 +55,8 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
         viewHolder.roomType.setText(ResultRoom.get(position).getRoomTitle());
         if (ResultRoom.get(position).getRoomCapacityExtra() != null && !ResultRoom.get(position).getRoomCapacityExtra().equals("0")) {
             viewHolder.txtCapacity.setText(Util.persianNumbers(ResultRoom.get(position).getRoomCapacityAdult()) + " نفر +" + Util.persianNumbers(ResultRoom.get(position).getRoomCapacityExtra()) + " نفر اضافه ");
-        } else {
-            viewHolder.txtCapacity.setText(Util.persianNumbers(ResultRoom.get(position).getRoomCapacityAdult()) + " نفر ");
+        } else  {
+            viewHolder.txtCapacity.setText("");
         }
         viewHolder.BreakfastHolder.setVisibility(View.VISIBLE);
         List<LodgingRoomFacility> LodgingRoomFacility = ResultRoom.get(position).getLodgingRoomFacility();
@@ -72,21 +72,23 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
             List<LodgingRoomBed> LodgingRoomBeds = ResultRoom.get(position).getLodgingRoomBed();
             int index = 0;
             for (LodgingRoomBed lodgingRoomBed : LodgingRoomBeds) {
-                if (index == 0) {
-                    viewHolder.capacityRoomHolderDetail1.setVisibility(View.VISIBLE);
-                    viewHolder.txtCapacityRoomDetail1.setText(lodgingRoomBed.getRoomBedName() + " " + Util.persianNumbers(lodgingRoomBed.getRoomBedCount()) + " عدد");
-                }
-                if (index == 1) {
-                    viewHolder.capacityRoomHolderDetail2.setVisibility(View.VISIBLE);
-                    viewHolder.txtCapacityRoomDetail2.setText(lodgingRoomBed.getRoomBedName() + " " + Util.persianNumbers(lodgingRoomBed.getRoomBedCount()) + " عدد");
-                }
-                if (index == 2) {
-                    viewHolder.capacityRoomHolderDetail3.setVisibility(View.VISIBLE);
-                    viewHolder.txtCapacityRoomDetail3.setText(lodgingRoomBed.getRoomBedName() + " " + Util.persianNumbers(lodgingRoomBed.getRoomBedCount()) + " عدد");
-                }
-                if (index == 3) {
-                    viewHolder.capacityRoomHolderDetail4.setVisibility(View.VISIBLE);
-                    viewHolder.txtCapacityRoomDetail4.setText(lodgingRoomBed.getRoomBedName() + " " + Util.persianNumbers(lodgingRoomBed.getRoomBedCount()) + " عدد");
+                if(  lodgingRoomBed.getRoomBedCount()!=null){
+                    if (index == 0 ) {
+                        viewHolder.capacityRoomHolderDetail1.setVisibility(View.VISIBLE);
+                        viewHolder.txtCapacityRoomDetail1.setText(lodgingRoomBed.getRoomBedName() + " " + Util.persianNumbers(lodgingRoomBed.getRoomBedCount()) + " عدد");
+                    }
+                    if (index == 1) {
+                        viewHolder.capacityRoomHolderDetail2.setVisibility(View.VISIBLE);
+                        viewHolder.txtCapacityRoomDetail2.setText(lodgingRoomBed.getRoomBedName() + " " + Util.persianNumbers(lodgingRoomBed.getRoomBedCount()) + " عدد");
+                    }
+                    if (index == 2) {
+                        viewHolder.capacityRoomHolderDetail3.setVisibility(View.VISIBLE);
+                        viewHolder.txtCapacityRoomDetail3.setText(lodgingRoomBed.getRoomBedName() + " " + Util.persianNumbers(lodgingRoomBed.getRoomBedCount()) + " عدد");
+                    }
+                    if (index == 3) {
+                        viewHolder.capacityRoomHolderDetail4.setVisibility(View.VISIBLE);
+                        viewHolder.txtCapacityRoomDetail4.setText(lodgingRoomBed.getRoomBedName() + " " + Util.persianNumbers(lodgingRoomBed.getRoomBedCount()) + " عدد");
+                    }
                 }
                 index++;
             }

@@ -86,9 +86,9 @@ public class MapPandaPresenter extends MapPandaContract {
 //    }
 
     @Override
-    public void getDrawResult(PandaMapList pandaMapList, String valueSearch, String attractionFilter, String lodgingFilter, String eventFilter,String position1, String position2, String token, String androidId) {
+    public void getDrawResult(PandaMapList pandaMapList, String valueSearch, String attractionFilter, String lodgingFilter, String eventFilter,String position1, String position2, String token, String androidId, String zoomLevel) {
         mView.showProgress();
-        retrofit.create(MapPandaService.class).getDrawResult( pandaMapList,  valueSearch,  attractionFilter,  lodgingFilter,  eventFilter, position1,  position2,  token,  androidId)
+        retrofit.create(MapPandaService.class).getDrawResult( pandaMapList,  valueSearch,  attractionFilter,  lodgingFilter,  eventFilter, position1,  position2,  token,  androidId,zoomLevel)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -115,9 +115,9 @@ public class MapPandaPresenter extends MapPandaContract {
     }
 
     @Override
-    public void getDrawResult(String valueSearch, String attractionFilter, String lodgingFilter,String eventFilter, String position1, String position2, String token, String androidId) {
+    public void getDrawResult(String valueSearch, String attractionFilter, String lodgingFilter,String eventFilter, String position1, String position2, String token, String androidId, String zoomLevel) {
 
-        retrofit.create(MapPandaService.class).getDrawResult(   valueSearch,  attractionFilter,  lodgingFilter,  eventFilter, position1,  position2,  token,  androidId)
+        retrofit.create(MapPandaService.class).getDrawResult(   valueSearch,  attractionFilter,  lodgingFilter,  eventFilter, position1,  position2,  token,  androidId,zoomLevel)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -182,7 +182,8 @@ public class MapPandaPresenter extends MapPandaContract {
                                                   @Query("position1") String position1,
                                                   @Query("position2") String position2,
                                                   @Query("cid") String token,
-                                                  @Query("andId") String androidId);
+                                                  @Query("andId") String androidId,
+                                                  @Query("zoomLevel") String zoomLevel);
         @POST("api-field.php?action=pandamap")
         Observable<ResultPandaMaps> getDrawResult(@Query("valueSearch") String valueSearch,
                                                   @Query("attractionFilter") String attractionFilter,
@@ -191,7 +192,8 @@ public class MapPandaPresenter extends MapPandaContract {
                                                   @Query("position1") String position1,
                                                   @Query("position2") String position2,
                                                   @Query("cid") String token,
-                                                  @Query("andId") String androidId);
+                                                  @Query("andId") String androidId,
+                                                  @Query("zoomLevel") String zoomLevel);
 
    //https://api.parsdid.com/iranplanner/app/api-field.php?action=pandaautocomplete&value=غار
         @GET("api-field.php?")

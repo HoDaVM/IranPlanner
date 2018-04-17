@@ -1,6 +1,7 @@
 package com.iranplanner.tourism.iranplanner.ui.activity.filterMap;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -96,6 +97,7 @@ public class FilterMapAttraction extends AppCompatActivity implements OnMapReady
     ReservationHotelListPresenter reservationHotelListPresenter;
 
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         mLocationRequest = new LocationRequest();
@@ -173,6 +175,7 @@ public class FilterMapAttraction extends AppCompatActivity implements OnMapReady
     }
 
 
+    @SuppressLint("RestrictedApi")
     protected synchronized void buildGoogleApiClient() {
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)

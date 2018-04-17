@@ -184,8 +184,8 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
     CircleIndicator indicator;
     @BindView(R.id.toolbarToggle)
     ImageView toolbarToggle;
-    @BindView(R.id.toolbarToggleLeft)
-    ImageView toolbarToggleLeft;
+    //    @BindView(R.id.toolbarToggleLeft)
+//    ImageView toolbarToggleLeft;
     @BindView(R.id.featureListRelativeLayout)
     RelativeLayout frameLayout;
     @BindView(R.id.featureListHolder)
@@ -316,6 +316,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
 
         tvEventShowAll.setOnClickListener(this);
         txtMoreTitleBestRestaurant.setOnClickListener(this);
+
 
         //home nav views
         rootView.findViewById(R.id.homeNavAttraction).setOnClickListener(this);

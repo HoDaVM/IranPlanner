@@ -104,7 +104,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:background="@color/white_"
-        android:padding="@dimen/margin_short">
+        android:padding="@dimen/margin_short" android:visibility="gone">
 
         <LinearLayout
             android:layout_width="wrap_content"
