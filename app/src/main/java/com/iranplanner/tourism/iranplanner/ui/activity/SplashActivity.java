@@ -32,6 +32,7 @@ import com.iranplanner.tourism.iranplanner.ui.activity.login.LoginActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.mainActivity.MainActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListPresenter;
 import com.iranplanner.tourism.iranplanner.ui.activity.restaurant.RestaurantContract;
+import com.iranplanner.tourism.iranplanner.ui.activity.souvenirFood.SouvenirFoodContract;
 import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogContract;
 import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogModule;
 import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogPresenter;
@@ -45,6 +46,7 @@ import com.iranplanner.tourism.iranplanner.ui.fragment.itinerarySearch.MainSearc
 import javax.inject.Inject;
 
 import entity.GetHomeResult;
+import entity.GetResultSouvenir;
 import entity.HomeAndBlog;
 import entity.RestaurantList;
 import entity.ResultBlogList;
@@ -69,7 +71,7 @@ import tools.CustomMessage;
 import tools.Util;
 
 public class SplashActivity extends AppCompatActivity implements MainSearchPresenter.View, HomeContract.View, ReservationContract.View,
-        AttractionListMorePresenter.View, ReservationHotelListPresenter.View, RestaurantContract.View {
+        AttractionListMorePresenter.View, ReservationHotelListPresenter.View, RestaurantContract.View,SouvenirFoodContract.View {
     Thread splashTread;
     @Inject
     HomePresenter homePresenter;
@@ -176,7 +178,7 @@ public class SplashActivity extends AppCompatActivity implements MainSearchPrese
     }
 
     private void getHomeResult(String destination, String selectId) {
-        DaggerHomeComponent.builder().netComponent(((App) getApplicationContext()).getNetComponent()).homeModule(new HomeModule(this, this, this, this, this, this)).build().inject(this);
+        DaggerHomeComponent.builder().netComponent(((App) getApplicationContext()).getNetComponent()).homeModule(new HomeModule(this,this, this, this, this, this, this)).build().inject(this);
         String cid = Util.getTokenFromSharedPreferences(getApplicationContext());
         String andId = Util.getAndroidIdFromSharedPreferences(getApplicationContext());
         homePresenter.getHomeAndBlog("home", destination, selectId, cid, andId, "list");
@@ -338,6 +340,11 @@ public class SplashActivity extends AppCompatActivity implements MainSearchPrese
     }
 
     @Override
+    public void showFullSouvenir(GetResultSouvenir getResultSouvenir) {
+
+    }
+
+    @Override
     public void setRestaurantFull(ResultRestaurantFull resultRestaurantFull) {
 
     }
@@ -362,8 +369,9 @@ public class SplashActivity extends AppCompatActivity implements MainSearchPrese
             intent.putExtra("nTypeNotification", nTypeNotification);
             intent.putExtra("idNotification", idNotification);
         }
-        finish();
+
         startActivity(intent);
+        finish();
     }
 
 

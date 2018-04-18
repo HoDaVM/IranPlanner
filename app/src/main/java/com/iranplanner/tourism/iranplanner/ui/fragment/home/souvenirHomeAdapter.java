@@ -13,6 +13,7 @@ import com.iranplanner.tourism.iranplanner.R;
 import java.util.List;
 
 import entity.HomeSouvenir;
+import entity.ResultSouvenirList;
 import tools.Util;
 
 
@@ -23,6 +24,7 @@ import tools.Util;
 public class souvenirHomeAdapter extends RecyclerView.Adapter<souvenirHomeAdapter.MyViewHolder> {
 
     List<HomeSouvenir> homeSouvenirs;
+    List<ResultSouvenirList> resultSouvenirLists;
     Context context;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -38,9 +40,10 @@ public class souvenirHomeAdapter extends RecyclerView.Adapter<souvenirHomeAdapte
         }
     }
 
-    public souvenirHomeAdapter(List<HomeSouvenir> homeSouvenirs, Context context) {
+    public souvenirHomeAdapter(List<HomeSouvenir> homeSouvenirs, Context context, List<ResultSouvenirList> resultSouvenirLists) {
         this.homeSouvenirs = homeSouvenirs;
         this.context = context;
+        this.resultSouvenirLists=resultSouvenirLists;
     }
 
     @Override
@@ -56,15 +59,27 @@ public class souvenirHomeAdapter extends RecyclerView.Adapter<souvenirHomeAdapte
     public void onBindViewHolder(final MyViewHolder holder, final int listPosition) {
         TextView textViewName = holder.textViewName;
         ImageView imageView = holder.imageViewIcon;
-        textViewName.setText(homeSouvenirs.get(listPosition).getSouvenirsTitle());
-        if (homeSouvenirs.get(listPosition).getImgUrl() != null) {
-            Util.setImageView(String.valueOf(homeSouvenirs.get(listPosition).getImgUrl()), context, imageView,null);
-    }
+        if (homeSouvenirs != null) {
+            textViewName.setText(homeSouvenirs.get(listPosition).getSouvenirsTitle());
+            if (homeSouvenirs.get(listPosition).getImgUrl() != null) {
+                Util.setImageView(String.valueOf(homeSouvenirs.get(listPosition).getImgUrl()), context, imageView, null);
+            }
+        }else  if (resultSouvenirLists != null) {
+            textViewName.setText(resultSouvenirLists.get(listPosition).getResultSouvenir().getSouvenirName());
+            if (resultSouvenirLists.get(listPosition).getResultSouvenir().getSouvenirImgUrl() != null) {
+                Util.setImageView(String.valueOf(resultSouvenirLists.get(listPosition).getResultSouvenir().getSouvenirImgUrl()), context, imageView, null);
+            }
+        }
     }
 
     @Override
     public int getItemCount() {
-        return homeSouvenirs.size();
+        if (resultSouvenirLists != null) {
+            return resultSouvenirLists.size();
+        } else if (homeSouvenirs != null) {
+            return homeSouvenirs.size();
+        } else return 0;
+
     }
 }
 

@@ -1,22 +1,19 @@
 
 package entity;
 
+import java.io.Serializable;
+import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
-
-public class ResultSouvenir implements Serializable{
+public class ResultSouvenirFull implements Serializable {
 
     @SerializedName("souvenir_id")
     @Expose
     private String souvenirId;
-    @SerializedName("souvenir_name")
+    @SerializedName("souvenir_title")
     @Expose
-    private String souvenirName;
-    @SerializedName("souvenir_description")
-    @Expose
-    private String souvenirDescription;
+    private String souvenirTitle;
     @SerializedName("souvenir_province_id")
     @Expose
     private String souvenirProvinceId;
@@ -32,6 +29,12 @@ public class ResultSouvenir implements Serializable{
     @SerializedName("souvenir_img_url")
     @Expose
     private String souvenirImgUrl;
+    @SerializedName("souvenir_body")
+    @Expose
+    private String souvenirBody;
+    @SerializedName("Result_souvenir_list")
+    @Expose
+    private List<ResultSouvenirList> resultSouvenirList = null;
 
     public String getSouvenirId() {
         return souvenirId;
@@ -41,34 +44,21 @@ public class ResultSouvenir implements Serializable{
         this.souvenirId = souvenirId;
     }
 
-    public ResultSouvenir withSouvenirId(String souvenirId) {
+    public ResultSouvenirFull withSouvenirId(String souvenirId) {
         this.souvenirId = souvenirId;
         return this;
     }
 
-    public String getSouvenirName() {
-        return souvenirName;
+    public String getSouvenirTitle() {
+        return souvenirTitle;
     }
 
-    public void setSouvenirName(String souvenirName) {
-        this.souvenirName = souvenirName;
+    public void setSouvenirTitle(String souvenirTitle) {
+        this.souvenirTitle = souvenirTitle;
     }
 
-    public ResultSouvenir withSouvenirName(String souvenirName) {
-        this.souvenirName = souvenirName;
-        return this;
-    }
-
-    public String getSouvenirDescription() {
-        return souvenirDescription;
-    }
-
-    public void setSouvenirDescription(String souvenirDescription) {
-        this.souvenirDescription = souvenirDescription;
-    }
-
-    public ResultSouvenir withSouvenirDescription(String souvenirDescription) {
-        this.souvenirDescription = souvenirDescription;
+    public ResultSouvenirFull withSouvenirTitle(String souvenirTitle) {
+        this.souvenirTitle = souvenirTitle;
         return this;
     }
 
@@ -80,7 +70,7 @@ public class ResultSouvenir implements Serializable{
         this.souvenirProvinceId = souvenirProvinceId;
     }
 
-    public ResultSouvenir withSouvenirProvinceId(String souvenirProvinceId) {
+    public ResultSouvenirFull withSouvenirProvinceId(String souvenirProvinceId) {
         this.souvenirProvinceId = souvenirProvinceId;
         return this;
     }
@@ -93,7 +83,7 @@ public class ResultSouvenir implements Serializable{
         this.souvenirProvinceName = souvenirProvinceName;
     }
 
-    public ResultSouvenir withSouvenirProvinceName(String souvenirProvinceName) {
+    public ResultSouvenirFull withSouvenirProvinceName(String souvenirProvinceName) {
         this.souvenirProvinceName = souvenirProvinceName;
         return this;
     }
@@ -106,7 +96,7 @@ public class ResultSouvenir implements Serializable{
         this.souvenirCityName = souvenirCityName;
     }
 
-    public ResultSouvenir withSouvenirCityName(String souvenirCityName) {
+    public ResultSouvenirFull withSouvenirCityName(String souvenirCityName) {
         this.souvenirCityName = souvenirCityName;
         return this;
     }
@@ -119,7 +109,7 @@ public class ResultSouvenir implements Serializable{
         this.souvenirCityId = souvenirCityId;
     }
 
-    public ResultSouvenir withSouvenirCityId(String souvenirCityId) {
+    public ResultSouvenirFull withSouvenirCityId(String souvenirCityId) {
         this.souvenirCityId = souvenirCityId;
         return this;
     }
@@ -132,8 +122,34 @@ public class ResultSouvenir implements Serializable{
         this.souvenirImgUrl = souvenirImgUrl;
     }
 
-    public ResultSouvenir withSouvenirImgUrl(String souvenirImgUrl) {
+    public ResultSouvenirFull withSouvenirImgUrl(String souvenirImgUrl) {
         this.souvenirImgUrl = souvenirImgUrl;
+        return this;
+    }
+
+    public String getSouvenirBody() {
+        return souvenirBody;
+    }
+
+    public void setSouvenirBody(String souvenirBody) {
+        this.souvenirBody = souvenirBody;
+    }
+
+    public ResultSouvenirFull withSouvenirBody(String souvenirBody) {
+        this.souvenirBody = souvenirBody;
+        return this;
+    }
+
+    public List<ResultSouvenirList> getResultSouvenirList() {
+        return resultSouvenirList;
+    }
+
+    public void setResultSouvenirList(List<ResultSouvenirList> resultSouvenirList) {
+        this.resultSouvenirList = resultSouvenirList;
+    }
+
+    public ResultSouvenirFull withResultSouvenirList(List<ResultSouvenirList> resultSouvenirList) {
+        this.resultSouvenirList = resultSouvenirList;
         return this;
     }
 

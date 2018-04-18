@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/GroupHolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+     >
+
+
+
+
+
+        <RelativeLayout
+            android:id="@+id/ShowMoreInfoHolder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/comment_rate"
+            android:background="@color/white_"
+            android:layout_alignParentStart="true"
+            android:padding="@dimen/padding_short">
+
+
+            <ImageView
+                android:id="@+id/imageTypeAttraction"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="@dimen/margin_short"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_natural" />
+
+            <TextView
+                android:id="@+id/txtType"
+                style="@style/StandardTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/titleBody"
+                android:padding="5dp"
+                android:text="txtType" />
+
+            <TextView
+                android:id="@+id/titleBody"
+                style="@style/StandardTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/txtType"
+                android:layout_alignBottom="@+id/txtType"
+                android:layout_marginEnd="@dimen/margin_xshort"
+
+                android:layout_marginStart="@dimen/margin_xshort"
+                android:layout_toEndOf="@+id/imageTypeAttraction"
+                android:gravity="right"
+                android:paddingBottom="@dimen/padding_short"
+                android:paddingTop="@dimen/padding_short"
+                android:text="درباره" />
+
+            <RelativeLayout
+                android:id="@+id/webBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/titleBody"
+                >
+
+                <com.coinpany.core.android.widget.CTouchyWebView
+                    android:id="@+id/contentFullDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/StandardTextGrey" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/txtAddressTitle"
+                style="@style/StandardText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/webBody"
+                android:layout_marginEnd="@dimen/margin_standard"
+                android:layout_marginStart="@dimen/margin_standard"
+                android:text="province"
+                android:textColor="@color/blue" />
+        </RelativeLayout>
+
+        <!--supplierlayoutTraveltype -->
+
+        <RelativeLayout
+            android:id="@+id/borderLayout"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_below="@+id/supplierLayoutTravelType"
+            android:background="@color/greyLight"></RelativeLayout>
+        <!--pageMore-->
+
+        <!-- nearAttraction-->
+        <RelativeLayout
+            android:id="@+id/bestAttractionHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ShowMoreInfoHolder"
+            android:padding="@dimen/padding_standard"
+            android:visibility="visible"
+            android:layout_marginBottom="@dimen/padding_big">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerBestSouvenirFood"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtSouvenirFoodBestTitle"
+                android:focusable="false" />
+
+            <TextView
+                android:id="@+id/txtSouvenirFoodBestTitle"
+                style="@style/StandardTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="@dimen/margin_short"
+                android:text="موارد بیشتر" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>

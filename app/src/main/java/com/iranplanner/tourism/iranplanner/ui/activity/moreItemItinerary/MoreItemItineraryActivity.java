@@ -1,6 +1,7 @@
 package com.iranplanner.tourism.iranplanner.ui.activity.moreItemItinerary;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -28,11 +29,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
+
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -213,7 +212,6 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         LikeValue = 0;
         VisitedValue = 0;
         WishValue = 0;
-        showToolViewPager();
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         itineraryData = (ResultItinerary) bundle.getSerializable("itineraryData");
@@ -321,14 +319,6 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         return isFav = !isFav;
     }
 
-    private void showToolViewPager() {
-//        ShowTavelToolsAdapter showTavelToolsAdapter = new ShowTavelToolsAdapter(getSupportFragmentManager());
-        ShowTavelToolsAdapter showTavelToolsAdapter = new ShowTavelToolsAdapter(getApplicationContext(), MoreItemItineraryActivity.this, itineraryId);
-        toolsPager.setAdapter(showTavelToolsAdapter);
-        toolsPager.setCurrentItem(2);
-        toolsPager.setClipToPadding(false);
-
-    }
 
     @Override
     public void onClick(View v) {
@@ -1025,6 +1015,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void onConnected(Bundle bundle) {
 

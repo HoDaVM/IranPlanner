@@ -28,20 +28,20 @@ public class NearAttractionAdapter extends RecyclerView.Adapter<NearAttractionAd
     private Context context;
     private List<ResultAttractionList> resultAttractionList;
     private List<PostNode> postNodes;
-    List<PostBlog> blogNodes;
+    List<PostBlog> PostBlog;
 
-    public NearAttractionAdapter(List<ResultAttractionList> resultAttractionList, Context context, List<PostNode> postNodes, List<PostBlog> blogNodes) {
+    public NearAttractionAdapter(List<ResultAttractionList> resultAttractionList, Context context, List<PostNode> postNodes, List<PostBlog> PostBlog) {
         this.resultAttractionList = resultAttractionList;
         this.context = context;
         this.postNodes = postNodes;
-        this.blogNodes = blogNodes;
+        this.PostBlog = PostBlog;
     }
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         view = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_home_small, parent, false);
-        if (blogNodes != null) {
+        if (PostBlog != null) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_attractions_home, parent, false);
         }
         return new Holder(view);
@@ -50,14 +50,14 @@ public class NearAttractionAdapter extends RecyclerView.Adapter<NearAttractionAd
     @Override
     public void onBindViewHolder(final Holder holder, final int listPosition) {
         // use content_attraction_home layout
-        if (blogNodes != null) {
+        if (PostBlog != null) {
             TextView textViewName = holder.txtView;
             ImageView image = holder.image;
             ProgressBar imageLoading = holder.imageLoading;
             textViewName.setLines(2);
-            textViewName.setText(blogNodes.get(listPosition).getTitle());
-            if (blogNodes.get(listPosition).getImgUrl() != null)
-                Util.setImageView(String.valueOf(blogNodes.get(listPosition).getImgUrl()), context, image, imageLoading);
+            textViewName.setText(PostBlog.get(listPosition).getTitle());
+            if (PostBlog.get(listPosition).getImgUrl() != null)
+                Util.setImageView(String.valueOf(PostBlog.get(listPosition).getImgUrl()), context, image, imageLoading);
         }
 
 //use content_home_small
@@ -86,7 +86,7 @@ public class NearAttractionAdapter extends RecyclerView.Adapter<NearAttractionAd
 
     @Override
     public int getItemCount() {
-        if (postNodes != null && blogNodes.size() > 0) {
+        if (PostBlog!=null && postNodes != null && PostBlog.size() > 0) {
             return postNodes.size();
         } else if (resultAttractionList != null && resultAttractionList.size() > 0) {
             return resultAttractionList.size();

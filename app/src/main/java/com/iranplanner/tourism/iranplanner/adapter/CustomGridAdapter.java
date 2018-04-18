@@ -43,8 +43,8 @@ public class CustomGridAdapter extends BaseAdapter {
 
     }
     private void imageing(ImageView imageView, int position) {
-        if (resultSouvenirs.get(position).getSouvenirUrl() != null) {
-            String url = resultSouvenirs.get(position).getSouvenirUrl();
+        if (resultSouvenirs.get(position).getSouvenirImgUrl() != null) {
+            String url = resultSouvenirs.get(position).getSouvenirImgUrl();
             Glide.with(mContext)
                     .load(url)
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)

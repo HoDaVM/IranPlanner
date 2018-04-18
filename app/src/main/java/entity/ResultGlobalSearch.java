@@ -17,33 +17,66 @@ public class ResultGlobalSearch implements Serializable{
     @SerializedName("title")
     @Expose
     private String title;
+    @SerializedName("province_name")
+    @Expose
+    private String provinceName;
+    @SerializedName("province_id")
+    @Expose
+    private String provinceId;
+    @SerializedName("city_name")
+    @Expose
+    private String cityName;
+    @SerializedName("city_id")
+    @Expose
+    private String cityId;
+    @SerializedName("position_lat")
+    @Expose
+    private String positionLat;
+    @SerializedName("position_lon")
+    @Expose
+    private String positionLon;
+    @SerializedName("type_id")
+    @Expose
+    private String typeId;
+    @SerializedName("type_title")
+    @Expose
+    private String typeTitle;
     @SerializedName("lang")
     @Expose
     private String lang;
-    @SerializedName("image")
+    @SerializedName("img_url")
     @Expose
-    private ImageGlobal image;
-    @SerializedName("contact")
+    private String imgUrl;
+    @SerializedName("rate_title")
     @Expose
-    private Contact contact;
-    @SerializedName("rate")
+    private String rateTitle;
+    @SerializedName("rate_id")
     @Expose
-    private Rate rate;
-    @SerializedName("parent_id")
+    private String rateId;
+    @SerializedName("rate_int")
     @Expose
-    private String parentId;
-    @SerializedName("parent_title")
+    private String rateInt;
+    @SerializedName("post_author_id")
     @Expose
-    private String parentTitle;
-    @SerializedName("position_lon")
+    private String postAuthorId;
+    @SerializedName("post_date")
     @Expose
-    private Double positionLon;
-    @SerializedName("position_lat")
+    private String postDate;
+    @SerializedName("author_name")
     @Expose
-    private Double positionLat;
+    private String authorName;
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
 
     public String getType() {
         return type;
+
     }
 
     public void setType(String type) {
@@ -81,6 +114,110 @@ public class ResultGlobalSearch implements Serializable{
         return this;
     }
 
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+    }
+
+    public ResultGlobalSearch withProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+        return this;
+    }
+
+    public String getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(String provinceId) {
+        this.provinceId = provinceId;
+    }
+
+    public ResultGlobalSearch withProvinceId(String provinceId) {
+        this.provinceId = provinceId;
+        return this;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public ResultGlobalSearch withCityName(String cityName) {
+        this.cityName = cityName;
+        return this;
+    }
+
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
+    }
+
+    public ResultGlobalSearch withCityId(String cityId) {
+        this.cityId = cityId;
+        return this;
+    }
+
+    public String getPositionLat() {
+        return positionLat;
+    }
+
+    public void setPositionLat(String positionLat) {
+        this.positionLat = positionLat;
+    }
+
+    public ResultGlobalSearch withPositionLat(String positionLat) {
+        this.positionLat = positionLat;
+        return this;
+    }
+
+    public String getPositionLon() {
+        return positionLon;
+    }
+
+    public void setPositionLon(String positionLon) {
+        this.positionLon = positionLon;
+    }
+
+    public ResultGlobalSearch withPositionLon(String positionLon) {
+        this.positionLon = positionLon;
+        return this;
+    }
+
+    public String getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(String typeId) {
+        this.typeId = typeId;
+    }
+
+    public ResultGlobalSearch withTypeId(String typeId) {
+        this.typeId = typeId;
+        return this;
+    }
+
+    public String getTypeTitle() {
+        return typeTitle;
+    }
+
+    public void setTypeTitle(String typeTitle) {
+        this.typeTitle = typeTitle;
+    }
+
+    public ResultGlobalSearch withTypeTitle(String typeTitle) {
+        this.typeTitle = typeTitle;
+        return this;
+    }
+
     public String getLang() {
         return lang;
     }
@@ -94,94 +231,81 @@ public class ResultGlobalSearch implements Serializable{
         return this;
     }
 
-    public ImageGlobal getImage() {
-        return image;
+    public String getImgUrl() {
+        return imgUrl;
     }
 
-    public void setImage(ImageGlobal image) {
-        this.image = image;
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
-    public ResultGlobalSearch withImage(ImageGlobal image) {
-        this.image = image;
+    public ResultGlobalSearch withImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
         return this;
     }
 
-    public Contact getContact() {
-        return contact;
+    public String getRateTitle() {
+        return rateTitle;
     }
 
-    public void setContact(Contact contact) {
-        this.contact = contact;
+    public void setRateTitle(String rateTitle) {
+        this.rateTitle = rateTitle;
     }
 
-    public ResultGlobalSearch withContact(Contact contact) {
-        this.contact = contact;
+    public ResultGlobalSearch withRateTitle(String rateTitle) {
+        this.rateTitle = rateTitle;
         return this;
     }
 
-    public Rate getRate() {
-        return rate;
+    public String getRateId() {
+        return rateId;
     }
 
-    public void setRate(Rate rate) {
-        this.rate = rate;
+    public void setRateId(String rateId) {
+        this.rateId = rateId;
     }
 
-    public ResultGlobalSearch withRate(Rate rate) {
-        this.rate = rate;
+    public ResultGlobalSearch withRateId(String rateId) {
+        this.rateId = rateId;
         return this;
     }
 
-    public String getParentId() {
-        return parentId;
+    public String getRateInt() {
+        return rateInt;
     }
 
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
+    public void setRateInt(String rateInt) {
+        this.rateInt = rateInt;
     }
 
-    public ResultGlobalSearch withParentId(String parentId) {
-        this.parentId = parentId;
+    public ResultGlobalSearch withRateInt(String rateInt) {
+        this.rateInt = rateInt;
         return this;
     }
 
-    public String getParentTitle() {
-        return parentTitle;
+    public String getPostAuthorId() {
+        return postAuthorId;
     }
 
-    public void setParentTitle(String parentTitle) {
-        this.parentTitle = parentTitle;
+    public void setPostAuthorId(String postAuthorId) {
+        this.postAuthorId = postAuthorId;
     }
 
-    public ResultGlobalSearch withParentTitle(String parentTitle) {
-        this.parentTitle = parentTitle;
+    public ResultGlobalSearch withPostAuthorId(String postAuthorId) {
+        this.postAuthorId = postAuthorId;
         return this;
     }
 
-    public Double getPositionLon() {
-        return positionLon;
+    public String getPostDate() {
+        return postDate;
     }
 
-    public void setPositionLon(Double positionLon) {
-        this.positionLon = positionLon;
+    public void setPostDate(String postDate) {
+        this.postDate = postDate;
     }
 
-    public ResultGlobalSearch withPositionLon(Double positionLon) {
-        this.positionLon = positionLon;
-        return this;
-    }
-
-    public Double getPositionLat() {
-        return positionLat;
-    }
-
-    public void setPositionLat(Double positionLat) {
-        this.positionLat = positionLat;
-    }
-
-    public ResultGlobalSearch withPositionLat(Double positionLat) {
-        this.positionLat = positionLat;
+    public ResultGlobalSearch withPostDate(String postDate) {
+        this.postDate = postDate;
         return this;
     }
 

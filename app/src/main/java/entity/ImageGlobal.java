@@ -5,40 +5,30 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class ImageGlobal implements Serializable {
 
     @SerializedName("main")
     @Expose
-    private String main;
+    private String mainImage;
     @SerializedName("list")
     @Expose
-    private String list;
+    private List<String> listImage;
 
-    public String getMain() {
-        return main;
+    public String getMainImage() {
+        return mainImage;
     }
 
-    public void setMain(String main) {
-        this.main = main;
+    public void setMainImage(String mainImage) {
+        this.mainImage = mainImage;
     }
 
-    public ImageGlobal withMain(String main) {
-        this.main = main;
-        return this;
+    public List<String> getListImage() {
+        return listImage;
     }
 
-    public String getList() {
-        return list;
+    public void setListImage(List<String> listImage) {
+        this.listImage = listImage;
     }
-
-    public void setList(String list) {
-        this.list = list;
-    }
-
-    public ImageGlobal withList(String list) {
-        this.list = list;
-        return this;
-    }
-
 }

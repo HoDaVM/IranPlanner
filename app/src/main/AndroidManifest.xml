@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.Manifest.permission.READ_PHONE_STATE" />
 
 
@@ -71,11 +71,13 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.mainActivity.MainActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTop"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.reqestHotelStatus.HotelReservationStatusActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.globalSearch.GlobalSearchActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.confirmHotelReservation.ActivityHotelReservationConfirm"
@@ -83,6 +85,9 @@
         <activity android:name=".ui.activity.MapsActivity" />
         <activity
             android:name=".ui.activity.editprofile.EditProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.souvenirFood.SouvenirFoodActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.getPhoneNumber.SendPhoneActivity"
@@ -172,12 +177,14 @@
         <!-- ./Firebase Notifications -->
 
         <!--<meta-data-->
-            <!--android:name="io.fabric.ApiKey"-->
-            <!--android:value="99164a3830139c22424702ada3eeee9501d88ab9" />-->
+        <!--android:name="io.fabric.ApiKey"-->
+        <!--android:value="99164a3830139c22424702ada3eeee9501d88ab9" />-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-        <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="false" />
 
         <activity
             android:name=".ui.activity.ScrollingActivity1"

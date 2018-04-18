@@ -337,7 +337,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         getPhoto = new GetPhoto(getApplicationContext(), this);
         cameraHolder.setOnClickListener(this);
 
-        if (resulAttraction.getRate().getRateFinalAvg() != null) {
+        if (resulAttraction.getRate()!=null&&resulAttraction.getRate().getRateFinalAvg() != null) {
             ratingBar.setRating(Float.valueOf(resulAttraction.getRate().getRateFinalAvg()));
             txtRateType.setText("تا کنون " + Util.persianNumbers(resulAttraction.getRate().getRateFinalCount()) + "نفر به اینجا امتیاز داده اند ");
         }
