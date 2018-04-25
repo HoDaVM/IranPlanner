@@ -9,8 +9,8 @@ import java.io.Serializable;
 
 import javax.inject.Inject;
 
+import entity.GetResultLocalFood;
 import entity.GetResultSouvenir;
-import entity.GlobalResult;
 import retrofit2.Retrofit;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -75,6 +75,7 @@ public class SouvenirFoodPresenter extends SouvenirFoodContract implements Seria
                     public void onError(Throwable e) {
                         Log.e("e", e.getMessage());
                         mView.dismissProgress();
+                        mView.showError(e.toString());
 
                     }
 
@@ -86,10 +87,48 @@ public class SouvenirFoodPresenter extends SouvenirFoodContract implements Seria
                 });
     }
 
+    @Override
+    public void getLocalFoodFull(String action, String value) {
+        mView.showProgress();
+        retrofit.create(SouvenirFoodhService.class)
+                .getLocalFoodFull(action, value).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+
+                .subscribe(new Observer<GetResultLocalFood>() {
+
+                    @Override
+                    public void onCompleted() {
+                        Log.e("direction path", "complete");
+                        mView.dismissProgress();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("e", e.getMessage());
+                        mView.dismissProgress();
+                        mView.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onNext(GetResultLocalFood getResultLocalFood) {
+                        mView.showFullLocalFood(getResultLocalFood);
+                        mView.dismissProgress();
+                    }
+                });
+    }
+
     public interface SouvenirFoodhService {
         //        https://api.parsdid.com/iranplanner/app/api-souvenir.php?action=full&id=28297
         @GET("api-souvenir.php")
         Observable<GetResultSouvenir> getSouvenirFull(
+                @Query("action") String action,
+                @Query("id") String value);
+
+//        https://api.parsdid.com/iranplanner/app/api-localfood.php?action=full&id=26664
+
+        @GET("api-localfood.php")
+        Observable<GetResultLocalFood> getLocalFoodFull(
                 @Query("action") String action,
                 @Query("id") String value);
     }

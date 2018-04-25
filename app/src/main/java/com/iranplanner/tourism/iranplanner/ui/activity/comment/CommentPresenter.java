@@ -72,6 +72,7 @@ public class CommentPresenter extends CommentContract implements Serializable {
                     @Override
                     public void onCompleted() {
                         mView.showComplete();
+                        mView.dismissProgress();
                     }
 
                     @Override
@@ -91,6 +92,7 @@ public class CommentPresenter extends CommentContract implements Serializable {
 
     @Override
     public void callInsertComment(CommentSend commentSend, String cid, String andId) {
+        mView.showProgress();
         retrofit.create(CommentService.class)
                 .callInsertComment(commentSend, cid, andId).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -100,16 +102,19 @@ public class CommentPresenter extends CommentContract implements Serializable {
                     @Override
                     public void onCompleted() {
                         mView.showComplete();
+                        mView.dismissProgress();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         mView.commentResult(e.getMessage());
+                        mView.dismissProgress();
                     }
 
                     @Override
                     public void onNext(ResultCommentList resultItineraryList) {
                         mView.sendCommentMessage(resultItineraryList);
+                        mView.dismissProgress();
                     }
                 });
     }

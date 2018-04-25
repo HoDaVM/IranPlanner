@@ -32,6 +32,7 @@ import com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails.attract
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentListActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentPresenter;
+import com.iranplanner.tourism.iranplanner.ui.activity.globalSearch.GlobalSearchActivity;
 import com.iranplanner.tourism.iranplanner.ui.navigationDrawer.NavigationFunctionsHelper;
 
 import org.json.JSONObject;
@@ -104,6 +105,8 @@ public class BlogDetailActivity extends StandardActivity implements View.OnClick
     ImageView addImg;
     @BindView(R.id.shareImg)
     ImageView shareImg;
+    @BindView(R.id.img_magnifier_foreground)
+    ImageView img_magnifier_foreground;
     @Inject
     BlogPresenter blogPresenter;
     @Inject
@@ -194,79 +197,9 @@ public class BlogDetailActivity extends StandardActivity implements View.OnClick
         likeImg.setOnClickListener(this);
         img.setOnClickListener(this);
         cameraHolder.setOnClickListener(this);
+        img_magnifier_foreground.setOnClickListener(this);
         ((AdView) findViewById(R.id.banner_ad_view)).setAdListener(mAdListener);
 
-
-//
-//                 aboutCityBtn1.setVisibility(View.VISIBLE);
-//                 aboutCityBtn1.setText(resulAttraction.getProvinceTitle() + " - " + resulAttraction.getCityTitle());
-//                 if (resulAttraction.getAttractionEstimatedTime() != null) {
-//                     int totalMinute = Integer.parseInt(resulAttraction.getAttractionEstimatedTime());
-//                     Util.convertMinuteToHour(totalMinute, textTimeDuration);
-//                 }
-//
-//                 setImageHolder();
-//                 myData = resulAttraction.getAttractionBody();
-//                 if (myData != null) {
-//                     setWebViewContent(getShowMoreString(myData));
-//                 }
-//
-//                 if (resulAttraction.getAttractionPrice() == null) {
-//                     textEntranceFee.setText("هزینه ورودی : رایگان");
-//                 } else {
-//                     textEntranceFee.setText("هزینه ورودی : " + Util.persianNumbers(resulAttraction.getAttractionPrice().toString()) + "تومان");
-//                 }
-//                 attractionType.setText(resulAttraction.getAttractionItineraryTypeTitle());
-//                 setAttractionTypeImage();
-//                 txtAddress.setText(resulAttraction.getAttractionAddress());
-//
-//                 mapFragment.getMapAsync(this);
-//
-//
-//                 likeImg.setOnClickListener(this);
-//                 commentImg.setOnClickListener(this);
-//
-//                 commentHolder.setOnClickListener(this);
-//                 ratingPeopleHolder.setOnClickListener(this);
-//                 MoreInoText.setOnClickListener(this);
-//
-//
-//                 img.setOnClickListener(new View.OnClickListener() {
-//
-//
-//                     @Override
-//                     public void onClick(View v) {
-//                         commentPresenter.getImages("images", resulAttraction.getAttractionId(), "attraction");
-//                     }
-//                 });
-//
-//                 builder = DaggerAtractionDetailComponent.builder()
-//                         .netComponent(((App) getApplicationContext()).getNetComponent())
-//                         .attractionDetailModule(new AttractionDetailModule(this, this, this));
-//                 builder.build().inject(this);
-//                 commentPresenter.getWidgetResult("nodeuser", resulAttraction.getAttractionId(), Util.getUseRIdFromShareprefrence(getApplicationContext()), "attraction", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
-//                 getPhoto = new GetPhoto(getApplicationContext(), this);
-//
-//                 cameraHolder.setOnClickListener(new View.OnClickListener() {
-//                     @Override
-//                     public void onClick(View v) {
-//                         App.getInstance().prepareDirectories();
-//
-//                         if (Build.VERSION.SDK_INT < 23) {
-//                             commentPresenter.selectImage(attractionDetailActivity.this);
-//
-//                         } else {
-//                             if (App.checkGroupPermissions(App.STORAGE_PERMISSIONS)) {
-//                                 commentPresenter.selectImage(attractionDetailActivity.this);
-//                             } else {
-//                                 requestPermissions(App.STORAGE_PERMISSIONS, 5);
-//                             }
-//                         }
-//
-//                     }
-//                 });
-//
-//                 ((AdView) findViewById(R.id.banner_ad_view)).setAdListener(mAdListener);
     }
 
     private void setInterestResponce(List<ResultWidget> resultWidget) {
@@ -323,6 +256,10 @@ public class BlogDetailActivity extends StandardActivity implements View.OnClick
                         likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
                     }
                 }
+                break;
+                case R.id.img_magnifier_foreground:
+                    Intent intentSearch = new Intent(BlogDetailActivity.this, GlobalSearchActivity.class);
+                    startActivity(intentSearch);
                 break;
 
 

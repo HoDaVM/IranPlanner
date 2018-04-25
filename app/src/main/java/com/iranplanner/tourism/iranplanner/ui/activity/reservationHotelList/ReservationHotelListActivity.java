@@ -107,10 +107,8 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
         txtTypeHotel.setText("از " + Util.persianNumbers(Utils.getSimpleDate(startOfTravel)));
         if (resultLodgings.size() > 0) {
             setUpRecyclerView();
+            setupToolbar();
         }
-        setupToolbar();
-
-
         holderDate.setOnClickListener(this);
         typeDurationHolder.setOnClickListener(this);
 
@@ -278,9 +276,9 @@ public class ReservationHotelListActivity extends StandardActivity implements Da
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (!TextUtils.isEmpty(cityName)){
-            getSupportActionBar().setTitle("هتل های " + cityName);
+            getSupportActionBar().setTitle("اقامتگاه های " + cityName);
         }else {
-            getSupportActionBar().setTitle("هتل های " + resultLodgings.get(0).getLodgingCityName());
+            getSupportActionBar().setTitle("اقامتگاه های " + resultLodgings.get(0).getLodgingCityName());
         }
 
     }

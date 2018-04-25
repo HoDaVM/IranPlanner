@@ -1,5 +1,6 @@
 package com.iranplanner.tourism.iranplanner.ui.navigationDrawer;
 
+import android.app.ProgressDialog;
 import android.support.design.widget.TextInputEditText;
 
 import android.os.Bundle;
@@ -16,20 +17,40 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.iranplanner.tourism.iranplanner.R;
+import com.iranplanner.tourism.iranplanner.di.model.App;
+import com.iranplanner.tourism.iranplanner.ui.fragment.myaccount.DaggerSettingComponent;
+import com.iranplanner.tourism.iranplanner.ui.fragment.myaccount.SettingContract;
+import com.iranplanner.tourism.iranplanner.ui.fragment.myaccount.SettingModule;
+import com.iranplanner.tourism.iranplanner.ui.fragment.myaccount.SettingPresenter;
 
-public class ContactUsActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback {
+import javax.inject.Inject;
+
+import entity.ContactUs;
+import entity.GetInfoResult;
+import entity.ResultReservationReqStatus;
+import entity.SendParamContactUs;
+import tools.Util;
+
+public class ContactUsActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, SettingContract.View {
     private GoogleMap mMap;
     private EditText etMessage;
-    private TextInputEditText etName;
+    private EditText etName;
+    private EditText etMail;
+
+    @Inject
+    SettingPresenter settingPresenter;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_us);
         init();
+        DaggerSettingComponent.builder().netComponent(((App) getApplicationContext().getApplicationContext()).getNetComponent())
+                .settingModule(new SettingModule(this))
+                .build().injectUser(this);
     }
 
     private void init() {
@@ -45,7 +66,8 @@ public class ContactUsActivity extends AppCompatActivity implements View.OnClick
         findViewById(R.id.contactUsSubmitBtn).setOnClickListener(this);
 
         etMessage = (EditText) findViewById(R.id.contactUsMessageEt);
-        etName = (TextInputEditText) findViewById(R.id.contactUsNameEt);
+//        etName = (TextInputEditText) findViewById(R.id.contactUsNameEt);
+        etMail = (EditText) findViewById(R.id.input_email);
 
 //        FragmentManager fm = getSupportFragmentManager();
 //        SupportMapFragment mapFragment = (SupportMapFragment) fm.findFragmentByTag("mapFragment");
@@ -60,15 +82,27 @@ public class ContactUsActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void submitMessage() {
-        if (validate())
+        if (validate()) {
             Toast.makeText(this, "Your message has been sent !", Toast.LENGTH_SHORT).show();
-        else
-            Toast.makeText(this, "Please Fill All the Fields", Toast.LENGTH_SHORT).show();
+            settingPresenter.sendParamContactUs(new SendParamContactUs("", etMail.getText().toString(), "d", "d", etMessage.getText().toString(), "app-android-feedback"), "", "");
+        }
     }
 
+
+
     private boolean validate() {
-        return !TextUtils.isEmpty(etMessage.getText()) && !TextUtils.isEmpty(etName.getText())
-                && TextUtils.getTrimmedLength(etMessage.getText()) > 15;
+        boolean valid = true;
+        if (etMail.getText().toString().isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(etMail.getText().toString()).matches()) {
+            etMail.setError("فرمت ایمیل اشتباه است");
+            valid = false;
+        } else {
+            etMail.setError(null);
+        }
+        if (etMessage.getText().toString().equals("")) {
+            valid = false;
+            etMessage.setError("متنی وارد نشده است");
+        }
+        return valid;
     }
 
     @Override
@@ -101,4 +135,41 @@ public class ContactUsActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    @Override
+    public void showInfoUserResult(GetInfoResult infoResult) {
+
+    }
+
+    @Override
+    public void showError(String message) {
+        Toast.makeText(getApplicationContext(), "اشکال در فرستادن پیام", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void showComplete() {
+
+    }
+
+    @Override
+    public void showProgress() {
+        progressDialog = Util.showProgressDialog(getApplicationContext(), "منتظر بمانید", ContactUsActivity.this);
+
+    }
+
+    @Override
+    public void dismissProgress() {
+        Util.dismissProgress(progressDialog);
+
+    }
+
+    @Override
+    public void getContactUsMessage(ContactUs CcntactUs) {
+        Toast.makeText(getApplicationContext(), "پیام با موفقیت ارسال شد", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showResultReservationReqStatus(ResultReservationReqStatus resultReservationReqStatus) {
+
+    }
 }

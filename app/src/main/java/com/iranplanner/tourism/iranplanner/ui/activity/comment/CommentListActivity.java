@@ -82,6 +82,7 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
     private String cParent;
     int STATIC_INTEGER_VALUE_COMMENT = 103;
     ResultRestaurantFull restaurantData;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,7 +174,7 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
                             intent.putExtra("itineraryData", (Serializable) itineraryData);
 
                         } else if (fromWhere.equals("Attraction")) {
-                            intent.putExtra("attractionData", (Serializable) attractionData);
+                            intent.putExtra("attraction", (Serializable) attractionData);
                         } else if (fromWhere.equals("Lodging")) {
                             intent.putExtra("lodgingData", (Serializable) lodgingData);
                         } else if (fromWhere.equals("Blog")) {
@@ -292,7 +293,9 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (STATIC_INTEGER_VALUE_COMMENT == requestCode) {
-            setDataSetChange((ResultCommentList) data.getExtras().get("replyComment"));
+            if ( data != null) {
+                setDataSetChange((ResultCommentList) data.getExtras().get("replyComment"));
+            }
         }
     }
 
@@ -356,7 +359,8 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
 
     @Override
     public void commentResult(String message) {
-        Toast.makeText(getApplicationContext(), "اشکال در ارسال پیام، بعد از بررسی اتصال به اینترنت دوباره تلاش کنید", Toast.LENGTH_LONG).show();
+        sending=false;
+        Toast.makeText(getApplicationContext(), "اشکال در ارسال پیام لطفا دوباره تلاش کنید", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -386,12 +390,16 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
 
     @Override
     public void showProgress() {
+        if (progressDialog != null && progressDialog.isShowing()) {
 
+        } else {
+            progressDialog = Util.showProgressDialog(getApplicationContext(), "لطفا منتظر بمانید", CommentListActivity.this);
+        }
     }
 
     @Override
     public void dismissProgress() {
-
+        Util.dismissProgress(progressDialog);
     }
 
     @Override
@@ -446,5 +454,11 @@ public class CommentListActivity extends StandardActivity implements DataTransfe
     @Override
     public void setValues(ArrayList<String> al) {
         al.get(0);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
     }
 }

@@ -91,6 +91,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import entity.CityProvince;
 import entity.GetHomeResult;
+import entity.GetResultLocalFood;
 import entity.GetResultSouvenir;
 import entity.HomeAndBlog;
 import entity.HomeAttraction;
@@ -115,6 +116,7 @@ import entity.ResultEvents;
 import entity.ResultHome;
 import entity.ResultItinerary;
 import entity.ResultItineraryList;
+import entity.ResultLocalfoodFull;
 import entity.ResultLodging;
 import entity.ResultLodgingHotel;
 import entity.ResultLodgingList;
@@ -1005,7 +1007,7 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
     }
 
     private void setSouvenir(/*final List<HomeSouvenir> homeSouvenir*/) {
-        souvenirHomeAdapter attractionHomeAdapter = new souvenirHomeAdapter(resultHomes.get(0).getHomeSouvenirs(), getContext(), null);
+        souvenirHomeAdapter attractionHomeAdapter = new souvenirHomeAdapter(resultHomes.get(0).getHomeSouvenirs(), getContext(), null,null);
         LinearLayoutManager horizontalLayoutManagaer
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerSouvenir.setLayoutManager(horizontalLayoutManagaer);
@@ -1028,6 +1030,15 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerLocalFood.setLayoutManager(horizontalLayoutManagaer);
         recyclerLocalFood.setAdapter(attractionHomeAdapter);
+        recyclerLocalFood.addOnItemTouchListener(new RecyclerItemOnClickListener(getContext(), new RecyclerItemOnClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, final int position) {
+                if (isItemClicked) {
+                    isItemClicked = false;
+                    souvenirFoodPresenter.getLocalFoodFull("full", resultHomes.get(0).getHomeLocalfood().get(position).getLocalfoodId());
+                }
+            }
+        }));
     }
 
     private void setNamePicture() {
@@ -1065,6 +1076,15 @@ public class HomeFragment extends StandardFragment implements DataTransferInterf
         if (getResultSouvenir.getResultSouvenirFull() != null) {
             Intent intent = new Intent(getActivity(), SouvenirFoodActivity.class);
             intent.putExtra("ResultSouvenirFull", getResultSouvenir.getResultSouvenirFull());
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void showFullLocalFood(GetResultLocalFood getResultLocalFood) {
+        if (getResultLocalFood.getResultLocalfoodFull() != null) {
+            Intent intent = new Intent(getActivity(), SouvenirFoodActivity.class);
+            intent.putExtra("ResultLocalFood", (ResultLocalfoodFull) getResultLocalFood.getResultLocalfoodFull());
             startActivity(intent);
         }
     }

@@ -53,6 +53,7 @@ import com.iranplanner.tourism.iranplanner.ui.activity.MapFullActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.OnCutImageListener;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentPresenter;
+import com.iranplanner.tourism.iranplanner.ui.activity.globalSearch.GlobalSearchActivity;
 import com.iranplanner.tourism.iranplanner.ui.camera.GetPhoto;
 import com.iranplanner.tourism.iranplanner.ui.camera.PhotoCropFragment;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
@@ -149,6 +150,8 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     ImageView commentImg;
     @BindView(R.id.likeImg)
     ImageView likeImg;
+    @BindView(R.id.img_magnifier_foreground)
+    ImageView img_magnifier_foreground;
     @BindView(R.id.ratingBar)
     RatingBar ratingBar;
     @BindView(R.id.txtRateType)
@@ -313,6 +316,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         commentHolder.setOnClickListener(this);
         ratingPeopleHolder.setOnClickListener(this);
         MoreInoText.setOnClickListener(this);
+        img_magnifier_foreground.setOnClickListener(this);
 
 
         img.setOnClickListener(new View.OnClickListener() {
@@ -489,6 +493,10 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                     SendParamUser ss = new SendParamUser(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "attraction", resulAttraction.getAttractionId());
                     commentPresenter.getRate("rateinfo", ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                 }
+                break;
+            case R.id.img_magnifier_foreground:
+                Intent intentSearch = new Intent(attractionDetailActivity.this, GlobalSearchActivity.class);
+                startActivity(intentSearch);
                 break;
 
 

@@ -78,10 +78,10 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
  */
 public class Util {
 
-    public static  void setWebViewJastify(CTouchyWebView contentFullDescription , String myData) {
+    public static void setWebViewJastify(CTouchyWebView contentFullDescription, String myData) {
 
         contentFullDescription.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
+            @Override
             public boolean onLongClick(View v) {
                 return true;
             }
@@ -92,7 +92,7 @@ public class Util {
         String pas = "</body></html>";
         String myHtmlString = pish + myData + pas;
 
-        contentFullDescription.loadDataWithBaseURL(null,myHtmlString, "text/html", "UTF-8", null);
+        contentFullDescription.loadDataWithBaseURL(null, myHtmlString, "text/html", "UTF-8", null);
 
     }
     public static class CustomDialogLogin extends Dialog implements
@@ -361,25 +361,31 @@ public class Util {
 
 
 //            imgItineraryListMore.setVisibility(View.VISIBLE);
-        Glide.with(context)
-                .load(url)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .listener(new RequestListener<String, GlideDrawable>() {
+        try {
 
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        //// TODO: 22/01/2017  get defeult picture
-                        return false;
-                    }
 
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        return false;
-                    }
-                })
-                .into(imageView);
-        if (loading != null) {
-            loading.setVisibility(View.GONE);
+            Glide.with(context)
+                    .load(url)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .listener(new RequestListener<String, GlideDrawable>() {
+
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            //// TODO: 22/01/2017  get defeult picture
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            return false;
+                        }
+                    })
+                    .into(imageView);
+            if (loading != null) {
+                loading.setVisibility(View.GONE);
+            }
+        }catch (Exception e){
+
         }
 
     }

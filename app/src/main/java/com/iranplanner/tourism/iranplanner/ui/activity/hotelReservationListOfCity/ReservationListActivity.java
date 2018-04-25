@@ -155,13 +155,18 @@ public class ReservationListActivity extends StandardActivity implements DataTra
 
     @Override
     public void showLodgingList(ResultLodgingList resultLodgingList) {
-        List<ResultLodging> resultLodgings = resultLodgingList.getResultLodging();
-        Intent intent = new Intent(getApplicationContext(), ReservationHotelListActivity.class);
-        intent.putExtra("resultLodgings", (Serializable) resultLodgings);
-        intent.putExtra("startOfTravel", startOfTravel);
-        intent.putExtra("durationTravel", durationTravel);
-        intent.putExtra("todayDate", resultLodgingList.getStatistics().getDateNow());
-        startActivity(intent);
+        if(resultLodgingList.getResultLodging()!=null &&resultLodgingList.getResultLodging().size()>0){
+            List<ResultLodging> resultLodgings = resultLodgingList.getResultLodging();
+            Intent intent = new Intent(getApplicationContext(), ReservationHotelListActivity.class);
+            intent.putExtra("resultLodgings", (Serializable) resultLodgings);
+            intent.putExtra("startOfTravel", startOfTravel);
+            intent.putExtra("durationTravel", durationTravel);
+            intent.putExtra("todayDate", resultLodgingList.getStatistics().getDateNow());
+            startActivity(intent);
+        }else {
+            Toast.makeText(getApplicationContext(),"برای شهر مذکور هنوز اقامتگاهی ثبت نشده است",Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override

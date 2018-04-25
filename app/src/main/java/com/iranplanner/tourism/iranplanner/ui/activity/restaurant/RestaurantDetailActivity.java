@@ -44,6 +44,7 @@ import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.ShowAtt
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentListActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentPresenter;
+import com.iranplanner.tourism.iranplanner.ui.activity.globalSearch.GlobalSearchActivity;
 import com.iranplanner.tourism.iranplanner.ui.camera.PhotoCropFragment;
 
 import org.json.JSONObject;
@@ -86,6 +87,8 @@ public class RestaurantDetailActivity extends StandardActivity implements Restau
     TextView txtAddressCity;
     @BindView(R.id.img)
     ImageView img;
+    @BindView(R.id.img_magnifier_foreground)
+    ImageView img_magnifier_foreground;
     @BindView(R.id.likeImg)
     ImageView likeImg;
     @BindView(R.id.aboutCityBtn1)
@@ -164,6 +167,7 @@ public class RestaurantDetailActivity extends StandardActivity implements Restau
         likeHolder.setOnClickListener(this);
         ratingPeopleHolder.setOnClickListener(this);
         img.setOnClickListener(this);
+        img_magnifier_foreground.setOnClickListener(this);
         ((AdView) findViewById(R.id.banner_ad_view)).setAdListener(mAdListener);
 
     }
@@ -334,6 +338,10 @@ public class RestaurantDetailActivity extends StandardActivity implements Restau
                         }
                     }
                 }
+                break;
+            case R.id.img_magnifier_foreground:
+                Intent intentSearch = new Intent(RestaurantDetailActivity.this, GlobalSearchActivity.class);
+                startActivity(intentSearch);
                 break;
         }
     }

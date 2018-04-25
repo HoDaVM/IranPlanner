@@ -55,10 +55,10 @@ public class ResultLodging implements Serializable {
     private String lodgingAddress;
     @SerializedName("lodging_pos_lat")
     @Expose
-    private Double lodgingPosLat;
+    private String lodgingPosLat;
     @SerializedName("lodging_pos_long")
     @Expose
-    private Double lodgingPosLong;
+    private String lodgingPosLong;
     @SerializedName("lodging_rate_title")
     @Expose
     private String lodgingRateTitle;
@@ -128,19 +128,19 @@ public class ResultLodging implements Serializable {
         this.lodgingAddress = lodgingAddress;
     }
 
-    public Double getLodgingPosLat() {
+    public String getLodgingPosLat() {
         return lodgingPosLat;
     }
 
-    public void setLodgingPosLat(Double lodgingPosLat) {
+    public void setLodgingPosLat(String lodgingPosLat) {
         this.lodgingPosLat = lodgingPosLat;
     }
 
-    public Double getLodgingPosLong() {
+    public String getLodgingPosLong() {
         return lodgingPosLong;
     }
 
-    public void setLodgingPosLong(Double lodgingPosLong) {
+    public void setLodgingPosLong(String lodgingPosLong) {
         this.lodgingPosLong = lodgingPosLong;
     }
 

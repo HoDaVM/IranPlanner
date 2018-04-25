@@ -45,6 +45,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import entity.ContactUs;
 import entity.GetInfoReqSend;
 import entity.GetInfoResult;
 import entity.ReservationRequestList;
@@ -264,6 +265,11 @@ public class SettingFragment extends StandardFragment implements View.OnClickLis
     @Override
     public void dismissProgress() {
         progressDialog.dismiss();
+    }
+
+    @Override
+    public void getContactUsMessage(ContactUs CcntactUs) {
+
     }
 
     @Override

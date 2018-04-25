@@ -58,10 +58,10 @@ import com.iranplanner.tourism.iranplanner.ui.activity.MapFullActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.OnCutImageListener;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.AttractionListMorePresenter;
-import com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails.attractionDetailActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentListActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentPresenter;
+import com.iranplanner.tourism.iranplanner.ui.activity.globalSearch.GlobalSearchActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.showRoom.ShowRoomActivity;
 import com.iranplanner.tourism.iranplanner.ui.camera.PhotoCropFragment;
 import com.iranplanner.tourism.iranplanner.ui.camera.PhotoUtils;
@@ -132,7 +132,7 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
     TextView txtDateCheckIn, txtOk, MoreInoText, txtHotelType, txtHotelName, txtAddress, txtDate, txtDurationHotel;
     RelativeLayout TypeDurationHolder, holderDate, ratingHolder, GroupHolder, interestingLayout, VisitedLayout, LikeLayout, changeDateHolder;
     LinearLayout rateHolder, bookmarkHolder, doneHolder, nowVisitedHolder, beftorVisitedHolder, likeHolder, okHolder, dislikeHolder, commentHolder;
-    ImageView bookmarkImg, doneImg, dislikeImg, okImg, likeImg, rateImg, beftorVisitedImg, nowVisitedImg, wishImg, triangleShowAttraction;
+    ImageView bookmarkImg, doneImg, dislikeImg, okImg, likeImg, rateImg, beftorVisitedImg, nowVisitedImg, wishImg, triangleShowAttraction, img_magnifier_foreground;
     boolean ratingHolderFlag = false;
     String rotateImage;
     RotateAnimation rotate;
@@ -221,6 +221,7 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
         attractionType = (TextView) findViewById(R.id.attractionType);
         imageTypeAttraction = (ImageView) findViewById(R.id.imageTypeAttraction);
         img = (ImageView) findViewById(R.id.img);
+        img_magnifier_foreground = (ImageView) findViewById(R.id.img_magnifier_foreground);
         roomReservationBtn = (Button) findViewById(R.id.roomReservationBtn);
         holderDate = (RelativeLayout) findViewById(R.id.holderDate);
 
@@ -466,6 +467,7 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
         likeHolder.setOnClickListener(this);
         ratingPeopleHolder.setOnClickListener(this);
         img.setOnClickListener(this);
+        img_magnifier_foreground.setOnClickListener(this);
 
 
         DaggerHotelDetailComponent.builder()
@@ -502,15 +504,16 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
         mMap.getUiSettings().setZoomControlsEnabled(false);
 
         MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker));
-        Double lan = resultLodgingHotelDetail.getLodgingPosLat();
-        Double lon = resultLodgingHotelDetail.getLodgingPosLong();
-
-        marker = mMap.addMarker(markerOptions
-                .position(new LatLng(lan, lon))
-                .title(resultLodgingHotelDetail.getLodgingName())
-        );
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lan, lon), 15.0f));
-
+        if (resultLodgingHotelDetail.getLodgingPosLat() != null &&
+                resultLodgingHotelDetail.getLodgingPosLong() != null && !resultLodgingHotelDetail.getLodgingPosLat().equals("") && !resultLodgingHotelDetail.getLodgingPosLong().equals("")) {
+            Double lan = Double.valueOf(resultLodgingHotelDetail.getLodgingPosLat());
+            Double lon = Double.valueOf(resultLodgingHotelDetail.getLodgingPosLong());
+            marker = mMap.addMarker(markerOptions
+                    .position(new LatLng(lan, lon))
+                    .title(resultLodgingHotelDetail.getLodgingName())
+            );
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lan, lon), 15.0f));
+        }
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -666,6 +669,10 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
                 commentPresenter.getImages("images", resultLodgingHotelDetail.getLodgingId(), "lodging");
 
 
+                break;
+            case R.id.img_magnifier_foreground:
+                Intent intentSearch = new Intent(ReservationHotelDetailActivity.this, GlobalSearchActivity.class);
+                startActivity(intentSearch);
                 break;
 
             case R.id.roomReservationBtn:
@@ -887,7 +894,7 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
 
     @Override
     public void setLodgingRoomList(ResultLodgingRoomList resultLodgingRoomList) {
-        if (resultLodgingRoomList != null && resultLodgingRoomList.getResultRoom().size()>0) {
+        if (resultLodgingRoomList != null && resultLodgingRoomList.getResultRoom().size() > 0) {
             List<ResultRoom> ResultRooms = resultLodgingRoomList.getResultRoom();
             Intent intent = new Intent(getApplicationContext(), ShowRoomActivity.class);
             intent.putExtra("ResultRooms", (Serializable) ResultRooms);
@@ -896,9 +903,8 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
             intent.putExtra("durationTravel", durationTravel);
             intent.putExtra("hotelName", resultLodgingHotelDetail.getLodgingName());
             startActivity(intent);
-        }
-        else {
-            Toast.makeText(getApplicationContext(),"اتاق ناموجود",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "اتاق ناموجود", Toast.LENGTH_SHORT).show();
         }
     }
 

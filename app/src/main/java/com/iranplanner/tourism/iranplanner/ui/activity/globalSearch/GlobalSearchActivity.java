@@ -26,13 +26,19 @@ import com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails.attract
 
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelDetails.ReservationHotelDetailActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelReservationListOfCity.ReservationContract;
+import com.iranplanner.tourism.iranplanner.ui.activity.mainActivity.MainActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.reservationHotelList.ReservationHotelListPresenter;
 import com.iranplanner.tourism.iranplanner.ui.activity.restaurant.RestaurantContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.restaurant.RestaurantDetailActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.restaurant.RestaurantPresenter;
+import com.iranplanner.tourism.iranplanner.ui.activity.souvenirFood.SouvenirFoodActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.souvenirFood.SouvenirFoodContract;
+import com.iranplanner.tourism.iranplanner.ui.activity.souvenirFood.SouvenirFoodPresenter;
 import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogContract;
 import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogDetailActivity;
 import com.iranplanner.tourism.iranplanner.ui.fragment.blog.BlogPresenter;
+import com.iranplanner.tourism.iranplanner.ui.fragment.home.HomeContract;
+import com.iranplanner.tourism.iranplanner.ui.fragment.home.HomePresenter;
 import com.iranplanner.tourism.iranplanner.ui.fragment.itinerarySearch.MainSearchPresenter;
 
 import java.io.Serializable;
@@ -41,15 +47,21 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import entity.GetHomeResult;
+import entity.GetResultLocalFood;
+import entity.GetResultSouvenir;
+import entity.HomeAndBlog;
 import entity.RestaurantList;
 import entity.ResulAttraction;
 import entity.ResultAttractionList;
 import entity.ResultBlogFull;
 import entity.ResultBlogList;
 import entity.ResultCommentList;
+import entity.ResultEvents;
 import entity.ResultGlobalSearch;
 
 import entity.ResultItineraryList;
+import entity.ResultLocalfoodFull;
 import entity.ResultLodging;
 import entity.ResultLodgingHotel;
 import entity.ResultLodgingList;
@@ -65,7 +77,7 @@ import tools.Util;
  */
 
 public class GlobalSearchActivity extends StandardActivity implements GlobalSearchContract.View, TextWatcher, ReservationContract.View, AttractionListMorePresenter.View, ReservationHotelListPresenter.View
-        , MainSearchPresenter.View, RestaurantContract.View, BlogContract.View {
+        , MainSearchPresenter.View, RestaurantContract.View, BlogContract.View, HomeContract.View, SouvenirFoodContract.View {
 
     RecyclerView recyclerView;
     AutoCompleteTextView autoGlobalSearch;
@@ -87,6 +99,10 @@ public class GlobalSearchActivity extends StandardActivity implements GlobalSear
     RestaurantPresenter restaurantPresenter;
     @Inject
     BlogPresenter blogPresenter;
+    @Inject
+    HomePresenter homePresenter;
+    @Inject
+    SouvenirFoodPresenter souvenirFoodPresenter;
     boolean itemIsClicked = true;
 
     @Override
@@ -105,12 +121,17 @@ public class GlobalSearchActivity extends StandardActivity implements GlobalSear
         DaggerGlobalSearchComponent.builder().netComponent(((App) getApplicationContext().getApplicationContext()).getNetComponent())
                 .globalSearchModule(new GlobalSearchModule(this, this, this, this,
                         this, this
-                        , this))
+                        , this, this, this))
                 .build().injectGlobalSearch(this);
 
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        itemIsClicked = true;
+    }
 
     private void setResultGlobalSearch() {
         GlobalSearchAdapter globalSearchAdapter = new GlobalSearchAdapter(resultGlobalSearch, getApplicationContext());
@@ -133,6 +154,14 @@ public class GlobalSearchActivity extends StandardActivity implements GlobalSear
                         reservationHotelListPresenter.getHotelReserve("full", String.valueOf(resultGlobalSearch.get(position).getId()), "20", "0", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                     } else if (resultGlobalSearch.get(position).getType().equals("blog")) {
                         blogPresenter.getBlogFull("full", resultGlobalSearch.get(position).getId(), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                    } else if (resultGlobalSearch.get(position).getType().equals("city")) {
+                        homePresenter.getHomeAndBlog("home", "city", resultGlobalSearch.get(position).getId(), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()), "list");
+                    } else if (resultGlobalSearch.get(position).getType().equals("province")) {
+                        homePresenter.getHomeAndBlog("home", "province", resultGlobalSearch.get(position).getId(), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()), "list");
+                    } else if (resultGlobalSearch.get(position).getType().equals("souvenir")) {
+                        souvenirFoodPresenter.getSouvenirFull("full", resultGlobalSearch.get(position).getId());
+                    } else if (resultGlobalSearch.get(position).getType().equals("localfood")) {
+                        souvenirFoodPresenter.getLocalFoodFull("full", resultGlobalSearch.get(position).getId());
                     }
                 }
             }
@@ -197,6 +226,21 @@ public class GlobalSearchActivity extends StandardActivity implements GlobalSear
     }
 
     @Override
+    public void ShowHomeResult(GetHomeResult GetHomeResult) {
+
+    }
+
+    @Override
+    public void ShowEventLists(ResultEvents resultEvents) {
+
+    }
+
+    @Override
+    public void ShowEventDetail(ResultEvents resultEvent) {
+
+    }
+
+    @Override
     public void showProgress() {
         if (progressBar != null && progressBar.isShowing()) {
 
@@ -216,6 +260,47 @@ public class GlobalSearchActivity extends StandardActivity implements GlobalSear
             Util.dismissProgress(progressBar);
         } catch (Exception e) {
         }
+    }
+
+    @Override
+    public void showFullSouvenir(GetResultSouvenir getResultSouvenir) {
+        if (getResultSouvenir.getResultSouvenirFull() != null) {
+            Intent intent = new Intent(this, SouvenirFoodActivity.class);
+            intent.putExtra("ResultSouvenirFull", getResultSouvenir.getResultSouvenirFull());
+            intent.putExtra("ResultLocalFood", (ResultLocalfoodFull) null);
+
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void showFullLocalFood(GetResultLocalFood getResultLocalFood) {
+        if (getResultLocalFood.getResultLocalfoodFull() != null) {
+            Intent intent = new Intent(this, SouvenirFoodActivity.class);
+            intent.putExtra("ResultLocalFood", (ResultLocalfoodFull) getResultLocalFood.getResultLocalfoodFull());
+            intent.putExtra("ResultSouvenirFull", (ResultLocalfoodFull) null);
+
+            startActivity(intent);
+        }
+    }
+
+
+    @Override
+    public void ShowItineryDetail(ResultItineraryList resultItineraryList) {
+
+    }
+
+    @Override
+    public void showHomeAndBlog(HomeAndBlog homeAndBlog) {
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("HomeResult", homeAndBlog.getHomeResult());
+        intent.putExtra("ResultBlogList", homeAndBlog.getBlogList());
+//        if (nTypeNotification != null && idNotification != null) {
+//            intent.putExtra("nTypeNotification", nTypeNotification);
+//            intent.putExtra("idNotification", idNotification);
+//        }
+        startActivity(intent);
     }
 
     @Override

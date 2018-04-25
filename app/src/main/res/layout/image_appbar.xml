@@ -161,9 +161,9 @@
             app:layout_collapseMode="pin"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"            >
             <ImageView
-                android:id="@+id/someImage"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:id="@+id/img_magnifier_foreground"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@mipmap/ic_magnifier_foreground"
                 android:layout_marginEnd="@dimen/margin_standard"
                 android:layout_gravity="top|end"

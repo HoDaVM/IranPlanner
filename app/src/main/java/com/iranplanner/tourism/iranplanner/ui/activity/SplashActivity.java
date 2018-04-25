@@ -46,6 +46,7 @@ import com.iranplanner.tourism.iranplanner.ui.fragment.itinerarySearch.MainSearc
 import javax.inject.Inject;
 
 import entity.GetHomeResult;
+import entity.GetResultLocalFood;
 import entity.GetResultSouvenir;
 import entity.HomeAndBlog;
 import entity.RestaurantList;
@@ -341,6 +342,11 @@ public class SplashActivity extends AppCompatActivity implements MainSearchPrese
 
     @Override
     public void showFullSouvenir(GetResultSouvenir getResultSouvenir) {
+
+    }
+
+    @Override
+    public void showFullLocalFood(GetResultLocalFood getResultLocalFood) {
 
     }
 

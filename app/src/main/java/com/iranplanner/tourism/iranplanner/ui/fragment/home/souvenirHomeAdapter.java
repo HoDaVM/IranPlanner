@@ -13,6 +13,7 @@ import com.iranplanner.tourism.iranplanner.R;
 import java.util.List;
 
 import entity.HomeSouvenir;
+import entity.ResultLocalfoodList;
 import entity.ResultSouvenirList;
 import tools.Util;
 
@@ -25,6 +26,7 @@ public class souvenirHomeAdapter extends RecyclerView.Adapter<souvenirHomeAdapte
 
     List<HomeSouvenir> homeSouvenirs;
     List<ResultSouvenirList> resultSouvenirLists;
+    List<ResultLocalfoodList> resultLocalfoodLists;
     Context context;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -40,10 +42,11 @@ public class souvenirHomeAdapter extends RecyclerView.Adapter<souvenirHomeAdapte
         }
     }
 
-    public souvenirHomeAdapter(List<HomeSouvenir> homeSouvenirs, Context context, List<ResultSouvenirList> resultSouvenirLists) {
+    public souvenirHomeAdapter(List<HomeSouvenir> homeSouvenirs, Context context, List<ResultSouvenirList> resultSouvenirLists, List<ResultLocalfoodList> resultLocalfoodLists) {
         this.homeSouvenirs = homeSouvenirs;
         this.context = context;
         this.resultSouvenirLists=resultSouvenirLists;
+        this.resultLocalfoodLists=resultLocalfoodLists;
     }
 
     @Override
@@ -70,6 +73,12 @@ public class souvenirHomeAdapter extends RecyclerView.Adapter<souvenirHomeAdapte
                 Util.setImageView(String.valueOf(resultSouvenirLists.get(listPosition).getResultSouvenir().getSouvenirImgUrl()), context, imageView, null);
             }
         }
+        else  if (resultLocalfoodLists != null) {
+            textViewName.setText(resultLocalfoodLists.get(listPosition).getResultLocalfood().getLocalfoodTitle());
+            if (resultLocalfoodLists.get(listPosition).getResultLocalfood().getLocalfoodImgUrl() != null) {
+                Util.setImageView(String.valueOf(resultLocalfoodLists.get(listPosition).getResultLocalfood().getLocalfoodImgUrl()), context, imageView, null);
+            }
+        }
     }
 
     @Override
@@ -78,7 +87,9 @@ public class souvenirHomeAdapter extends RecyclerView.Adapter<souvenirHomeAdapte
             return resultSouvenirLists.size();
         } else if (homeSouvenirs != null) {
             return homeSouvenirs.size();
-        } else return 0;
+        } else if (resultLocalfoodLists != null) {
+            return resultLocalfoodLists.size();
+        }else return 0;
 
     }
 }

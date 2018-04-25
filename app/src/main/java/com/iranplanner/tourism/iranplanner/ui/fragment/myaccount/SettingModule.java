@@ -23,6 +23,10 @@ public class SettingModule {
         this.HotelReservationStatusView = HotelReservationStatusView;
     }
 
+    public SettingModule(SettingContract.View mView) {
+        this.mView = mView;
+        this.HotelReservationStatusView = null;
+    }
     @CustomScope
     @Provides
     SettingContract.View a() {

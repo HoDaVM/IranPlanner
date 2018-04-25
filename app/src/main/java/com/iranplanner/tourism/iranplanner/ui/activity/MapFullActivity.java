@@ -1,6 +1,7 @@
 package com.iranplanner.tourism.iranplanner.ui.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -57,19 +58,22 @@ public class MapFullActivity extends StandardActivity implements OnMapReadyCallb
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        lodgingCities = (List<ItineraryLodgingCity>) bundle.getSerializable("lodgingCities");
-        isRoad = bundle.getBoolean("isRoad");
+        if (bundle != null) {
+            lodgingCities = (List<ItineraryLodgingCity>) bundle.getSerializable("lodgingCities");
+            isRoad = bundle.getBoolean("isRoad");
 //        setContentView(R.layout.activity_map_full);
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkLocationPermission();
-        }
-        // Initializing
-        MarkerPoints = new ArrayList<>();
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                checkLocationPermission();
+            }
+            // Initializing
+            MarkerPoints = new ArrayList<>();
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+            // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
+        }
+
 
     }
 
@@ -118,37 +122,37 @@ public class MapFullActivity extends StandardActivity implements OnMapReadyCallb
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
-            prepareMarkers();
+        prepareMarkers();
 
     }
 
     private void prepareMarkers() {
         try {
-        if (MarkerPoints.size() > 1) {
-            MarkerPoints.clear();
-            mMap.clear();
-        }
-        if (lodgingCities != null ) {
+            if (MarkerPoints.size() > 1) {
+                MarkerPoints.clear();
+                mMap.clear();
+            }
+            if (lodgingCities != null) {
 
-            MapDirection mapDirection = new MapDirection(mMap, getApplicationContext(), lodgingCities, MarkerPoints,isRoad);
-            // Already two locations
-            markers = mapDirection.readytoDirect();
-            mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                @Override
-                public void onMapClick(LatLng latLng) {
-                    Log.e("map is ckicked", "true");
-                }
-            });
+                MapDirection mapDirection = new MapDirection(mMap, getApplicationContext(), lodgingCities, MarkerPoints, isRoad);
+                // Already two locations
+                markers = mapDirection.readytoDirect();
+                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(LatLng latLng) {
+                        Log.e("map is ckicked", "true");
+                    }
+                });
 
-        }/*else if(!isRoad){
+            }/*else if(!isRoad){
             markers = mapDirection.readytoDirect();
             Polyline line = mMap.addPolyline(new PolylineOptions()
                     .add(new LatLng(Float.valueOf(lodgingCities.get(0).getCityPositionLat()),Float.valueOf(lodgingCities.get(0).getCityPositionLon())),new LatLng(Float.valueOf(lodgingCities.get(1).getCityPositionLat()),Float.valueOf(lodgingCities.get(1).getCityPositionLon())))
                     .width(8).color((getApplicationContext().getResources().getColor(R.color.pink))));
 
         }*/
-        onWindowFocusChanged(true);}
-        catch (Exception e){
+            onWindowFocusChanged(true);
+        } catch (Exception e) {
 
         }
     }
@@ -162,6 +166,7 @@ public class MapFullActivity extends StandardActivity implements OnMapReadyCallb
         mGoogleApiClient.connect();
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void onConnected(Bundle bundle) {
 

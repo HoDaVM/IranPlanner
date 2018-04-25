@@ -68,6 +68,7 @@ import com.iranplanner.tourism.iranplanner.showcaseview.CustomShowcaseView;
 import com.iranplanner.tourism.iranplanner.ui.activity.MapFullActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentPresenter;
+import com.iranplanner.tourism.iranplanner.ui.activity.globalSearch.GlobalSearchActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelReservationListOfCity.ReservationListActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.showAttraction.ShowAttractionActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentListActivity;
@@ -135,7 +136,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
     private TextView textPercentage1, textPercentage2, textPercentage3;
     private TextView txtItinerary_attraction_type, txtDate;
     private ProgressDialog progressDialog;
-    private ImageView itinerary_attraction_type_more;
+    private ImageView itinerary_attraction_type_more,img_magnifier_foreground;
     protected CTouchyWebView contentFullDescription;
     private TextView txtItinerary_attraction_Difficulty;
     private TextView txtItinerary_count_attraction;
@@ -198,6 +199,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         txtPhotos = findViewById(R.id.txtPhotos);
         mapImg = findViewById(R.id.mapImg);
         addImg = findViewById(R.id.addImg);
+        img_magnifier_foreground = findViewById(R.id.img_magnifier_foreground);
 
     }
 
@@ -242,7 +244,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         try{
             if (itineraryData.getRate().getRateFinalAvg() != null) {
                 ratingBar.setRating(Float.valueOf(itineraryData.getRate().getRateFinalAvg()));
-                txtRateType.setText("تا کنون " + Util.persianNumbers(itineraryData.getRate().getRateFinalCount()) + "نفر به اینجا امتیاز داده اند ");
+                txtRateType.setText("تا کنون " + Util.persianNumbers(itineraryData.getRate().getRateFinalCount()) + " نفر به اینجا امتیاز داده اند ");
             }
         }catch (Exception e){
 
@@ -270,6 +272,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         ratingPeopleHolder.setOnClickListener(this);
         likeHolder.setOnClickListener(this);
         mapImg.setOnClickListener(this);
+        img_magnifier_foreground.setOnClickListener(this);
 
         //-------------------map
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -331,6 +334,10 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
                     builder.build().inject(this);
                     commentPresenter.getCommentList("pagecomments", itineraryId, "itinerary", "0");
                 }
+                break;
+                case R.id.img_magnifier_foreground:
+                    Intent intentSearch = new Intent(MoreItemItineraryActivity.this, GlobalSearchActivity.class);
+                    startActivity(intentSearch);
                 break;
 
             case R.id.showReservation:
@@ -524,7 +531,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
                 LatLngBounds bounds = builder.build();
 //        int width = getResources().getDisplayMetrics().widthPixels;
 //        int height = getResources().getDisplayMetrics().heightPixels;
-                int padding = (int) (width * 0.10); // offset from edges of the map 12% of screen
+                int padding = (int) (width * 0.13); // offset from edges of the map 12% of screen
                 CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
                 mMap.animateCamera(cu);
             }

@@ -15,16 +15,24 @@ public class NavigationFunctionsHelper {
     private String title;
     private static NavigationFunctionsHelper instance = null;
 
-    private NavigationFunctionsHelper(Activity context, String body,String subject,String title) {
+    private NavigationFunctionsHelper(Activity context, String body, String subject, String title) {
         this.context = context;
-        this.body=body;
-        this.subject=subject;
+        this.body = body;
+        this.subject = subject;
     }
 
-    public static NavigationFunctionsHelper getInstance(Activity context,String body,String subject,String title) {
-        if (instance == null)
-            instance = new NavigationFunctionsHelper(context,body,subject,title);
+    public static NavigationFunctionsHelper getInstance(Activity context, String body, String subject, String title) {
+        if (instance == null) {
+            instance = new NavigationFunctionsHelper(context, body, subject, title);
+//            return instance;
+        } else {
+            instance.context = context;
+            instance.body = body;
+            instance.subject = subject;
+//            return instance;
+        }
         return instance;
+
     }
 
     public void sendShareIntent() {
