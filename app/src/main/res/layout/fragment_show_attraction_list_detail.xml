@@ -1,311 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/container"
+    android:id="@+id/attractionHolder"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/background"
-    android:baselineAligned="false"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
 
-    <ScrollView
+    <RelativeLayout
+        android:id="@+id/relativeLayout3"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ImageAttraction"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/margin_xxshort"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            app:civ_border_color="@color/greyLight"
+            app:civ_border_width="@dimen/margin_xxshort" />
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_margin="@dimen/margin_xshort"
+        android:layout_toStartOf="@+id/relativeLayout3"
+        android:background="@drawable/button_corner_greylight_back_stroke"
 
-        <LinearLayout
+        >
+
+
+        <TextView
+            android:id="@+id/itinerary_attraction_name"
+            style="@style/StandardTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
 
+            android:layout_marginBottom="@dimen/margin_xshort"
+            android:layout_marginLeft="@dimen/margin_standard"
+            android:layout_marginRight="@dimen/margin_standard"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:text="پارسه" />
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/card_view_itinerary"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:cardCornerRadius="10dp"
-                app:cardUseCompatPadding="true">
+        <LinearLayout
+            android:id="@+id/cityNameHolder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/attractionHolder">
+            android:layout_below="@+id/itinerary_attraction_name"
+            android:layout_marginStart="@dimen/margin_standard"
+            android:gravity="start"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/margin_xxshort">
 
+            <ImageView
+                android:id="@+id/imageCityName"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_margin="5dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_pinblack"/>
 
-                    <RelativeLayout
-                        android:id="@+id/supplierLayoutMore"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="@dimen/margin_standard"
-                        android:paddingRight="@dimen/margin_standard"
-                        android:layout_below="@+id/imageTextAttractionHolder"
-                        android:layout_alignParentStart="true"                 >
-
-                        <!--<LinearLayout-->
-                            <!--android:id="@+id/navigateBtn"-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_alignParentRight="true"-->
-                            <!--android:layout_alignParentTop="true"-->
-                            <!--android:background="?android:attr/selectableItemBackground"-->
-                            <!--android:gravity="center"-->
-                            <!--android:orientation="vertical"-->
-                            <!--android:paddingStart="@dimen/padding_standard"-->
-                            <!--android:paddingRight="@dimen/padding_standard">-->
-
-                            <!--<ImageView-->
-                                <!--android:id="@+id/imageGps"-->
-                                <!--android:layout_width="35dp"-->
-                                <!--android:layout_height="35dp"-->
-                                <!--android:scaleType="centerCrop"-->
-                                <!--android:src="@mipmap/ic_duration_bluee" />-->
-
-                            <!--<TextView-->
-                                <!--android:id="@+id/textGps"-->
-                                <!--style="@style/SmallText"-->
-                                <!--android:layout_width="wrap_content"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:maxLines="1"-->
-                                <!--android:text="مسیریابی" />-->
-
-                        <!--</LinearLayout>-->
-
-                        <!--<LinearLayout-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_alignParentTop="true"-->
-                            <!--android:layout_centerInParent="true"-->
-                            <!--android:gravity="center"-->
-                            <!--android:orientation="vertical"-->
-                            <!--android:visibility="gone">-->
-
-                            <!--<ImageView-->
-                                <!--android:id="@+id/imageTimeOpen"-->
-                                <!--android:layout_width="35dp"-->
-                                <!--android:layout_height="35dp"-->
-                                <!--android:scaleType="centerCrop"-->
-                                <!--android:src="@mipmap/ic_duration_time_blue" />-->
-
-                            <!--<TextView-->
-                                <!--android:id="@+id/textTimeOpen"-->
-                                <!--style="@style/SmallText"-->
-                                <!--android:layout_width="wrap_content"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:maxLines="1"-->
-                                <!--android:text="باز است" />-->
-                        <!--</LinearLayout>-->
-
-                        <!--<LinearLayout-->
-                            <!--android:id="@+id/moreInfoHolder"-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_alignParentStart="true"-->
-                            <!--android:layout_alignParentTop="true"-->
-                            <!--android:background="?android:attr/selectableItemBackground"-->
-                            <!--android:gravity="center"-->
-                            <!--android:orientation="vertical"-->
-                            <!--android:paddingStart="@dimen/padding_standard"-->
-                            <!--android:paddingRight="@dimen/padding_standard">-->
-
-                            <!--<ImageView-->
-                                <!--android:id="@+id/imageMore"-->
-                                <!--android:layout_width="35dp"-->
-                                <!--android:layout_height="35dp"-->
-                                <!--android:scaleType="centerCrop"-->
-                                <!--android:src="@mipmap/ic_info_blue_new" />-->
-
-                            <!--<TextView-->
-                                <!--android:id="@+id/textMore"-->
-                                <!--style="@style/SmallText"-->
-                                <!--android:layout_width="wrap_content"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:maxLines="1"-->
-                                <!--android:text="بیشتر" />-->
-
-
-                        <!--</LinearLayout>-->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="@dimen/margin_short"
-                            android:orientation="horizontal"
-                            android:weightSum="2"
-                            android:padding="@dimen/margin_xshort"                          >
-
-                            <Button
-                                android:id="@+id/moreInfoHolder"
-                                style="@style/StandardText"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/button_corner_grey_dark_stroke"
-                                android:text="اطلاعات بیشتر"
-                                android:layout_margin="@dimen/margin_xxshort"
-                                />
-                            <Button
-                                android:id="@+id/navigateBtn"
-                                style="@style/StandardText"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="@dimen/margin_xxxshort"
-                                android:layout_weight="1"
-                                android:background="@drawable/button_corner_blue_stroke"
-                                android:text="مسیریابی"
-                                android:textColor="@color/main_blue"
-                                android:layout_margin="@dimen/margin_xxshort"
-                                 />
-
-                        </LinearLayout>
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/imageTextAttractionHolder"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentTop="true"
-                        android:background="?android:attr/selectableItemBackground">
-
-
-
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_toStartOf="@+id/ImageAttraction"
-                            android:id="@+id/relativeLayout">
-
-                            <TextView
-                                android:id="@+id/itinerary_attraction_name"
-                                style="@style/StandardTitle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:text="پارسه"
-                                android:layout_marginLeft="@dimen/margin_standard"
-                                android:layout_marginRight="@dimen/margin_standard"
-                                android:layout_marginTop="@dimen/margin_standard"
-                                android:layout_marginBottom="@dimen/margin_standard"
-                                android:layout_alignParentEnd="true" />
-
-                            <!--<LinearLayout-->
-                                <!--android:id="@+id/cityNameHolder"-->
-                                <!--android:layout_width="wrap_content"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:layout_below="@+id/itinerary_attraction_name"-->
-                                <!--android:layout_alignParentStart="true"-->
-
-                                <!--android:gravity="end"-->
-                                <!--android:orientation="horizontal"-->
-                                <!--android:paddingBottom="@dimen/margin_xshort"-->
-                                <!--android:layout_alignParentEnd="true">-->
-                                <!--<ImageView-->
-                                    <!--android:id="@+id/imageCityName"-->
-                                    <!--android:layout_width="20dp"-->
-                                    <!--android:layout_height="20dp"-->
-                                    <!--android:layout_margin="5dp"-->
-                                    <!--android:scaleType="centerCrop"-->
-                                    <!--android:src="@mipmap/ic_pinblack" />-->
-
-                                <!--<TextView-->
-                                    <!--android:id="@+id/textCityName"-->
-                                    <!--style="@style/StandardText"-->
-                                    <!--android:layout_width="wrap_content"-->
-                                    <!--android:layout_height="wrap_content"-->
-                                    <!--android:layout_margin="5dp"-->
-                                    <!--android:maxLines="1"-->
-                                    <!--android:text="textCityName" />-->
-
-
-
-
-                            <!--</LinearLayout>-->
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@+id/itinerary_attraction_name"
-                                android:gravity="start"
-                                android:orientation="horizontal"
-                                android:paddingBottom="@dimen/padding_short"
-                                android:layout_alignParentStart="true"
-                                android:layout_alignParentEnd="true"
-                                android:layout_marginStart="@dimen/margin_standard">
-
-                                <ImageView
-                                    android:id="@+id/imageCityName"
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
-                                    android:layout_margin="5dp"
-                                    android:scaleType="centerCrop"
-                                    android:src="@mipmap/ic_pinblack" />
-                                <TextView
-                                    android:id="@+id/textCityName"
-                                    style="@style/StandardText"
-                                    android:layout_width="249dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="5dp"
-                                    android:maxLines="1"
-                                    android:text="dgdg" />
-
-
-
-                            </LinearLayout>
-
-                        </RelativeLayout>
-
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/ImageAttraction"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            app:civ_border_color="@color/greyLight"
-                            app:civ_border_width="@dimen/margin_xxshort"
-                            android:layout_marginEnd="@dimen/margin_standard"
-                            />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="start"
-                            android:orientation="horizontal"
-                            android:paddingBottom="@dimen/padding_short"
-                            android:layout_below="@+id/relativeLayout"
-                            android:layout_alignParentStart="true"
-                            android:layout_toStartOf="@+id/ImageAttraction"
-                            android:layout_marginStart="@dimen/margin_standard">
-
-                            <ImageView
-                                android:id="@+id/imageTimeDuration"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:layout_margin="5dp"
-                                android:scaleType="centerCrop"
-                                android:src="@mipmap/ic_duration_time_grey" />
-
-                            <TextView
-                                android:id="@+id/textTimeDuration"
-                                style="@style/StandardText"
-                                android:layout_width="249dp"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:maxLines="1"
-                                android:text="textTimeDuratioccccccn" />
-
-
-                        </LinearLayout>
-
-                    </RelativeLayout>
-
-                </RelativeLayout>
-
-            </android.support.v7.widget.CardView>
+            <TextView
+                android:id="@+id/textCityName"
+                style="@style/StandardText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:maxLines="1"
+                android:text="dgdg"/>
 
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/timeDurationHolder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/cityNameHolder"
+            android:layout_marginStart="@dimen/margin_standard"
+            android:layout_toStartOf="@+id/ImageAttraction"
+            android:gravity="start"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/margin_xxshort">
 
-    </ScrollView>
+            <ImageView
+                android:id="@+id/imageTimeDuration"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_margin="5dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_duration_time_grey" />
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/textTimeDuration"
+                style="@style/StandardText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:maxLines="1"
+                android:text="textTimeDuratioccccccn" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/timeDurationHolder"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_xshort"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/moreInfoHolder"
+                style="@style/StandardText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_xxshort"
+                android:layout_weight="1"
+                android:background="@drawable/button_corner_grey_dark_stroke"
+                android:text="اطلاعات بیشتر" />
+
+            <Button
+                android:id="@+id/navigateBtn"
+                style="@style/StandardText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_xxshort"
+                android:layout_marginRight="@dimen/margin_xxxshort"
+                android:layout_weight="1"
+                android:background="@drawable/button_corner_blue_stroke"
+                android:text="مسیریابی"
+                android:textColor="@color/main_blue" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

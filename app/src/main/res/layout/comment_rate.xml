@@ -19,7 +19,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="3"
+                android:weightSum="4"
                 android:orientation="horizontal"
                 android:layoutDirection="locale"
                 android:padding="4dp">
@@ -131,6 +131,36 @@
 
                     <TextView
                         android:id="@+id/likeTxt"
+                        style="@style/SmallText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_xshort"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:maxLines="1"
+                        android:text="دوست دارم"
+                        android:visibility="gone"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/addHolder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/padding_short">
+
+                    <ImageView
+                        android:id="@+id/addForegroundImg"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:padding="@dimen/margin_xxshort"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/ic_plus_foreground" />
+
+                    <TextView
+                        android:id="@+id/plusTxt"
                         style="@style/SmallText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

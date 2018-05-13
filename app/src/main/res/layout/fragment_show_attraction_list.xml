@@ -3,55 +3,32 @@
     android:id="@+id/Holder"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/tut_background_pattern"
     tools:context=".ui.fragment.showAttractionList.ShowAttractionListFragment">
-
-    <RelativeLayout
-        android:id="@+id/viewDayNumber"
-        android:layout_width="match_parent"
-        android:layout_height="65dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="@dimen/margin_xxshort"
-        android:layout_marginLeft="@dimen/margin_xxshort"
-        android:layout_marginTop="@dimen/margin_xxshort"
-        android:background="@color/main_blue">
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/padding_large"
-            android:src="@mipmap/ic_arow_right"
-            android:id="@+id/arrowRight"
-            android:visibility="gone"/>
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/padding_large"
-            android:src="@mipmap/ic_arow_left"
-            android:id="@+id/arrowLeft"
-            android:visibility="gone"/>
-        <TextView
-            android:id="@+id/textDayNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="days"
-            style="@style/StandardTitle"
-            android:textColor="@color/textColorWhite" />
-
-    </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/listRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/viewDayNumber"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"></android.support.v7.widget.RecyclerView>
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:translationZ="1dp"></android.support.v7.widget.RecyclerView>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout3"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true">
+
+        <View
+            android:layout_width="3dp"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:background="@color/white_" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

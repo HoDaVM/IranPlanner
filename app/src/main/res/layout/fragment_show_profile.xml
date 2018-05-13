@@ -526,7 +526,8 @@
                             android:id="@+id/txtNewsShow"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignBottom="@+id/txtNewsValueShow"
+                            android:layout_alignParentEnd="true"
                             android:text="عضویت در خبرنامه: " />
 
                         <TextView

@@ -53,6 +53,9 @@ import com.iranplanner.tourism.iranplanner.ui.activity.MapFullActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.OnCutImageListener;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentPresenter;
+import com.iranplanner.tourism.iranplanner.ui.activity.dynamicItinerary.AddNewDynamicItinerary;
+import com.iranplanner.tourism.iranplanner.ui.activity.dynamicItinerary.DynamicItineraryContract;
+import com.iranplanner.tourism.iranplanner.ui.activity.dynamicItinerary.DynamicItineraryPresenter;
 import com.iranplanner.tourism.iranplanner.ui.activity.globalSearch.GlobalSearchActivity;
 import com.iranplanner.tourism.iranplanner.ui.camera.GetPhoto;
 import com.iranplanner.tourism.iranplanner.ui.camera.PhotoCropFragment;
@@ -74,16 +77,21 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import entity.InterestResult;
 import entity.ItineraryLodgingCity;
+import entity.MyItineraryAdd;
+import entity.MyItineraryList;
 import entity.RateParam;
 import entity.ResulAttraction;
 import entity.ResultAttractionList;
 import entity.ResultComment;
 import entity.ResultCommentList;
+import entity.ResultEditDynamicItinerary;
 import entity.ResultImageList;
 import entity.ResultParamUser;
+import entity.ResultPositionAddItinerary;
 import entity.ResultWidget;
 import entity.ResultWidgetFull;
 import entity.SendParamUser;
+import entity.SendParamUsetToGetItinerary;
 import entity.ShowAtractionDetailMore;
 import entity.ShowAttractionListMore;
 import ir.adad.client.AdListener;
@@ -95,7 +103,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static android.graphics.BitmapFactory.decodeFile;
 
-public class attractionDetailActivity extends StandardActivity implements OnMapReadyCallback, View.OnClickListener, AttractionDetailContract.View, AttractionListMoreContract.View, CommentContract.View
+public class attractionDetailActivity extends StandardActivity implements OnMapReadyCallback, View.OnClickListener,
+        AttractionDetailContract.View, AttractionListMoreContract.View, CommentContract.View, DynamicItineraryContract.View
         , OnCutImageListener, PhotoUtils.OnImageUriSelect {
     private static final int REQUEST_CAMERA = 0;
     @Inject
@@ -105,6 +114,8 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     @Inject
 //    static
             CommentPresenter commentPresenter;
+    @Inject
+    DynamicItineraryPresenter dynamicItineraryPresenter;
 
     private GoogleMap mMap;
     ResulAttraction resulAttraction;
@@ -148,6 +159,8 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     TextView MoreInoText;
     @BindView(R.id.commentImg)
     ImageView commentImg;
+    @BindView(R.id.addHolder)
+    LinearLayout addHolder;
     @BindView(R.id.likeImg)
     ImageView likeImg;
     @BindView(R.id.img_magnifier_foreground)
@@ -317,6 +330,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         ratingPeopleHolder.setOnClickListener(this);
         MoreInoText.setOnClickListener(this);
         img_magnifier_foreground.setOnClickListener(this);
+        addHolder.setOnClickListener(this);
 
 
         img.setOnClickListener(new View.OnClickListener() {
@@ -330,7 +344,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
 
         builder = DaggerAtractionDetailComponent.builder()
                 .netComponent(((App) getApplicationContext()).getNetComponent())
-                .attractionDetailModule(new AttractionDetailModule(this, this, this));
+                .attractionDetailModule(new AttractionDetailModule(this, this, this, this));
         builder.build().inject(this);
         rotateImage = "likeImg";
         if (!Util.getUseRIdFromShareprefrence(getApplicationContext()).equals("")) {
@@ -341,7 +355,7 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         getPhoto = new GetPhoto(getApplicationContext(), this);
         cameraHolder.setOnClickListener(this);
 
-        if (resulAttraction.getRate()!=null&&resulAttraction.getRate().getRateFinalAvg() != null) {
+        if (resulAttraction.getRate() != null && resulAttraction.getRate().getRateFinalAvg() != null) {
             ratingBar.setRating(Float.valueOf(resulAttraction.getRate().getRateFinalAvg()));
             txtRateType.setText("تا کنون " + Util.persianNumbers(resulAttraction.getRate().getRateFinalCount()) + "نفر به اینجا امتیاز داده اند ");
         }
@@ -498,6 +512,12 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
                 Intent intentSearch = new Intent(attractionDetailActivity.this, GlobalSearchActivity.class);
                 startActivity(intentSearch);
                 break;
+            case R.id.addHolder:
+                if (Util.isLogin(getApplicationContext(), this)) {
+                    dynamicItineraryPresenter.getDynamicItineraryList(new SendParamUsetToGetItinerary(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "attraction", resulAttraction.getAttractionId(),""), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                }
+
+                break;
 
 
         }
@@ -549,6 +569,31 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     @Override
     public void dismissProgress() {
         progressBar.dismiss();
+    }
+
+    @Override
+    public void showDynamicItineraryList(MyItineraryList myItineraryList) {
+        Intent intentAdd = new Intent(attractionDetailActivity.this, AddNewDynamicItinerary.class);
+        if (myItineraryList != null && myItineraryList.getResultItnListUser().size() > 0) {
+            intentAdd.putExtra("ResultItnListUser", (Serializable) myItineraryList.getResultItnListUser());
+            intentAdd.putExtra("nid", resulAttraction.getAttractionId());
+        }
+        startActivity(intentAdd);
+    }
+
+    @Override
+    public void confirmationAddDynamicItinerary(MyItineraryAdd myItineraryAdd) {
+
+    }
+
+    @Override
+    public void confirmationAddDynamicPosition(ResultPositionAddItinerary resultPositionAddItinerary) {
+
+    }
+
+    @Override
+    public void showResultEditDynamicItinerary(ResultEditDynamicItinerary resultEditDynamicItinerary) {
+
     }
 
     @Override
@@ -617,7 +662,6 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
     @Override
     public void showDirectionOnMap(PolylineOptions rectLine) {
         mMap.addPolyline(rectLine);
-
     }
 
     private void setWidgetValue(List<ResultWidget> resultWidget) {
@@ -655,8 +699,13 @@ public class attractionDetailActivity extends StandardActivity implements OnMapR
         mImageUri = uri;
     }
 
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
 
-       public class CustomDialogAlert extends Dialog implements
+    }
+
+
+    public class CustomDialogAlert extends Dialog implements
             View.OnClickListener {
 
         public Activity c;

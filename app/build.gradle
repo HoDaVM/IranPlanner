@@ -35,10 +35,10 @@ android {
         applicationId "com.iranplanner.tourism.iranplanner"
         minSdkVersion 17
         targetSdkVersion 26
-        versionCode 12
-        versionName "1.0.6"
-//        versionCode 1003
-//        versionName "400.0.6"
+//        versionCode 12
+//        versionName "1.0.6"
+        versionCode 1004
+        versionName "400.0.7"
         multiDexEnabled true
     }
     buildTypes {
@@ -128,7 +128,7 @@ dependencies {
     compile "com.facebook.fresco:fresco:1.2.0"
     //--------------
 //    compile 'com.github.woxthebox:draglistview:1.5.2'
-//    compile 'com.yydcdut.sdlv:sdlv:0.7.0'
+    compile 'com.yydcdut.sdlv:sdlv:0.7.0'
 
 }
 

@@ -15,25 +15,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
-
+import android.widget.RelativeLayout;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.RecyclerItemOnClickListener;
 import com.iranplanner.tourism.iranplanner.ui.activity.MapFullActivity;
 import com.iranplanner.tourism.iranplanner.standard.DataTransferInterface;
 import com.iranplanner.tourism.iranplanner.standard.StandardFragment;
 import com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails.attractionDetailActivity;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import entity.ItineraryLodgingCity;
 import entity.ResulAttraction;
 import entity.ResultAttractionList;
 import entity.ResultItineraryAttraction;
 import entity.ResultItineraryAttractionDay;
-import tools.Util;
 
 
 public class ShowAttractionListFragment extends StandardFragment implements DataTransferInterface {
@@ -52,14 +48,15 @@ public class ShowAttractionListFragment extends StandardFragment implements Data
         View view = inflater.inflate(R.layout.fragment_show_attraction_list, container, false);
         Bundle bundle = getArguments();
         attractionRecyclerView = (RecyclerView) view.findViewById(R.id.listRecyclerView);
-        arrowLeft = (ImageView) view.findViewById(R.id.arrowLeft);
-        arrowRight = (ImageView) view.findViewById(R.id.arrowRight);
-        TextView textDayNumber = (TextView) view.findViewById(R.id.textDayNumber);
+
+//        arrowLeft = (ImageView) view.findViewById(R.id.arrowLeft);
+//        arrowRight = (ImageView) view.findViewById(R.id.arrowRight);
+//        TextView textDayNumber = (TextView) view.findViewById(R.id.textDayNumber);
         itineraryActionList = (List<ResultItineraryAttraction>) bundle.getSerializable("itineraryActionList");
         resultItineraryAttractionDays = (List<ResultItineraryAttractionDay>) bundle.getSerializable("resultItineraryAttractionDays");
-        dayNumber = bundle.getInt("dayNumber");
-        allDays = bundle.getInt("allDays");
-        textDayNumber.setText(" روز " + Util.persianNumbers(String.valueOf(dayNumber)) + " از " + Util.persianNumbers(String.valueOf(allDays)));
+//        dayNumber = bundle.getInt("dayNumber");
+//        allDays = bundle.getInt("allDays");
+//        textDayNumber.setText(" روز " + Util.persianNumbers(String.valueOf(dayNumber)) + " از " + Util.persianNumbers(String.valueOf(allDays)));
         attractionRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
         attractionRecyclerView.setLayoutManager(layoutManager);
@@ -69,6 +66,10 @@ public class ShowAttractionListFragment extends StandardFragment implements Data
         attractionRecyclerView.setAdapter(adapters);
         mLayoutManager = new LinearLayoutManager(getContext());
         attractionRecyclerView.setLayoutManager(mLayoutManager);
+        //--------------for viewpager RTl
+        RelativeLayout Holder = view.findViewById(R.id.Holder);
+        Holder.setRotationY(180);
+        //--------------------------------------
         attractionRecyclerView.addOnItemTouchListener(new RecyclerItemOnClickListener(getContext(), new RecyclerItemOnClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, final int position) {

@@ -16,6 +16,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -44,19 +45,15 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.coinpany.core.android.widget.CTouchyWebView;
-import com.coinpany.core.android.widget.Utils;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.di.model.App;
-import com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails.attractionDetailActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.login.LoginActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.login.OnLoginFinishListener;
 
-import java.io.ByteArrayOutputStream;
+
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -64,12 +61,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.UUID;
 
-import entity.SendParamUser;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import server.Config;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -78,6 +70,14 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
  */
 public class Util {
 
+
+    public static Drawable getDrawable(Context context, int res) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return context.getResources().getDrawable(res, context.getTheme());
+        } else {
+            return context.getResources().getDrawable(res);
+        }
+    }
     public static void setWebViewJastify(CTouchyWebView contentFullDescription, String myData) {
 
         contentFullDescription.setOnLongClickListener(new View.OnLongClickListener() {

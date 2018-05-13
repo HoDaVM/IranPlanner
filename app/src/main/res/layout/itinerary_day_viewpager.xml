@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/main_blue"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <Button
+            android:id="@+id/btnSaveItinerary"
+            style="@style/SmallText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/button_corner_white"
+            android:text="ذخیره"
+            android:textColor="@color/main_blue" />
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:id="@+id/unplannedHolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/toolbar"
+        android:background="@color/white_">
+
+        <TextView
+            android:id="@+id/txtUnPlanned"
+            style="@style/SmallText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_xshort"
+            android:text="انتخاب های برنامه ریزی نشده" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewUnplanned"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_below="@+id/txtUnPlanned"
+            android:layout_marginBottom="@dimen/margin_xshort"
+            android:layout_marginLeft="@dimen/margin_xshort"
+            android:layout_marginRight="@dimen/margin_xshort" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/recyclerViewUnplanned"
+            android:background="@drawable/dark_shadow_top"></LinearLayout>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/txtHeader"
+        style="@style/SmallText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/unplannedHolder"
+        android:text="برنامه ریزی روز به روز" />
+
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtHeader"
+        android:background="@color/white_"
+        android:minHeight="?attr/actionBarSize"
+        app:tabBackground="@drawable/tab_layout_selector"
+        app:tabGravity="fill"
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="@color/white_"
+        app:tabTextColor="@color/main_blue">
+
+    </android.support.design.widget.TabLayout>
+
+    <LinearLayout
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_below="@+id/tabs"
+        android:background="@drawable/dark_shadow_top"
+        android:orientation="horizontal"></LinearLayout>
+
+    <com.iranplanner.tourism.iranplanner.ui.RightToLeftViewPager
+        android:id="@+id/vpPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider"
+        android:background="@color/white_"></com.iranplanner.tourism.iranplanner.ui.RightToLeftViewPager>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/margin_short" />
+
+
+
+</RelativeLayout>

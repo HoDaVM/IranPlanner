@@ -28,6 +28,7 @@
         android:id="@+id/okFilter"
         android:padding="@dimen/margin_xshort"
         style="@style/StandardText"
+        android:textColor="@color/white_"
         />
 
 </RelativeLayout>

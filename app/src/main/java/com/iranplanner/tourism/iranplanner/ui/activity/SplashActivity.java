@@ -72,7 +72,7 @@ import tools.CustomMessage;
 import tools.Util;
 
 public class SplashActivity extends AppCompatActivity implements MainSearchPresenter.View, HomeContract.View, ReservationContract.View,
-        AttractionListMorePresenter.View, ReservationHotelListPresenter.View, RestaurantContract.View,SouvenirFoodContract.View {
+        AttractionListMorePresenter.View, ReservationHotelListPresenter.View, RestaurantContract.View, SouvenirFoodContract.View {
     Thread splashTread;
     @Inject
     HomePresenter homePresenter;
@@ -179,7 +179,7 @@ public class SplashActivity extends AppCompatActivity implements MainSearchPrese
     }
 
     private void getHomeResult(String destination, String selectId) {
-        DaggerHomeComponent.builder().netComponent(((App) getApplicationContext()).getNetComponent()).homeModule(new HomeModule(this,this, this, this, this, this, this)).build().inject(this);
+        DaggerHomeComponent.builder().netComponent(((App) getApplicationContext()).getNetComponent()).homeModule(new HomeModule(this, this, this, this, this, this, this)).build().inject(this);
         String cid = Util.getTokenFromSharedPreferences(getApplicationContext());
         String andId = Util.getAndroidIdFromSharedPreferences(getApplicationContext());
         homePresenter.getHomeAndBlog("home", destination, selectId, cid, andId, "list");
@@ -237,8 +237,8 @@ public class SplashActivity extends AppCompatActivity implements MainSearchPrese
     protected void onStop() {
         super.onStop();
         unregisterReceiver(receiver);
-        finish();
-
+//        finish();
+        finishAffinity();
     }
 
     @Override
@@ -377,7 +377,6 @@ public class SplashActivity extends AppCompatActivity implements MainSearchPrese
         }
 
         startActivity(intent);
-        finish();
     }
 
 

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white_"
+    android:gravity="start"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_short">
+
+
+
+
+    <Button
+        android:id="@+id/btnAddDay"
+        style="@style/StandardText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="اضافه کردن روز "
+        android:background="@drawable/button_corner_blue_stroke"
+        android:layout_marginTop="@dimen/margin_short"/>
+
+    <Button
+        android:id="@+id/btnAddItem"
+        style="@style/StandardText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="اضافه کردن آینم "
+        android:background="@drawable/button_corner_blue_stroke"
+        android:layout_marginTop="@dimen/margin_short"/>
+
+
+</LinearLayout>
+
+
