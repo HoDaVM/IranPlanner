@@ -34,7 +34,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/imgDelete"
                 android:hint="text"
                 android:maxLines="1"
                 android:singleLine="true" />
@@ -48,13 +47,13 @@
                         android:hint="text"
                         android:maxLines="1"
                         android:singleLine="true"/>-->
-            <ImageButton
+        <!--    <ImageButton
                 android:id="@+id/imgDelete"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:background="@mipmap/ic_menu_foreground" />
+                android:background="@mipmap/ic_menu_foreground" />-->
         </RelativeLayout>
     </LinearLayout>
 

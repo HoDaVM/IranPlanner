@@ -106,7 +106,7 @@
                         android:layout_alignBaseline="@+id/checkBoxExist"
                         android:layout_alignBottom="@+id/checkBoxExist"
                         android:layout_toEndOf="@+id/checkBoxExist"
-                        android:text="در این برنامه وجود دارد"
+                        android:text="اضافه کردن به سفر"
                         android:textColor="@color/grey" />
 
                     <CheckBox

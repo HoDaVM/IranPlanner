@@ -10,32 +10,41 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/main_blue"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:layout_alignParentStart="true"
-        >
+        android:background="@color/main_blue"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <!--<RelativeLayout-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@color/dark_red"-->
-            <!--android:gravity="start">-->
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:padding="@dimen/margin_short">
+
+            <TextView
+                android:id="@+id/txtTitle"
+                style="@style/StandardText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="test"
+                android:textColor="@color/white_" />
 
             <Button
                 android:id="@+id/btnSaveItinerary"
                 style="@style/SmallText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
                 android:background="@drawable/button_corner_white"
+                android:gravity="center"
                 android:text="@string/txtSave"
                 android:textColor="@color/main_blue"
-                android:gravity="center"
-                android:layout_alignParentEnd="true"
-
 
 
                 />
-        <!--</RelativeLayout>-->
+        </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
     <RelativeLayout
@@ -74,67 +83,75 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/deleteDayHolder"
+        android:id="@+id/tabHolder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/unplannedHolder"
-        android:background="@color/white_">
+        android:layout_below="@+id/unplannedHolder">
 
-        <TextView
-            android:id="@+id/txtHeader"
-            style="@style/SmallText"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/deleteDayHolder"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:text="@string/txtPlanned"
-            tools:ignore="RelativeOverlap" />
 
-        <TextView
-            android:id="@+id/txtDelete"
-            style="@style/SmallText"
-            android:layout_width="wrap_content"
+            android:background="@color/white_">
+
+            <TextView
+                android:id="@+id/txtHeader"
+                style="@style/SmallText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="@string/txtPlanned"
+                tools:ignore="RelativeOverlap" />
+
+            <TextView
+                android:id="@+id/txtDelete"
+                style="@style/SmallText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/btnDeleteDay"
+                android:text="@string/txtDel"
+                android:visibility="invisible"
+                tools:ignore="RelativeOverlap" />
+
+            <ImageButton
+                android:id="@+id/btnDeleteDay"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:background="@mipmap/ic_cancel_red"
+                android:contentDescription="@string/txtDel"
+                android:visibility="invisible"
+                tools:ignore="RelativeOverlap" />
+
+        </RelativeLayout>
+
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/btnDeleteDay"
-            android:text="@string/txtDel"
-            android:visibility="invisible"
-            tools:ignore="RelativeOverlap" />
+            android:layout_below="@+id/deleteDayHolder"
+            android:background="@color/white_"
+            android:minHeight="?attr/actionBarSize"
+            app:tabBackground="@drawable/tab_layout_selector"
+            app:tabGravity="fill"
+            app:tabMode="scrollable"
+            app:tabSelectedTextColor="@color/white_"
+            app:tabTextColor="@color/main_blue">
 
-        <ImageButton
-            android:id="@+id/btnDeleteDay"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:background="@mipmap/ic_cancel_red"
-            android:contentDescription="@string/txtDel"
-            android:visibility="invisible"
-            tools:ignore="RelativeOverlap" />
+        </android.support.design.widget.TabLayout>
     </RelativeLayout>
-
-
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tabs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/deleteDayHolder"
-        android:background="@color/white_"
-        android:minHeight="?attr/actionBarSize"
-        app:tabBackground="@drawable/tab_layout_selector"
-        app:tabGravity="fill"
-        app:tabMode="scrollable"
-        app:tabSelectedTextColor="@color/white_"
-        app:tabTextColor="@color/main_blue">
-
-    </android.support.design.widget.TabLayout>
 
     <LinearLayout
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:layout_below="@+id/tabs"
+        android:layout_below="@+id/tabHolder"
         android:background="@drawable/dark_shadow_top"
         android:orientation="horizontal"></LinearLayout>
 
@@ -152,7 +169,9 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/margin_short"
-        android:visibility="gone" />
+        android:src="@mipmap/ic_plus_foreground"
+        android:visibility="gone"
+        app:backgroundTint="@color/greyLight" />
 
 
 </RelativeLayout>

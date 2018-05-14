@@ -28,7 +28,6 @@ public class ShowDynamicUnplannListAdapter extends RecyclerView.Adapter<ShowDyna
     public ShowDynamicUnplannListAdapter(Activity a, List<DayPosition> DayPosition, Context context) {
         this.DayPosition = DayPosition;
         this.context = context;
-
         Activity activity = a;
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -42,7 +41,6 @@ public class ShowDynamicUnplannListAdapter extends RecyclerView.Adapter<ShowDyna
 
     @Override
     public void onBindViewHolder(final ShowDynamicUnplannListAdapter.ViewHolder viewHolder, int i) {
-
         viewHolder.txtHeader.setText(DayPosition.get(i).getTitle());
     }
 
@@ -58,7 +56,6 @@ public class ShowDynamicUnplannListAdapter extends RecyclerView.Adapter<ShowDyna
 
         private TextView txtText, txtHeader;
         private ProgressBar imageLoading;
-        private ImageButton imgDelete;
 
 
         public ViewHolder(View view) {
@@ -66,7 +63,6 @@ public class ShowDynamicUnplannListAdapter extends RecyclerView.Adapter<ShowDyna
             txtText =  view.findViewById(R.id.txtTitle);
             txtHeader =  view.findViewById(R.id.txtHeader);
             image = view.findViewById(R.id.image);
-            imgDelete = view.findViewById(R.id.imgDelete);
         }
     }
 
