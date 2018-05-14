@@ -10,32 +10,21 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/main_blue"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:layout_alignParentStart="true"
-        >
+        android:layout_alignParentTop="true"
+        android:background="@color/main_blue"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <!--<RelativeLayout-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@color/dark_red"-->
-            <!--android:gravity="start">-->
-
-            <Button
-                android:id="@+id/btnSaveItinerary"
-                style="@style/SmallText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/button_corner_white"
-                android:text="@string/txtSave"
-                android:textColor="@color/main_blue"
-                android:gravity="center"
-                android:layout_alignParentEnd="true"
-
-
-
-                />
-        <!--</RelativeLayout>-->
+        <Button
+            android:id="@+id/btnSaveItinerary"
+            style="@style/SmallText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/button_corner_white"
+            android:text="@string/txtSave"
+            android:textColor="@color/main_blue" />
     </android.support.v7.widget.Toolbar>
 
     <RelativeLayout
@@ -44,16 +33,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/toolbar"
-        android:background="@color/white_"
-        android:visibility="gone">
+        android:background="@color/white_">
 
         <TextView
             android:id="@+id/txtUnPlanned"
             style="@style/SmallText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
             android:padding="@dimen/margin_xshort"
             android:text="@string/txtUnplanned" />
 
@@ -78,7 +64,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/unplannedHolder"
-        android:background="@color/white_">
+        android:background="@color/white_"
+        >
 
         <TextView
             android:id="@+id/txtHeader"
@@ -86,9 +73,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
             android:text="@string/txtPlanned"
-            tools:ignore="RelativeOverlap" />
+            tools:ignore="RelativeOverlap"
+            android:layout_centerVertical="true"
+            />
 
         <TextView
             android:id="@+id/txtDelete"
@@ -98,7 +86,6 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/btnDeleteDay"
             android:text="@string/txtDel"
-            android:visibility="invisible"
             tools:ignore="RelativeOverlap" />
 
         <ImageButton
@@ -107,11 +94,10 @@
             android:layout_height="30dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
+            tools:ignore="RelativeOverlap"
             android:background="@mipmap/ic_cancel_red"
-            android:contentDescription="@string/txtDel"
-            android:visibility="invisible"
-            tools:ignore="RelativeOverlap" />
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/txtDel"/>
     </RelativeLayout>
 
 
@@ -151,8 +137,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/margin_short"
-        android:visibility="gone" />
+        android:layout_marginBottom="@dimen/margin_short" />
 
 
 </RelativeLayout>

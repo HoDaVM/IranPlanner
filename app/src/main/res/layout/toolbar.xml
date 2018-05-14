@@ -63,7 +63,7 @@
             android:layout_centerInParent="true"
             android:layout_marginStart="@dimen/margin_standard"
             android:clickable="true"
-            android:src="@mipmap/ic_menu" />
+            android:src="@mipmap/ic_menu_foreground" />
 
         <ImageView
             android:id="@+id/toolbarBack"

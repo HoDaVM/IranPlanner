@@ -132,12 +132,11 @@ public class AddNewDynamicItinerary extends StandardActivity implements DynamicI
 
     @Override
     public void showResultEditDynamicItinerary(ResultEditDynamicItinerary resultEditDynamicItinerary) {
-        Intent intent = new Intent(this, DynamicItineraryUpdateDayActivity.class);
-        intent.putExtra("ResultEditDynamicItinerary", resultEditDynamicItinerary);
-        startActivity(intent);
-//        Intent intent=new Intent(this,ItemDragActivity.class);
-//        intent.putExtra("intDaily", (Serializable) resultEditDynamicItinerary.getResultUserItnFull().getItnDaily());
-//        startActivity(intent);
+        if(resultEditDynamicItinerary!=null && resultEditDynamicItinerary.getResultUserItnFull()!=null){
+            Intent intent = new Intent(this, DynamicItineraryUpdateDayActivity.class);
+            intent.putExtra("ResultEditDynamicItinerary", resultEditDynamicItinerary);
+            startActivity(intent);
+        }
     }
 
     private void setUpRecyclerView() {
@@ -183,24 +182,7 @@ public class AddNewDynamicItinerary extends StandardActivity implements DynamicI
 
             }
         }));
-//
-//
-//        recyclerShowDynamicItinerary.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                if (dy > 0 && loading) //check for scroll down
-//                {
-//                    visibleItemCount = mLayoutManager.getChildCount();
-//                    totalItemCount = mLayoutManager.getItemCount();
-//                    pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
-//                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-//                        loading = false;
-//                        restaurantPresenter.getRestaurantList("list", resultRestaurantLists.get(0).getResultRestaurant().getCityId(), selectedType, "20", nextOffset, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
-//                    }
-//                }
-//            }
-//            }
-//        });
+
     }
 
     @Override

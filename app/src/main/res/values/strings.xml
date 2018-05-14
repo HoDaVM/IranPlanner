@@ -199,6 +199,10 @@
     <string name="_12">12 نفر پسندیدند</string>
     <string name="vahidimehr_gmail_com">vahidimehr@gmail.com</string>
     <string name="replay">پاسخ</string>
+    <string name="txtUnplanned">انتخاب های برنامه ریزی نشده</string>
+    <string name="txtSave">ذخیره</string>
+    <string name="txtPlanned">برنامه ریزی روز به روز</string>
+    <string name="txtDel">حذف روز 1</string>
 
 
 </resources>

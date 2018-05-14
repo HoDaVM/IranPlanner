@@ -13,7 +13,7 @@ import tools.Util;
 /**
  * Created by Hoda on 20/01/2017.
  */
-public class ShowDynamicItineraryDayFragmentAdapter extends FragmentStatePagerAdapter  {
+public class ShowDynamicItineraryDayFragmentAdapter extends FragmentStatePagerAdapter implements Serializable  {
     List<ItnDaily> intdaily;
     OnDynamicListListener onDynamicListListener;
 

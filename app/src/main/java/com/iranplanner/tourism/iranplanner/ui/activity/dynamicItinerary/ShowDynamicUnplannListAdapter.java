@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -43,14 +44,6 @@ public class ShowDynamicUnplannListAdapter extends RecyclerView.Adapter<ShowDyna
     public void onBindViewHolder(final ShowDynamicUnplannListAdapter.ViewHolder viewHolder, int i) {
 
         viewHolder.txtHeader.setText(DayPosition.get(i).getTitle());
-
-//                if(DayPosition.get(i).getNodeType().equals("restaurant")){
-//                    viewHolder.txtText.setText("رستوران");
-//                }else if(DayPosition.get(i).getNodeType().equals("attraction")){
-//                    viewHolder.txtText.setText("جای دیدنی");
-//                }
-
-
     }
 
 
@@ -65,6 +58,7 @@ public class ShowDynamicUnplannListAdapter extends RecyclerView.Adapter<ShowDyna
 
         private TextView txtText, txtHeader;
         private ProgressBar imageLoading;
+        private ImageButton imgDelete;
 
 
         public ViewHolder(View view) {
@@ -72,6 +66,7 @@ public class ShowDynamicUnplannListAdapter extends RecyclerView.Adapter<ShowDyna
             txtText =  view.findViewById(R.id.txtTitle);
             txtHeader =  view.findViewById(R.id.txtHeader);
             image = view.findViewById(R.id.image);
+            imgDelete = view.findViewById(R.id.imgDelete);
         }
     }
 

@@ -25,6 +25,7 @@ import com.yydcdut.sdlv.Menu;
 import com.yydcdut.sdlv.MenuItem;
 import com.yydcdut.sdlv.SlideAndDragListView;
 
+import java.io.Serializable;
 import java.util.List;
 
 import entity.DayPosition;
@@ -34,7 +35,7 @@ import tools.Util;
 /**
  * Created by yuyidong on 16/4/20.
  */
-public class ItemDragFragment extends StandardFragment implements AdapterView.OnItemClickListener,
+public class ItemDragFragment extends StandardFragment implements Serializable, AdapterView.OnItemClickListener,
         AdapterView.OnItemLongClickListener, AbsListView.OnScrollListener,
         SlideAndDragListView.OnDragDropListener, SlideAndDragListView.OnSlideListener,
         SlideAndDragListView.OnMenuItemClickListener, SlideAndDragListView.OnItemDeleteListener {
@@ -77,25 +78,6 @@ public class ItemDragFragment extends StandardFragment implements AdapterView.On
 
     public void initMenu() {
         mMenu = new Menu(true);
-//        mMenu.addItem(new MenuItem.Builder().setWidth((int) getResources().getDimension(R.dimen.slv_item_bg_btn_width) * 2)
-//                .setBackground(Util.getDrawable(getActivity(), R.drawable.btn_left0))
-//                .setText("One")
-//                .setTextColor(Color.GRAY)
-//                .setTextSize(14)
-//                .build());
-//        mMenu.addItem(new MenuItem.Builder().setWidth((int) getResources().getDimension(R.dimen.slv_item_bg_btn_width))
-//                .setBackground(Util.getDrawable(getActivity(), R.drawable.btn_left1))
-//                .setText("Two")
-//                .setTextColor(Color.BLACK)
-//                .setTextSize(14)
-//                .build());
-//        mMenu.addItem(new MenuItem.Builder().setWidth((int) getResources().getDimension(R.dimen.slv_item_bg_btn_width) + 30)
-//                .setBackground(Util.getDrawable(getActivity(), R.drawable.btn_right0))
-//                .setText("Three")
-//                .setDirection(MenuItem.DIRECTION_RIGHT)
-//                .setTextColor(Color.BLACK)
-//                .setTextSize(14)
-//                .build());
         mMenu.addItem(new MenuItem.Builder().setWidth((int) getResources().getDimension(R.dimen.slv_item_bg_btn_width_img))
                 .setBackground(Util.getDrawable(getActivity(), R.drawable.btn_right1))
                 .setDirection(MenuItem.DIRECTION_RIGHT)
@@ -104,12 +86,11 @@ public class ItemDragFragment extends StandardFragment implements AdapterView.On
     }
 
     public void initUiAndListener() {
-        mListView = (SlideAndDragListView) view.findViewById(R.id.lv_edit);
+        mListView = view.findViewById(R.id.lv_edit);
         mListView.setMenu(mMenu);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
         mListView.setOnDragDropListener(this);
-//        mListView.setOnItemLongClickListener(this);
         mListView.setOnSlideListener(this);
         mListView.setOnMenuItemClickListener(this);
         mListView.setOnItemDeleteListener(this);
@@ -151,7 +132,6 @@ public class ItemDragFragment extends StandardFragment implements AdapterView.On
             }
 
             cvh.txtName.setText(dayPositionList.get(position).getTitle());
-//            cvh.imgLogo.setImageDrawable();
             cvh.imgLogo2.setImageDrawable(Util.getDrawable(getActivity(), R.mipmap.ic_vertical_hand_scroll_foreground));
             cvh.imgLogo2.setTag(Integer.parseInt(position + ""));
             return convertView;

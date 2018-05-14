@@ -2,18 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="@dimen/padding_big">
+    android:layout_marginTop="@dimen/margin_short"
+    android:background="@drawable/button_corner_grey_stroke"
+    android:orientation="vertical">
 
     <TextView
+        android:id="@+id/txtTitle"
+        style="@style/StandardText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:padding="@dimen/margin_short"
         android:text="my Title"
-        android:textColor="@color/blue"
-        android:id="@+id/mytext"
-        android:textSize="18sp"
-        android:layout_marginBottom="@dimen/padding_big"
-        style="@style/StandardTitle"/>
+        android:textColor="@color/grey"/>
 
 </LinearLayout>

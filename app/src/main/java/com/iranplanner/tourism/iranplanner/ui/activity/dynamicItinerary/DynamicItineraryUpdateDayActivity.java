@@ -3,7 +3,7 @@ package com.iranplanner.tourism.iranplanner.ui.activity.dynamicItinerary;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
+
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,14 +11,14 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -45,84 +45,156 @@ import tools.Util;
 /**
  * Created by Hoda on 20/01/2017.
  */
-public class DynamicItineraryUpdateDayActivity extends StandardActivity implements DynamicItineraryContract.View, OnDynamicListListener {
+public class DynamicItineraryUpdateDayActivity extends StandardActivity implements DynamicItineraryContract.View, OnDynamicListListener, View.OnClickListener {
 
     ShowDynamicItineraryDayFragmentAdapter adapterViewPager;
     private ResultEditDynamicItinerary resultEditDynamicItinerary;
     int selectedDayToAdd = 0;
     TabLayout tabLayout;
     RecyclerView recyclerViewUnplanned;
+    ImageButton btnDeleteDay;
     ShowDynamicUnplannListAdapter showDynamicUnplannListAdapter;
     RelativeLayout unplannedHolder;
     FloatingActionButton fabBtn;
     int dayCount = 0;
+    //itnDailies use : lists in view pager
     List<ItnDaily> itnDailies;
     ViewPager vpPager;
     List<DayPosition> unPlanned;
     Button btnSaveItinerary;
+    TextView txtDelete;
     @Inject
     DynamicItineraryPresenter dynamicItineraryPresenter;
     DaggerDynamicItineraryComponent.Builder builder;
     private ProgressDialog progressDialog;
+    int positionDayDelete = 0;
+    private Toolbar toolbar;
 
-    @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.itinerary_day_viewpager);
+    private void init() {
         vpPager = findViewById(R.id.vpPager);
         recyclerViewUnplanned = findViewById(R.id.recyclerViewUnplanned);
         fabBtn = findViewById(R.id.fabBtn);
         btnSaveItinerary = findViewById(R.id.btnSaveItinerary);
         unplannedHolder = findViewById(R.id.unplannedHolder);
+        btnDeleteDay = findViewById(R.id.btnDeleteDay);
+        tabLayout = findViewById(R.id.tabs);
+        txtDelete = findViewById(R.id.txtDelete);
         unplannedHolder.setVisibility(View.VISIBLE);
-        Bundle extras = getIntent().getExtras();
+        fabBtn.setVisibility(View.VISIBLE);
+        btnSaveItinerary.setVisibility(View.VISIBLE);
         List<ResultItineraryAttraction> itineraryActionList = null;
         builder = DaggerDynamicItineraryComponent.builder()
                 .netComponent(((App) getApplicationContext()).getNetComponent())
                 .dynamicItineraryModule(new DynamicItineraryModule(this));
         builder.build().inject(this);
 
-        fabBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (dayCount == 1) {
-                    dayCount = 0;
-                }
-                addDay(newDayPosition("", "", ""));
-            }
-        });
 
-        btnSaveItinerary.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendParam();
-            }
-        });
+    }
 
+    private void setToolbar() {
+        toolbar =  findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(resultEditDynamicItinerary.getResultUserItnFull().getItnTitle());
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+    private void getExtras() {
+        Bundle extras = getIntent().getExtras();
         if (extras != null) {
             resultEditDynamicItinerary = (ResultEditDynamicItinerary) extras.getSerializable("ResultEditDynamicItinerary");
             dayCount = resultEditDynamicItinerary.getResultUserItnFull().getItnDaily().size();
+            unPlanned = resultEditDynamicItinerary.getResultUserItnFull().getItnDaily().get(0).getDayPosition();
         }
-        unPlanned = resultEditDynamicItinerary.getResultUserItnFull().getItnDaily().get(0).getDayPosition();
-        setRecyclerViewUnplanned();
+    }
+
+    private void setViewPagersData() {
         if (resultEditDynamicItinerary.getResultUserItnFull().getItnDaily() != null && resultEditDynamicItinerary.getResultUserItnFull().getItnDaily().size() >= 1) {
             itnDailies = resultEditDynamicItinerary.getResultUserItnFull().getItnDaily();
             itnDailies.remove(0);
             adapterViewPager = new ShowDynamicItineraryDayFragmentAdapter(getSupportFragmentManager(), itnDailies, this);
             vpPager.setAdapter(adapterViewPager);
             adapterViewPager.notifyDataSetChanged();
-            tabLayout = findViewById(R.id.tabs);
             tabLayout.setupWithViewPager(vpPager);
             vpPager.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            setBtnVisibility();
             setCustomFont();
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fabBtn:
+                openAddDialog();
+                break;
+
+            case R.id.btnSaveItinerary:
+                sendParam();
+                break;
+            case R.id.btnDeleteDay:
+                deleteDay(positionDayDelete);
+
+                break;
+            case R.id.txtDelete:
+                deleteDay(positionDayDelete);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.itinerary_day_viewpager);
+        init();
+
+        getExtras();  setToolbar();
+        setRecyclerViewUnplanned();
+        setViewPagersData();
+
+        fabBtn.setOnClickListener(this);
+        btnSaveItinerary.setOnClickListener(this);
+        btnDeleteDay.setOnClickListener(this);
+        txtDelete.setOnClickListener(this);
+
+
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                positionDayDelete = tab.getPosition();
+                txtDelete.setText("حذف روز " + Util.persianNumbers(String.valueOf(positionDayDelete + 1)));
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
 
     public void setCustomFont() {
         ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
         int tabsCount = vg.getChildCount();
-
         for (int j = 0; j < tabsCount; j++) {
             ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
             int tabChildsCount = vgTab.getChildCount();
@@ -151,8 +223,33 @@ public class DynamicItineraryUpdateDayActivity extends StandardActivity implemen
             recyclerViewUnplanned.addOnItemTouchListener(new RecyclerItemOnClickListener(getApplicationContext(), new RecyclerItemOnClickListener.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, final int position) {
-                    CustomDialogDay customDialogDay = new CustomDialogDay(DynamicItineraryUpdateDayActivity.this, "d", position);
-                    customDialogDay.show();
+                   final LinearLayout linearLayout= view.findViewById(R.id.delAddHolder);
+                   ImageButton addBtn= view.findViewById(R.id.addBtn);
+                   ImageButton delBtn= view.findViewById(R.id.delBtn);
+                   linearLayout.setVisibility(View.VISIBLE);
+
+                   addBtn.setOnClickListener(new View.OnClickListener() {
+                       @Override
+                       public void onClick(View v) {
+                           CustomDialogDay customDialogDay = new CustomDialogDay(DynamicItineraryUpdateDayActivity.this, "d", position);
+                           customDialogDay.show();
+                           Util.buildDialog(DynamicItineraryUpdateDayActivity.this);
+                           linearLayout.setVisibility(View.INVISIBLE);
+
+                       }
+                   });
+
+                   delBtn.setOnClickListener(new View.OnClickListener() {
+                       @Override
+                       public void onClick(View v) {
+                           Log.e("Del","del");
+                           unPlanned.remove(position);
+                           recyclerViewUnplanned.getAdapter().notifyDataSetChanged();
+                           linearLayout.setVisibility(View.INVISIBLE);
+
+                       }
+                   });
+
                 }
             }));
 
@@ -175,11 +272,24 @@ public class DynamicItineraryUpdateDayActivity extends StandardActivity implemen
         itnDailies.add(itnDaily);
         dayCount++;
         updateDataset();
+        tabLayout.getTabAt(tabLayout.getTabCount() - 1).select();
     }
 
     private void updateDataset() {
         vpPager.getAdapter().notifyDataSetChanged();
         setCustomFont();
+        setBtnVisibility();
+    }
+
+    private void setBtnVisibility() {
+        if (tabLayout.getTabCount() == 0) {
+            btnDeleteDay.setVisibility(View.INVISIBLE);
+            txtDelete.setVisibility(View.INVISIBLE);
+
+        } else {
+            btnDeleteDay.setVisibility(View.VISIBLE);
+            txtDelete.setVisibility(View.VISIBLE);
+        }
     }
 
     private void addToDay(DayPosition day, int addPosition) {
@@ -193,6 +303,7 @@ public class DynamicItineraryUpdateDayActivity extends StandardActivity implemen
             addItemToDay(day, addPosition);
         }
         updateDataset();
+
     }
 
     private void addItemToDay(DayPosition day, int addPosition) {
@@ -263,26 +374,18 @@ public class DynamicItineraryUpdateDayActivity extends StandardActivity implemen
         dynamicItineraryPresenter.sendParamForSaveDynamicItinerary(sendParamSaveDynamicItinerary, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
     }
 
-    private void openAddDialog(Context context) {
-        final Dialog mBottomSheetDialog = new Dialog(context, R.style.MaterialDialogSheet);
+     private void openAddDialog() {
+        final Dialog mBottomSheetDialog = new Dialog(DynamicItineraryUpdateDayActivity.this, R.style.MaterialDialogSheet);
         mBottomSheetDialog.setContentView(R.layout.content_addoption_update_itinerary_);
         Button btnAddDay = ((Dialog) mBottomSheetDialog).findViewById(R.id.btnAddDay);
         Button btnAddItem = ((Dialog) mBottomSheetDialog).findViewById(R.id.btnAddItem);
-
-//        Button okFilter = ((Dialog) mBottomSheetDialog).findViewById(R.id.okFilter);
-//        okFilter.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.e("filter", "clicked");
-//                cleanMapAndRecyclerView();
-//                getResultDraw();
-//                mBottomSheetDialog.dismiss();
-//            }
-//        });
-
         btnAddDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (dayCount == 1) {
+                    dayCount = 0;
+                }
+                addDay(newDayPosition("", "", ""));
                 mBottomSheetDialog.dismiss();
 
             }
@@ -302,97 +405,105 @@ public class DynamicItineraryUpdateDayActivity extends StandardActivity implemen
     }
 
 
-    private void openCustomSearchDialog(String type) {
-
-    }
 
     @Override
     public void onDelete(DayPosition dayPosition) {
+        addToUnplanned(dayPosition);
+    }
+
+    private void addToUnplanned(DayPosition dayPosition) {
         unPlanned.add(dayPosition);
         recyclerViewUnplanned.getAdapter().notifyDataSetChanged();
     }
 
+    private void deleteDay(int position) {
+        if (itnDailies.get(position).getDayPosition() != null && itnDailies.get(position).getDayPosition().size() > 0) {
+            for (DayPosition dayPosition : itnDailies.get(position).getDayPosition()) {
+                addToUnplanned(dayPosition);
+            }
+        }
+        //------------
+        itnDailies.remove(position);
+        updateDataset();
+    }
 
-    public class CustomDialogDay extends Dialog implements
-            View.OnClickListener {
 
-        public Activity c;
+    public class CustomDialogDay extends Dialog /*implements
+            View.OnClickListener*/ {
+
+        public Activity activity;
         public Dialog d;
         //        public TextView no;
         ListView listd;
         String type;
         int position1;
+        List<String> addDaysList, nd;
+        RecyclerView recyclerSelectDayDynamicItinerary;
+        ShowSelectDayDynamicListAdapter showSelectDayDynamicListAdapter;
+        LinearLayout footer;
+        ShowSelectDayDynamicListAdapter ss;
 
         public CustomDialogDay(Activity a, String type, int position1) {
             super(a);
-            this.c = a;
+            this.activity = a;
             this.type = type;
             this.position1 = position1;
+        }
+
+        private List<String> getDayList() {
+            nd = new ArrayList<String>();
+            int planetListCounter = 1;
+            for (ItnDaily itnDaily : itnDailies) {
+                nd.add(" روز " + planetListCounter);
+                planetListCounter++;
+            }
+            return nd;
         }
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
-            setContentView(R.layout.add_new_itinerary);
-
+            setContentView(R.layout.select_day_itinerary);
             Button addNewBtn = findViewById(R.id.addNewBtn);
-            RecyclerView recyclerShowDynamicItinerary = findViewById(R.id.recyclerShowDynamicItinerary);
-            ListView mainListView = findViewById(R.id.mainListView);
-            recyclerShowDynamicItinerary.setVisibility(View.GONE);
-            mainListView.setVisibility(View.VISIBLE);
-
-//            no = (TextView) findViewById(R.id.txtNo);
-            ArrayAdapter<String> listAdapter;
-
-//            no.setOnClickListener(this);
-            /*tempCityProvince =*/
-            addNewBtn.setOnClickListener(new View.OnClickListener() {
+            recyclerSelectDayDynamicItinerary = findViewById(R.id.recyclerSelectDayDynamicItinerary);
+            footer = findViewById(R.id.footer);
+            addDaysList = getDayList();
+            ss = new ShowSelectDayDynamicListAdapter(activity, addDaysList, activity.getApplicationContext());
+            LinearLayoutManager horizontalLayoutManagaer = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+            recyclerSelectDayDynamicItinerary.setLayoutManager(horizontalLayoutManagaer);
+            recyclerSelectDayDynamicItinerary.setAdapter(ss);
+            recyclerSelectDayDynamicItinerary.addOnItemTouchListener(new RecyclerItemOnClickListener(getApplicationContext(), new RecyclerItemOnClickListener.OnItemClickListener() {
                 @Override
-                public void onClick(View v) {
-
-                }
-
-
-            });
-
-            ArrayList<String> planetList = new ArrayList<String>();
-            int position = 1;
-
-            for (ItnDaily itnDaily : itnDailies) {
-                planetList.add("روز" + position);
-                position++;
-            }
-            // Create ArrayAdapter using the planet list.
-            listAdapter = new ArrayAdapter<String>(c, android.R.layout.simple_list_item_1, planetList);
-
-
-            // Set the ArrayAdapter as the ListView's adapter.
-            mainListView.setAdapter(listAdapter);
-            mainListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                public void onItemClick(View view, final int position) {
                     selectedDayToAdd = position;
                     Log.e("unplannedItem position", position + "");
                     dismiss();
                     addToDay(newDayPosition(unPlanned.get(position1).getNodeType(), unPlanned.get(position1).getNodeId(), unPlanned.get(position1).getTitle()), selectedDayToAdd);
                     removeItemFromUnplanned(position1);
+                }
+            }));
 
+
+            addNewBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (dayCount == 1) {
+                        dayCount = 0;
+                    }
+                    addDay(newDayPosition("", "", ""));
+                    addDaysList.clear();
+                    addDaysList.addAll(getDayList());
+                    ss.notifyDataSetChanged();
                 }
             });
-        }
+            footer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+                }
+            });
 
-        @Override
-        public void onClick(View v) {
-//            switch (v.getId()) {
-//                case R.id.txtNo:
-//                    dismiss();
-//                    break;
-//                default:
-//                    break;
-//            }
-            dismiss();
         }
 
 
