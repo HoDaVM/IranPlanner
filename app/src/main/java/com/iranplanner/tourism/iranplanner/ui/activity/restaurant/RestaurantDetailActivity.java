@@ -44,26 +44,37 @@ import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.ShowAtt
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentListActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentPresenter;
+import com.iranplanner.tourism.iranplanner.ui.activity.dynamicItinerary.AddNewDynamicItinerary;
+import com.iranplanner.tourism.iranplanner.ui.activity.dynamicItinerary.DynamicItineraryContract;
+import com.iranplanner.tourism.iranplanner.ui.activity.dynamicItinerary.DynamicItineraryPresenter;
 import com.iranplanner.tourism.iranplanner.ui.activity.globalSearch.GlobalSearchActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.hotelDetails.ReservationHotelDetailActivity;
 import com.iranplanner.tourism.iranplanner.ui.camera.PhotoCropFragment;
 
 import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import entity.InterestResult;
+import entity.MyItineraryAdd;
+import entity.MyItineraryList;
 import entity.RateParam;
 import entity.RestaurantList;
 import entity.ResultComment;
 import entity.ResultCommentList;
+import entity.ResultEditDynamicItinerary;
 import entity.ResultImageList;
 import entity.ResultParamUser;
+import entity.ResultPositionAddItinerary;
 import entity.ResultRestaurantFull;
 import entity.ResultWidgetFull;
 import entity.SendParamUser;
+import entity.SendParamUsetToGetItinerary;
 import ir.adad.client.AdListener;
 import ir.adad.client.AdView;
 import tools.Constants;
@@ -73,12 +84,14 @@ import tools.Util;
  * Created by h.vahidimehr on 13/03/2018.
  */
 
-public class RestaurantDetailActivity extends StandardActivity implements RestaurantContract.View, CommentContract.View, View.OnClickListener, OnCutImageListener, OnMapReadyCallback {
+public class RestaurantDetailActivity extends StandardActivity implements RestaurantContract.View, CommentContract.View, View.OnClickListener, OnCutImageListener, OnMapReadyCallback, DynamicItineraryContract.View {
 
     @Inject
     CommentPresenter commentPresenter;
     @Inject
     RestaurantPresenter restaurantPresenter;
+    @Inject
+    DynamicItineraryPresenter dynamicItineraryPresenter;
     private Uri mImageUri;
     ResultRestaurantFull resultRestaurantFull;
     @BindView(R.id.txtAddress)
@@ -108,6 +121,8 @@ public class RestaurantDetailActivity extends StandardActivity implements Restau
     RatingBar ratingBar;
     @BindView(R.id.txtRateType)
     TextView txtRateType;
+    @BindView(R.id.addHolder)
+    LinearLayout addHolder;
     private ProgressDialog progressDialog;
     SupportMapFragment mapFragment;
     private AdListener mAdListener = new AdListener() {
@@ -136,6 +151,7 @@ public class RestaurantDetailActivity extends StandardActivity implements Restau
         }
 
     };
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_restaurant;
@@ -155,7 +171,7 @@ public class RestaurantDetailActivity extends StandardActivity implements Restau
         }
         DaggerRestaurantComponent.builder()
                 .netComponent(((App) getApplicationContext()).getNetComponent())
-                .restaurantModule(new RestaurantModule(this, this))
+                .restaurantModule(new RestaurantModule(this, this,this))
                 .build().inject(this);
         if (resultRestaurantFull.getResultRestaurant().getRate().getRateFinalAvg() != null) {
             ratingBar.setRating(Float.valueOf(resultRestaurantFull.getResultRestaurant().getRate().getRateFinalAvg()));
@@ -166,6 +182,7 @@ public class RestaurantDetailActivity extends StandardActivity implements Restau
         cameraHolder.setOnClickListener(this);
         likeHolder.setOnClickListener(this);
         ratingPeopleHolder.setOnClickListener(this);
+        addHolder.setOnClickListener(this);
         img.setOnClickListener(this);
         img_magnifier_foreground.setOnClickListener(this);
         ((AdView) findViewById(R.id.banner_ad_view)).setAdListener(mAdListener);
@@ -179,10 +196,12 @@ public class RestaurantDetailActivity extends StandardActivity implements Restau
             outState.putParcelable("IMAGE_URI", mImageUri);
         }
     }
+
     private void findView() {
         ButterKnife.bind(this);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
     }
+
     private void initial() {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -269,7 +288,6 @@ public class RestaurantDetailActivity extends StandardActivity implements Restau
     }
 
 
-
     @Override
     public void setImageUri(Uri uri) {
 
@@ -342,6 +360,11 @@ public class RestaurantDetailActivity extends StandardActivity implements Restau
             case R.id.img_magnifier_foreground:
                 Intent intentSearch = new Intent(RestaurantDetailActivity.this, GlobalSearchActivity.class);
                 startActivity(intentSearch);
+                break;
+            case R.id.addHolder:
+                if (Util.isLogin(getApplicationContext(), this)) {
+                    dynamicItineraryPresenter.getDynamicItineraryList(new SendParamUsetToGetItinerary(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "restaurant", resultRestaurantFull.getResultRestaurant().getRestaurantId(), ""), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+                }
                 break;
         }
     }
@@ -419,6 +442,7 @@ public class RestaurantDetailActivity extends StandardActivity implements Restau
         }
 
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -433,6 +457,31 @@ public class RestaurantDetailActivity extends StandardActivity implements Restau
     @Override
     public void dismissProgress() {
         Util.dismissProgress(progressDialog);
+    }
+
+    @Override
+    public void showDynamicItineraryList(MyItineraryList myItineraryList) {
+        Intent intentAdd = new Intent(RestaurantDetailActivity.this, AddNewDynamicItinerary.class);
+        if (myItineraryList != null && myItineraryList.getResultItnListUser().size() > 0) {
+            intentAdd.putExtra("ResultItnListUser", (Serializable) myItineraryList.getResultItnListUser());
+            intentAdd.putExtra("nid", resultRestaurantFull.getResultRestaurant().getRestaurantId());
+        }
+        startActivity(intentAdd);
+    }
+
+    @Override
+    public void confirmationAddDynamicItinerary(MyItineraryAdd myItineraryAdd) {
+
+    }
+
+    @Override
+    public void confirmationAddDynamicPosition(ResultPositionAddItinerary resultPositionAddItinerary) {
+
+    }
+
+    @Override
+    public void showResultEditDynamicItinerary(ResultEditDynamicItinerary resultEditDynamicItinerary) {
+
     }
 
     @Override

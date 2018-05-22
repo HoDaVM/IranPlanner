@@ -54,6 +54,17 @@ public class DayPosition implements Serializable {
     @Expose
     private String attractionDifficulty;
 
+    public String getImgUrl() {
+        return ImgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        ImgUrl = imgUrl;
+    }
+
+    @SerializedName("img_url")
+    @Expose
+    private String ImgUrl;
     public String getId() {
         return id;
     }

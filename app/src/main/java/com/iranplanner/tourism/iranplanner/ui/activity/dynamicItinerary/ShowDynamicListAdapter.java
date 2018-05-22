@@ -14,7 +14,7 @@ import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.standard.DataTransferInterface;
 import java.util.List;
 import entity.ResultItnListUser;
-
+import tools.Util;
 
 
 /**
@@ -49,6 +49,8 @@ public class ShowDynamicListAdapter extends RecyclerView.Adapter<ShowDynamicList
             viewHolder.checkBox.setChecked(true);
             viewHolder.checkBox.setClickable(false);
         }
+        if (resultItineraryListUser.get(i).getImageUrl() != null)
+            Util.setImageView(resultItineraryListUser.get(i).getImageUrl(), context, viewHolder.img, null);
     }
 
 
@@ -69,6 +71,8 @@ public class ShowDynamicListAdapter extends RecyclerView.Adapter<ShowDynamicList
             super(view);
             txtTitle = view.findViewById(R.id.txtTitle);
             checkBox = view.findViewById(R.id.checkBoxExist);
+            img = view.findViewById(R.id.img);
+
         }
     }
 

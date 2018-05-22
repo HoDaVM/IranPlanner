@@ -7,7 +7,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
@@ -31,7 +33,9 @@ public class ShowAttractionActivity extends StandardActivity {
     ResulAttraction resulAttraction;
     List<ResultAttractionList> resultAttractionList;
     TabLayout tabLayout;
-
+    android.support.v7.widget.Toolbar toolbar;
+    TextView txtTitle;
+    String title="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,11 +43,16 @@ public class ShowAttractionActivity extends StandardActivity {
         ViewPager vpPager = (ViewPager) findViewById(R.id.vpPager);
         Bundle extras = getIntent().getExtras();
         List<ResultItineraryAttraction> itineraryActionList = null;
+        Button btnSaveItinerary=findViewById(R.id.btnSaveItinerary);
+         txtTitle=findViewById(R.id.txtTitle);
+        btnSaveItinerary.setVisibility(View.INVISIBLE);
 
         if (extras != null) {
             itineraryActionList = (List<ResultItineraryAttraction>) extras.getSerializable("ResultItineraryAttraction");
             resultItineraryAttractionDays = (List<ResultItineraryAttractionDay>) extras.getSerializable("resultItineraryAttractionDays");
+             title =  extras.getString("itineraryTitle");
         }
+
         getDayGroups(resultItineraryAttractionDays);
         adapterViewPager = new ShowDetailItineraryDayAdapter(getSupportFragmentManager(), getDayGroups(resultItineraryAttractionDays));
         vpPager.setAdapter(adapterViewPager);
@@ -51,8 +60,23 @@ public class ShowAttractionActivity extends StandardActivity {
         tabLayout.setupWithViewPager(vpPager);
         vpPager.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         setCustomFont();
+        setToolbar();
     }
 
+    private void setToolbar() {
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            txtTitle.setText(title);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
     public void setCustomFont() {
         ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);

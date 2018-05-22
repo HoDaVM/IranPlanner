@@ -169,18 +169,14 @@ public class DynamicItineraryUpdateDayActivity extends StandardActivity implemen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.itinerary_day_viewpager);
         init();
-
         getExtras();
         setToolbar();
         setRecyclerViewUnplanned();
         setViewPagersData();
-
         fabBtn.setOnClickListener(this);
         btnSaveItinerary.setOnClickListener(this);
         btnDeleteDay.setOnClickListener(this);
         txtDelete.setOnClickListener(this);
-
-
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -241,7 +237,7 @@ public class DynamicItineraryUpdateDayActivity extends StandardActivity implemen
                     addBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            CustomDialogDay customDialogDay = new CustomDialogDay(DynamicItineraryUpdateDayActivity.this, "d", position);
+                            CustomDialogDay customDialogDay = new CustomDialogDay(DynamicItineraryUpdateDayActivity.this, "position", position);
                             customDialogDay.show();
                             Util.buildDialog(DynamicItineraryUpdateDayActivity.this);
                             linearLayout.setVisibility(View.INVISIBLE);
@@ -252,7 +248,7 @@ public class DynamicItineraryUpdateDayActivity extends StandardActivity implemen
                     delBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Log.e("Del", "del");
+                            Log.e("DelUnplanned", "position");
                             unPlanned.remove(position);
                             setunplannedHolderVisible();
                             recyclerViewUnplanned.getAdapter().notifyDataSetChanged();
@@ -395,7 +391,6 @@ public class DynamicItineraryUpdateDayActivity extends StandardActivity implemen
                 itnPositionList.add(itnPosition);
             }
         }
-
 
         sendParamSaveDynamicItinerary.setDayCount(itnDailies.size());
         sendParamSaveDynamicItinerary.setItnId(resultEditDynamicItinerary.getResultUserItnFull().getItnId());

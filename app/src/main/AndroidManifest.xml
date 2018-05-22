@@ -128,10 +128,6 @@
             android:label="@string/title_activity_maps"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.dynamicItinerary.ItemDragActivity"
-            android:label="@string/title_activity_maps"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activity.StandardMap"
             android:screenOrientation="portrait" />
         <activity

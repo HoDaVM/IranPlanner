@@ -30,12 +30,16 @@ import com.iranplanner.tourism.iranplanner.di.model.App;
 import com.iranplanner.tourism.iranplanner.showcaseview.CustomShowcaseView;
 import com.iranplanner.tourism.iranplanner.standard.StandardFragment;
 import com.iranplanner.tourism.iranplanner.ui.activity.SplashActivity;
+import com.iranplanner.tourism.iranplanner.ui.activity.dynamicItinerary.AddNewDynamicItinerary;
+import com.iranplanner.tourism.iranplanner.ui.activity.dynamicItinerary.DynamicItineraryContract;
+import com.iranplanner.tourism.iranplanner.ui.activity.dynamicItinerary.DynamicItineraryPresenter;
 import com.iranplanner.tourism.iranplanner.ui.activity.editprofile.EditProfileActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.login.LoginActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.ScrollingActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.reqestHotelStatus.HotelReservationStatusActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.reqestHotelStatus.HotelReservationStatusContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.reqestHotelStatus.HotelReservationStatusListPresenter;
+import com.iranplanner.tourism.iranplanner.ui.activity.restaurant.RestaurantDetailActivity;
 import com.iranplanner.tourism.iranplanner.ui.fragment.OnVisibleShowCaseViewListener;
 
 import java.io.Serializable;
@@ -48,11 +52,16 @@ import butterknife.BindView;
 import entity.ContactUs;
 import entity.GetInfoReqSend;
 import entity.GetInfoResult;
+import entity.MyItineraryAdd;
+import entity.MyItineraryList;
 import entity.ReservationRequestList;
 import entity.ResultBundleStatus;
+import entity.ResultEditDynamicItinerary;
+import entity.ResultPositionAddItinerary;
 import entity.ResultReqBundle;
 import entity.ResultReqCount;
 import entity.ResultReservationReqStatus;
+import entity.SendParamUsetToGetItinerary;
 import server.Config;
 import tools.Constants;
 import tools.Util;
@@ -60,22 +69,25 @@ import tools.Util;
 /**
  * Created by Hoda on 10/01/2017.
  */
-public class SettingFragment extends StandardFragment implements View.OnClickListener, SettingContract.View, HotelReservationStatusContract.View {
+public class SettingFragment extends StandardFragment implements View.OnClickListener, SettingContract.View, HotelReservationStatusContract.View, DynamicItineraryContract.View {
 
     TextView txtProfileName, btnEditProfile, txtHotelReservationStatus;
     RelativeLayout LayoutShowProfileHolder, exitFromAccount, HotelReservationStatusHolder;
     @Inject
     SettingPresenter settingPresenter;
+    @Inject
+    DynamicItineraryPresenter dynamicItineraryPresenter;
     private String tagFrom;
     ProgressDialog progressDialog;
-//    String cid;
+    //    String cid;
 //    String andId;
 //    String uid;
     View view;
     @Inject
     HotelReservationStatusListPresenter hotelReservationStatusListPresenter;
-    private RelativeLayout TutorialHolder;
+    private RelativeLayout TutorialHolder, LayoutItineraryHolder;
     OnVisibleShowCaseViewListener onVisibleShowCaseViewListener;
+
     public static SettingFragment newInstance(OnVisibleShowCaseViewListener onVisibleShowCaseViewListener) {
         SettingFragment fragment = new SettingFragment();
         fragment.onVisibleShowCaseViewListener = onVisibleShowCaseViewListener;
@@ -116,15 +128,17 @@ public class SettingFragment extends StandardFragment implements View.OnClickLis
         LayoutShowProfileHolder = (RelativeLayout) view.findViewById(R.id.LayoutShowProfileHolder);
         exitFromAccount = (RelativeLayout) view.findViewById(R.id.exitFromAccount);
         TutorialHolder = (RelativeLayout) view.findViewById(R.id.TutorialHolder);
+        LayoutItineraryHolder = (RelativeLayout) view.findViewById(R.id.LayoutItineraryHolder);
         btnEditProfile.setOnClickListener(this);
         LayoutShowProfileHolder.setOnClickListener(this);
         exitFromAccount.setOnClickListener(this);
         HotelReservationStatusHolder.setOnClickListener(this);
         TutorialHolder.setOnClickListener(this);
+        LayoutItineraryHolder.setOnClickListener(this);
         setLoginName();
         getSharedpreferences();
         DaggerSettingComponent.builder().netComponent(((App) getActivity().getApplicationContext()).getNetComponent())
-                .settingModule(new SettingModule(this, this))
+                .settingModule(new SettingModule(this, this, this))
                 .build().inject(this);
 //        boolean responseBoolean = Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_SETTINGFRAGMENT, "false", false,getContext()));
 //
@@ -169,6 +183,12 @@ public class SettingFragment extends StandardFragment implements View.OnClickLis
                 break;
             case R.id.HotelReservationStatusHolder:
                 getRerReservation();
+                break;
+            case R.id.LayoutItineraryHolder:
+                if (Util.isLogin(getContext(), getActivity())) {
+                    dynamicItineraryPresenter.getDynamicItineraryList(new SendParamUsetToGetItinerary(Util.getUseRIdFromShareprefrence(getContext()), Util.getTokenFromSharedPreferences(getContext()), "", "", ""), Util.getTokenFromSharedPreferences(getContext()), Util.getAndroidIdFromSharedPreferences(getContext()));
+                }
+
                 break;
             case R.id.TutorialHolder: {
                 Util.saveInPreferences(Constants.PREF_SHOWCASE_PASSED_HOMEfRAGMENT, String.valueOf(false), false, getContext());
@@ -265,6 +285,31 @@ public class SettingFragment extends StandardFragment implements View.OnClickLis
     @Override
     public void dismissProgress() {
         progressDialog.dismiss();
+    }
+
+    @Override
+    public void showDynamicItineraryList(MyItineraryList myItineraryList) {
+        Intent intentAdd = new Intent(getActivity(), AddNewDynamicItinerary.class);
+        if (myItineraryList != null && myItineraryList.getResultItnListUser().size() > 0) {
+            intentAdd.putExtra("ResultItnListUser", (Serializable) myItineraryList.getResultItnListUser());
+            intentAdd.putExtra("nid", "");
+        }
+        startActivity(intentAdd);
+    }
+
+    @Override
+    public void confirmationAddDynamicItinerary(MyItineraryAdd myItineraryAdd) {
+
+    }
+
+    @Override
+    public void confirmationAddDynamicPosition(ResultPositionAddItinerary resultPositionAddItinerary) {
+
+    }
+
+    @Override
+    public void showResultEditDynamicItinerary(ResultEditDynamicItinerary resultEditDynamicItinerary) {
+
     }
 
     @Override

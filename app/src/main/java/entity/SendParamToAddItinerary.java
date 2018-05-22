@@ -14,6 +14,13 @@ public class SendParamToAddItinerary implements Serializable {
         this.itn_visibility = itn_visibility;
         this.itn_description = itn_description;
     }
+    public SendParamToAddItinerary(String uid, String itn_title, String itn_visibility, String itn_description,String itineraryId) {
+        this.uid = uid;
+        this.itn_title = itn_title;
+        this.itn_visibility = itn_visibility;
+        this.itn_description = itn_description;
+        this.itinerary_id=itineraryId;
+    }
 
     @SerializedName("uid")
     @Expose
@@ -24,12 +31,26 @@ public class SendParamToAddItinerary implements Serializable {
     @SerializedName("itn_visibility")
     @Expose
     private String itn_visibility;
+
+
     @SerializedName("itn_description")
     @Expose
+
     private String itn_description;
+    @SerializedName("itinerary_id")
+    @Expose
+    private String itinerary_id;
 
     public String getUid() {
         return uid;
+    }
+
+    public String getItinerary_id() {
+        return itinerary_id;
+    }
+
+    public void setItinerary_id(String itinerary_id) {
+        this.itinerary_id = itinerary_id;
     }
 
     public String getItn_title() {

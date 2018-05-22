@@ -158,35 +158,29 @@ public class ItemDragFragment extends StandardFragment implements Serializable, 
     @Override
     public void onDragViewStart(int beginPosition) {
         mDraggedEntity = dayPositionList.get(beginPosition);
-        toast("onDragViewStart   beginPosition--->" + beginPosition);
     }
 
     @Override
     public void onDragDropViewMoved(int fromPosition, int toPosition) {
         DayPosition applicationInfo = dayPositionList.remove(fromPosition);
         dayPositionList.add(toPosition, applicationInfo);
-        toast("onDragDropViewMoved   fromPosition--->" + fromPosition + "  toPosition-->" + toPosition);
     }
 
     @Override
     public void onDragViewDown(int finalPosition) {
         dayPositionList.set(finalPosition, mDraggedEntity);
-        toast("onDragViewDown   finalPosition--->" + finalPosition);
     }
 
     @Override
     public void onSlideOpen(View view, View parentView, int position, int direction) {
-        toast("onSlideOpen   position--->" + position + "  direction--->" + direction);
     }
 
     @Override
     public void onSlideClose(View view, View parentView, int position, int direction) {
-        toast("onSlideClose   position--->" + position + "  direction--->" + direction);
     }
 
     @Override
     public int onMenuItemClick(View v, int itemPosition, int buttonPosition, int direction) {
-        toast("onMenuItemClick   itemPosition--->" + itemPosition + "  buttonPosition-->" + buttonPosition + "  direction-->" + direction);
         switch (direction) {
             case MenuItem.DIRECTION_RIGHT:
                 switch (buttonPosition) {
@@ -207,7 +201,6 @@ public class ItemDragFragment extends StandardFragment implements Serializable, 
         }
         dayPositionList.remove(deletePosition);
         mAdapter.notifyDataSetChanged();
-        toast("onItemDeleteAnimationFinished   position--->" + position);
 
     }
 
@@ -230,17 +223,15 @@ public class ItemDragFragment extends StandardFragment implements Serializable, 
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        toast("onItemClick   position--->" + position);
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        toast("onItemLongClick   position--->" + position);
         return false;
     }
 
-    private void toast(String toast) {
-        mToast.setText(toast);
-        mToast.show();
-    }
+//    private void toast(String toast) {
+//        mToast.setText(toast);
+//        mToast.show();
+//    }
 }

@@ -19,10 +19,22 @@ public class ResultItnListUser implements Serializable {
     @SerializedName("itn_date_create")
     @Expose
     private String itnDateCreate;
+    @SerializedName("img_url")
+    @Expose
+    private String imageUrl;
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     public ResultItnListUser(String itnTitle, String itnId, String itnVisibility, String itnInside) {
         this.itnTitle = itnTitle;
         this.itnId = itnId;
+
         this.itnVisibility = itnVisibility;
         this.itnInside = itnInside;
     }

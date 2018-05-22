@@ -39,7 +39,7 @@ public abstract class DynamicItineraryContract extends Presenter<DynamicItinerar
     public abstract void getDynamicItineraryList(SendParamUsetToGetItinerary sendParamUserToGetItinerary, String token,
                                                  String androidId);
 
-    public abstract void addNewDynamicItinerary(SendParamToAddItinerary sendParamToAddItinerary,
+    public abstract void addNewDynamicItinerary(String action,SendParamToAddItinerary sendParamToAddItinerary,
                                                 String token,
                                                 String androidId);
 

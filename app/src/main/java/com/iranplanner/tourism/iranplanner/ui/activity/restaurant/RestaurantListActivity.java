@@ -19,6 +19,7 @@ import com.iranplanner.tourism.iranplanner.standard.DataTransferInterface;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.AttractionsMoreListAdapter;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentPresenter;
+import com.iranplanner.tourism.iranplanner.ui.activity.dynamicItinerary.DynamicItineraryContract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +30,14 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import entity.InterestResult;
+import entity.MyItineraryAdd;
+import entity.MyItineraryList;
 import entity.RestaurantList;
 import entity.ResultCommentList;
+import entity.ResultEditDynamicItinerary;
 import entity.ResultImageList;
 import entity.ResultParamUser;
+import entity.ResultPositionAddItinerary;
 import entity.ResultRestaurantFull;
 import entity.ResultRestaurantList;
 import entity.ResultWidgetFull;
@@ -42,7 +47,7 @@ import tools.Util;
  * Created by h.vahidimehr on 13/03/2018.
  */
 
-public class RestaurantListActivity extends StandardActivity implements RestaurantContract.View, DataTransferInterface, CommentPresenter.View {
+public class RestaurantListActivity extends StandardActivity implements RestaurantContract.View, DataTransferInterface, CommentPresenter.View ,DynamicItineraryContract.View{
 
     @BindView(R.id.toolbar)
     android.support.v7.widget.Toolbar toolbar;
@@ -94,6 +99,26 @@ public class RestaurantListActivity extends StandardActivity implements Restaura
     @Override
     public void dismissProgress() {
         Util.dismissProgress(progressDialog);
+    }
+
+    @Override
+    public void showDynamicItineraryList(MyItineraryList myItineraryList) {
+
+    }
+
+    @Override
+    public void confirmationAddDynamicItinerary(MyItineraryAdd myItineraryAdd) {
+
+    }
+
+    @Override
+    public void confirmationAddDynamicPosition(ResultPositionAddItinerary resultPositionAddItinerary) {
+
+    }
+
+    @Override
+    public void showResultEditDynamicItinerary(ResultEditDynamicItinerary resultEditDynamicItinerary) {
+
     }
 
     @Override
@@ -149,7 +174,7 @@ public class RestaurantListActivity extends StandardActivity implements Restaura
         ButterKnife.bind(this);
 
         DaggerRestaurantComponent.builder().netComponent(((App) getApplicationContext()).getNetComponent())
-                .restaurantModule(new RestaurantModule(this, this))
+                .restaurantModule(new RestaurantModule(this, this,this))
                 .build().inject(this);
 
         getExtra();

@@ -97,7 +97,40 @@
                         android:layout_below="@+id/showProfile"
                         android:background="@color/greyLight" />
                 </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/LayoutItineraryHolder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true">
 
+                    <TextView
+                        android:id="@+id/showItineray"
+                        style="@style/StandardTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="@dimen/margin_standard"
+                        android:layout_marginTop="@dimen/margin_standard"
+                        android:text="سفرهای من" />
+
+                    <ImageView
+                        android:layout_width="@dimen/height20"
+                        android:layout_height="@dimen/height20"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/ic_send_grey"
+                        android:visibility="invisible"
+
+                        />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@+id/showItineray"
+                        android:background="@color/greyLight" />
+                </RelativeLayout>
                 <RelativeLayout
                     android:id="@+id/HotelReservationStatusHolder"
                     android:layout_width="match_parent"

@@ -85,9 +85,9 @@ public class DynamicItineraryPresenter extends DynamicItineraryContract {
     }
 
     @Override
-    public void addNewDynamicItinerary(SendParamToAddItinerary sendParamToAddItinerary, String token, String androidId) {
+    public void addNewDynamicItinerary(String action, SendParamToAddItinerary sendParamToAddItinerary, String token, String androidId) {
         mView.showProgress();
-        retrofit.create(DynamicItineraryService.class).addNewDynamicItinerary(sendParamToAddItinerary, token, androidId)
+        retrofit.create(DynamicItineraryService.class).addNewDynamicItinerary(action, sendParamToAddItinerary, token, androidId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -210,8 +210,10 @@ public class DynamicItineraryPresenter extends DynamicItineraryContract {
                                                             @Query("andId") String androidId);
 
         //      https://api.parsdid.com/iranplanner/app/api-itn.php?action=itn_add
-        @POST("api-itn.php?action=itn_add")
-        Observable<MyItineraryAdd> addNewDynamicItinerary(@Body SendParamToAddItinerary sendParamToAddItinerary,
+        //      https://api.parsdid.com/iranplanner/app/api-itn.php?action=clone_itinerary
+        @POST("api-itn.php")
+        Observable<MyItineraryAdd> addNewDynamicItinerary(@Query("action") String action,
+                                                          @Body SendParamToAddItinerary sendParamToAddItinerary,
                                                           @Query("cid") String token,
                                                           @Query("andId") String androidId);
 

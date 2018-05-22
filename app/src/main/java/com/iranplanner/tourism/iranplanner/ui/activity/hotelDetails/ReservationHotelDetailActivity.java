@@ -58,9 +58,13 @@ import com.iranplanner.tourism.iranplanner.ui.activity.MapFullActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.OnCutImageListener;
 import com.iranplanner.tourism.iranplanner.ui.activity.StandardActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.attractioListMore.AttractionListMorePresenter;
+import com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails.attractionDetailActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentListActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentPresenter;
+import com.iranplanner.tourism.iranplanner.ui.activity.dynamicItinerary.AddNewDynamicItinerary;
+import com.iranplanner.tourism.iranplanner.ui.activity.dynamicItinerary.DynamicItineraryContract;
+import com.iranplanner.tourism.iranplanner.ui.activity.dynamicItinerary.DynamicItineraryPresenter;
 import com.iranplanner.tourism.iranplanner.ui.activity.globalSearch.GlobalSearchActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.showRoom.ShowRoomActivity;
 import com.iranplanner.tourism.iranplanner.ui.camera.PhotoCropFragment;
@@ -81,17 +85,22 @@ import javax.inject.Inject;
 
 import entity.InterestResult;
 import entity.ItineraryLodgingCity;
+import entity.MyItineraryAdd;
+import entity.MyItineraryList;
 import entity.RateParam;
 import entity.ResultComment;
 import entity.ResultCommentList;
+import entity.ResultEditDynamicItinerary;
 import entity.ResultImageList;
 import entity.ResultLodging;
 import entity.ResultLodgingRoomList;
 import entity.ResultParamUser;
+import entity.ResultPositionAddItinerary;
 import entity.ResultRoom;
 import entity.ResultWidget;
 import entity.ResultWidgetFull;
 import entity.SendParamUser;
+import entity.SendParamUsetToGetItinerary;
 import entity.ShowAtractionDetailMore;
 import entity.ShowAttractionListMore;
 import ir.adad.client.AdListener;
@@ -116,7 +125,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  */
 
 public class ReservationHotelDetailActivity extends StandardActivity implements OnMapReadyCallback, CommentContract.View,
-        View.OnClickListener, AttractionListMorePresenter.View, HotelDetailContract.View, PhotoUtils.OnImageUriSelect, OnCutImageListener {
+        View.OnClickListener, AttractionListMorePresenter.View, HotelDetailContract.View, PhotoUtils.OnImageUriSelect, OnCutImageListener, DynamicItineraryContract.View {
     private Uri mImageUri;
 
     private GoogleMap mMap;
@@ -151,6 +160,8 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
     CommentPresenter commentPresenter;
     @Inject
     HotelDetailPresenter hotelDetailPresenter;
+    @Inject
+    DynamicItineraryPresenter dynamicItineraryPresenter;
     RelativeLayout ratingPeopleHolder;
     RatingBar ratingBar;
     TextView txtRateType, txtPhotos;
@@ -180,6 +191,8 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
         }
 
     };
+    private LinearLayout addHolder;
+
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -257,7 +270,10 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
         txtRateType = findViewById(R.id.txtRateType);
         txtPhotos = findViewById(R.id.txtPhotos);
         cameraHolder = findViewById(R.id.cameraHolder);
+        addHolder = findViewById(R.id.addHolder);
         cameraHolder.setOnClickListener(this);
+        addHolder.setOnClickListener(this);
+
 //        setupTablayout();
     }
 
@@ -470,11 +486,12 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
         img_magnifier_foreground.setOnClickListener(this);
 
 
+
+        setImageHolder();
         DaggerHotelDetailComponent.builder()
                 .netComponent(((App) getApplicationContext()).getNetComponent())
-                .hotelDetailModule(new HotelDetailModule(this, this))
+                .hotelDetailModule(new HotelDetailModule(this, this, this))
                 .build().inject(this);
-        setImageHolder();
         commentPresenter.getWidgetResult("nodeuser", resultLodgingHotelDetail.getLodgingId(), Util.getUseRIdFromShareprefrence(getApplicationContext()), "lodging", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
         mapFragment.getMapAsync(this);
         ((AdView) findViewById(R.id.banner_ad_view)).setAdListener(mAdListener);
@@ -636,6 +653,10 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
 
             case R.id.ratingPeopleHolder:
                 if (Util.isLogin(getApplicationContext(), this)) {
+                    DaggerHotelDetailComponent.builder()
+                            .netComponent(((App) getApplicationContext()).getNetComponent())
+                            .hotelDetailModule(new HotelDetailModule(this, this, this))
+                            .build().inject(this);
                     SendParamUser ss = new SendParamUser(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "lodging", resultLodgingHotelDetail.getLodgingId());
                     commentPresenter.getRate("rateinfo", ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                 }
@@ -643,6 +664,10 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
 
             case R.id.commentHolder:
                 if (Util.isLogin(getApplicationContext(), this)) {
+                    DaggerHotelDetailComponent.builder()
+                            .netComponent(((App) getApplicationContext()).getNetComponent())
+                            .hotelDetailModule(new HotelDetailModule(this, this, this))
+                            .build().inject(this);
                     commentPresenter.getCommentList("pagecomments", resultLodgingHotelDetail.getLodgingId(), "lodging", "0");
                 }
 
@@ -690,6 +715,11 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
                         OnClickedIntrestedWidget("like", Constants.likeImg, likeImg);
                         likeImg.setImageDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.ic_like_on));
                     }
+                }
+                break;
+            case R.id.addHolder:
+                if (Util.isLogin(getApplicationContext(), this)) {
+                    dynamicItineraryPresenter.getDynamicItineraryList(new SendParamUsetToGetItinerary(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "lodging", resultLodgingHotelDetail.getLodgingId(), ""), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                 }
                 break;
         }
@@ -874,6 +904,31 @@ public class ReservationHotelDetailActivity extends StandardActivity implements 
 
     public void dismissProgress() {
         Util.dismissProgress(progressDialog);
+    }
+
+    @Override
+    public void showDynamicItineraryList(MyItineraryList myItineraryList) {
+        Intent intentAdd = new Intent(ReservationHotelDetailActivity.this, AddNewDynamicItinerary.class);
+        if (myItineraryList != null && myItineraryList.getResultItnListUser().size() > 0) {
+            intentAdd.putExtra("ResultItnListUser", (Serializable) myItineraryList.getResultItnListUser());
+            intentAdd.putExtra("nid", resultLodgingHotelDetail.getLodgingId());
+        }
+        startActivity(intentAdd);
+    }
+
+    @Override
+    public void confirmationAddDynamicItinerary(MyItineraryAdd myItineraryAdd) {
+
+    }
+
+    @Override
+    public void confirmationAddDynamicPosition(ResultPositionAddItinerary resultPositionAddItinerary) {
+
+    }
+
+    @Override
+    public void showResultEditDynamicItinerary(ResultEditDynamicItinerary resultEditDynamicItinerary) {
+
     }
 
     @Override

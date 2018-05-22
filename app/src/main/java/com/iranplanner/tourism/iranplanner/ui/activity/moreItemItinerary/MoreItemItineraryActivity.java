@@ -68,6 +68,8 @@ import com.iranplanner.tourism.iranplanner.showcaseview.CustomShowcaseView;
 import com.iranplanner.tourism.iranplanner.ui.activity.MapFullActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentContract;
 import com.iranplanner.tourism.iranplanner.ui.activity.comment.CommentPresenter;
+import com.iranplanner.tourism.iranplanner.ui.activity.dynamicItinerary.DynamicItineraryContract;
+import com.iranplanner.tourism.iranplanner.ui.activity.dynamicItinerary.DynamicItineraryPresenter;
 import com.iranplanner.tourism.iranplanner.ui.activity.globalSearch.GlobalSearchActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.hotelReservationListOfCity.ReservationListActivity;
 import com.iranplanner.tourism.iranplanner.ui.activity.showAttraction.ShowAttractionActivity;
@@ -84,21 +86,28 @@ import javax.inject.Inject;
 import entity.InterestResult;
 import entity.ItineraryLodgingCity;
 import entity.ItineraryPercentage;
+import entity.MyItineraryAdd;
+import entity.MyItineraryList;
 import entity.RateParam;
 import entity.ResultComment;
 import entity.ResultCommentList;
+import entity.ResultEditDynamicItinerary;
 import entity.ResultImageList;
 import entity.ResultItinerary;
 import entity.ResultItineraryAttraction;
 import entity.ResultItineraryAttractionDay;
 import entity.ResultItineraryAttractionList;
+import entity.ResultItnListUser;
 import entity.ResultParamUser;
+import entity.ResultPositionAddItinerary;
 import entity.ResultWidget;
 
 import entity.ResultWidgetFull;
 
 
+import entity.SendParamToAddItinerary;
 import entity.SendParamUser;
+import entity.SendParamUsetToGetItinerary;
 import entity.ShowAttractionListItinerary;
 import tools.Constants;
 
@@ -112,12 +121,15 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         GoogleApiClient.OnConnectionFailedListener, CommentContract.View,
         LocationListener,
         View.OnClickListener,
-        ItineraryContract.View {
+        ItineraryContract.View,
+        DynamicItineraryContract.View {
 
     @Inject
     ItineraryPresenter itineraryPresenter;
     @Inject
     CommentPresenter commentPresenter;
+    @Inject
+    DynamicItineraryPresenter dynamicItineraryPresenter;
 
     private CollapsingToolbarLayout collapsingToolbar;
     private GoogleMap mMap;
@@ -136,7 +148,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
     private TextView textPercentage1, textPercentage2, textPercentage3;
     private TextView txtItinerary_attraction_type, txtDate;
     private ProgressDialog progressDialog;
-    private ImageView itinerary_attraction_type_more,img_magnifier_foreground;
+    private ImageView itinerary_attraction_type_more, img_magnifier_foreground;
     protected CTouchyWebView contentFullDescription;
     private TextView txtItinerary_attraction_Difficulty;
     private TextView txtItinerary_count_attraction;
@@ -163,6 +175,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
     RelativeLayout ratingPeopleHolder;
     TextView txtRateType, txtPhotos;
     private ImageView mapImg, addImg;
+    LinearLayout addHolder;
 
     private void findView() {
 
@@ -200,6 +213,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         mapImg = findViewById(R.id.mapImg);
         addImg = findViewById(R.id.addImg);
         img_magnifier_foreground = findViewById(R.id.img_magnifier_foreground);
+        addHolder = findViewById(R.id.addHolder);
 
     }
 
@@ -241,12 +255,12 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
 
 
         txtPhotos.setVisibility(View.GONE);
-        try{
+        try {
             if (itineraryData.getRate().getRateFinalAvg() != null) {
                 ratingBar.setRating(Float.valueOf(itineraryData.getRate().getRateFinalAvg()));
                 txtRateType.setText("تا کنون " + Util.persianNumbers(itineraryData.getRate().getRateFinalCount()) + " نفر به اینجا امتیاز داده اند ");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -272,6 +286,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         ratingPeopleHolder.setOnClickListener(this);
         likeHolder.setOnClickListener(this);
         mapImg.setOnClickListener(this);
+        addHolder.setOnClickListener(this);
         img_magnifier_foreground.setOnClickListener(this);
 
         //-------------------map
@@ -306,7 +321,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
 
         builder = DaggerItineraryComponent.builder()
                 .netComponent(((App) getApplicationContext()).getNetComponent())
-                .itineraryModule(new ItineraryModule(this, this));
+                .itineraryModule(new ItineraryModule(this, this, this));
         builder.build().inject(this);
         itineraryPresenter.getWidgetResult("nodeuser", itineraryData.getItineraryId(), Util.getUseRIdFromShareprefrence(getApplicationContext()), "itinerary", Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
         if (!Boolean.parseBoolean(Util.getFromPreferences(Constants.PREF_SHOWCASE_PASSED_MOREITEMITINERARY, "false", false, getApplicationContext()))) {
@@ -335,9 +350,9 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
                     commentPresenter.getCommentList("pagecomments", itineraryId, "itinerary", "0");
                 }
                 break;
-                case R.id.img_magnifier_foreground:
-                    Intent intentSearch = new Intent(MoreItemItineraryActivity.this, GlobalSearchActivity.class);
-                    startActivity(intentSearch);
+            case R.id.img_magnifier_foreground:
+                Intent intentSearch = new Intent(MoreItemItineraryActivity.this, GlobalSearchActivity.class);
+                startActivity(intentSearch);
                 break;
 
             case R.id.showReservation:
@@ -376,7 +391,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
                     //todo
                     DaggerItineraryComponent.builder()
                             .netComponent(((App) getApplicationContext()).getNetComponent())
-                            .itineraryModule(new ItineraryModule(this, this))
+                            .itineraryModule(new ItineraryModule(this, this, this))
                             .build().inject(this);
                     SendParamUser ss = new SendParamUser(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "itinerary", itineraryId);
                     commentPresenter.getRate("rateinfo", ss, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
@@ -404,6 +419,18 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
                     }
                 } catch (Exception e) {
 
+                }
+                break;
+            case R.id.addHolder:
+                if (Util.isLogin(getApplicationContext(), this)) {
+                    builder = DaggerItineraryComponent.builder()
+                            .netComponent(((App) getApplicationContext()).getNetComponent())
+                            .itineraryModule(new ItineraryModule(this, this, this));
+                    builder.build().inject(this);
+                    SendParamToAddItinerary s = new SendParamToAddItinerary(Util.getUseRIdFromShareprefrence(getApplicationContext()),  "برنامه سفر " + itineraryData.getItineraryFromCityName() + " به " + itineraryData.getItineraryToCityName(), "1", "",itineraryData.getItineraryId());
+                    dynamicItineraryPresenter.addNewDynamicItinerary("clone_itinerary",s, Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
+
+//                    dynamicItineraryPresenter.getDynamicItineraryList(new SendParamUsetToGetItinerary(Util.getUseRIdFromShareprefrence(getApplicationContext()), Util.getTokenFromSharedPreferences(getApplicationContext()), "", "", resultItineraryAttractionDays.get(0).getItineraryId()), Util.getTokenFromSharedPreferences(getApplicationContext()), Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
                 }
                 break;
         }
@@ -623,6 +650,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         progressDialog.dismiss();
         Intent intent = new Intent(getApplicationContext(), ShowAttractionActivity.class);
         intent.putExtra("ResultItineraryAttraction", (Serializable) itineraryActionList);
+        intent.putExtra("itineraryTitle", "برنامه سفر " + itineraryData.getItineraryFromCityName() + " به " + itineraryData.getItineraryToCityName());
         startActivity(intent);
     }
 
@@ -704,11 +732,11 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
     @Override
     public void setRate(ResultParamUser resultParamUser) {
         try {
-            if (resultParamUser.getResultRatePost().getRateFinalAvg()!= null) {
+            if (resultParamUser.getResultRatePost().getRateFinalAvg() != null) {
                 ratingBar.setRating(Float.valueOf(resultParamUser.getResultRatePost().getRateFinalAvg()));
                 txtRateType.setText("تا کنون " + Util.persianNumbers(resultParamUser.getResultRatePost().getRateFinalCount() + "نفر به اینجا امتیاز داده اند "));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -847,6 +875,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         progressDialog.dismiss();
         Intent intent = new Intent(getApplicationContext(), ShowAttractionActivity.class);
         intent.putExtra("resultItineraryAttractionDays", (Serializable) resultItineraryAttractionDays);
+        intent.putExtra("itineraryTitle", "برنامه سفر " + itineraryData.getItineraryFromCityName() + " به " + itineraryData.getItineraryToCityName());
         startActivity(intent);
     }
 
@@ -869,7 +898,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         if (!Util.getUseRIdFromShareprefrence(getApplicationContext()).isEmpty()) {
             builder = DaggerItineraryComponent.builder()
                     .netComponent(((App) getApplicationContext()).getNetComponent())
-                    .itineraryModule(new ItineraryModule(this, this));
+                    .itineraryModule(new ItineraryModule(this, this, this));
             builder.build().inject(this);
             commentPresenter.getInterest("widget", Util.getUseRIdFromShareprefrence(getApplicationContext()), "1", "itinerary", itineraryId, gType, gValue, Util.getAndroidIdFromSharedPreferences(getApplicationContext()));
 
@@ -962,7 +991,7 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
 
         DaggerItineraryComponent.builder()
                 .netComponent(((App) getApplicationContext()).getGoogleNetComponent())
-                .itineraryModule(new ItineraryModule(this, this))
+                .itineraryModule(new ItineraryModule(this, this, this))
                 .build().inject(this);
 
         //-----------------
@@ -1120,6 +1149,31 @@ public class MoreItemItineraryActivity extends AppCompatActivity implements OnMa
         showcaseView.setContentText("روی این دکمه کلیک کن تا برنامه بازدیدهای هر روز رو به تفکیک ببینی");
         showcaseView.setContentTitle("دیدن برنامه روز به روز سفر");
         showcaseView.forceTextPosition(ShowcaseView.ABOVE_SHOWCASE);
+    }
+
+
+    @Override
+    public void showDynamicItineraryList(MyItineraryList myItineraryList) {
+
+    }
+
+    @Override
+    public void confirmationAddDynamicItinerary(MyItineraryAdd myItineraryAdd) {
+        if (myItineraryAdd != null && myItineraryAdd.getStatus().getStatus() == 200) {
+            ResultItnListUser rItinerary = new ResultItnListUser(myItineraryAdd.getResultItnAdd().getItnTitle(), myItineraryAdd.getResultItnAdd().getItnId(), myItineraryAdd.getResultItnAdd().getItnVisibility(), "0");
+//            resultItnListUser.add(0, rItinerary);
+//            showDynamicListAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void confirmationAddDynamicPosition(ResultPositionAddItinerary resultPositionAddItinerary) {
+
+    }
+
+    @Override
+    public void showResultEditDynamicItinerary(ResultEditDynamicItinerary resultEditDynamicItinerary) {
+
     }
 
 }

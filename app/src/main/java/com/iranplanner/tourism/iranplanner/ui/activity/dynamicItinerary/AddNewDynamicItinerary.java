@@ -233,7 +233,7 @@ public class AddNewDynamicItinerary extends StandardActivity implements DynamicI
             switch (v.getId()) {
                 case R.id.okBtn:
                     SendParamToAddItinerary s = new SendParamToAddItinerary(Util.getUseRIdFromShareprefrence(c.getApplicationContext()), autoTextAddNewItinerary.getText().toString(), checkBoxGlobalShow.isChecked() ? "1" : "0", "");
-                    dynamicItineraryPresenter.addNewDynamicItinerary(s, Util.getTokenFromSharedPreferences(c.getApplicationContext()), Util.getAndroidIdFromSharedPreferences(c.getApplicationContext()));
+                    dynamicItineraryPresenter.addNewDynamicItinerary("itn_add",s, Util.getTokenFromSharedPreferences(c.getApplicationContext()), Util.getAndroidIdFromSharedPreferences(c.getApplicationContext()));
                     break;
                 case R.id.cancelBtn:
                     dismiss();

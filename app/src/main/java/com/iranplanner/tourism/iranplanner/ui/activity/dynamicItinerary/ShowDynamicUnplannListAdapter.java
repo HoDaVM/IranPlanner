@@ -10,9 +10,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import com.iranplanner.tourism.iranplanner.R;
+
 import java.util.List;
+
 import entity.DayPosition;
+import tools.Util;
 
 
 /**
@@ -42,6 +46,8 @@ public class ShowDynamicUnplannListAdapter extends RecyclerView.Adapter<ShowDyna
     @Override
     public void onBindViewHolder(final ShowDynamicUnplannListAdapter.ViewHolder viewHolder, int i) {
         viewHolder.txtHeader.setText(DayPosition.get(i).getTitle());
+        if (DayPosition.get(i).getImgUrl() != null)
+            Util.setImageView(DayPosition.get(i).getImgUrl(), context, viewHolder.image, null);
     }
 
 
@@ -53,15 +59,14 @@ public class ShowDynamicUnplannListAdapter extends RecyclerView.Adapter<ShowDyna
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView image;
-
         private TextView txtText, txtHeader;
         private ProgressBar imageLoading;
 
 
         public ViewHolder(View view) {
             super(view);
-            txtText =  view.findViewById(R.id.txtTitle);
-            txtHeader =  view.findViewById(R.id.txtHeader);
+            txtText = view.findViewById(R.id.txtTitle);
+            txtHeader = view.findViewById(R.id.txtHeader);
             image = view.findViewById(R.id.image);
         }
     }
