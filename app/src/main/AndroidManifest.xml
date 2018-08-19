@@ -169,17 +169,17 @@
             android:name=".ui.fragment.blog.BlogDetailActivity"
             android:screenOrientation="portrait" />
         <!-- Firebase Notifications -->
-        <service android:name="server.MyFirebaseMessagingService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
+        <!--<service android:name="server.MyFirebaseMessagingService">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.google.firebase.MESSAGING_EVENT" />-->
+            <!--</intent-filter>-->
 
-        </service>
-        <service android:name="server.MyFirebaseInstanceIDService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>
+        <!--</service>-->
+        <!--<service android:name="server.MyFirebaseInstanceIDService">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.google.firebase.INSTANCE_ID_EVENT" />-->
+            <!--</intent-filter>-->
+        <!--</service>-->
         <!-- ./Firebase Notifications -->
 
         <!--<meta-data-->

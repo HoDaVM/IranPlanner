@@ -100,6 +100,7 @@
             android:contentDescription="@string/txtDel"/>
     </RelativeLayout>
 
+    <!--app:tabBackground="@drawable/tab_layout_selector"-->
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
@@ -108,7 +109,6 @@
         android:layout_below="@+id/deleteDayHolder"
         android:background="@color/white_"
         android:minHeight="?attr/actionBarSize"
-        app:tabBackground="@drawable/tab_layout_selector"
         app:tabGravity="fill"
         app:tabMode="scrollable"
         app:tabSelectedTextColor="@color/white_"

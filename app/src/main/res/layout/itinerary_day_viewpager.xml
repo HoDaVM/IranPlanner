@@ -130,6 +130,7 @@
 
         </RelativeLayout>
 
+        <!--app:tabBackground="@drawable/tab_layout_selector"-->
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
@@ -138,7 +139,6 @@
             android:layout_below="@+id/deleteDayHolder"
             android:background="@color/white_"
             android:minHeight="?attr/actionBarSize"
-            app:tabBackground="@drawable/tab_layout_selector"
             app:tabGravity="fill"
             app:tabMode="scrollable"
             app:tabSelectedTextColor="@color/white_"
@@ -153,7 +153,9 @@
         android:layout_height="3dp"
         android:layout_below="@+id/tabHolder"
         android:background="@drawable/dark_shadow_top"
-        android:orientation="horizontal"></LinearLayout>
+        android:orientation="horizontal">
+
+    </LinearLayout>
 
     <com.iranplanner.tourism.iranplanner.ui.RightToLeftViewPager
         android:id="@+id/vpPager"

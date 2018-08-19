@@ -39,6 +39,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.appnex.android.notification.Appnex;
 import io.fabric.sdk.android.Fabric;
 import server.Config;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -71,6 +72,10 @@ public class App extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        //Hila sdk init
+        Appnex.init(this);
+
         Fresco.initialize(this);
         enableLocationCheck();
         prepareDirectories();

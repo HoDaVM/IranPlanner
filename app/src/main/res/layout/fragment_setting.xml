@@ -100,6 +100,7 @@
                 <RelativeLayout
                     android:id="@+id/LayoutItineraryHolder"
                     android:layout_width="match_parent"
+                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
                     android:clickable="true">
