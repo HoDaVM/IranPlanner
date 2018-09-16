@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="colorPrimary">#f0137d</color>
     <color name="colorPrimaryDark">#288795</color>
     <color name="colorAccent">#87f0137d</color>
@@ -9,7 +10,6 @@
     <color name="pinkpress">#d10f6c</color>
     <color name="pink_shadow">#a6f0137d</color>
     <color name="blue">#00b1dd</color>
-    <color name="greyDark">#181818</color>
     <color name="greyTransparent">#8e181818</color>
     <color name="greyDarkTransparent">#65181818</color>
     <color name="bg_showcase">#da050000</color>
@@ -45,5 +45,23 @@
     <color name="teal500">#009688</color>
     <color name="teal300">#4DB6AC</color>
     <color name="map">#6f3ec1cf</color>
+
+    <color name="contentMainColor">#BB8800</color>
+    <color name="contentTabAccentDefault">#FFFFFF</color>
+    <color name="contentTabAccentHighlighted">@color/contentMainColor</color>
+
+    <color name="white">@android:color/white</color>
+    <color name="chat_user_reply_background_color">#c8f0ff</color>
+    <color name="chat_company_reply_background_color">#F5F5F5</color>
+    <color name="greyDark">@android:color/darker_gray</color>
+    <color name="transparent">@android:color/transparent</color>
+    <color name="orange">#00AAFF</color>
+    <color name="background_tab_pressed2">#6633B5E5</color>
+
+
+    <!--Loading...-->
+    <color name="book_loading_background">#00000000</color>
+    <color name="book_loading_book">#00AAFF</color>
+    <color name="book_loading_page">#AAffffff</color>
 
 </resources>

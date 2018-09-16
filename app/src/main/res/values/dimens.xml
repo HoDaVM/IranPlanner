@@ -6,6 +6,8 @@
     <dimen name="margin_standard">16dp</dimen>
     <dimen name="padding_standard">16dp</dimen>
 
+
+
     <dimen name="padding_24">24dp</dimen>
 
     <dimen name="padding_large">32dp</dimen>
@@ -44,4 +46,7 @@
     <dimen name="slv_item_bg_btn_width">48dip</dimen>
     <dimen name="slv_item_bg_btn2_width">60dip</dimen>
     <dimen name="slv_item_bg_btn_width_img">100dip</dimen>
+    <dimen name="book_border">12dp</dimen>
+    <dimen name="book_padding">12dp</dimen>
+    <dimen name="page_border">12dp</dimen>
 </resources>

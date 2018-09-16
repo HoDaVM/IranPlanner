@@ -153,7 +153,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginTop="10dp"
             android:scaleType="fitXY"
-            android:src="@mipmap/ic_near_me_round"
+            android:src="@mipmap/ic_natural"
             android:background="@mipmap/ic_filter_foreground"            android:translationZ="3dp"/>
 
         <include layout="@layout/activity_maps" />

@@ -1,6 +1,0 @@
-<resources>
-
-    <style name="CSelectableItemBackground">
-        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
-    </style>
-</resources>

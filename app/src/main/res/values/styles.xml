@@ -69,12 +69,12 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-    <style name="CustomDigitsTheme" parent="android:Theme.Material.Light">
+    <style name="CustomDigitsTheme" parent="android:Theme.Light">
         <item name="android:textColorPrimary">@android:color/black</item>
-        <item name="android:textColorSecondary">@color/transparent</item>
+        <item name="android:textColorSecondary">#00000000</item>
         <item name="android:windowBackground">@android:color/white</item>
-        <item name="android:textColorLink">@color/transparent</item>
-        <item name="android:colorAccent">#ff398622</item>
+        <item name="android:textColorLink">#00000000</item>
+        <item name="colorAccent">#ff398622</item>
     </style>
 
     <style name="TextLabel" parent="@android:style/TextAppearance">
@@ -152,14 +152,14 @@ anim dialog
         <item name="fontPath">fonts/IRANSansMobile_Medium.ttf</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">#ffffff</item>
     </style>
 
     <style name="collapsedappbar" parent="@android:style/TextAppearance.Medium">
         <item name="fontPath">fonts/IRANSansMobile_Medium.ttf</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">#ffffff</item>
     </style>
 
 
@@ -187,6 +187,50 @@ anim dialog
          <item name="fontPath">fonts/IRANSansMobile_Medium.ttf</item>
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:textSize">20sp</item>
+    </style>
+
+
+
+    <style name="Theme.Base" parent="android:Theme.Light" />
+
+    <style name="Theme.Sample" parent="Theme.Base" />
+
+    <style name="AppTheme2" parent="Theme.Sample" />
+    <!-- Widget styling -->
+
+    <style name="Widget" />
+
+    <style name="Widget.SampleMessage">
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:lineSpacingMultiplier">1.1</item>
+    </style>
+
+    <style name="Widget.SampleMessageTile">
+        <!--<item name="android:background">@drawable/tile</item>-->
+        <item name="android:shadowColor">#7F000000</item>
+        <item name="android:shadowDy">-3.5</item>
+        <item name="android:shadowRadius">2</item>
+    </style>
+
+
+    <color name="background_tab_pressed">#6633B5E5</color>
+    <declare-styleable name="CPagerSlidingTabStrip">
+        <attr name="pstsIndicatorColor" format="color" />
+        <attr name="pstsUnderlineColor" format="color" />
+        <attr name="pstsDividerColor" format="color" />
+        <attr name="pstsIndicatorHeight" format="dimension" />
+        <attr name="pstsUnderlineHeight" format="dimension" />
+        <attr name="pstsDividerPadding" format="dimension" />
+        <attr name="pstsTabPaddingLeftRight" format="dimension" />
+        <attr name="pstsScrollOffset" format="dimension" />
+        <attr name="pstsTabBackground" format="reference" />
+        <attr name="pstsShouldExpand" format="boolean" />
+        <attr name="pstsTextAllCaps" format="boolean" />
+    </declare-styleable>
+
+
+    <style name="CSelectableItemBackground">
+        <item name="android:background">?attr/selectableItemBackground</item>
     </style>
 
 </resources>

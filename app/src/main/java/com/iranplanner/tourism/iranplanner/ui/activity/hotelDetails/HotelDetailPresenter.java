@@ -15,8 +15,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.iranplanner.tourism.iranplanner.R;
 import com.iranplanner.tourism.iranplanner.ui.activity.attractionDetails.AttractionDetailContract;
 import com.iranplanner.tourism.iranplanner.ui.presenter.RouteDecode;
-import com.nineoldandroids.animation.AnimatorSet;
-import com.nineoldandroids.animation.ObjectAnimator;
+
 
 import java.util.ArrayList;
 import java.util.List;

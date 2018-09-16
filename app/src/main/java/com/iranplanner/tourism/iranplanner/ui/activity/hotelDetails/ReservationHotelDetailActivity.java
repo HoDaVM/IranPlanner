@@ -1,5 +1,7 @@
 package com.iranplanner.tourism.iranplanner.ui.activity.hotelDetails;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -69,8 +71,7 @@ import com.iranplanner.tourism.iranplanner.ui.activity.globalSearch.GlobalSearch
 import com.iranplanner.tourism.iranplanner.ui.activity.showRoom.ShowRoomActivity;
 import com.iranplanner.tourism.iranplanner.ui.camera.PhotoCropFragment;
 import com.iranplanner.tourism.iranplanner.ui.camera.PhotoUtils;
-import com.nineoldandroids.animation.AnimatorSet;
-import com.nineoldandroids.animation.ObjectAnimator;
+
 
 import org.json.JSONObject;
 

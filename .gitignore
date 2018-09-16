@@ -7,3 +7,11 @@
 /build
 /captures
 /app/build.gradle
+app/src/main/res/layout-v11/
+app/src/main/res/layout/module_option_tab_item.xml
+app/src/main/res/layout/newton_cradle_loading.xml
+app/src/main/res/layout/rtl_spinner_layout.xml
+app/src/main/res/layout/sl_persian_date_picker.xml
+app/src/main/res/layout/tab_indicator.xml
+app/src/main/res/values-sw600dp/
+app/src/main/res/values-sw720dp/

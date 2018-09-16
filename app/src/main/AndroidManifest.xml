@@ -79,7 +79,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.reqestHotelStatus.HotelReservationStatusActivity"
-            android:screenOrientation="portrait" /><activity
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activity.dynamicItinerary.AddNewDynamicItinerary"
             android:screenOrientation="portrait" />
         <activity
@@ -230,6 +231,9 @@
             android:name="AdadLoggingLevel"
             android:value="debug" />
 
+        <activity
+            android:name=".MapsActivity"
+            android:label="@string/title_activity_maps"></activity>
     </application>
 
 </manifest>

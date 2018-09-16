@@ -1,22 +1,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mapView"
-    android:name="com.iranplanner.tourism.iranplanner.ui.activity.MySupportMapFragmen"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.activity.MapsActivity"
+    android:orientation="vertical">
 
-    />
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/mapView"
+        android:name="com.iranplanner.tourism.iranplanner.ui.activity.MySupportMapFragmen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.activity.MapsActivity"
+
+        />
+
     <View
+        android:id="@+id/viewTransparent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/greyTransparent"
-        android:visibility="invisible"
-        android:id="@+id/viewTransparent"/>
+        android:visibility="invisible" />
 
 </RelativeLayout>
 
